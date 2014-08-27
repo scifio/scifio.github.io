@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="ico/favicon.ico">
+
+    <title>SCIFIO</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="theme.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body role="document">
+
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">SCIFIO</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="https://github.com/scifio/scifio/wiki">Wiki</a></li>
+            <li><a href="https://github.com/scifio">Source</a></li>
+            <li><a href="http://imagej.net/mailman/listinfo/scifio">Mailing list</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container theme-showcase" role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <img src="logo.png" class="logo" alt="logo">
+        <h1>SCIFIO</h1>
+        <p>A flexible framework for SCientific Image File Input and Output (SCIFIO).
+           SCIFIO defines a common pattern for image format construction. extension of the
+           <a href="http://www.scijava.org/">Sci-Java Common plugin mechanism</a> facilitates
+           easy extension, from custom formats to new metadata schema.
+        </p>
+        <p>
+        <a href="#source" class="btn btn-info btn-lg" role="button">Source &raquo;</a>
+        <a href="#bf" class="btn btn-primary btn-lg" role="button">Bio-Formats &raquo;</a>
+        <a href="#imagej" class="btn btn-success btn-lg" role="button">ImageJ &raquo;</a>
+        </p>
+      </div>
+
+      <div class="well">
+        <p>SCIFIO is developed by Mark Hiner, Curtis Rueden and the ImageJ
+        development team at the <a
+        href="http://loci.wisc.edu/">Laboratory for Optical and Computational
+        Instrumentation</a> (LOCI) at the University of Wisconsin-Madison.
+        </p>
+      </div>
+
+      <div id="source" class="page-header">
+        <h1>Source</h1>
+      </div>
+      <p>
+      The SCIFIO core is licensed under a <a
+      href="http://en.wikipedia.org/wiki/BSD_licenses#2-clause_license_.28.22Simplified_BSD_License.22_or_.22FreeBSD_License.22.29">
+      Simplified BSD License</a>.
+      </p>
+      <p>
+      The SCIFIO core library code is written in Java 6 compatible Java.</p>
+      <a href="https://github.com/scifio/scifio" class="btn btn-default btn-lg" role="button">See the code &raquo;</a>
+      <a href="http://jenkins.imagej.net/job/SCIFIO-javadoc/javadoc/" class="btn btn-default btn-lg" role="button">Read the docs &raquo;</a>
+
+      <div id="bf" class="page-header">
+        <h1>Bio-Formats</h1>
+      </div>
+      <img src="bio-formats.png" style="float: right; width: 400px" class="img-thumbnail" alt="Bio-Formats logo">
+      <p>
+      Bio-Formats provides the ability to convert many proprietary image formats to a common
+      OME-TIFF format, using the OME-XML schema. This allows scientists to freely share image
+      data without being restricted by proprietary format barriers.
+      <p>
+      SCIFIO was envisioned as a refactoring of Bio-Formats - creating the framework
+      that would support Bio-Formats and the OME-XML model, but also allow support for
+      N-Dimensional models and metadata schema from other imaging domains. The core
+      SCIFIO formats, which are necessarily BSD licensed, are based on the original
+      Bio-Formats readers.
+      </p>
+      <p>
+      To promote a mutualistic relationship between SCIFIO and Bio-Formats, such
+      that both benefit from new formats in the other, we created
+      SCIFIO-BF-compat: a compatibility layer for the two projects.
+      </p>
+      <a href="http://www.openmicroscopy.org/site/products/bio-formats" class="btn btn-default btn-lg" role="button">Read more &raquo;</a>
+
+      <div id="imagej" class="page-header" style="clear: right">
+        <h1>ImageJ</h1>
+      </div>
+      <img src="Fiji.jpg" style="float: right; width: 400px" class="img-thumbnail" alt="imagej2">
+      <p>
+      The ImageJ2 project is a redesign, from the ground up, of the original <a href="http://imagej.net/ImageJ1">ImageJ</a>
+      project. Like SCIFIO, it is built on the Sci-Java Common plugin framework to facilitate
+      extension at any level. Additionally, it is built to augment the existing ImageJ, allowing
+      as much of the original ImageJ functionality to remain intact.
+      <p>
+      Using SCIFIO as it's image I/O core, ImageJ2 allows users to get support
+      for all the open formats from SCIFIO and proprietary formats from Bio-Formats.
+      Further, SCIFIO provides a single point of extension, allowing any 3rd-party formats
+      to be easily enabled (and co-exist) via Fiji's <a href="http://imagej.net/Update_Sites">update site mechanism.</a>
+      </p>
+      <a href="http://imagej.net/" class="btn btn-default btn-lg" role="button">Read more &raquo;</a>
+
+    </div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
