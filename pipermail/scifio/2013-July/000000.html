@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> Nrrd ITK-SCIFIO Bug
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20Nrrd%20ITK-SCIFIO%20Bug&In-Reply-To=%3CCADN69y%3DWQ-V36SqTBPzM%2BLLZ%2BrTK_SuS42pJgZOfhqR2s5kYGQ%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000001.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>Nrrd ITK-SCIFIO Bug</H1>
+    <B>Curtis Rueden</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20Nrrd%20ITK-SCIFIO%20Bug&In-Reply-To=%3CCADN69y%3DWQ-V36SqTBPzM%2BLLZ%2BrTK_SuS42pJgZOfhqR2s5kYGQ%40mail.gmail.com%3E"
+       TITLE="Nrrd ITK-SCIFIO Bug">ctrueden at wisc.edu
+       </A><BR>
+    <I>Tue Jul  2 14:10:15 CDT 2013</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000001.html">Nrrd ITK-SCIFIO Bug
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#0">[ date ]</a>
+              <a href="thread.html#0">[ thread ]</a>
+              <a href="subject.html#0">[ subject ]</a>
+              <a href="author.html#0">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Kedar,
+
+Thanks for exercising the new code! I have a question, and a request.
+First, the latter: we just created a new SCIFIO mailing list (CCed). Can we
+please discuss these technical issues on the public list from now on?
+
+And my question: can you describe your need for the Vector image type in a
+little more detail? From my (limited) perspective,  using an ITK vector
+image type to represent multiple N-D Image blocks, which may have differing
+dimensional extents, is fundamentally unworkable. Is there another way to
+accomplish your goals?
+
+Regards,
+Curtis
+
+P.S. I spoke with Mark this morning about a possible alternative approach
+for requesting specific Images (i.e. &quot;series&quot;) from the SCIFIO ImageIO:
+encode it in the file path string somehow.
+ On Jul 2, 2013 1:24 PM, &quot;Kedar Grama&quot; &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">gbkedar at gmail.com</A>&gt; wrote:
+
+&gt;<i> Hi Mark,
+</I>&gt;<i>
+</I>&gt;<i> Thanks for working on the vector image support through SCIFIO. I have
+</I>&gt;<i> shared a nrrd file with you on google docs. When I read it with the
+</I>&gt;<i> ITK-SCIFIO reader it switches the bit ordering LittleEndian/BigEndian
+</I>&gt;<i> whereas if I read it in Fiji or build ITK without SCIFIO it is read
+</I>&gt;<i> properly. To test this you can use the ITK reader example and write the
+</I>&gt;<i> image out as a tiff while building with/without SCIFIO.
+</I>&gt;<i>
+</I>&gt;<i> Thanks,
+</I>&gt;<i>
+</I>&gt;<i> -Kedar
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130702/c56edaf2/attachment.html">http://scif.io/pipermail/scifio/attachments/20130702/c56edaf2/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000001.html">Nrrd ITK-SCIFIO Bug
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#0">[ date ]</a>
+              <a href="thread.html#0">[ thread ]</a>
+              <a href="subject.html#0">[ subject ]</a>
+              <a href="author.html#0">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

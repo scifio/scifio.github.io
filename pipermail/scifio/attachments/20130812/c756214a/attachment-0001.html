@@ -1,0 +1,31 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;Hi&nbsp;Michael,&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;&gt;&nbsp;What&nbsp;is&nbsp;the&nbsp;minimal&nbsp;set&nbsp;of&nbsp;Services&nbsp;that&nbsp;we&nbsp;need&nbsp;just&nbsp;for&nbsp;the&nbsp;opener?&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;The&nbsp;noargs&nbsp;ImgOpener&nbsp;constructor&nbsp;is&nbsp;supposed&nbsp;to&nbsp;give&nbsp;you&nbsp;exactly&nbsp;that:&lt;/div&gt;<br>
+&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio/blob/8037fd38419030dff000eda84fca9b35909be3a4/scifio/src/main/java/io/scif/img/AbstractImgIOComponent.java#L68&quot;&gt;https://github.com/scifio/scifio/blob/8037fd38419030dff000eda84fca9b35909be3a4/scifio/src/main/java/io/scif/img/AbstractImgIOComponent.java#L68&lt;/a&gt;&lt;br&gt;<br>
+&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Please&nbsp;let&nbsp;us&nbsp;know&nbsp;if&nbsp;it&nbsp;doesn&#39;t&nbsp;work&nbsp;for&nbsp;you!&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Regards,&lt;/div&gt;&lt;div&gt;Curtis&lt;/div&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Mon,&nbsp;Aug&nbsp;12,&nbsp;2013&nbsp;at&nbsp;10:39&nbsp;AM,&nbsp;Michael&nbsp;Zinsmaier&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:michael.zinsmaier@gmx.de&quot;&nbsp;target=&quot;_blank&quot;&gt;michael.zinsmaier@gmx.de&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;Hi&nbsp;all,&lt;br&gt;<br>
+&lt;br&gt;<br>
+we&nbsp;try&nbsp;to&nbsp;create&nbsp;a&nbsp;suitable&nbsp;context&nbsp;for&nbsp;the&nbsp;ImgOpener&nbsp;but&nbsp;on&nbsp;our&nbsp;classpath&nbsp;are&nbsp;several&nbsp;jar&nbsp;files&nbsp;that&nbsp;contain&nbsp;services&nbsp;which&nbsp;we&nbsp;do&nbsp;not&nbsp;intend&nbsp;to&nbsp;use&nbsp;and&nbsp;which&nbsp;cause&nbsp;problems&nbsp;if&nbsp;discovered&nbsp;(e.g.&nbsp;HotdrawService&nbsp;is&nbsp;discovered&nbsp;but&nbsp;we&nbsp;do&nbsp;not&nbsp;include&nbsp;all&nbsp;required&nbsp;libs...).&nbsp;What&nbsp;is&nbsp;the&nbsp;minimal&nbsp;set&nbsp;of&nbsp;Services&nbsp;that&nbsp;we&nbsp;need&nbsp;just&nbsp;for&nbsp;the&nbsp;opener?&lt;br&gt;<br>
+<br>
+&lt;br&gt;<br>
+or&nbsp;more&nbsp;code&nbsp;based:&lt;br&gt;<br>
+&lt;br&gt;<br>
+given&nbsp;the&nbsp;following&nbsp;methods&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;public&nbsp;void&nbsp;foo()&nbsp;{&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;Context&nbsp;c&nbsp;=&nbsp;new&nbsp;Context(getIOContextServices()&lt;u&gt;&lt;/u&gt;);&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;m_scifio&nbsp;=&nbsp;new&nbsp;SCIFIO(c);&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;FORMATS&nbsp;=&nbsp;m_scifio.format().&lt;u&gt;&lt;/u&gt;getAllFormats();&lt;br&gt;<br>
+ &nbsp; &nbsp;}&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;private&nbsp;List&lt;Class&lt;?&nbsp;extends&nbsp;Service&gt;&gt;&nbsp;getIOContextServices()&nbsp;{&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;final&nbsp;List&nbsp;services&nbsp;=&nbsp;new&nbsp;ArrayList();&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; services.add(FormatService.&lt;u&gt;&lt;/u&gt;class);&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; return&nbsp;services;&lt;br&gt;<br>
+ &nbsp; &nbsp;}&lt;br&gt;<br>
+&lt;br&gt;<br>
+what&nbsp;would&nbsp;be&nbsp;the&nbsp;minimal&nbsp;list&nbsp;of&nbsp;required&nbsp;services&nbsp;in&nbsp;order&nbsp;to&nbsp;get&nbsp;a&nbsp;suitable&nbsp;Context&nbsp;for&nbsp;the&nbsp;ImgOpener?&lt;br&gt;<br>
+&lt;br&gt;<br>
+Regards&nbsp;Michael&lt;br&gt;<br>
+&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+
+</tt>

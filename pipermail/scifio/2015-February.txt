@@ -1,0 +1,72 @@
+From hiner at wisc.edu  Mon Feb  2 09:42:29 2015
+From: hiner at wisc.edu (Mark Hiner)
+Date: Mon, 2 Feb 2015 09:42:29 -0600
+Subject: [SCIFIO] Block-wise writer
+In-Reply-To: <54CBE80A.2070305@web.de>
+References: <mailman.11.1422640801.6727.scifio@scif.io>
+	<54CBE80A.2070305@web.de>
+Message-ID: <CA+B=mGrPp1xSB2Q6t73v70=o+Yrn=uTegKyUinOPMTDQ+2aLcA@mail.gmail.com>
+
+Hi Burkhard,
+
+>This is exactly what I want, because my writer can not write a series of
+2D planes.
+>Please advise if I am still missing something, or if this is not the right
+way of doing this for now.
+
+In that case it sounds like what you're doing is perfectly correct.
+
+>Instead, it complains about the image having n planes, while it really
+should have only 1
+
+After looking at the source again, this message should just be coming up as
+a warning[1]. You should be able to continue writing. Is there an error
+message that comes up later? If you launch Fiji from the command line, or
+turn Edit > Options > Misc... > Debug mode on you should be able to fully
+capture any exceptions.
+
+Thank you!
+- Mark
+
+[1]
+https://github.com/scifio/scifio/blob/df3ab80b052055b8241cda3798a246ba6a9dbb8f/src/main/java/io/scif/img/ImgSaver.java#L599-605
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150202/f1e848e5/attachment.html>
+
+From hiner at wisc.edu  Mon Feb  2 09:42:29 2015
+From: hiner at wisc.edu (Mark Hiner)
+Date: Mon, 2 Feb 2015 09:42:29 -0600
+Subject: [SCIFIO] Block-wise writer
+In-Reply-To: <54CBE80A.2070305@web.de>
+References: <mailman.11.1422640801.6727.scifio@scif.io>
+	<54CBE80A.2070305@web.de>
+Message-ID: <CA+B=mGrPp1xSB2Q6t73v70=o+Yrn=uTegKyUinOPMTDQ+2aLcA@mail.gmail.com>
+
+Hi Burkhard,
+
+>This is exactly what I want, because my writer can not write a series of
+2D planes.
+>Please advise if I am still missing something, or if this is not the right
+way of doing this for now.
+
+In that case it sounds like what you're doing is perfectly correct.
+
+>Instead, it complains about the image having n planes, while it really
+should have only 1
+
+After looking at the source again, this message should just be coming up as
+a warning[1]. You should be able to continue writing. Is there an error
+message that comes up later? If you launch Fiji from the command line, or
+turn Edit > Options > Misc... > Debug mode on you should be able to fully
+capture any exceptions.
+
+Thank you!
+- Mark
+
+[1]
+https://github.com/scifio/scifio/blob/df3ab80b052055b8241cda3798a246ba6a9dbb8f/src/main/java/io/scif/img/ImgSaver.java#L599-605
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150202/f1e848e5/attachment-0002.html>
+

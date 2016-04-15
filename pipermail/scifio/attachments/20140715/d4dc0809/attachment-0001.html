@@ -1,0 +1,294 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Hello&nbsp;again&nbsp;Burkhard,&lt;br&gt;&lt;br&gt;&lt;/div&gt;Thank&nbsp;you&nbsp;for&nbsp;your&nbsp;persistence&nbsp;in&nbsp;this&nbsp;issue.&nbsp;After&nbsp;looking&nbsp;at&nbsp;it&nbsp;again&nbsp;today,&nbsp;I&nbsp;realized&nbsp;that&nbsp;there&nbsp;must&nbsp;be&nbsp;a&nbsp;memory&nbsp;leak&nbsp;in&nbsp;how&nbsp;we&nbsp;try&nbsp;to&nbsp;map&nbsp;and&nbsp;synchronize&nbsp;ImageJ&nbsp;1.x&nbsp;ImagePluses&nbsp;with&nbsp;ImageJ2&nbsp;data&nbsp;structures.&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt;Indeed,&nbsp;that&nbsp;was&nbsp;exactly&nbsp;what&nbsp;I&nbsp;found...&nbsp;however,&nbsp;the&nbsp;solution&nbsp;is&nbsp;non-trivial.&lt;br&gt;&lt;br&gt;&lt;/div&gt;I&nbsp;have&nbsp;filed&nbsp;a&nbsp;new&nbsp;issue&nbsp;for&nbsp;this&nbsp;here:&nbsp;&lt;a&nbsp;href=&quot;https://github.com/imagej/imagej-legacy/issues/67&quot;&gt;https://github.com/imagej/imagej-legacy/issues/67&lt;/a&gt;.&nbsp;It&nbsp;is&nbsp;something&nbsp;I&nbsp;would&nbsp;like&nbsp;to&nbsp;resolve&nbsp;quickly,&nbsp;but&nbsp;because&nbsp;it&nbsp;is&nbsp;an&nbsp;involved&nbsp;issue&nbsp;that&nbsp;requires&nbsp;additional&nbsp;investigation&nbsp;and&nbsp;discussion,&nbsp;it&#39;s&nbsp;at&nbsp;a&nbsp;lower&nbsp;priority&nbsp;than&nbsp;some&nbsp;necessary&nbsp;grant&nbsp;work&nbsp;this&nbsp;week.&nbsp;&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt;Thanks&nbsp;again&nbsp;for&nbsp;the&nbsp;report&nbsp;-&nbsp;it&nbsp;is,&nbsp;at&nbsp;least,&nbsp;good&nbsp;to&nbsp;know&nbsp;where&nbsp;the&nbsp;problem&nbsp;is&nbsp;now.&lt;br&gt;&lt;/div&gt;-&nbsp;Mark&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Mon,&nbsp;Jul&nbsp;14,&nbsp;2014&nbsp;at&nbsp;1:39&nbsp;PM,&nbsp;Burkhard&nbsp;Höckendorf&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:burkhard.hoeckendorf@web.de&quot;&nbsp;target=&quot;_blank&quot;&gt;burkhard.hoeckendorf@web.de&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;Hi&nbsp;Mark,&lt;br&gt;<br>
+&lt;br&gt;<br>
+Thanks&nbsp;for&nbsp;the&nbsp;speedy&nbsp;response.&nbsp;I&#39;ve&nbsp;rewritten&nbsp;my&nbsp;macro&nbsp;to&nbsp;perhaps&nbsp;illustrate&nbsp;my&nbsp;point&nbsp;more&nbsp;clearly.&nbsp;It&nbsp;now&nbsp;opens&nbsp;the&nbsp;file&nbsp;and&nbsp;immediately&nbsp;closes&nbsp;it&nbsp;again,&nbsp;for&nbsp;50&nbsp;iterations.&lt;br&gt;<br>
+&lt;br&gt;<br>
+With&nbsp;scifio&nbsp;enabled&nbsp;I&nbsp;do&nbsp;not&nbsp;get&nbsp;an&nbsp;out&nbsp;of&nbsp;memory&nbsp;error,&nbsp;but&nbsp;it&nbsp;still&nbsp;accumulates&nbsp;memory&nbsp;to&nbsp;the&nbsp;point&nbsp;that&nbsp;it&nbsp;can&nbsp;not&nbsp;open&nbsp;the&nbsp;entire&nbsp;image&nbsp;anymore&nbsp;but&nbsp;instead&nbsp;opens&nbsp;virtual&nbsp;stacks.&nbsp;Without&nbsp;scifio&nbsp;this&nbsp;does&nbsp;not&nbsp;occur.&lt;br&gt;<br>
+<br>
+<br>
+&lt;br&gt;<br>
+Also&nbsp;note&nbsp;that&nbsp;reading&nbsp;the&nbsp;full&nbsp;image&nbsp;into&nbsp;memory&nbsp;without&nbsp;scifio&nbsp;is&nbsp;performance-wise&nbsp;much&nbsp;closer&nbsp;to&nbsp;opening&nbsp;a&nbsp;scifio&nbsp;virtual&nbsp;image&nbsp;than&nbsp;reading&nbsp;the&nbsp;full&nbsp;image&nbsp;with&nbsp;scifio.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Below&nbsp;is&nbsp;the&nbsp;macro&nbsp;and&nbsp;its&nbsp;output.&lt;br&gt;<br>
+Best,&lt;br&gt;<br>
+Burkhard&lt;br&gt;<br>
+&lt;br&gt;<br>
+nOpenTimes&nbsp;=&nbsp;50;&lt;br&gt;<br>
+file&nbsp;=&nbsp;&quot;/path/to/image&quot;;&lt;br&gt;<br>
+&lt;br&gt;<br>
+for&nbsp;(i=1;&nbsp;i&lt;=nOpenTimes;&nbsp;i+=1)&nbsp;{&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;msToOpen&nbsp;=&nbsp;getTime();&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;open(file);&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;msToOpen&nbsp;=&nbsp;getTime()&nbsp;-&nbsp;msToOpen;&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;msg&nbsp;=&nbsp;&quot;&quot;+&nbsp;i&nbsp;+&quot;:&nbsp;&quot;+&nbsp;IJ.currentMemory()&nbsp;+&quot;&nbsp;mem,&nbsp;&quot;+&nbsp;msToOpen&nbsp;+&quot;&nbsp;ms&quot;;&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;if&nbsp;(is(&quot;Virtual&nbsp;Stack&quot;))&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;msg&nbsp;+=&nbsp;&quot;&nbsp;(virtual)&quot;;&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;print(msg);&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;close();&lt;br&gt;<br>
+}&lt;br&gt;<br>
+&lt;br&gt;<br>
+Using&nbsp;SCIFIO:&lt;br&gt;<br>
+ 1:&nbsp; 3822648536&nbsp;mem,&nbsp;15984&nbsp;ms&lt;br&gt;<br>
+ 2:&nbsp; &lt;a&nbsp;href=&quot;tel:7572956280&quot;&nbsp;value=&quot;+17572956280&quot;&nbsp;target=&quot;_blank&quot;&gt;7572956280&lt;/a&gt;&nbsp;mem,&nbsp;14986&nbsp;ms&lt;br&gt;<br>
+ 3:&nbsp; 9998931400&nbsp;mem,&nbsp;14821&nbsp;ms&lt;br&gt;<br>
+ 4:&nbsp;13784264296&nbsp;mem,&nbsp;14895&nbsp;ms&lt;br&gt;<br>
+ 5:&nbsp;16885256128&nbsp;mem,&nbsp;15019&nbsp;ms&lt;br&gt;<br>
+ 6:&nbsp;19656427040&nbsp;mem,&nbsp;15036&nbsp;ms&lt;br&gt;<br>
+ 7:&nbsp;24079096808&nbsp;mem,&nbsp;15212&nbsp;ms&lt;br&gt;<br>
+ 8:&nbsp;27510832552&nbsp;mem,&nbsp;15179&nbsp;ms&lt;br&gt;<br>
+ 9:&nbsp;32077394688&nbsp;mem,&nbsp;15427&nbsp;ms&lt;br&gt;<br>
+10:&nbsp;34409304040&nbsp;mem,&nbsp;15482&nbsp;ms&lt;br&gt;<br>
+11:&nbsp;36859610432&nbsp;mem,&nbsp;15227&nbsp;ms&lt;br&gt;<br>
+12:&nbsp;43061552320&nbsp;mem,&nbsp;15607&nbsp;ms&lt;br&gt;<br>
+13:&nbsp;42104714576&nbsp;mem,&nbsp;15359&nbsp;ms&lt;br&gt;<br>
+14:&nbsp;47910156296&nbsp;mem,&nbsp;15073&nbsp;ms&lt;br&gt;<br>
+15:&nbsp;48044651592&nbsp;mem,&nbsp;3053&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+16:&nbsp;48170004824&nbsp;mem,&nbsp;2502&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+17:&nbsp;48295208256&nbsp;mem,&nbsp;2522&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+18:&nbsp;48422832064&nbsp;mem,&nbsp;2495&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+19:&nbsp;48550863920&nbsp;mem,&nbsp;2504&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+20:&nbsp;48228290696&nbsp;mem,&nbsp;2615&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+21:&nbsp;48343976264&nbsp;mem,&nbsp;2482&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+22:&nbsp;48461224352&nbsp;mem,&nbsp;2495&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+23:&nbsp;48577275224&nbsp;mem,&nbsp;2482&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+24:&nbsp;48696021320&nbsp;mem,&nbsp;2493&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+25:&nbsp;48815302152&nbsp;mem,&nbsp;2513&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+26:&nbsp;48512671680&nbsp;mem,&nbsp;2682&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+27:&nbsp;48624380048&nbsp;mem,&nbsp;2493&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+28:&nbsp;48734321624&nbsp;mem,&nbsp;2487&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+29:&nbsp;48847280096&nbsp;mem,&nbsp;2504&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+30:&nbsp;48958189928&nbsp;mem,&nbsp;2491&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+31:&nbsp;49069385672&nbsp;mem,&nbsp;2499&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+32:&nbsp;48787137328&nbsp;mem,&nbsp;2614&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+33:&nbsp;48896061816&nbsp;mem,&nbsp;2500&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+34:&nbsp;49004784912&nbsp;mem,&nbsp;2488&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+35:&nbsp;49116572664&nbsp;mem,&nbsp;2516&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+36:&nbsp;49226035440&nbsp;mem,&nbsp;2497&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+37:&nbsp;49334418896&nbsp;mem,&nbsp;2500&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+38:&nbsp;49074728512&nbsp;mem,&nbsp;2660&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+39:&nbsp;49183254768&nbsp;mem,&nbsp;2506&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+40:&nbsp;49290891152&nbsp;mem,&nbsp;2491&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+41:&nbsp;49399382336&nbsp;mem,&nbsp;2499&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+42:&nbsp;49505843008&nbsp;mem,&nbsp;2487&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+43:&nbsp;49613438808&nbsp;mem,&nbsp;2487&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+44:&nbsp;49721198184&nbsp;mem,&nbsp;2481&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+45:&nbsp;49441266864&nbsp;mem,&nbsp;2709&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+46:&nbsp;49548934656&nbsp;mem,&nbsp;2485&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+47:&nbsp;49656785920&nbsp;mem,&nbsp;2501&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+48:&nbsp;49764127512&nbsp;mem,&nbsp;2480&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+49:&nbsp;49872069552&nbsp;mem,&nbsp;2495&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+50:&nbsp;49979814216&nbsp;mem,&nbsp;2482&nbsp;ms&nbsp;(virtual)&lt;br&gt;<br>
+&lt;br&gt;<br>
+Not&nbsp;using&nbsp;SCIFIO:&lt;br&gt;<br>
+ 1:&nbsp;&lt;a&nbsp;href=&quot;tel:3107094592&quot;&nbsp;value=&quot;+13107094592&quot;&nbsp;target=&quot;_blank&quot;&gt;3107094592&lt;/a&gt;&nbsp;mem,&nbsp;3921&nbsp;ms&lt;br&gt;<br>
+ 2:&nbsp;&lt;a&nbsp;href=&quot;tel:3109153032&quot;&nbsp;value=&quot;+13109153032&quot;&nbsp;target=&quot;_blank&quot;&gt;3109153032&lt;/a&gt;&nbsp;mem,&nbsp;3837&nbsp;ms&lt;br&gt;<br>
+ 3:&nbsp;&lt;a&nbsp;href=&quot;tel:3109836568&quot;&nbsp;value=&quot;+13109836568&quot;&nbsp;target=&quot;_blank&quot;&gt;3109836568&lt;/a&gt;&nbsp;mem,&nbsp;3631&nbsp;ms&lt;br&gt;<br>
+ 4:&nbsp;&lt;a&nbsp;href=&quot;tel:3109512264&quot;&nbsp;value=&quot;+13109512264&quot;&nbsp;target=&quot;_blank&quot;&gt;3109512264&lt;/a&gt;&nbsp;mem,&nbsp;3581&nbsp;ms&lt;br&gt;<br>
+ 5:&nbsp;&lt;a&nbsp;href=&quot;tel:3109478728&quot;&nbsp;value=&quot;+13109478728&quot;&nbsp;target=&quot;_blank&quot;&gt;3109478728&lt;/a&gt;&nbsp;mem,&nbsp;3633&nbsp;ms&lt;br&gt;<br>
+ 6:&nbsp;&lt;a&nbsp;href=&quot;tel:3123692656&quot;&nbsp;value=&quot;+13123692656&quot;&nbsp;target=&quot;_blank&quot;&gt;3123692656&lt;/a&gt;&nbsp;mem,&nbsp;4145&nbsp;ms&lt;br&gt;<br>
+ 7:&nbsp;3112714624&nbsp;mem,&nbsp;3301&nbsp;ms&lt;br&gt;<br>
+ 8:&nbsp;&lt;a&nbsp;href=&quot;tel:3128373632&quot;&nbsp;value=&quot;+13128373632&quot;&nbsp;target=&quot;_blank&quot;&gt;3128373632&lt;/a&gt;&nbsp;mem,&nbsp;3202&nbsp;ms&lt;br&gt;<br>
+ 9:&nbsp;3117798216&nbsp;mem,&nbsp;3235&nbsp;ms&lt;br&gt;<br>
+10:&nbsp;&lt;a&nbsp;href=&quot;tel:3133595872&quot;&nbsp;value=&quot;+13133595872&quot;&nbsp;target=&quot;_blank&quot;&gt;3133595872&lt;/a&gt;&nbsp;mem,&nbsp;3190&nbsp;ms&lt;br&gt;<br>
+11:&nbsp;&lt;a&nbsp;href=&quot;tel:3123048664&quot;&nbsp;value=&quot;+13123048664&quot;&nbsp;target=&quot;_blank&quot;&gt;3123048664&lt;/a&gt;&nbsp;mem,&nbsp;3229&nbsp;ms&lt;br&gt;<br>
+12:&nbsp;&lt;a&nbsp;href=&quot;tel:5754899128&quot;&nbsp;value=&quot;+15754899128&quot;&nbsp;target=&quot;_blank&quot;&gt;5754899128&lt;/a&gt;&nbsp;mem,&nbsp;3404&nbsp;ms&lt;br&gt;<br>
+13:&nbsp;&lt;a&nbsp;href=&quot;tel:3128308704&quot;&nbsp;value=&quot;+13128308704&quot;&nbsp;target=&quot;_blank&quot;&gt;3128308704&lt;/a&gt;&nbsp;mem,&nbsp;3307&nbsp;ms&lt;br&gt;<br>
+14:&nbsp;3117759024&nbsp;mem,&nbsp;3219&nbsp;ms&lt;br&gt;<br>
+15:&nbsp;5910573440&nbsp;mem,&nbsp;3112&nbsp;ms&lt;br&gt;<br>
+16:&nbsp;5488969832&nbsp;mem,&nbsp;3222&nbsp;ms&lt;br&gt;<br>
+17:&nbsp;3112824736&nbsp;mem,&nbsp;3273&nbsp;ms&lt;br&gt;<br>
+18:&nbsp;&lt;a&nbsp;href=&quot;tel:3128647888&quot;&nbsp;value=&quot;+13128647888&quot;&nbsp;target=&quot;_blank&quot;&gt;3128647888&lt;/a&gt;&nbsp;mem,&nbsp;3147&nbsp;ms&lt;br&gt;<br>
+19:&nbsp;3118094280&nbsp;mem,&nbsp;3208&nbsp;ms&lt;br&gt;<br>
+20:&nbsp;5902184440&nbsp;mem,&nbsp;3281&nbsp;ms&lt;br&gt;<br>
+21:&nbsp;&lt;a&nbsp;href=&quot;tel:3123372736&quot;&nbsp;value=&quot;+13123372736&quot;&nbsp;target=&quot;_blank&quot;&gt;3123372736&lt;/a&gt;&nbsp;mem,&nbsp;3224&nbsp;ms&lt;br&gt;<br>
+22:&nbsp;3112825408&nbsp;mem,&nbsp;3259&nbsp;ms&lt;br&gt;<br>
+23:&nbsp;&lt;a&nbsp;href=&quot;tel:3128648960&quot;&nbsp;value=&quot;+13128648960&quot;&nbsp;target=&quot;_blank&quot;&gt;3128648960&lt;/a&gt;&nbsp;mem,&nbsp;3146&nbsp;ms&lt;br&gt;<br>
+24:&nbsp;3118100760&nbsp;mem,&nbsp;3230&nbsp;ms&lt;br&gt;<br>
+25:&nbsp;&lt;a&nbsp;href=&quot;tel:3133941888&quot;&nbsp;value=&quot;+13133941888&quot;&nbsp;target=&quot;_blank&quot;&gt;3133941888&lt;/a&gt;&nbsp;mem,&nbsp;3119&nbsp;ms&lt;br&gt;<br>
+26:&nbsp;5488982136&nbsp;mem,&nbsp;3225&nbsp;ms&lt;br&gt;<br>
+27:&nbsp;3112820248&nbsp;mem,&nbsp;3249&nbsp;ms&lt;br&gt;<br>
+28:&nbsp;&lt;a&nbsp;href=&quot;tel:3128655064&quot;&nbsp;value=&quot;+13128655064&quot;&nbsp;target=&quot;_blank&quot;&gt;3128655064&lt;/a&gt;&nbsp;mem,&nbsp;3154&nbsp;ms&lt;br&gt;<br>
+29:&nbsp;3118110296&nbsp;mem,&nbsp;3241&nbsp;ms&lt;br&gt;<br>
+30:&nbsp;&lt;a&nbsp;href=&quot;tel:3133956392&quot;&nbsp;value=&quot;+13133956392&quot;&nbsp;target=&quot;_blank&quot;&gt;3133956392&lt;/a&gt;&nbsp;mem,&nbsp;3176&nbsp;ms&lt;br&gt;<br>
+31:&nbsp;&lt;a&nbsp;href=&quot;tel:3123381976&quot;&nbsp;value=&quot;+13123381976&quot;&nbsp;target=&quot;_blank&quot;&gt;3123381976&lt;/a&gt;&nbsp;mem,&nbsp;3220&nbsp;ms&lt;br&gt;<br>
+32:&nbsp;3112831584&nbsp;mem,&nbsp;3264&nbsp;ms&lt;br&gt;<br>
+33:&nbsp;&lt;a&nbsp;href=&quot;tel:3128664576&quot;&nbsp;value=&quot;+13128664576&quot;&nbsp;target=&quot;_blank&quot;&gt;3128664576&lt;/a&gt;&nbsp;mem,&nbsp;3170&nbsp;ms&lt;br&gt;<br>
+34:&nbsp;3118103400&nbsp;mem,&nbsp;3209&nbsp;ms&lt;br&gt;<br>
+35:&nbsp;&lt;a&nbsp;href=&quot;tel:3133956744&quot;&nbsp;value=&quot;+13133956744&quot;&nbsp;target=&quot;_blank&quot;&gt;3133956744&lt;/a&gt;&nbsp;mem,&nbsp;3163&nbsp;ms&lt;br&gt;<br>
+36:&nbsp;&lt;a&nbsp;href=&quot;tel:3123387312&quot;&nbsp;value=&quot;+13123387312&quot;&nbsp;target=&quot;_blank&quot;&gt;3123387312&lt;/a&gt;&nbsp;mem,&nbsp;3233&nbsp;ms&lt;br&gt;<br>
+37:&nbsp;3112827304&nbsp;mem,&nbsp;3279&nbsp;ms&lt;br&gt;<br>
+38:&nbsp;&lt;a&nbsp;href=&quot;tel:3128664688&quot;&nbsp;value=&quot;+13128664688&quot;&nbsp;target=&quot;_blank&quot;&gt;3128664688&lt;/a&gt;&nbsp;mem,&nbsp;3158&nbsp;ms&lt;br&gt;<br>
+39:&nbsp;3118115152&nbsp;mem,&nbsp;3256&nbsp;ms&lt;br&gt;<br>
+40:&nbsp;&lt;a&nbsp;href=&quot;tel:3133956432&quot;&nbsp;value=&quot;+13133956432&quot;&nbsp;target=&quot;_blank&quot;&gt;3133956432&lt;/a&gt;&nbsp;mem,&nbsp;3128&nbsp;ms&lt;br&gt;<br>
+41:&nbsp;5488994224&nbsp;mem,&nbsp;3214&nbsp;ms&lt;br&gt;<br>
+42:&nbsp;&lt;a&nbsp;href=&quot;tel:5746873888&quot;&nbsp;value=&quot;+15746873888&quot;&nbsp;target=&quot;_blank&quot;&gt;5746873888&lt;/a&gt;&nbsp;mem,&nbsp;3266&nbsp;ms&lt;br&gt;<br>
+43:&nbsp;&lt;a&nbsp;href=&quot;tel:3128666592&quot;&nbsp;value=&quot;+13128666592&quot;&nbsp;target=&quot;_blank&quot;&gt;3128666592&lt;/a&gt;&nbsp;mem,&nbsp;3174&nbsp;ms&lt;br&gt;<br>
+44:&nbsp;3118109984&nbsp;mem,&nbsp;3215&nbsp;ms&lt;br&gt;<br>
+45:&nbsp;&lt;a&nbsp;href=&quot;tel:3133949360&quot;&nbsp;value=&quot;+13133949360&quot;&nbsp;target=&quot;_blank&quot;&gt;3133949360&lt;/a&gt;&nbsp;mem,&nbsp;3131&nbsp;ms&lt;br&gt;<br>
+46:&nbsp;&lt;a&nbsp;href=&quot;tel:3123388320&quot;&nbsp;value=&quot;+13123388320&quot;&nbsp;target=&quot;_blank&quot;&gt;3123388320&lt;/a&gt;&nbsp;mem,&nbsp;3207&nbsp;ms&lt;br&gt;<br>
+47:&nbsp;3112843792&nbsp;mem,&nbsp;3269&nbsp;ms&lt;br&gt;<br>
+48:&nbsp;&lt;a&nbsp;href=&quot;tel:3128683960&quot;&nbsp;value=&quot;+13128683960&quot;&nbsp;target=&quot;_blank&quot;&gt;3128683960&lt;/a&gt;&nbsp;mem,&nbsp;3144&nbsp;ms&lt;br&gt;<br>
+49:&nbsp;&lt;a&nbsp;href=&quot;tel:5617941896&quot;&nbsp;value=&quot;+15617941896&quot;&nbsp;target=&quot;_blank&quot;&gt;5617941896&lt;/a&gt;&nbsp;mem,&nbsp;3201&nbsp;ms&lt;br&gt;<br>
+50:&nbsp;5902216016&nbsp;mem,&nbsp;3131&nbsp;ms&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;<br>
+Date:&nbsp;Mon,&nbsp;14&nbsp;Jul&nbsp;2014&nbsp;08:34:45&nbsp;-0500&lt;br&gt;<br>
+From:&nbsp;Mark&nbsp;Hiner&nbsp;&lt;&lt;a&nbsp;href=&quot;mailto:hinerm@gmail.com&quot;&nbsp;target=&quot;_blank&quot;&gt;hinerm@gmail.com&lt;/a&gt;&gt;&lt;br&gt;<br>
+To:&nbsp;Burkhard&nbsp;H?ckendorf&nbsp;&lt;&lt;a&nbsp;href=&quot;mailto:burkhard.hoeckendorf@web.de&quot;&nbsp;target=&quot;_blank&quot;&gt;burkhard.hoeckendorf@web.de&lt;/a&gt;&gt;&lt;br&gt;<br>
+Cc:&nbsp;&quot;&lt;a&nbsp;href=&quot;mailto:scifio@scif.io&quot;&nbsp;target=&quot;_blank&quot;&gt;scifio@scif.io&lt;/a&gt;&quot;&nbsp;&lt;&lt;a&nbsp;href=&quot;mailto:scifio@scif.io&quot;&nbsp;target=&quot;_blank&quot;&gt;scifio@scif.io&lt;/a&gt;&gt;&lt;br&gt;<br>
+Subject:&nbsp;Re:&nbsp;[SCIFIO]&nbsp;SCIFIO&nbsp;does&nbsp;not&nbsp;seem&nbsp;to&nbsp;release&nbsp;memory&nbsp;of&nbsp;closed&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;images&lt;br&gt;<br>
+Message-ID:&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;&lt;CA+B=&lt;a&nbsp;href=&quot;mailto:mGqx47SkUzM_FHGkoyAy3vbpf8%2BNMMbURUOSJ65UfeCf3w@mail.gmail.com&quot;&nbsp;target=&quot;_blank&quot;&gt;mGqx47SkUzM_&lt;u&gt;&lt;/u&gt;FHGkoyAy3vbpf8+&lt;u&gt;&lt;/u&gt;NMMbURUOSJ65UfeCf3w@mail.&lt;u&gt;&lt;/u&gt;gmail.com&lt;/a&gt;&gt;&lt;br&gt;<br>
+Content-Type:&nbsp;text/plain;&nbsp;charset=&quot;utf-8&quot;&lt;br&gt;<br>
+&lt;br&gt;<br>
+Hi&nbsp;Burkhard,&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp;&gt;&nbsp;run(&quot;Collect&nbsp;Garbage&quot;);&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp;This&nbsp;just&nbsp;calls&nbsp;System.gc()..&nbsp;twice,&nbsp;actually.&nbsp;There&nbsp;are&nbsp;many&nbsp;articles&nbsp;and&lt;br&gt;<br>
+StackOverflow&nbsp;posts&nbsp;about&nbsp;why&nbsp;System.gc()&nbsp;is&nbsp;unreliable&lt;br&gt;<br>
+&lt;&lt;a&nbsp;href=&quot;http://stackoverflow.com/questions/2414105/why-is-it-a-bad-practice-to-call-system-gc&quot;&nbsp;target=&quot;_blank&quot;&gt;http://stackoverflow.com/&lt;u&gt;&lt;/u&gt;questions/2414105/why-is-it-a-&lt;u&gt;&lt;/u&gt;bad-practice-to-call-system-gc&lt;/a&gt;&lt;u&gt;&lt;/u&gt;&gt;.&lt;br&gt;<br>
+<br>
+<br>
+I&nbsp;personally&nbsp;have&nbsp;seen&nbsp;endlessly&nbsp;repeated&nbsp;System.gc()&nbsp;calls&nbsp;effectively&nbsp;do&lt;br&gt;<br>
+nothing,&nbsp;necessitating&nbsp;the&nbsp;creation&nbsp;of&nbsp;large&nbsp;objects&nbsp;to&nbsp;force&nbsp;memory&nbsp;to&nbsp;be&lt;br&gt;<br>
+released.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp;Also,&nbsp;the&nbsp;JVM&nbsp;should&nbsp;automatically&nbsp;attempt&nbsp;to&nbsp;run&nbsp;the&nbsp;garbage&nbsp;collector&lt;br&gt;<br>
+when&nbsp;memory&nbsp;is&nbsp;requested&nbsp;for&nbsp;allocation&nbsp;in&nbsp;excess&nbsp;of&nbsp;the&nbsp;JVM&#39;s&nbsp;memory&lt;br&gt;<br>
+limits.&nbsp;So&nbsp;the&nbsp;best&nbsp;way&nbsp;to&nbsp;test&nbsp;if&nbsp;SCIFIO&nbsp;has&nbsp;a&nbsp;memory&nbsp;leak&nbsp;would&nbsp;be:&lt;br&gt;<br>
+&lt;br&gt;<br>
+1)&nbsp;Open&nbsp;datasets&nbsp;that&nbsp;occupy&nbsp;slightly&nbsp;less&nbsp;than&nbsp;the&nbsp;max&nbsp;memory&nbsp;allocated&nbsp;to&lt;br&gt;<br>
+your&nbsp;Fiji&lt;br&gt;<br>
+2)&nbsp;Close&nbsp;these&nbsp;datasets&lt;br&gt;<br>
+3)&nbsp;Try&nbsp;opening&nbsp;more&nbsp;datasets&nbsp;(of&nbsp;a&nbsp;size&nbsp;such&nbsp;that,&nbsp;if&nbsp;the&nbsp;original&nbsp;datasets&lt;br&gt;<br>
+not&nbsp;released,&nbsp;the&nbsp;total&nbsp;memory&nbsp;used&nbsp;would&nbsp;exceed&nbsp;the&nbsp;max&nbsp;allocation)&lt;br&gt;<br>
+&lt;br&gt;<br>
+If&nbsp;you&nbsp;see&nbsp;OutOfMemory&nbsp;errors&nbsp;then&nbsp;there&nbsp;could&nbsp;quite&nbsp;possibly&nbsp;be&nbsp;a&nbsp;leak.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Note&nbsp;also&nbsp;that&nbsp;we&nbsp;have&nbsp;unit&nbsp;tests&nbsp;in&nbsp;place&nbsp;designed&nbsp;to&nbsp;catch&nbsp;these&nbsp;leaks:&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java&quot;&nbsp;target=&quot;_blank&quot;&gt;https://github.com/scifio/&lt;u&gt;&lt;/u&gt;scifio/blob/master/src/test/&lt;u&gt;&lt;/u&gt;java/io/scif/img/cell/cache/&lt;u&gt;&lt;/u&gt;utests/CacheServiceTest.java&lt;/a&gt;.&lt;br&gt;<br>
+<br>
+<br>
+An&nbsp;excellent&nbsp;way&nbsp;to&nbsp;demonstrate&nbsp;the&nbsp;memory&nbsp;error&nbsp;would&nbsp;be&nbsp;to&nbsp;come&nbsp;up&nbsp;with&lt;br&gt;<br>
+another&nbsp;test&nbsp;in&nbsp;this&nbsp;class&nbsp;that&nbsp;fails.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Thanks,&lt;br&gt;<br>
+Mark&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+On&nbsp;Sat,&nbsp;Jul&nbsp;12,&nbsp;2014&nbsp;at&nbsp;1:54&nbsp;PM,&nbsp;Burkhard&nbsp;H?ckendorf&nbsp;&lt;&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;mailto:burkhard.hoeckendorf@web.de&quot;&nbsp;target=&quot;_blank&quot;&gt;burkhard.hoeckendorf@web.de&lt;/a&gt;&gt;&nbsp;wrote:&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;<br>
+Dear&nbsp;List,&lt;br&gt;<br>
+&lt;br&gt;<br>
+First&nbsp;of&nbsp;all&nbsp;thanks&nbsp;for&nbsp;developing&nbsp;scifio&nbsp;and&nbsp;doing&nbsp;that&nbsp;open&nbsp;source.&nbsp;I&lt;br&gt;<br>
+have&nbsp;started&nbsp;to&nbsp;use&nbsp;it&nbsp;with&nbsp;ImageJ,&nbsp;since&nbsp;Fiji&nbsp;now&nbsp;offers&nbsp;the&nbsp;option&nbsp;to&nbsp;use&lt;br&gt;<br>
+it.&nbsp;Having&nbsp;said&nbsp;that,&nbsp;I&nbsp;may&nbsp;also&nbsp;have&nbsp;stumbled&nbsp;upon&nbsp;an&nbsp;issue.&nbsp;I&#39;m&nbsp;unsure&lt;br&gt;<br>
+when&nbsp;(or&nbsp;whether)&nbsp;scifio&nbsp;releases&nbsp;the&nbsp;corresponding&nbsp;memory&nbsp;after&nbsp;images&nbsp;are&lt;br&gt;<br>
+closed.&nbsp;To&nbsp;look&nbsp;at&nbsp;this&nbsp;in&nbsp;a&nbsp;somewhat&nbsp;systematic&nbsp;way,&nbsp;I&nbsp;ran&nbsp;a&nbsp;macro&nbsp;(see&lt;br&gt;<br>
+below)&nbsp;to&nbsp;repeatedly&nbsp;open&nbsp;and&nbsp;close&nbsp;a&nbsp;3GB&nbsp;single&nbsp;file&nbsp;uncompressed&nbsp;TIFF&lt;br&gt;<br>
+stack&nbsp;(2048x2048x367x16bits)&nbsp;and&nbsp;record&nbsp;some&nbsp;performance&nbsp;stats&nbsp;along&nbsp;the&lt;br&gt;<br>
+way.&nbsp;I&nbsp;ran&nbsp;this&nbsp;using&nbsp;a&nbsp;new&nbsp;download&nbsp;of&nbsp;Fiji.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Here&nbsp;are&nbsp;the&nbsp;results&nbsp;with&nbsp;scifio&nbsp;disabled:&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp;11450&nbsp;ms&nbsp;to&nbsp;open&nbsp;files&lt;br&gt;<br>
+ &nbsp; 28578184&nbsp;mem&nbsp;before&nbsp;opening&nbsp;files&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;tel:9282667288&quot;&nbsp;value=&quot;+19282667288&quot;&nbsp;target=&quot;_blank&quot;&gt;9282667288&lt;/a&gt; mem&nbsp;after&nbsp;opening&nbsp;files&lt;br&gt;<br>
+9272732560&nbsp;mem&nbsp;after&nbsp;opening&nbsp;files&nbsp;&amp;&nbsp;GC&lt;br&gt;<br>
+9272780080&nbsp;mem&nbsp;after&nbsp;closing&nbsp;files&lt;br&gt;<br>
+ &nbsp; 24220936&nbsp;mem&nbsp;after&nbsp;closing&nbsp;files&nbsp;&amp;&nbsp;GC&lt;br&gt;<br>
+&lt;br&gt;<br>
+And&nbsp;here&nbsp;with&nbsp;scifio&nbsp;enabled:&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; 43715&nbsp;ms&nbsp;to&nbsp;open&nbsp;files&lt;br&gt;<br>
+ &nbsp; &nbsp;26765224&nbsp;mem&nbsp;before&nbsp;opening&nbsp;files&lt;br&gt;<br>
+10517954400&nbsp;mem&nbsp;after&nbsp;opening&nbsp;files&lt;br&gt;<br>
+ &nbsp;9327459480&nbsp;mem&nbsp;after&nbsp;opening&nbsp;files&nbsp;&amp;&nbsp;GC&lt;br&gt;<br>
+ &nbsp;9327506440&nbsp;mem&nbsp;after&nbsp;closing&nbsp;files&lt;br&gt;<br>
+ &nbsp;&lt;a&nbsp;href=&quot;tel:9314822896&quot;&nbsp;value=&quot;+19314822896&quot;&nbsp;target=&quot;_blank&quot;&gt;9314822896&lt;/a&gt;&nbsp;mem&nbsp;after&nbsp;closing&nbsp;files&nbsp;&amp;&nbsp;GC&lt;br&gt;<br>
+&lt;br&gt;<br>
+I&nbsp;have&nbsp;also&nbsp;checked,&nbsp;whether&nbsp;memory&nbsp;is&nbsp;freed&nbsp;a&nbsp;couple&nbsp;of&nbsp;minutes&nbsp;after&lt;br&gt;<br>
+closing&nbsp;the&nbsp;images,&nbsp;which&nbsp;does&nbsp;not&nbsp;appear&nbsp;to&nbsp;be&nbsp;the&nbsp;case.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Note&nbsp;that&nbsp;scifio&nbsp;is&nbsp;also&nbsp;somewhat&nbsp;slower,&nbsp;although&nbsp;I&#39;m&nbsp;a&nbsp;bit&nbsp;hesitant&nbsp;to&lt;br&gt;<br>
+bring&nbsp;this&nbsp;up,&nbsp;because&nbsp;it&nbsp;is&nbsp;still&nbsp;relatively&nbsp;young&nbsp;and&nbsp;I&nbsp;can&nbsp;see&nbsp;a&nbsp;few&lt;br&gt;<br>
+&quot;improve&nbsp;...&nbsp;performance&quot;&nbsp;tickets&nbsp;in&nbsp;the&nbsp;issue&nbsp;tracker.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Below&nbsp;is&nbsp;the&nbsp;macro.&lt;br&gt;<br>
+Kind&nbsp;regards,&lt;br&gt;<br>
+Burkhard&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+nOpenTimes&nbsp;=&nbsp;3;&lt;br&gt;<br>
+file&nbsp;=&nbsp;&quot;/path/to/stack&quot;;&lt;br&gt;<br>
+&lt;br&gt;<br>
+run(&quot;Collect&nbsp;Garbage&quot;);&lt;br&gt;<br>
+memBefore&nbsp;=&nbsp;IJ.currentMemory();&lt;br&gt;<br>
+&lt;br&gt;<br>
+msToOpen&nbsp;=&nbsp;getTime();&lt;br&gt;<br>
+for&nbsp;(i=0;&nbsp;i&lt;nOpenTimes;&nbsp;i+=1)&nbsp;{&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; open(file);&lt;br&gt;<br>
+}&lt;br&gt;<br>
+msToOpen&nbsp;=&nbsp;getTime()&nbsp;-&nbsp;msToOpen;&lt;br&gt;<br>
+&lt;br&gt;<br>
+memFilesOpen&nbsp;=&nbsp;IJ.currentMemory();&lt;br&gt;<br>
+run(&quot;Collect&nbsp;Garbage&quot;);&lt;br&gt;<br>
+memFilesOpenGC&nbsp;=&nbsp;IJ.currentMemory();&lt;br&gt;<br>
+&lt;br&gt;<br>
+for&nbsp;(i=0;&nbsp;i&lt;nOpenTimes;&nbsp;i+=1)&nbsp;{&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; close();&lt;br&gt;<br>
+}&lt;br&gt;<br>
+memFilesClosed&nbsp;=&nbsp;IJ.currentMemory();&lt;br&gt;<br>
+run(&quot;Collect&nbsp;Garbage&quot;);&lt;br&gt;<br>
+memFilesClosedGC&nbsp;=&nbsp;IJ.currentMemory();&lt;br&gt;<br>
+&lt;br&gt;<br>
+print(&quot;&quot;+&nbsp;msToOpen&nbsp;+&nbsp;&quot;&nbsp;ms&nbsp;to&nbsp;open&nbsp;files&quot;);&lt;br&gt;<br>
+print(&quot;&quot;+&nbsp;memBefore&nbsp;+&nbsp;&quot;&nbsp;mem&nbsp;before&nbsp;opening&nbsp;files&quot;);&lt;br&gt;<br>
+print(&quot;&quot;+&nbsp;memFilesOpen&nbsp;+&nbsp;&quot;&nbsp;mem&nbsp;after&nbsp;opening&nbsp;files&quot;);&lt;br&gt;<br>
+print(&quot;&quot;+&nbsp;memFilesOpenGC&nbsp;+&nbsp;&quot;&nbsp;mem&nbsp;after&nbsp;opening&nbsp;files&nbsp;&amp;&nbsp;GC&quot;);&lt;br&gt;<br>
+print(&quot;&quot;+&nbsp;memFilesClosed&nbsp;+&nbsp;&quot;&nbsp;mem&nbsp;after&nbsp;closing&nbsp;files&quot;);&lt;br&gt;<br>
+print(&quot;&quot;+&nbsp;memFilesClosedGC&nbsp;+&nbsp;&quot;&nbsp;mem&nbsp;after&nbsp;closing&nbsp;files&nbsp;&amp;&nbsp;GC&quot;);&lt;br&gt;<br>
+&lt;br&gt;<br>
+______________________________&lt;u&gt;&lt;/u&gt;_________________&lt;br&gt;<br>
+SCIFIO&nbsp;mailing&nbsp;list&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;mailto:SCIFIO@scif.io&quot;&nbsp;target=&quot;_blank&quot;&gt;SCIFIO@scif.io&lt;/a&gt;&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;http://scif.io/mailman/listinfo/scifio&quot;&nbsp;target=&quot;_blank&quot;&gt;http://scif.io/mailman/&lt;u&gt;&lt;/u&gt;listinfo/scifio&lt;/a&gt;&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;/blockquote&gt;<br>
+--------------&nbsp;next&nbsp;part&nbsp;--------------&lt;br&gt;<br>
+An&nbsp;HTML&nbsp;attachment&nbsp;was&nbsp;scrubbed...&lt;br&gt;<br>
+URL:&nbsp;&lt;&lt;a&nbsp;href=&quot;http://scif.io/pipermail/scifio/attachments/20140714/0e7f8b63/attachment-0001.html&quot;&nbsp;target=&quot;_blank&quot;&gt;http://scif.io/pipermail/&lt;u&gt;&lt;/u&gt;scifio/attachments/20140714/&lt;u&gt;&lt;/u&gt;0e7f8b63/attachment-0001.html&lt;/a&gt;&gt;&lt;br&gt;<br>
+<br>
+<br>
+&lt;br&gt;<br>
+------------------------------&lt;br&gt;<br>
+&lt;br&gt;<br>
+______________________________&lt;u&gt;&lt;/u&gt;_________________&lt;br&gt;<br>
+SCIFIO&nbsp;mailing&nbsp;list&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;mailto:SCIFIO@scif.io&quot;&nbsp;target=&quot;_blank&quot;&gt;SCIFIO@scif.io&lt;/a&gt;&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;http://scif.io/mailman/listinfo/scifio&quot;&nbsp;target=&quot;_blank&quot;&gt;http://scif.io/mailman/&lt;u&gt;&lt;/u&gt;listinfo/scifio&lt;/a&gt;&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+End&nbsp;of&nbsp;SCIFIO&nbsp;Digest,&nbsp;Vol&nbsp;11,&nbsp;Issue&nbsp;5&lt;br&gt;<br>
+******************************&lt;u&gt;&lt;/u&gt;*******&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;/blockquote&gt;<br>
+&lt;br&gt;<br>
+______________________________&lt;u&gt;&lt;/u&gt;_________________&lt;br&gt;<br>
+SCIFIO&nbsp;mailing&nbsp;list&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;mailto:SCIFIO@scif.io&quot;&nbsp;target=&quot;_blank&quot;&gt;SCIFIO@scif.io&lt;/a&gt;&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;http://scif.io/mailman/listinfo/scifio&quot;&nbsp;target=&quot;_blank&quot;&gt;http://scif.io/mailman/&lt;u&gt;&lt;/u&gt;listinfo/scifio&lt;/a&gt;&lt;br&gt;<br>
+&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+
+</tt>

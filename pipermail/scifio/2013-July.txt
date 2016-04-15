@@ -1,0 +1,1956 @@
+From ctrueden at wisc.edu  Tue Jul  2 14:10:15 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Tue, 2 Jul 2013 14:10:15 -0500
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To: <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+References: <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+Message-ID: <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+
+Hi Kedar,
+
+Thanks for exercising the new code! I have a question, and a request.
+First, the latter: we just created a new SCIFIO mailing list (CCed). Can we
+please discuss these technical issues on the public list from now on?
+
+And my question: can you describe your need for the Vector image type in a
+little more detail? From my (limited) perspective,  using an ITK vector
+image type to represent multiple N-D Image blocks, which may have differing
+dimensional extents, is fundamentally unworkable. Is there another way to
+accomplish your goals?
+
+Regards,
+Curtis
+
+P.S. I spoke with Mark this morning about a possible alternative approach
+for requesting specific Images (i.e. "series") from the SCIFIO ImageIO:
+encode it in the file path string somehow.
+ On Jul 2, 2013 1:24 PM, "Kedar Grama" <gbkedar at gmail.com> wrote:
+
+> Hi Mark,
+>
+> Thanks for working on the vector image support through SCIFIO. I have
+> shared a nrrd file with you on google docs. When I read it with the
+> ITK-SCIFIO reader it switches the bit ordering LittleEndian/BigEndian
+> whereas if I read it in Fiji or build ITK without SCIFIO it is read
+> properly. To test this you can use the ITK reader example and write the
+> image out as a tiff while building with/without SCIFIO.
+>
+> Thanks,
+>
+> -Kedar
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/c56edaf2/attachment.html>
+
+From matt.mccormick at kitware.com  Tue Jul  2 14:24:25 2013
+From: matt.mccormick at kitware.com (Matt McCormick)
+Date: Tue, 02 Jul 2013 19:24:25 +0000
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+Message-ID: <CALzTN-RRjdyCb4LhZi+w3KCn+K38GXu-OKN1BgTc2Pwv4MRLWA@mail.gmail.com>
+
+Hi guys,
+
+Some additional thoughts -- as Curtis points out, if the Size of the
+3D images from different time points is not the same, a 4D VectorImage
+will not work well.  In ITKv4, a new set of classes [1] was added to
+handle time explicitly.  However, it has its own IO framework [2], so
+it may take some thought on how ITK-SCIFIO could mesh with this
+cleanly.
+
+Thanks,
+Matt
+
+[1] http://www.itk.org/Doxygen/html/group__Group-Video.html
+[2] http://www.itk.org/Doxygen/html/group__ITKVideoIO.html
+
+On Tue, Jul 2, 2013 at 7:10 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+> Hi Kedar,
+>
+> Thanks for exercising the new code! I have a question, and a request. First,
+> the latter: we just created a new SCIFIO mailing list (CCed). Can we please
+> discuss these technical issues on the public list from now on?
+>
+> And my question: can you describe your need for the Vector image type in a
+> little more detail? From my (limited) perspective,  using an ITK vector
+> image type to represent multiple N-D Image blocks, which may have differing
+> dimensional extents, is fundamentally unworkable. Is there another way to
+> accomplish your goals?
+>
+> Regards,
+> Curtis
+>
+> P.S. I spoke with Mark this morning about a possible alternative approach
+> for requesting specific Images (i.e. "series") from the SCIFIO ImageIO:
+> encode it in the file path string somehow.
+>
+> On Jul 2, 2013 1:24 PM, "Kedar Grama" <gbkedar at gmail.com> wrote:
+>>
+>> Hi Mark,
+>>
+>> Thanks for working on the vector image support through SCIFIO. I have
+>> shared a nrrd file with you on google docs. When I read it with the
+>> ITK-SCIFIO reader it switches the bit ordering LittleEndian/BigEndian
+>> whereas if I read it in Fiji or build ITK without SCIFIO it is read
+>> properly. To test this you can use the ITK reader example and write the
+>> image out as a tiff while building with/without SCIFIO.
+>>
+>> Thanks,
+>>
+>> -Kedar
+
+
+
+From hinerm at gmail.com  Tue Jul  2 14:37:28 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Tue, 02 Jul 2013 14:37:28 -0500
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+Message-ID: <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+
+Curtis - sorry, I actually did the @ encoding to extract specific series
+earlier today (here<https://github.com/scifio/scifio-itk-bridge/commit/3661b29b2faac4a71f5a625efc882010e84f4a23>)
+and replied by private e-mail.
+
+Kedar can correct me if I'm wrong, but I don't think he explicitly needs
+Vector images types... he just wants the ability to convert a complete
+multi-series dataset, and VectorImages seemed to make the most sense to me.
+
+You could convert each series in a dataset right now with the @ encoding,
+but in Kedar's use case (a 65GB .czi file) the entire image gets parsed
+each time a single series is read and written (of 580 total).. so the time
+requirements don't seem reasonable. Also, a new file is created for each
+series (although these could be consolidated with the
+ImageSeriesReader<http://www.itk.org/Doxygen/html/classitk_1_1ImageSeriesReader.html>I
+think).
+
+But even in Kedar's case where I believe all the 3D images are the same
+size, the creation of a VectorImage is not simple, because - from what I
+understand - it expects all the pixel 0 values, then all the pixel 1
+values, etc... which is basically worst-case-scenario when getting data one
+series at a time from Bio-Formats (and piped back in arbitrary chunks with
+no concept of pixel delimitation, at that).
+
+If there was an itk::image type that expects series to appear sequentially
+though, that would at least be a start..
+
+
+On Tue, Jul 2, 2013 at 2:10 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+
+> Hi Kedar,
+>
+> Thanks for exercising the new code! I have a question, and a request.
+> First, the latter: we just created a new SCIFIO mailing list (CCed). Can we
+> please discuss these technical issues on the public list from now on?
+>
+> And my question: can you describe your need for the Vector image type in a
+> little more detail? From my (limited) perspective,  using an ITK vector
+> image type to represent multiple N-D Image blocks, which may have differing
+> dimensional extents, is fundamentally unworkable. Is there another way to
+> accomplish your goals?
+>
+> Regards,
+> Curtis
+>
+> P.S. I spoke with Mark this morning about a possible alternative approach
+> for requesting specific Images (i.e. "series") from the SCIFIO ImageIO:
+> encode it in the file path string somehow.
+>  On Jul 2, 2013 1:24 PM, "Kedar Grama" <gbkedar at gmail.com> wrote:
+>
+>> Hi Mark,
+>>
+>> Thanks for working on the vector image support through SCIFIO. I have
+>> shared a nrrd file with you on google docs. When I read it with the
+>> ITK-SCIFIO reader it switches the bit ordering LittleEndian/BigEndian
+>> whereas if I read it in Fiji or build ITK without SCIFIO it is read
+>> properly. To test this you can use the ITK reader example and write the
+>> image out as a tiff while building with/without SCIFIO.
+>>
+>> Thanks,
+>>
+>> -Kedar
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/fde54836/attachment.html>
+
+From gbkedar at gmail.com  Tue Jul  2 14:46:58 2013
+From: gbkedar at gmail.com (Kedar Grama)
+Date: Tue, 02 Jul 2013 15:46:58 -0400
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+ <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+Message-ID: <CAHfi=GKzZOjcNBTcY8SFCsOTiUTetsyJHMsy4VPQW_V_qJGWCA@mail.gmail.com>
+
+Hi Mark,
+
+You are right. I just need access to the multi-series dataset and the
+vector image. However each series is not a 3D image. They are 11 2D-images
+of the same scene at different wavelengths.
+
+Thanks,
+
+-Kedar
+
+
+On Tue, Jul 2, 2013 at 3:37 PM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Curtis - sorry, I actually did the @ encoding to extract specific series
+> earlier today (here<https://github.com/scifio/scifio-itk-bridge/commit/3661b29b2faac4a71f5a625efc882010e84f4a23>)
+> and replied by private e-mail.
+>
+> Kedar can correct me if I'm wrong, but I don't think he explicitly needs
+> Vector images types... he just wants the ability to convert a complete
+> multi-series dataset, and VectorImages seemed to make the most sense to me.
+>
+> You could convert each series in a dataset right now with the @ encoding,
+> but in Kedar's use case (a 65GB .czi file) the entire image gets parsed
+> each time a single series is read and written (of 580 total).. so the time
+> requirements don't seem reasonable. Also, a new file is created for each
+> series (although these could be consolidated with the ImageSeriesReader<http://www.itk.org/Doxygen/html/classitk_1_1ImageSeriesReader.html>I think).
+>
+> But even in Kedar's case where I believe all the 3D images are the same
+> size, the creation of a VectorImage is not simple, because - from what I
+> understand - it expects all the pixel 0 values, then all the pixel 1
+> values, etc... which is basically worst-case-scenario when getting data one
+> series at a time from Bio-Formats (and piped back in arbitrary chunks with
+> no concept of pixel delimitation, at that).
+>
+> If there was an itk::image type that expects series to appear sequentially
+> though, that would at least be a start..
+>
+>
+> On Tue, Jul 2, 2013 at 2:10 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+>
+>> Hi Kedar,
+>>
+>> Thanks for exercising the new code! I have a question, and a request.
+>> First, the latter: we just created a new SCIFIO mailing list (CCed). Can we
+>> please discuss these technical issues on the public list from now on?
+>>
+>> And my question: can you describe your need for the Vector image type in
+>> a little more detail? From my (limited) perspective,  using an ITK vector
+>> image type to represent multiple N-D Image blocks, which may have differing
+>> dimensional extents, is fundamentally unworkable. Is there another way to
+>> accomplish your goals?
+>>
+>> Regards,
+>> Curtis
+>>
+>> P.S. I spoke with Mark this morning about a possible alternative approach
+>> for requesting specific Images (i.e. "series") from the SCIFIO ImageIO:
+>> encode it in the file path string somehow.
+>>  On Jul 2, 2013 1:24 PM, "Kedar Grama" <gbkedar at gmail.com> wrote:
+>>
+>>> Hi Mark,
+>>>
+>>> Thanks for working on the vector image support through SCIFIO. I have
+>>> shared a nrrd file with you on google docs. When I read it with the
+>>> ITK-SCIFIO reader it switches the bit ordering LittleEndian/BigEndian
+>>> whereas if I read it in Fiji or build ITK without SCIFIO it is read
+>>> properly. To test this you can use the ITK reader example and write the
+>>> image out as a tiff while building with/without SCIFIO.
+>>>
+>>> Thanks,
+>>>
+>>> -Kedar
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/a360687e/attachment.html>
+
+From gbkedar at gmail.com  Tue Jul  2 14:50:02 2013
+From: gbkedar at gmail.com (Kedar Grama)
+Date: Tue, 02 Jul 2013 15:50:02 -0400
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CAHfi=GKzZOjcNBTcY8SFCsOTiUTetsyJHMsy4VPQW_V_qJGWCA@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+ <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+ <CAHfi=GKzZOjcNBTcY8SFCsOTiUTetsyJHMsy4VPQW_V_qJGWCA@mail.gmail.com>
+Message-ID: <CAHfi=GKtAOnEGJv8DPBDonOGU0tA6Yrx0KnK9jcebni8kftPgA@mail.gmail.com>
+
+Hi Mark,
+
+You are right. I just need access to the multi-series dataset and the
+vector image seems like the logical choice. However each series is not a 3D
+image. They are 11 2D-images of the same scene at different wavelengths.
+
+Thanks,
+
+-Kedar
+
+
+On Tue, Jul 2, 2013 at 3:46 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+
+> Hi Mark,
+>
+> You are right. I just need access to the multi-series dataset and the
+> vector image. However each series is not a 3D image. They are 11 2D-images
+> of the same scene at different wavelengths.
+>
+> Thanks,
+>
+> -Kedar
+>
+>
+> On Tue, Jul 2, 2013 at 3:37 PM, Mark Hiner <hinerm at gmail.com> wrote:
+>
+>> Curtis - sorry, I actually did the @ encoding to extract specific series
+>> earlier today (here<https://github.com/scifio/scifio-itk-bridge/commit/3661b29b2faac4a71f5a625efc882010e84f4a23>)
+>> and replied by private e-mail.
+>>
+>> Kedar can correct me if I'm wrong, but I don't think he explicitly needs
+>> Vector images types... he just wants the ability to convert a complete
+>> multi-series dataset, and VectorImages seemed to make the most sense to me.
+>>
+>> You could convert each series in a dataset right now with the @ encoding,
+>> but in Kedar's use case (a 65GB .czi file) the entire image gets parsed
+>> each time a single series is read and written (of 580 total).. so the time
+>> requirements don't seem reasonable. Also, a new file is created for each
+>> series (although these could be consolidated with the ImageSeriesReader<http://www.itk.org/Doxygen/html/classitk_1_1ImageSeriesReader.html>I think).
+>>
+>> But even in Kedar's case where I believe all the 3D images are the same
+>> size, the creation of a VectorImage is not simple, because - from what I
+>> understand - it expects all the pixel 0 values, then all the pixel 1
+>> values, etc... which is basically worst-case-scenario when getting data one
+>> series at a time from Bio-Formats (and piped back in arbitrary chunks with
+>> no concept of pixel delimitation, at that).
+>>
+>> If there was an itk::image type that expects series to appear
+>> sequentially though, that would at least be a start..
+>>
+>>
+>> On Tue, Jul 2, 2013 at 2:10 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+>>
+>>> Hi Kedar,
+>>>
+>>> Thanks for exercising the new code! I have a question, and a request.
+>>> First, the latter: we just created a new SCIFIO mailing list (CCed). Can we
+>>> please discuss these technical issues on the public list from now on?
+>>>
+>>> And my question: can you describe your need for the Vector image type in
+>>> a little more detail? From my (limited) perspective,  using an ITK vector
+>>> image type to represent multiple N-D Image blocks, which may have differing
+>>> dimensional extents, is fundamentally unworkable. Is there another way to
+>>> accomplish your goals?
+>>>
+>>> Regards,
+>>> Curtis
+>>>
+>>> P.S. I spoke with Mark this morning about a possible alternative
+>>> approach for requesting specific Images (i.e. "series") from the SCIFIO
+>>> ImageIO: encode it in the file path string somehow.
+>>>  On Jul 2, 2013 1:24 PM, "Kedar Grama" <gbkedar at gmail.com> wrote:
+>>>
+>>>> Hi Mark,
+>>>>
+>>>> Thanks for working on the vector image support through SCIFIO. I have
+>>>> shared a nrrd file with you on google docs. When I read it with the
+>>>> ITK-SCIFIO reader it switches the bit ordering LittleEndian/BigEndian
+>>>> whereas if I read it in Fiji or build ITK without SCIFIO it is read
+>>>> properly. To test this you can use the ITK reader example and write the
+>>>> image out as a tiff while building with/without SCIFIO.
+>>>>
+>>>> Thanks,
+>>>>
+>>>> -Kedar
+>>>>
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/401995ff/attachment.html>
+
+From matt.mccormick at kitware.com  Tue Jul  2 14:55:00 2013
+From: matt.mccormick at kitware.com (Matt McCormick)
+Date: Tue, 02 Jul 2013 19:55:00 +0000
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+ <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+Message-ID: <CALzTN-QS4jpC+e6oMvvu-4jFONRMGjBmRFTh5QJg-3849Z=i8A@mail.gmail.com>
+
+On Tue, Jul 2, 2013 at 7:37 PM, Mark Hiner <hinerm at gmail.com> wrote:
+> If there was an itk::image type that expects series to appear sequentially
+> though, that would at least be a start..
+
+TemporalDataObject?
+
+http://www.itk.org/Doxygen/html/classitk_1_1TemporalDataObject.html
+
+I am not too familiar with the Video framework myself, but it seems
+that a SCIFIOVideoIO class would work well here.
+
+Thanks,
+Matt
+
+
+
+From hiner at wisc.edu  Tue Jul  2 15:13:30 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Tue, 02 Jul 2013 15:13:30 -0500
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CALzTN-QS4jpC+e6oMvvu-4jFONRMGjBmRFTh5QJg-3849Z=i8A@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+ <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+ <CALzTN-QS4jpC+e6oMvvu-4jFONRMGjBmRFTh5QJg-3849Z=i8A@mail.gmail.com>
+Message-ID: <CA+B=mGo-QTXAQj8cbSSAYjgLM9C3kbx0zihAc9F_eq1TQh=9Mw@mail.gmail.com>
+
+On Tue, Jul 2, 2013 at 2:55 PM, Matt McCormick
+<matt.mccormick at kitware.com>wrote:
+
+> TemporalDataObject?
+>
+
+So is this incompatible with the ImageReaders, because it's a sibling of
+ImageBase <http://www.itk.org/Doxygen/html/classitk_1_1ImageBase.html>? Is
+there a separate VideoReader/VideoWriter class? (didn't see one in the video
+module <http://www.itk.org/Doxygen/html/group__ITKVideoCore.html>...)
+
+I don't love the idea of creating another ImageIO... but can't I just make,
+essentially, a TemporalDataObject that extends ImageBase, and specifically
+holds a list of image series?
+
+It doesn't even have to be a circular list.. it can just hold offsets into
+the data..
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/25bd79e5/attachment.html>
+
+From ctrueden at wisc.edu  Tue Jul  2 15:22:56 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Tue, 2 Jul 2013 15:22:56 -0500
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To: <CA+B=mGo-QTXAQj8cbSSAYjgLM9C3kbx0zihAc9F_eq1TQh=9Mw@mail.gmail.com>
+References: <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+	<CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+	<CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+	<CALzTN-QS4jpC+e6oMvvu-4jFONRMGjBmRFTh5QJg-3849Z=i8A@mail.gmail.com>
+	<CA+B=mGo-QTXAQj8cbSSAYjgLM9C3kbx0zihAc9F_eq1TQh=9Mw@mail.gmail.com>
+Message-ID: <CADN69ym4M_1+qRvXy=MRb5d_kj1NJPyUZhUyQGbKAviMM0PgdA@mail.gmail.com>
+
+Hi Matt,
+
+Thanks for your suggestions. To be clear, in microscopy these days, it is
+quite common to have an experiment stored as a single file (in e.g. Leica
+LIF format), which contains many loosely related N-dimensional images from
+the same experiment, but dimensionally different. So you might have, e.g.:
+
+512 x 512 (single image plane)
+768 x 512 x 12 T x 5 Z
+1024 x 1024 x 3 C x 100 T
+... etc., with very few rules or limitations on the number of images, or
+their structure.
+
+It would be great if in ITK there were a way to represent this in a general
+way. SCIFIO & Bio-Formats handle it by allowing you to specify the image
+index you want to retrieve. (From the information so far, it sounds like
+the VideoIO may not be powerful enough, and/or may not match the intended
+use case here?) What would be the best way forward to pursue such an
+enhancement?
+
+Thanks,
+Curtis
+
+
+On Tue, Jul 2, 2013 at 3:13 PM, Mark Hiner <hiner at wisc.edu> wrote:
+
+>
+> On Tue, Jul 2, 2013 at 2:55 PM, Matt McCormick <matt.mccormick at kitware.com
+> > wrote:
+>
+>> TemporalDataObject?
+>>
+>
+> So is this incompatible with the ImageReaders, because it's a sibling of
+> ImageBase <http://www.itk.org/Doxygen/html/classitk_1_1ImageBase.html>?
+> Is there a separate VideoReader/VideoWriter class? (didn't see one in the video
+> module <http://www.itk.org/Doxygen/html/group__ITKVideoCore.html>...)
+>
+> I don't love the idea of creating another ImageIO... but can't I just
+> make, essentially, a TemporalDataObject that extends ImageBase, and
+> specifically holds a list of image series?
+>
+> It doesn't even have to be a circular list.. it can just hold offsets into
+> the data..
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/4f5b257d/attachment.html>
+
+From matt.mccormick at kitware.com  Tue Jul  2 16:03:00 2013
+From: matt.mccormick at kitware.com (Matt McCormick)
+Date: Tue, 02 Jul 2013 21:03:00 +0000
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CADN69ym4M_1+qRvXy=MRb5d_kj1NJPyUZhUyQGbKAviMM0PgdA@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+ <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+ <CALzTN-QS4jpC+e6oMvvu-4jFONRMGjBmRFTh5QJg-3849Z=i8A@mail.gmail.com>
+ <CA+B=mGo-QTXAQj8cbSSAYjgLM9C3kbx0zihAc9F_eq1TQh=9Mw@mail.gmail.com>
+ <CADN69ym4M_1+qRvXy=MRb5d_kj1NJPyUZhUyQGbKAviMM0PgdA@mail.gmail.com>
+Message-ID: <CALzTN-TMGn51oc=Ggs2GvhEKGByrj4+XdOjAggR93ZqXKkyNew@mail.gmail.com>
+
+Hi Curtis and Mark,
+
+Thanks for the information.  It seems like the best path forward would
+add a new method to SCIFIOImageIO that specifies the index of the
+image to extract from the huge file (behaving just like the SCIFIO and
+Bio-format libraries).  If someone wants to process a particular
+image, they can call this method on an SCIFIOImageIO instance, then
+call SetImageIO on an ImageFileReader.
+
+If they want to process a series of the images from the file, then a
+SCIFIOVideoIO class could be created that inherits from VideoIOBase
+[1].  This class would internally use a SCIFIOImageIO instance,
+setting the image index as appropriate.  Then, the series of images
+could be processed easily with VideoFileReader [2] and
+ImageFilterToVideoFilterWrapper [3].
+
+Thanks,
+Matt
+
+[1] http://www.itk.org/Doxygen/html/classitk_1_1VideoIOBase.html
+[2] http://www.itk.org/Doxygen/html/classitk_1_1VideoFileReader.html
+[3] http://www.itk.org/Doxygen/html/classitk_1_1ImageFilterToVideoFilterWrapper.html
+
+On Tue, Jul 2, 2013 at 8:22 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+> Hi Matt,
+>
+> Thanks for your suggestions. To be clear, in microscopy these days, it is
+> quite common to have an experiment stored as a single file (in e.g. Leica
+> LIF format), which contains many loosely related N-dimensional images from
+> the same experiment, but dimensionally different. So you might have, e.g.:
+>
+> 512 x 512 (single image plane)
+> 768 x 512 x 12 T x 5 Z
+> 1024 x 1024 x 3 C x 100 T
+> ... etc., with very few rules or limitations on the number of images, or
+> their structure.
+>
+> It would be great if in ITK there were a way to represent this in a general
+> way. SCIFIO & Bio-Formats handle it by allowing you to specify the image
+> index you want to retrieve. (From the information so far, it sounds like the
+> VideoIO may not be powerful enough, and/or may not match the intended use
+> case here?) What would be the best way forward to pursue such an
+> enhancement?
+>
+> Thanks,
+> Curtis
+>
+>
+> On Tue, Jul 2, 2013 at 3:13 PM, Mark Hiner <hiner at wisc.edu> wrote:
+>>
+>>
+>> On Tue, Jul 2, 2013 at 2:55 PM, Matt McCormick
+>> <matt.mccormick at kitware.com> wrote:
+>>>
+>>> TemporalDataObject?
+>>
+>>
+>> So is this incompatible with the ImageReaders, because it's a sibling of
+>> ImageBase? Is there a separate VideoReader/VideoWriter class? (didn't see
+>> one in the video module...)
+>>
+>> I don't love the idea of creating another ImageIO... but can't I just
+>> make, essentially, a TemporalDataObject that extends ImageBase, and
+>> specifically holds a list of image series?
+>>
+>> It doesn't even have to be a circular list.. it can just hold offsets into
+>> the data..
+>
+>
+
+
+
+From ctrueden at wisc.edu  Tue Jul  2 16:31:55 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Tue, 2 Jul 2013 16:31:55 -0500
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To: <CALzTN-TMGn51oc=Ggs2GvhEKGByrj4+XdOjAggR93ZqXKkyNew@mail.gmail.com>
+References: <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+	<CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+	<CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+	<CALzTN-QS4jpC+e6oMvvu-4jFONRMGjBmRFTh5QJg-3849Z=i8A@mail.gmail.com>
+	<CA+B=mGo-QTXAQj8cbSSAYjgLM9C3kbx0zihAc9F_eq1TQh=9Mw@mail.gmail.com>
+	<CADN69ym4M_1+qRvXy=MRb5d_kj1NJPyUZhUyQGbKAviMM0PgdA@mail.gmail.com>
+	<CALzTN-TMGn51oc=Ggs2GvhEKGByrj4+XdOjAggR93ZqXKkyNew@mail.gmail.com>
+Message-ID: <CADN69ykXuPaZm=UPwdYMTdhBRAFmjti-GDLw2sUGd75F7nRuJA@mail.gmail.com>
+
+Hi Matt,
+
+Thanks for the ideas! We'll keep you posted on our progress.
+
+Regards,
+Curtis
+
+
+On Tue, Jul 2, 2013 at 4:03 PM, Matt McCormick
+<matt.mccormick at kitware.com>wrote:
+
+> Hi Curtis and Mark,
+>
+> Thanks for the information.  It seems like the best path forward would
+> add a new method to SCIFIOImageIO that specifies the index of the
+> image to extract from the huge file (behaving just like the SCIFIO and
+> Bio-format libraries).  If someone wants to process a particular
+> image, they can call this method on an SCIFIOImageIO instance, then
+> call SetImageIO on an ImageFileReader.
+>
+> If they want to process a series of the images from the file, then a
+> SCIFIOVideoIO class could be created that inherits from VideoIOBase
+> [1].  This class would internally use a SCIFIOImageIO instance,
+> setting the image index as appropriate.  Then, the series of images
+> could be processed easily with VideoFileReader [2] and
+> ImageFilterToVideoFilterWrapper [3].
+>
+> Thanks,
+> Matt
+>
+> [1] http://www.itk.org/Doxygen/html/classitk_1_1VideoIOBase.html
+> [2] http://www.itk.org/Doxygen/html/classitk_1_1VideoFileReader.html
+> [3]
+> http://www.itk.org/Doxygen/html/classitk_1_1ImageFilterToVideoFilterWrapper.html
+>
+> On Tue, Jul 2, 2013 at 8:22 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+> > Hi Matt,
+> >
+> > Thanks for your suggestions. To be clear, in microscopy these days, it is
+> > quite common to have an experiment stored as a single file (in e.g. Leica
+> > LIF format), which contains many loosely related N-dimensional images
+> from
+> > the same experiment, but dimensionally different. So you might have,
+> e.g.:
+> >
+> > 512 x 512 (single image plane)
+> > 768 x 512 x 12 T x 5 Z
+> > 1024 x 1024 x 3 C x 100 T
+> > ... etc., with very few rules or limitations on the number of images, or
+> > their structure.
+> >
+> > It would be great if in ITK there were a way to represent this in a
+> general
+> > way. SCIFIO & Bio-Formats handle it by allowing you to specify the image
+> > index you want to retrieve. (From the information so far, it sounds like
+> the
+> > VideoIO may not be powerful enough, and/or may not match the intended use
+> > case here?) What would be the best way forward to pursue such an
+> > enhancement?
+> >
+> > Thanks,
+> > Curtis
+> >
+> >
+> > On Tue, Jul 2, 2013 at 3:13 PM, Mark Hiner <hiner at wisc.edu> wrote:
+> >>
+> >>
+> >> On Tue, Jul 2, 2013 at 2:55 PM, Matt McCormick
+> >> <matt.mccormick at kitware.com> wrote:
+> >>>
+> >>> TemporalDataObject?
+> >>
+> >>
+> >> So is this incompatible with the ImageReaders, because it's a sibling of
+> >> ImageBase? Is there a separate VideoReader/VideoWriter class? (didn't
+> see
+> >> one in the video module...)
+> >>
+> >> I don't love the idea of creating another ImageIO... but can't I just
+> >> make, essentially, a TemporalDataObject that extends ImageBase, and
+> >> specifically holds a list of image series?
+> >>
+> >> It doesn't even have to be a circular list.. it can just hold offsets
+> into
+> >> the data..
+> >
+> >
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/02979f18/attachment.html>
+
+From michael.zinsmaier at gmx.de  Fri Jul  5 05:35:56 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Fri, 05 Jul 2013 12:35:56 +0200
+Subject: [ImageJ-devel] Scifion Img Opener some question
+Message-ID: <51D6A18C.3050004@gmx.de>
+
+Hi together, hi Mark,
+
+I just started to convert the Knime Image Processing "Image Reader" code 
+to the new implementation of ImgOpener (scifio). However I am a bit 
+stuck could you help me with a few questions regarding the code changes?
+
+- the imglib2.io ImgOpener has some static methods like
+         - public static AxisType[] getDimTypes(final IFormatReader r)
+         - public static double[] getCalibration(final IFormatReader r)
+
+     how can I retriev such data using the scifio ImgOpener?
+
+-  the scifio ImgOpener's openImg method has the parameters Reader, 
+type, factory and options
+         - What is the relationship between Reader and IFormatReader (we 
+used previously the openImg(IFormatReader ...) method)
+         - can we retriev the type from a Reader (IFormatReader x; 
+ImgIOUtils.makeType(x.getPixelType())
+
+- ImgOptions supports the selection of an interval (thanks for that). 
+But for our implementation we would need a multiple interval selection 
+(e.g. the first 10 frames of a video and the last 10). Is it possible to 
+change the implementation such that ImgOption accepts an array of intervals?
+
+Thanks in advance
+best regards,
+Michael
+
+_______________________________________________
+ImageJ-devel mailing list
+ImageJ-devel at imagej.net
+http://imagej.net/mailman/listinfo/imagej-devel
+
+
+
+From hiner at wisc.edu  Mon Jul  8 09:22:57 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Mon, 08 Jul 2013 09:22:57 -0500
+Subject: [ImageJ-devel] Scifion Img Opener some question
+In-Reply-To: <51D6A18C.3050004@gmx.de>
+References: <51D6A18C.3050004@gmx.de>
+Message-ID: <CA+B=mGp-aK3oVC_NxCLO3sJWtYgAT+3HAqkcuFBjQwMbd87AYw@mail.gmail.com>
+
+Hi Michael,
+
+-  the scifio ImgOpener's openImg method has the parameters Reader, type,
+> factory and options
+>         - What is the relationship between Reader and IFormatReader (we
+> used previously the openImg(IFormatReader ...) method)
+>         - can we retriev the type from a Reader (IFormatReader x;
+> ImgIOUtils.makeType(x.getPixelType())
+>
+
+ An IFormatReader<https://github.com/openmicroscopy/bioformats/blob/develop/components/scifio/src/loci/formats/IFormatReader.java>is
+the loci.formats base reader interface that performs all the metadata
+parsing and pixel reading in Bio-Formats. In SCIFIO, the process is split
+into components such as a
+Parser<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Parser.java>or
+Reader<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Reader.java>.
+So the io.scif Reader API is a subset of the IFormatReader, specifically
+for opening pixels.
+
+The pixel type (and all other metadata) is now stored in the i
+o.scif.Metadata<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Metadata.java>class,
+which gets attached to the Reader.
+Reader#getMetadata()<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Reader.java#L171>will
+get the current Metadata object, and
+Metadata#getPixelType(int)<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Metadata.java#L154>gets
+the pixel type for a specified image index (the Metadata class is at
+the dataset level; if you have a single image in your dataset, you can just
+get getPixelType(0) ).
+
+Note that the entry point for all these classes is the
+Format<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Format.java>.
+Also, there is a series of
+tutorials<https://github.com/scifio/scifio/tree/master/tutorials>introducing
+the SCIFIO API, with a specific focus on transitioning from the
+loci.formats API.
+
+- the imglib2.io ImgOpener has some static methods like
+>         - public static AxisType[] getDimTypes(final IFormatReader r)
+>         - public static double[] getCalibration(final IFormatReader r)
+>
+    how can I retriev such data using the scifio ImgOpener?
+>
+
+ The io.scif.Metadata class uses the imglib AxisTypes natively to manage
+dimensions. So if you have an io.scif.Reader, you can get its Metadata (as
+above) and call
+Metadata#getAxes(int)<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Metadata.java#L268>for
+the desired image index within the dataset.
+
+Unfortunately the calibration data is more complicated right now. In the
+loci.formats API, all the calibration information was tracked as physical
+pixel sizes in the MetadataStore. So in the io.scif API, that metadata only
+exists in the OMEMetadata<https://github.com/scifio/bioformats/blob/scifio/components/ome-xml/src/ome/xml/meta/OMEMetadata.java>class,
+which requires our fork of Bio-Formats on the classpath, and then
+requires Translation<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/services/TranslatorService.java>.
+Our intention is to make calibration information a fundamental part of the
+axes representation, but I'm not sure if this will be at the ImgLib or
+SCIFIO level.
+
+One way or another, it will eventually be part of the io.scif.Metadata API.
+
+- ImgOptions supports the selection of an interval (thanks for that). But
+> for our implementation we would need a multiple interval selection (e.g.
+> the first 10 frames of a video and the last 10). Is it possible to change
+> the implementation such that ImgOption accepts an array of intervals?
+>
+
+Yes, this is a very good idea and I'm sorry it wasn't available from the
+beginning. I've added an issue to track
+it<https://github.com/scifio/scifio/issues/14>and will get it into the
+next SCIFIO release.
+
+Thanks for the feedback and let me know if you have any more questions.
+
+- Mark
+
+P.S. there is now a SCIFIO mailing list (scifio at scif.io, copied) for
+scifio-specific issues
+
+
+On Fri, Jul 5, 2013 at 5:35 AM, Michael Zinsmaier
+<michael.zinsmaier at gmx.de>wrote:
+
+> Hi together, hi Mark,
+>
+> I just started to convert the Knime Image Processing "Image Reader" code
+> to the new implementation of ImgOpener (scifio). However I am a bit stuck
+> could you help me with a few questions regarding the code changes?
+>
+> - the imglib2.io ImgOpener has some static methods like
+>         - public static AxisType[] getDimTypes(final IFormatReader r)
+>         - public static double[] getCalibration(final IFormatReader r)
+>
+>     how can I retriev such data using the scifio ImgOpener?
+>
+> -  the scifio ImgOpener's openImg method has the parameters Reader, type,
+> factory and options
+>         - What is the relationship between Reader and IFormatReader (we
+> used previously the openImg(IFormatReader ...) method)
+>         - can we retriev the type from a Reader (IFormatReader x;
+> ImgIOUtils.makeType(x.**getPixelType())
+>
+> - ImgOptions supports the selection of an interval (thanks for that). But
+> for our implementation we would need a multiple interval selection (e.g.
+> the first 10 frames of a video and the last 10). Is it possible to change
+> the implementation such that ImgOption accepts an array of intervals?
+>
+> Thanks in advance
+> best regards,
+> Michael
+>
+> ______________________________**_________________
+> ImageJ-devel mailing list
+> ImageJ-devel at imagej.net
+> http://imagej.net/mailman/**listinfo/imagej-devel<http://imagej.net/mailman/listinfo/imagej-devel>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130708/7b2182cc/attachment.html>
+
+From hiner at wisc.edu  Sat Jul 13 13:18:52 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Sat, 13 Jul 2013 13:18:52 -0500
+Subject: SCIFIO Bio-Formats compatibility layer, 1.0.0
+Message-ID: <CA+B=mGrfvwdo5YrsiL7HyLdE8Cxx38bSWrA+my7v+MmFCCUiYQ@mail.gmail.com>
+
+Hi all,
+
+ Just wanted to briefly announce the 1.0.0 release of the SCIFIO-Bio-Formats
+compatibility layer <https://github.com/scifio/scifio-bf-compat>.
+
+ This project is designed to allow Bio-Formats formats to be used by
+SCIFIO-based applications until these proprietary readers are converted to
+true SCIFIO formats.
+
+ Adding the scifio-bf-compat jar to your classpath should be sufficient to
+make all the Bio-Formats formats available to SCIFIO.
+
+ Note that, although SCIFIO is BSD licensed, scifio-bf-compat is GPL, per
+Bio-Formats itself.
+
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130713/e0c249e4/attachment.html>
+
+From ctrueden at wisc.edu  Mon Jul 22 11:56:42 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 22 Jul 2013 11:56:42 -0500
+Subject: Fwd: 16bit-TIF with LUT
+In-Reply-To: <C512B07482680242AB0B9BD54A033E97990E@MLBXv04.nih.gov>
+References: <4923F394-E525-4AB3-8A15-A66B8F6C719A@nih.gov>
+	<C512B07482680242AB0B9BD54A033E97990E@MLBXv04.nih.gov>
+Message-ID: <CADN69ynG=-XzQ9LJ-5FuuXzjnmBt6HyZ8p4Hi-jWHwSZGLRR=g@mail.gmail.com>
+
+Hi Mark,
+
+> The ImageJ 1.48a daily build includes color LUTS when saving 16-bit
+> images in TIFF format.
+
+We will need to extend SCIFIO's TIFF support to handle this new feature of
+ImageJ. The SCIFIO TIFF writer will also need to preserve 16-bit color
+tables somehow -- depending on the implementation, we could use the same
+format, or a different one.
+
+Regards,
+Curtis
+
+
+---------- Forwarded message ----------
+From: Rasband, Wayne (NIH/NIMH) [E] <rasbandw at mail.nih.gov>
+Date: Sun, Jul 21, 2013 at 11:00 PM
+Subject: Re: 16bit-TIF with LUT
+To: IMAGEJ at list.nih.gov
+
+
+On Jul 21, 2013, at 11:53 PM, Peter Haub wrote:
+
+> Dear List,
+>
+> in ImageJ (1.47q)  I saved a 16bit TIF image with a Color-LUT.
+>
+> Problem: The LUT will not be stored in the file.
+>
+> Is the a something I can fix with configuration settings, is this
+> feature not supported in ImageJ or is this not an option in the TIF
+format?
+
+The ImageJ 1.48a daily build includes color LUTS when saving 16-bit images
+in TIFF format.
+
+-wayne
+
+--
+ImageJ mailing list: http://imagej.nih.gov/ij/list.html
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130722/df8ee901/attachment.html>
+
+From hiner at wisc.edu  Fri Jul 26 14:33:31 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Fri, 26 Jul 2013 14:33:31 -0500
+Subject: SCIFIO status, 7/26
+Message-ID: <CA+B=mGpdCgBriaMCbuPss7vJ7=cdEyJbYWxhHyfM-0sLCL_=pQ@mail.gmail.com>
+
+Hi all,
+
+  This week I released SCIFIO-0.4.1
+beta<https://github.com/scifio/scifio/tree/pom-scifio-0.4.1>.
+The primary new feature is a
+CacheService.<https://github.com/scifio/scifio/blob/pom-scifio-0.4.1/scifio/src/main/java/io/scif/img/cell/cache/CacheService.java>This
+allows the
+SCIFIOCellImg<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/cell/SCIFIOCellImg.java>,
+which lazily loads image planes, to store modified planes in a temporary
+disk store, allowing dataset-wide modifications and computation on images
+that won't fit in memory (without modifying the original data). The caching
+mechanism is fairly automated, although the API is there for direct control
+if desired. For the most part you should just need to access the
+CacheService if you want to change its configuration.
+
+  For those interested in Bio-Formats/SCIFIO in C++, the latest development
+branch of ITK <git://itk.org/ITK.git>was also updated this week with bug
+fixes and improvements to the
+itkSCIFIOImageIO<https://github.com/scifio/scifio-imageio>.
+Most significantly is that the ImageIO can now read multi-series datasets.
+Also, the itkSCIFIOImageIOTest<https://github.com/scifio/scifio-imageio/blob/master/test/itkSCIFIOImageIOTest.cxx>was
+refactored into a more robust command line tool, capable of accepting
+a
+variety of configuration flags (that normally would require
+re-compilation). Note that the itkSCIFIOImageIO still uses Bio-Formats, and
+not the SCIFIO beta. That's something we'll update after SCIFIO 1.0.0.
+
+  The next release will likely be 0.5.0, and will include the conversion of
+SCIFIO Metadata structures to be truly N-dimensional, as well as further
+improvements to the CacheService, logging, and more.
+
+Regards,
+Mark
+
+<https://github.com/scifio/scifio/blob/pom-scifio-0.4.1/scifio/src/main/java/io/scif/img/cell/cache/CacheService.java>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130726/74de895a/attachment.html>
+
+From ctrueden at wisc.edu  Tue Jul  2 14:10:15 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Tue, 2 Jul 2013 14:10:15 -0500
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To: <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+References: <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+Message-ID: <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+
+Hi Kedar,
+
+Thanks for exercising the new code! I have a question, and a request.
+First, the latter: we just created a new SCIFIO mailing list (CCed). Can we
+please discuss these technical issues on the public list from now on?
+
+And my question: can you describe your need for the Vector image type in a
+little more detail? From my (limited) perspective,  using an ITK vector
+image type to represent multiple N-D Image blocks, which may have differing
+dimensional extents, is fundamentally unworkable. Is there another way to
+accomplish your goals?
+
+Regards,
+Curtis
+
+P.S. I spoke with Mark this morning about a possible alternative approach
+for requesting specific Images (i.e. "series") from the SCIFIO ImageIO:
+encode it in the file path string somehow.
+ On Jul 2, 2013 1:24 PM, "Kedar Grama" <gbkedar at gmail.com> wrote:
+
+> Hi Mark,
+>
+> Thanks for working on the vector image support through SCIFIO. I have
+> shared a nrrd file with you on google docs. When I read it with the
+> ITK-SCIFIO reader it switches the bit ordering LittleEndian/BigEndian
+> whereas if I read it in Fiji or build ITK without SCIFIO it is read
+> properly. To test this you can use the ITK reader example and write the
+> image out as a tiff while building with/without SCIFIO.
+>
+> Thanks,
+>
+> -Kedar
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/c56edaf2/attachment-0001.html>
+
+From matt.mccormick at kitware.com  Tue Jul  2 14:24:25 2013
+From: matt.mccormick at kitware.com (Matt McCormick)
+Date: Tue, 02 Jul 2013 19:24:25 +0000
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+Message-ID: <CALzTN-RRjdyCb4LhZi+w3KCn+K38GXu-OKN1BgTc2Pwv4MRLWA@mail.gmail.com>
+
+Hi guys,
+
+Some additional thoughts -- as Curtis points out, if the Size of the
+3D images from different time points is not the same, a 4D VectorImage
+will not work well.  In ITKv4, a new set of classes [1] was added to
+handle time explicitly.  However, it has its own IO framework [2], so
+it may take some thought on how ITK-SCIFIO could mesh with this
+cleanly.
+
+Thanks,
+Matt
+
+[1] http://www.itk.org/Doxygen/html/group__Group-Video.html
+[2] http://www.itk.org/Doxygen/html/group__ITKVideoIO.html
+
+On Tue, Jul 2, 2013 at 7:10 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+> Hi Kedar,
+>
+> Thanks for exercising the new code! I have a question, and a request. First,
+> the latter: we just created a new SCIFIO mailing list (CCed). Can we please
+> discuss these technical issues on the public list from now on?
+>
+> And my question: can you describe your need for the Vector image type in a
+> little more detail? From my (limited) perspective,  using an ITK vector
+> image type to represent multiple N-D Image blocks, which may have differing
+> dimensional extents, is fundamentally unworkable. Is there another way to
+> accomplish your goals?
+>
+> Regards,
+> Curtis
+>
+> P.S. I spoke with Mark this morning about a possible alternative approach
+> for requesting specific Images (i.e. "series") from the SCIFIO ImageIO:
+> encode it in the file path string somehow.
+>
+> On Jul 2, 2013 1:24 PM, "Kedar Grama" <gbkedar at gmail.com> wrote:
+>>
+>> Hi Mark,
+>>
+>> Thanks for working on the vector image support through SCIFIO. I have
+>> shared a nrrd file with you on google docs. When I read it with the
+>> ITK-SCIFIO reader it switches the bit ordering LittleEndian/BigEndian
+>> whereas if I read it in Fiji or build ITK without SCIFIO it is read
+>> properly. To test this you can use the ITK reader example and write the
+>> image out as a tiff while building with/without SCIFIO.
+>>
+>> Thanks,
+>>
+>> -Kedar
+
+
+
+From hinerm at gmail.com  Tue Jul  2 14:37:28 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Tue, 02 Jul 2013 14:37:28 -0500
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+Message-ID: <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+
+Curtis - sorry, I actually did the @ encoding to extract specific series
+earlier today (here<https://github.com/scifio/scifio-itk-bridge/commit/3661b29b2faac4a71f5a625efc882010e84f4a23>)
+and replied by private e-mail.
+
+Kedar can correct me if I'm wrong, but I don't think he explicitly needs
+Vector images types... he just wants the ability to convert a complete
+multi-series dataset, and VectorImages seemed to make the most sense to me.
+
+You could convert each series in a dataset right now with the @ encoding,
+but in Kedar's use case (a 65GB .czi file) the entire image gets parsed
+each time a single series is read and written (of 580 total).. so the time
+requirements don't seem reasonable. Also, a new file is created for each
+series (although these could be consolidated with the
+ImageSeriesReader<http://www.itk.org/Doxygen/html/classitk_1_1ImageSeriesReader.html>I
+think).
+
+But even in Kedar's case where I believe all the 3D images are the same
+size, the creation of a VectorImage is not simple, because - from what I
+understand - it expects all the pixel 0 values, then all the pixel 1
+values, etc... which is basically worst-case-scenario when getting data one
+series at a time from Bio-Formats (and piped back in arbitrary chunks with
+no concept of pixel delimitation, at that).
+
+If there was an itk::image type that expects series to appear sequentially
+though, that would at least be a start..
+
+
+On Tue, Jul 2, 2013 at 2:10 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+
+> Hi Kedar,
+>
+> Thanks for exercising the new code! I have a question, and a request.
+> First, the latter: we just created a new SCIFIO mailing list (CCed). Can we
+> please discuss these technical issues on the public list from now on?
+>
+> And my question: can you describe your need for the Vector image type in a
+> little more detail? From my (limited) perspective,  using an ITK vector
+> image type to represent multiple N-D Image blocks, which may have differing
+> dimensional extents, is fundamentally unworkable. Is there another way to
+> accomplish your goals?
+>
+> Regards,
+> Curtis
+>
+> P.S. I spoke with Mark this morning about a possible alternative approach
+> for requesting specific Images (i.e. "series") from the SCIFIO ImageIO:
+> encode it in the file path string somehow.
+>  On Jul 2, 2013 1:24 PM, "Kedar Grama" <gbkedar at gmail.com> wrote:
+>
+>> Hi Mark,
+>>
+>> Thanks for working on the vector image support through SCIFIO. I have
+>> shared a nrrd file with you on google docs. When I read it with the
+>> ITK-SCIFIO reader it switches the bit ordering LittleEndian/BigEndian
+>> whereas if I read it in Fiji or build ITK without SCIFIO it is read
+>> properly. To test this you can use the ITK reader example and write the
+>> image out as a tiff while building with/without SCIFIO.
+>>
+>> Thanks,
+>>
+>> -Kedar
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/fde54836/attachment-0001.html>
+
+From gbkedar at gmail.com  Tue Jul  2 14:46:58 2013
+From: gbkedar at gmail.com (Kedar Grama)
+Date: Tue, 02 Jul 2013 15:46:58 -0400
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+ <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+Message-ID: <CAHfi=GKzZOjcNBTcY8SFCsOTiUTetsyJHMsy4VPQW_V_qJGWCA@mail.gmail.com>
+
+Hi Mark,
+
+You are right. I just need access to the multi-series dataset and the
+vector image. However each series is not a 3D image. They are 11 2D-images
+of the same scene at different wavelengths.
+
+Thanks,
+
+-Kedar
+
+
+On Tue, Jul 2, 2013 at 3:37 PM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Curtis - sorry, I actually did the @ encoding to extract specific series
+> earlier today (here<https://github.com/scifio/scifio-itk-bridge/commit/3661b29b2faac4a71f5a625efc882010e84f4a23>)
+> and replied by private e-mail.
+>
+> Kedar can correct me if I'm wrong, but I don't think he explicitly needs
+> Vector images types... he just wants the ability to convert a complete
+> multi-series dataset, and VectorImages seemed to make the most sense to me.
+>
+> You could convert each series in a dataset right now with the @ encoding,
+> but in Kedar's use case (a 65GB .czi file) the entire image gets parsed
+> each time a single series is read and written (of 580 total).. so the time
+> requirements don't seem reasonable. Also, a new file is created for each
+> series (although these could be consolidated with the ImageSeriesReader<http://www.itk.org/Doxygen/html/classitk_1_1ImageSeriesReader.html>I think).
+>
+> But even in Kedar's case where I believe all the 3D images are the same
+> size, the creation of a VectorImage is not simple, because - from what I
+> understand - it expects all the pixel 0 values, then all the pixel 1
+> values, etc... which is basically worst-case-scenario when getting data one
+> series at a time from Bio-Formats (and piped back in arbitrary chunks with
+> no concept of pixel delimitation, at that).
+>
+> If there was an itk::image type that expects series to appear sequentially
+> though, that would at least be a start..
+>
+>
+> On Tue, Jul 2, 2013 at 2:10 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+>
+>> Hi Kedar,
+>>
+>> Thanks for exercising the new code! I have a question, and a request.
+>> First, the latter: we just created a new SCIFIO mailing list (CCed). Can we
+>> please discuss these technical issues on the public list from now on?
+>>
+>> And my question: can you describe your need for the Vector image type in
+>> a little more detail? From my (limited) perspective,  using an ITK vector
+>> image type to represent multiple N-D Image blocks, which may have differing
+>> dimensional extents, is fundamentally unworkable. Is there another way to
+>> accomplish your goals?
+>>
+>> Regards,
+>> Curtis
+>>
+>> P.S. I spoke with Mark this morning about a possible alternative approach
+>> for requesting specific Images (i.e. "series") from the SCIFIO ImageIO:
+>> encode it in the file path string somehow.
+>>  On Jul 2, 2013 1:24 PM, "Kedar Grama" <gbkedar at gmail.com> wrote:
+>>
+>>> Hi Mark,
+>>>
+>>> Thanks for working on the vector image support through SCIFIO. I have
+>>> shared a nrrd file with you on google docs. When I read it with the
+>>> ITK-SCIFIO reader it switches the bit ordering LittleEndian/BigEndian
+>>> whereas if I read it in Fiji or build ITK without SCIFIO it is read
+>>> properly. To test this you can use the ITK reader example and write the
+>>> image out as a tiff while building with/without SCIFIO.
+>>>
+>>> Thanks,
+>>>
+>>> -Kedar
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/a360687e/attachment-0001.html>
+
+From gbkedar at gmail.com  Tue Jul  2 14:50:02 2013
+From: gbkedar at gmail.com (Kedar Grama)
+Date: Tue, 02 Jul 2013 15:50:02 -0400
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CAHfi=GKzZOjcNBTcY8SFCsOTiUTetsyJHMsy4VPQW_V_qJGWCA@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+ <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+ <CAHfi=GKzZOjcNBTcY8SFCsOTiUTetsyJHMsy4VPQW_V_qJGWCA@mail.gmail.com>
+Message-ID: <CAHfi=GKtAOnEGJv8DPBDonOGU0tA6Yrx0KnK9jcebni8kftPgA@mail.gmail.com>
+
+Hi Mark,
+
+You are right. I just need access to the multi-series dataset and the
+vector image seems like the logical choice. However each series is not a 3D
+image. They are 11 2D-images of the same scene at different wavelengths.
+
+Thanks,
+
+-Kedar
+
+
+On Tue, Jul 2, 2013 at 3:46 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+
+> Hi Mark,
+>
+> You are right. I just need access to the multi-series dataset and the
+> vector image. However each series is not a 3D image. They are 11 2D-images
+> of the same scene at different wavelengths.
+>
+> Thanks,
+>
+> -Kedar
+>
+>
+> On Tue, Jul 2, 2013 at 3:37 PM, Mark Hiner <hinerm at gmail.com> wrote:
+>
+>> Curtis - sorry, I actually did the @ encoding to extract specific series
+>> earlier today (here<https://github.com/scifio/scifio-itk-bridge/commit/3661b29b2faac4a71f5a625efc882010e84f4a23>)
+>> and replied by private e-mail.
+>>
+>> Kedar can correct me if I'm wrong, but I don't think he explicitly needs
+>> Vector images types... he just wants the ability to convert a complete
+>> multi-series dataset, and VectorImages seemed to make the most sense to me.
+>>
+>> You could convert each series in a dataset right now with the @ encoding,
+>> but in Kedar's use case (a 65GB .czi file) the entire image gets parsed
+>> each time a single series is read and written (of 580 total).. so the time
+>> requirements don't seem reasonable. Also, a new file is created for each
+>> series (although these could be consolidated with the ImageSeriesReader<http://www.itk.org/Doxygen/html/classitk_1_1ImageSeriesReader.html>I think).
+>>
+>> But even in Kedar's case where I believe all the 3D images are the same
+>> size, the creation of a VectorImage is not simple, because - from what I
+>> understand - it expects all the pixel 0 values, then all the pixel 1
+>> values, etc... which is basically worst-case-scenario when getting data one
+>> series at a time from Bio-Formats (and piped back in arbitrary chunks with
+>> no concept of pixel delimitation, at that).
+>>
+>> If there was an itk::image type that expects series to appear
+>> sequentially though, that would at least be a start..
+>>
+>>
+>> On Tue, Jul 2, 2013 at 2:10 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+>>
+>>> Hi Kedar,
+>>>
+>>> Thanks for exercising the new code! I have a question, and a request.
+>>> First, the latter: we just created a new SCIFIO mailing list (CCed). Can we
+>>> please discuss these technical issues on the public list from now on?
+>>>
+>>> And my question: can you describe your need for the Vector image type in
+>>> a little more detail? From my (limited) perspective,  using an ITK vector
+>>> image type to represent multiple N-D Image blocks, which may have differing
+>>> dimensional extents, is fundamentally unworkable. Is there another way to
+>>> accomplish your goals?
+>>>
+>>> Regards,
+>>> Curtis
+>>>
+>>> P.S. I spoke with Mark this morning about a possible alternative
+>>> approach for requesting specific Images (i.e. "series") from the SCIFIO
+>>> ImageIO: encode it in the file path string somehow.
+>>>  On Jul 2, 2013 1:24 PM, "Kedar Grama" <gbkedar at gmail.com> wrote:
+>>>
+>>>> Hi Mark,
+>>>>
+>>>> Thanks for working on the vector image support through SCIFIO. I have
+>>>> shared a nrrd file with you on google docs. When I read it with the
+>>>> ITK-SCIFIO reader it switches the bit ordering LittleEndian/BigEndian
+>>>> whereas if I read it in Fiji or build ITK without SCIFIO it is read
+>>>> properly. To test this you can use the ITK reader example and write the
+>>>> image out as a tiff while building with/without SCIFIO.
+>>>>
+>>>> Thanks,
+>>>>
+>>>> -Kedar
+>>>>
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/401995ff/attachment-0001.html>
+
+From matt.mccormick at kitware.com  Tue Jul  2 14:55:00 2013
+From: matt.mccormick at kitware.com (Matt McCormick)
+Date: Tue, 02 Jul 2013 19:55:00 +0000
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+ <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+Message-ID: <CALzTN-QS4jpC+e6oMvvu-4jFONRMGjBmRFTh5QJg-3849Z=i8A@mail.gmail.com>
+
+On Tue, Jul 2, 2013 at 7:37 PM, Mark Hiner <hinerm at gmail.com> wrote:
+> If there was an itk::image type that expects series to appear sequentially
+> though, that would at least be a start..
+
+TemporalDataObject?
+
+http://www.itk.org/Doxygen/html/classitk_1_1TemporalDataObject.html
+
+I am not too familiar with the Video framework myself, but it seems
+that a SCIFIOVideoIO class would work well here.
+
+Thanks,
+Matt
+
+
+
+From hiner at wisc.edu  Tue Jul  2 15:13:30 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Tue, 02 Jul 2013 15:13:30 -0500
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CALzTN-QS4jpC+e6oMvvu-4jFONRMGjBmRFTh5QJg-3849Z=i8A@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+ <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+ <CALzTN-QS4jpC+e6oMvvu-4jFONRMGjBmRFTh5QJg-3849Z=i8A@mail.gmail.com>
+Message-ID: <CA+B=mGo-QTXAQj8cbSSAYjgLM9C3kbx0zihAc9F_eq1TQh=9Mw@mail.gmail.com>
+
+On Tue, Jul 2, 2013 at 2:55 PM, Matt McCormick
+<matt.mccormick at kitware.com>wrote:
+
+> TemporalDataObject?
+>
+
+So is this incompatible with the ImageReaders, because it's a sibling of
+ImageBase <http://www.itk.org/Doxygen/html/classitk_1_1ImageBase.html>? Is
+there a separate VideoReader/VideoWriter class? (didn't see one in the video
+module <http://www.itk.org/Doxygen/html/group__ITKVideoCore.html>...)
+
+I don't love the idea of creating another ImageIO... but can't I just make,
+essentially, a TemporalDataObject that extends ImageBase, and specifically
+holds a list of image series?
+
+It doesn't even have to be a circular list.. it can just hold offsets into
+the data..
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/25bd79e5/attachment-0001.html>
+
+From ctrueden at wisc.edu  Tue Jul  2 15:22:56 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Tue, 2 Jul 2013 15:22:56 -0500
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To: <CA+B=mGo-QTXAQj8cbSSAYjgLM9C3kbx0zihAc9F_eq1TQh=9Mw@mail.gmail.com>
+References: <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+	<CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+	<CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+	<CALzTN-QS4jpC+e6oMvvu-4jFONRMGjBmRFTh5QJg-3849Z=i8A@mail.gmail.com>
+	<CA+B=mGo-QTXAQj8cbSSAYjgLM9C3kbx0zihAc9F_eq1TQh=9Mw@mail.gmail.com>
+Message-ID: <CADN69ym4M_1+qRvXy=MRb5d_kj1NJPyUZhUyQGbKAviMM0PgdA@mail.gmail.com>
+
+Hi Matt,
+
+Thanks for your suggestions. To be clear, in microscopy these days, it is
+quite common to have an experiment stored as a single file (in e.g. Leica
+LIF format), which contains many loosely related N-dimensional images from
+the same experiment, but dimensionally different. So you might have, e.g.:
+
+512 x 512 (single image plane)
+768 x 512 x 12 T x 5 Z
+1024 x 1024 x 3 C x 100 T
+... etc., with very few rules or limitations on the number of images, or
+their structure.
+
+It would be great if in ITK there were a way to represent this in a general
+way. SCIFIO & Bio-Formats handle it by allowing you to specify the image
+index you want to retrieve. (From the information so far, it sounds like
+the VideoIO may not be powerful enough, and/or may not match the intended
+use case here?) What would be the best way forward to pursue such an
+enhancement?
+
+Thanks,
+Curtis
+
+
+On Tue, Jul 2, 2013 at 3:13 PM, Mark Hiner <hiner at wisc.edu> wrote:
+
+>
+> On Tue, Jul 2, 2013 at 2:55 PM, Matt McCormick <matt.mccormick at kitware.com
+> > wrote:
+>
+>> TemporalDataObject?
+>>
+>
+> So is this incompatible with the ImageReaders, because it's a sibling of
+> ImageBase <http://www.itk.org/Doxygen/html/classitk_1_1ImageBase.html>?
+> Is there a separate VideoReader/VideoWriter class? (didn't see one in the video
+> module <http://www.itk.org/Doxygen/html/group__ITKVideoCore.html>...)
+>
+> I don't love the idea of creating another ImageIO... but can't I just
+> make, essentially, a TemporalDataObject that extends ImageBase, and
+> specifically holds a list of image series?
+>
+> It doesn't even have to be a circular list.. it can just hold offsets into
+> the data..
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/4f5b257d/attachment-0001.html>
+
+From matt.mccormick at kitware.com  Tue Jul  2 16:03:00 2013
+From: matt.mccormick at kitware.com (Matt McCormick)
+Date: Tue, 02 Jul 2013 21:03:00 +0000
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To:  <CADN69ym4M_1+qRvXy=MRb5d_kj1NJPyUZhUyQGbKAviMM0PgdA@mail.gmail.com>
+References:  <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+ <CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+ <CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+ <CALzTN-QS4jpC+e6oMvvu-4jFONRMGjBmRFTh5QJg-3849Z=i8A@mail.gmail.com>
+ <CA+B=mGo-QTXAQj8cbSSAYjgLM9C3kbx0zihAc9F_eq1TQh=9Mw@mail.gmail.com>
+ <CADN69ym4M_1+qRvXy=MRb5d_kj1NJPyUZhUyQGbKAviMM0PgdA@mail.gmail.com>
+Message-ID: <CALzTN-TMGn51oc=Ggs2GvhEKGByrj4+XdOjAggR93ZqXKkyNew@mail.gmail.com>
+
+Hi Curtis and Mark,
+
+Thanks for the information.  It seems like the best path forward would
+add a new method to SCIFIOImageIO that specifies the index of the
+image to extract from the huge file (behaving just like the SCIFIO and
+Bio-format libraries).  If someone wants to process a particular
+image, they can call this method on an SCIFIOImageIO instance, then
+call SetImageIO on an ImageFileReader.
+
+If they want to process a series of the images from the file, then a
+SCIFIOVideoIO class could be created that inherits from VideoIOBase
+[1].  This class would internally use a SCIFIOImageIO instance,
+setting the image index as appropriate.  Then, the series of images
+could be processed easily with VideoFileReader [2] and
+ImageFilterToVideoFilterWrapper [3].
+
+Thanks,
+Matt
+
+[1] http://www.itk.org/Doxygen/html/classitk_1_1VideoIOBase.html
+[2] http://www.itk.org/Doxygen/html/classitk_1_1VideoFileReader.html
+[3] http://www.itk.org/Doxygen/html/classitk_1_1ImageFilterToVideoFilterWrapper.html
+
+On Tue, Jul 2, 2013 at 8:22 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+> Hi Matt,
+>
+> Thanks for your suggestions. To be clear, in microscopy these days, it is
+> quite common to have an experiment stored as a single file (in e.g. Leica
+> LIF format), which contains many loosely related N-dimensional images from
+> the same experiment, but dimensionally different. So you might have, e.g.:
+>
+> 512 x 512 (single image plane)
+> 768 x 512 x 12 T x 5 Z
+> 1024 x 1024 x 3 C x 100 T
+> ... etc., with very few rules or limitations on the number of images, or
+> their structure.
+>
+> It would be great if in ITK there were a way to represent this in a general
+> way. SCIFIO & Bio-Formats handle it by allowing you to specify the image
+> index you want to retrieve. (From the information so far, it sounds like the
+> VideoIO may not be powerful enough, and/or may not match the intended use
+> case here?) What would be the best way forward to pursue such an
+> enhancement?
+>
+> Thanks,
+> Curtis
+>
+>
+> On Tue, Jul 2, 2013 at 3:13 PM, Mark Hiner <hiner at wisc.edu> wrote:
+>>
+>>
+>> On Tue, Jul 2, 2013 at 2:55 PM, Matt McCormick
+>> <matt.mccormick at kitware.com> wrote:
+>>>
+>>> TemporalDataObject?
+>>
+>>
+>> So is this incompatible with the ImageReaders, because it's a sibling of
+>> ImageBase? Is there a separate VideoReader/VideoWriter class? (didn't see
+>> one in the video module...)
+>>
+>> I don't love the idea of creating another ImageIO... but can't I just
+>> make, essentially, a TemporalDataObject that extends ImageBase, and
+>> specifically holds a list of image series?
+>>
+>> It doesn't even have to be a circular list.. it can just hold offsets into
+>> the data..
+>
+>
+
+
+
+From ctrueden at wisc.edu  Tue Jul  2 16:31:55 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Tue, 2 Jul 2013 16:31:55 -0500
+Subject: Nrrd ITK-SCIFIO Bug
+In-Reply-To: <CALzTN-TMGn51oc=Ggs2GvhEKGByrj4+XdOjAggR93ZqXKkyNew@mail.gmail.com>
+References: <CAHfi=GKM6S1Lyqw_5OcMfP7QvV9qX5V-tvmjQ9GAc7fcgWqwGg@mail.gmail.com>
+	<CADN69y=WQ-V36SqTBPzM+LLZ+rTK_SuS42pJgZOfhqR2s5kYGQ@mail.gmail.com>
+	<CA+B=mGpwKC9r-koBGXDxKYF--fVqBvgZOo3C_tk5TsGhddGy1w@mail.gmail.com>
+	<CALzTN-QS4jpC+e6oMvvu-4jFONRMGjBmRFTh5QJg-3849Z=i8A@mail.gmail.com>
+	<CA+B=mGo-QTXAQj8cbSSAYjgLM9C3kbx0zihAc9F_eq1TQh=9Mw@mail.gmail.com>
+	<CADN69ym4M_1+qRvXy=MRb5d_kj1NJPyUZhUyQGbKAviMM0PgdA@mail.gmail.com>
+	<CALzTN-TMGn51oc=Ggs2GvhEKGByrj4+XdOjAggR93ZqXKkyNew@mail.gmail.com>
+Message-ID: <CADN69ykXuPaZm=UPwdYMTdhBRAFmjti-GDLw2sUGd75F7nRuJA@mail.gmail.com>
+
+Hi Matt,
+
+Thanks for the ideas! We'll keep you posted on our progress.
+
+Regards,
+Curtis
+
+
+On Tue, Jul 2, 2013 at 4:03 PM, Matt McCormick
+<matt.mccormick at kitware.com>wrote:
+
+> Hi Curtis and Mark,
+>
+> Thanks for the information.  It seems like the best path forward would
+> add a new method to SCIFIOImageIO that specifies the index of the
+> image to extract from the huge file (behaving just like the SCIFIO and
+> Bio-format libraries).  If someone wants to process a particular
+> image, they can call this method on an SCIFIOImageIO instance, then
+> call SetImageIO on an ImageFileReader.
+>
+> If they want to process a series of the images from the file, then a
+> SCIFIOVideoIO class could be created that inherits from VideoIOBase
+> [1].  This class would internally use a SCIFIOImageIO instance,
+> setting the image index as appropriate.  Then, the series of images
+> could be processed easily with VideoFileReader [2] and
+> ImageFilterToVideoFilterWrapper [3].
+>
+> Thanks,
+> Matt
+>
+> [1] http://www.itk.org/Doxygen/html/classitk_1_1VideoIOBase.html
+> [2] http://www.itk.org/Doxygen/html/classitk_1_1VideoFileReader.html
+> [3]
+> http://www.itk.org/Doxygen/html/classitk_1_1ImageFilterToVideoFilterWrapper.html
+>
+> On Tue, Jul 2, 2013 at 8:22 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+> > Hi Matt,
+> >
+> > Thanks for your suggestions. To be clear, in microscopy these days, it is
+> > quite common to have an experiment stored as a single file (in e.g. Leica
+> > LIF format), which contains many loosely related N-dimensional images
+> from
+> > the same experiment, but dimensionally different. So you might have,
+> e.g.:
+> >
+> > 512 x 512 (single image plane)
+> > 768 x 512 x 12 T x 5 Z
+> > 1024 x 1024 x 3 C x 100 T
+> > ... etc., with very few rules or limitations on the number of images, or
+> > their structure.
+> >
+> > It would be great if in ITK there were a way to represent this in a
+> general
+> > way. SCIFIO & Bio-Formats handle it by allowing you to specify the image
+> > index you want to retrieve. (From the information so far, it sounds like
+> the
+> > VideoIO may not be powerful enough, and/or may not match the intended use
+> > case here?) What would be the best way forward to pursue such an
+> > enhancement?
+> >
+> > Thanks,
+> > Curtis
+> >
+> >
+> > On Tue, Jul 2, 2013 at 3:13 PM, Mark Hiner <hiner at wisc.edu> wrote:
+> >>
+> >>
+> >> On Tue, Jul 2, 2013 at 2:55 PM, Matt McCormick
+> >> <matt.mccormick at kitware.com> wrote:
+> >>>
+> >>> TemporalDataObject?
+> >>
+> >>
+> >> So is this incompatible with the ImageReaders, because it's a sibling of
+> >> ImageBase? Is there a separate VideoReader/VideoWriter class? (didn't
+> see
+> >> one in the video module...)
+> >>
+> >> I don't love the idea of creating another ImageIO... but can't I just
+> >> make, essentially, a TemporalDataObject that extends ImageBase, and
+> >> specifically holds a list of image series?
+> >>
+> >> It doesn't even have to be a circular list.. it can just hold offsets
+> into
+> >> the data..
+> >
+> >
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130702/02979f18/attachment-0001.html>
+
+From michael.zinsmaier at gmx.de  Fri Jul  5 05:35:56 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Fri, 05 Jul 2013 12:35:56 +0200
+Subject: [ImageJ-devel] Scifion Img Opener some question
+Message-ID: <51D6A18C.3050004@gmx.de>
+
+Hi together, hi Mark,
+
+I just started to convert the Knime Image Processing "Image Reader" code 
+to the new implementation of ImgOpener (scifio). However I am a bit 
+stuck could you help me with a few questions regarding the code changes?
+
+- the imglib2.io ImgOpener has some static methods like
+         - public static AxisType[] getDimTypes(final IFormatReader r)
+         - public static double[] getCalibration(final IFormatReader r)
+
+     how can I retriev such data using the scifio ImgOpener?
+
+-  the scifio ImgOpener's openImg method has the parameters Reader, 
+type, factory and options
+         - What is the relationship between Reader and IFormatReader (we 
+used previously the openImg(IFormatReader ...) method)
+         - can we retriev the type from a Reader (IFormatReader x; 
+ImgIOUtils.makeType(x.getPixelType())
+
+- ImgOptions supports the selection of an interval (thanks for that). 
+But for our implementation we would need a multiple interval selection 
+(e.g. the first 10 frames of a video and the last 10). Is it possible to 
+change the implementation such that ImgOption accepts an array of intervals?
+
+Thanks in advance
+best regards,
+Michael
+
+_______________________________________________
+ImageJ-devel mailing list
+ImageJ-devel at imagej.net
+http://imagej.net/mailman/listinfo/imagej-devel
+
+
+
+From hiner at wisc.edu  Mon Jul  8 09:22:57 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Mon, 08 Jul 2013 09:22:57 -0500
+Subject: [ImageJ-devel] Scifion Img Opener some question
+In-Reply-To: <51D6A18C.3050004@gmx.de>
+References: <51D6A18C.3050004@gmx.de>
+Message-ID: <CA+B=mGp-aK3oVC_NxCLO3sJWtYgAT+3HAqkcuFBjQwMbd87AYw@mail.gmail.com>
+
+Hi Michael,
+
+-  the scifio ImgOpener's openImg method has the parameters Reader, type,
+> factory and options
+>         - What is the relationship between Reader and IFormatReader (we
+> used previously the openImg(IFormatReader ...) method)
+>         - can we retriev the type from a Reader (IFormatReader x;
+> ImgIOUtils.makeType(x.getPixelType())
+>
+
+ An IFormatReader<https://github.com/openmicroscopy/bioformats/blob/develop/components/scifio/src/loci/formats/IFormatReader.java>is
+the loci.formats base reader interface that performs all the metadata
+parsing and pixel reading in Bio-Formats. In SCIFIO, the process is split
+into components such as a
+Parser<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Parser.java>or
+Reader<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Reader.java>.
+So the io.scif Reader API is a subset of the IFormatReader, specifically
+for opening pixels.
+
+The pixel type (and all other metadata) is now stored in the i
+o.scif.Metadata<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Metadata.java>class,
+which gets attached to the Reader.
+Reader#getMetadata()<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Reader.java#L171>will
+get the current Metadata object, and
+Metadata#getPixelType(int)<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Metadata.java#L154>gets
+the pixel type for a specified image index (the Metadata class is at
+the dataset level; if you have a single image in your dataset, you can just
+get getPixelType(0) ).
+
+Note that the entry point for all these classes is the
+Format<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Format.java>.
+Also, there is a series of
+tutorials<https://github.com/scifio/scifio/tree/master/tutorials>introducing
+the SCIFIO API, with a specific focus on transitioning from the
+loci.formats API.
+
+- the imglib2.io ImgOpener has some static methods like
+>         - public static AxisType[] getDimTypes(final IFormatReader r)
+>         - public static double[] getCalibration(final IFormatReader r)
+>
+    how can I retriev such data using the scifio ImgOpener?
+>
+
+ The io.scif.Metadata class uses the imglib AxisTypes natively to manage
+dimensions. So if you have an io.scif.Reader, you can get its Metadata (as
+above) and call
+Metadata#getAxes(int)<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Metadata.java#L268>for
+the desired image index within the dataset.
+
+Unfortunately the calibration data is more complicated right now. In the
+loci.formats API, all the calibration information was tracked as physical
+pixel sizes in the MetadataStore. So in the io.scif API, that metadata only
+exists in the OMEMetadata<https://github.com/scifio/bioformats/blob/scifio/components/ome-xml/src/ome/xml/meta/OMEMetadata.java>class,
+which requires our fork of Bio-Formats on the classpath, and then
+requires Translation<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/services/TranslatorService.java>.
+Our intention is to make calibration information a fundamental part of the
+axes representation, but I'm not sure if this will be at the ImgLib or
+SCIFIO level.
+
+One way or another, it will eventually be part of the io.scif.Metadata API.
+
+- ImgOptions supports the selection of an interval (thanks for that). But
+> for our implementation we would need a multiple interval selection (e.g.
+> the first 10 frames of a video and the last 10). Is it possible to change
+> the implementation such that ImgOption accepts an array of intervals?
+>
+
+Yes, this is a very good idea and I'm sorry it wasn't available from the
+beginning. I've added an issue to track
+it<https://github.com/scifio/scifio/issues/14>and will get it into the
+next SCIFIO release.
+
+Thanks for the feedback and let me know if you have any more questions.
+
+- Mark
+
+P.S. there is now a SCIFIO mailing list (scifio at scif.io, copied) for
+scifio-specific issues
+
+
+On Fri, Jul 5, 2013 at 5:35 AM, Michael Zinsmaier
+<michael.zinsmaier at gmx.de>wrote:
+
+> Hi together, hi Mark,
+>
+> I just started to convert the Knime Image Processing "Image Reader" code
+> to the new implementation of ImgOpener (scifio). However I am a bit stuck
+> could you help me with a few questions regarding the code changes?
+>
+> - the imglib2.io ImgOpener has some static methods like
+>         - public static AxisType[] getDimTypes(final IFormatReader r)
+>         - public static double[] getCalibration(final IFormatReader r)
+>
+>     how can I retriev such data using the scifio ImgOpener?
+>
+> -  the scifio ImgOpener's openImg method has the parameters Reader, type,
+> factory and options
+>         - What is the relationship between Reader and IFormatReader (we
+> used previously the openImg(IFormatReader ...) method)
+>         - can we retriev the type from a Reader (IFormatReader x;
+> ImgIOUtils.makeType(x.**getPixelType())
+>
+> - ImgOptions supports the selection of an interval (thanks for that). But
+> for our implementation we would need a multiple interval selection (e.g.
+> the first 10 frames of a video and the last 10). Is it possible to change
+> the implementation such that ImgOption accepts an array of intervals?
+>
+> Thanks in advance
+> best regards,
+> Michael
+>
+> ______________________________**_________________
+> ImageJ-devel mailing list
+> ImageJ-devel at imagej.net
+> http://imagej.net/mailman/**listinfo/imagej-devel<http://imagej.net/mailman/listinfo/imagej-devel>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130708/7b2182cc/attachment-0001.html>
+
+From hiner at wisc.edu  Sat Jul 13 13:18:52 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Sat, 13 Jul 2013 13:18:52 -0500
+Subject: SCIFIO Bio-Formats compatibility layer, 1.0.0
+Message-ID: <CA+B=mGrfvwdo5YrsiL7HyLdE8Cxx38bSWrA+my7v+MmFCCUiYQ@mail.gmail.com>
+
+Hi all,
+
+ Just wanted to briefly announce the 1.0.0 release of the SCIFIO-Bio-Formats
+compatibility layer <https://github.com/scifio/scifio-bf-compat>.
+
+ This project is designed to allow Bio-Formats formats to be used by
+SCIFIO-based applications until these proprietary readers are converted to
+true SCIFIO formats.
+
+ Adding the scifio-bf-compat jar to your classpath should be sufficient to
+make all the Bio-Formats formats available to SCIFIO.
+
+ Note that, although SCIFIO is BSD licensed, scifio-bf-compat is GPL, per
+Bio-Formats itself.
+
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130713/e0c249e4/attachment-0001.html>
+
+From ctrueden at wisc.edu  Mon Jul 22 11:56:42 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 22 Jul 2013 11:56:42 -0500
+Subject: Fwd: 16bit-TIF with LUT
+In-Reply-To: <C512B07482680242AB0B9BD54A033E97990E@MLBXv04.nih.gov>
+References: <4923F394-E525-4AB3-8A15-A66B8F6C719A@nih.gov>
+	<C512B07482680242AB0B9BD54A033E97990E@MLBXv04.nih.gov>
+Message-ID: <CADN69ynG=-XzQ9LJ-5FuuXzjnmBt6HyZ8p4Hi-jWHwSZGLRR=g@mail.gmail.com>
+
+Hi Mark,
+
+> The ImageJ 1.48a daily build includes color LUTS when saving 16-bit
+> images in TIFF format.
+
+We will need to extend SCIFIO's TIFF support to handle this new feature of
+ImageJ. The SCIFIO TIFF writer will also need to preserve 16-bit color
+tables somehow -- depending on the implementation, we could use the same
+format, or a different one.
+
+Regards,
+Curtis
+
+
+---------- Forwarded message ----------
+From: Rasband, Wayne (NIH/NIMH) [E] <rasbandw at mail.nih.gov>
+Date: Sun, Jul 21, 2013 at 11:00 PM
+Subject: Re: 16bit-TIF with LUT
+To: IMAGEJ at list.nih.gov
+
+
+On Jul 21, 2013, at 11:53 PM, Peter Haub wrote:
+
+> Dear List,
+>
+> in ImageJ (1.47q)  I saved a 16bit TIF image with a Color-LUT.
+>
+> Problem: The LUT will not be stored in the file.
+>
+> Is the a something I can fix with configuration settings, is this
+> feature not supported in ImageJ or is this not an option in the TIF
+format?
+
+The ImageJ 1.48a daily build includes color LUTS when saving 16-bit images
+in TIFF format.
+
+-wayne
+
+--
+ImageJ mailing list: http://imagej.nih.gov/ij/list.html
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130722/df8ee901/attachment-0001.html>
+
+From hiner at wisc.edu  Fri Jul 26 14:33:31 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Fri, 26 Jul 2013 14:33:31 -0500
+Subject: SCIFIO status, 7/26
+Message-ID: <CA+B=mGpdCgBriaMCbuPss7vJ7=cdEyJbYWxhHyfM-0sLCL_=pQ@mail.gmail.com>
+
+Hi all,
+
+  This week I released SCIFIO-0.4.1
+beta<https://github.com/scifio/scifio/tree/pom-scifio-0.4.1>.
+The primary new feature is a
+CacheService.<https://github.com/scifio/scifio/blob/pom-scifio-0.4.1/scifio/src/main/java/io/scif/img/cell/cache/CacheService.java>This
+allows the
+SCIFIOCellImg<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/cell/SCIFIOCellImg.java>,
+which lazily loads image planes, to store modified planes in a temporary
+disk store, allowing dataset-wide modifications and computation on images
+that won't fit in memory (without modifying the original data). The caching
+mechanism is fairly automated, although the API is there for direct control
+if desired. For the most part you should just need to access the
+CacheService if you want to change its configuration.
+
+  For those interested in Bio-Formats/SCIFIO in C++, the latest development
+branch of ITK <git://itk.org/ITK.git>was also updated this week with bug
+fixes and improvements to the
+itkSCIFIOImageIO<https://github.com/scifio/scifio-imageio>.
+Most significantly is that the ImageIO can now read multi-series datasets.
+Also, the itkSCIFIOImageIOTest<https://github.com/scifio/scifio-imageio/blob/master/test/itkSCIFIOImageIOTest.cxx>was
+refactored into a more robust command line tool, capable of accepting
+a
+variety of configuration flags (that normally would require
+re-compilation). Note that the itkSCIFIOImageIO still uses Bio-Formats, and
+not the SCIFIO beta. That's something we'll update after SCIFIO 1.0.0.
+
+  The next release will likely be 0.5.0, and will include the conversion of
+SCIFIO Metadata structures to be truly N-dimensional, as well as further
+improvements to the CacheService, logging, and more.
+
+Regards,
+Mark
+
+<https://github.com/scifio/scifio/blob/pom-scifio-0.4.1/scifio/src/main/java/io/scif/img/cell/cache/CacheService.java>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130726/74de895a/attachment-0001.html>
+

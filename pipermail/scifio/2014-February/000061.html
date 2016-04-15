@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Contributing a new writer plugin
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Contributing%20a%20new%20writer%20plugin&In-Reply-To=%3CCA%2BB%3DmGp6aeVUKMaXTuc1ipk72nN7K2oiOOCNKqEjBFw1WMtPZg%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Contributing a new writer plugin</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Contributing%20a%20new%20writer%20plugin&In-Reply-To=%3CCA%2BB%3DmGp6aeVUKMaXTuc1ipk72nN7K2oiOOCNKqEjBFw1WMtPZg%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Contributing a new writer plugin">hiner at wisc.edu
+       </A><BR>
+    <I>Thu Feb 27 08:15:18 CST 2014</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Brian,
+
+I'm also working on incorporating this into the Bio-Formats writer, so if
+&gt;<i> anyone here has advice along those lines, I'd appreciate that too!  I'll be
+</I>&gt;<i> cross-posting to their list as well when I have something working for the
+</I>&gt;<i> BioFormats/Scifio/?  Convert tool.
+</I>&gt;<i>
+</I>
+This is fantastic. I am selfishly quite excited for someone else to create
+a new SCIFIO format. :)
+
+To get you (and other developers) started, I put together a wiki
+page&lt;<A HREF="https://github.com/scifio/scifio/wiki/Adding-support-for-an-image-format">https://github.com/scifio/scifio/wiki/Adding-support-for-an-image-format</A>&gt;that
+discusses various aspects of format implementation, and provides a
+number of links to resources &amp; tutorials for both Bio-Formats and SCIFIO.
+
+The referenced tutorials are intended to take you through the format
+implementation process, but if you have any questions or run into problems,
+please feel welcome to reach out to the SCIFIO (<A HREF="http://scif.io/mailman/listinfo/scifio">scifio at scif.io</A>) or
+Bio-Formats (<A HREF="http://scif.io/mailman/listinfo/scifio">ome-devel at lists.openmicroscopy.org.uk</A>) mailing lists.
+
+Let me know if anything is unclear on the wiki page.
+
+Thanks, we look forward to your contribution!
+- Mark
+
+---------- Forwarded message ----------
+&gt;<i> From: Brian Long &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">brianl at ALLENINSTITUTE.ORG</A>&gt;
+</I>&gt;<i> To: <A HREF="http://scif.io/mailman/listinfo/scifio">IMAGEJ at LIST.NIH.GOV</A>
+</I>&gt;<i> Cc:
+</I>&gt;<i> Date: Mon, 24 Feb 2014 18:18:07 +0000
+</I>&gt;<i> Subject: Contributing a new writer plugin
+</I>&gt;<i> Greetings-
+</I>&gt;<i>
+</I>&gt;<i> I've written a new writer plugin for saving images in .v3draw format for
+</I>&gt;<i> opening in the 3D visualization program Vaa3D.  I'm new to the world of
+</I>&gt;<i> java development,  maven and git:  how do I contribute the plugin to the
+</I>&gt;<i> main ImageJ 1 repo?
+</I>&gt;<i>
+</I>&gt;<i> My plugin is built off the minimal-ij-1-plugin maven project and currently
+</I>&gt;<i> configured to place another entry in the 'Save As &gt;' menu.
+</I>&gt;<i> General Info:  Vaa3D is an open-source platform for 3D visualization and
+</I>&gt;<i> analysis of bio-images developed by Hanchuan Peng and his team (formerly
+</I>&gt;<i> Janelia Farm HHMI, currently at the Allen Institute for Brain Science).
+</I>&gt;<i>  Unlike the previous Vaa3d writer plugin that stored the whole image as a
+</I>&gt;<i> variable before writing, this update writes plane-by-plane, meaning that
+</I>&gt;<i> large files can be loaded as virtual stacks and written to .v3draw.
+</I>&gt;<i>
+</I>&gt;<i> I'm also working on incorporating this into the Bio-Formats writer, so if
+</I>&gt;<i> anyone here has advice along those lines, I'd appreciate that too!  I'll be
+</I>&gt;<i> cross-posting to their list as well when I have something working for the
+</I>&gt;<i> BioFormats/Scifio/?  Convert tool.
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> --
+</I>&gt;<i> ImageJ mailing list: <A HREF="http://imagej.nih.gov/ij/list.html">http://imagej.nih.gov/ij/list.html</A>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20140227/5dac03e0/attachment.html">http://scif.io/pipermail/scifio/attachments/20140227/5dac03e0/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

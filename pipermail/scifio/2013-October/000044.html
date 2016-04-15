@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Error reading a 32-bit nrrd image via ITK
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Error%20reading%20a%2032-bit%20nrrd%20image%20via%20ITK&In-Reply-To=%3CCA%2BB%3DmGr%2Bm4hh5NM1r_RPOfQcAzmkyvbN%2BAs-%3DB3pzV%3DwNM%2Bxmw%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000043.html">
+   <LINK REL="Next"  HREF="000045.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Error reading a 32-bit nrrd image via ITK</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Error%20reading%20a%2032-bit%20nrrd%20image%20via%20ITK&In-Reply-To=%3CCA%2BB%3DmGr%2Bm4hh5NM1r_RPOfQcAzmkyvbN%2BAs-%3DB3pzV%3DwNM%2Bxmw%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Error reading a 32-bit nrrd image via ITK">hinerm at gmail.com
+       </A><BR>
+    <I>Wed Oct 23 13:31:51 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000043.html">[SCIFIO] SCIFIO post from phsiao at cs.unc.edu requires approval
+</A></li>
+        <LI>Next message: <A HREF="000045.html">[SCIFIO] Error reading a 32-bit nrrd image via ITK
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#44">[ date ]</a>
+              <a href="thread.html#44">[ thread ]</a>
+              <a href="subject.html#44">[ subject ]</a>
+              <a href="author.html#44">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Joe,
+
+ Just wanted to let you know I identified that this is an error with
+endianness not being handled correctly in the SCIFIO ImageIO.
+
+ I fixed it locally, but found some bugs with how indexed and RGB images
+are being handled along the way. Once I have those fixed I'll update the
+SCIFIO ImageIO module and let you know.
+
+Thank you for reporting this, and for using the SCIFIO-ITK imageIO!
+
+- Mark
+
+On Tue, Oct 15, 2013 at 3:21 PM, Joe Ping-Lin Hsiao &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">phsiao at cs.unc.edu</A>&gt;wrote:
+
+&gt;<i> Hi Mark,
+</I>&gt;<i>
+</I>&gt;<i> The output dimension is 3, which is equal to the input's dimension. I also
+</I>&gt;<i> tried &quot;-d 5&quot;. Seems to me it doesn't change anything of the output. The
+</I>&gt;<i> output dimension is still 3 and the pixel values are wrong.
+</I>&gt;<i>
+</I>&gt;<i> Don't know if this helps. I put the following code after reader-&gt;Update()
+</I>&gt;<i> to check the image's min and max pixel values:
+</I>&gt;<i>
+</I>&gt;<i> typedef itk::MinimumMaximumImageCalculator &lt;ImageType&gt;
+</I>&gt;<i> ImageCalculatorFilterType;
+</I>&gt;<i> ImageCalculatorFilterType::Pointer imageCalculatorFilter =
+</I>&gt;<i> ImageCalculatorFilterType::New ();
+</I>&gt;<i> imageCalculatorFilter-&gt;SetImage(reader-&gt;GetOutput());
+</I>&gt;<i> imageCalculatorFilter-&gt;Compute();
+</I>&gt;<i> cout &lt;&lt; &quot;max intensity &quot; &lt;&lt; imageCalculatorFilter-&gt;GetMaximum() &lt;&lt; endl;
+</I>&gt;<i> cout &lt;&lt; &quot;min intensity &quot; &lt;&lt; imageCalculatorFilter-&gt;GetMinimum();
+</I>&gt;<i>
+</I>&gt;<i> The value range is the full range of 'float' from -3.49e38 to 3.49e38,
+</I>&gt;<i> which seems wrong. But if I comment out reader-&gt;SetImageIO(io), the values
+</I>&gt;<i> look reasonable.
+</I>&gt;<i>
+</I>&gt;<i> Thanks,
+</I>&gt;<i> Joe
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> On Tue, Oct 15, 2013 at 3:50 PM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hinerm at gmail.com</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> Hi Joe,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  Thanks for reporting this issue.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> reader-&gt;SetImageIO( io );
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  Just so you know, this is just disabling SCIFIO I believe, and
+</I>&gt;&gt;<i> defaulting to the ITK DICOM ImageIO.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  Does the output file have the correct number of total planes? If not,
+</I>&gt;&gt;<i> you might try &quot;-d 5&quot; just to test. The dimension order is XYCZT but XYZ are
+</I>&gt;&gt;<i> the dimensions with length more than 1. The SCIFIO plugin is supposed to
+</I>&gt;&gt;<i> account for that but it could be a bug.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  Otherwise if the dimensions are correct it could be an issue with the
+</I>&gt;&gt;<i> dataset being interleaved.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  I'll try to look at it soon.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Thanks,
+</I>&gt;&gt;<i> Mark
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> From: Joe Ping-Lin Hsiao &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">phsiao at cs.unc.edu</A>&gt;
+</I>&gt;&gt;&gt;<i> To: <A HREF="http://scif.io/mailman/listinfo/scifio">scifio at scif.io</A>
+</I>&gt;&gt;&gt;<i> Cc:
+</I>&gt;&gt;&gt;<i> Date: Tue, 15 Oct 2013 14:29:23 -0400
+</I>&gt;&gt;&gt;<i> Subject: Error reading a 32-bit nrrd image via ITK
+</I>&gt;&gt;&gt;<i> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image in
+</I>&gt;&gt;&gt;<i> my own program. The attached is a 32-bit 3-dimensional test image.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Then I used the following command to test with the SCIFIO test program:
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff -w
+</I>&gt;&gt;&gt;<i> -d 3 -t float
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> The output '123.ome.tiff' has wrong pixel values and looks wrong in
+</I>&gt;&gt;&gt;<i> ImageJ.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if I
+</I>&gt;&gt;&gt;<i> comment out this line
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i>    reader-&gt;SetImageIO( io );
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> to use ITK's default ImageIO, the output image becomes normal.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Thanks,
+</I>&gt;&gt;&gt;<i> Joe
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20131023/edbb3d66/attachment.html">http://scif.io/pipermail/scifio/attachments/20131023/edbb3d66/attachment.html</A>&gt;
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000043.html">[SCIFIO] SCIFIO post from phsiao at cs.unc.edu requires approval
+</A></li>
+	<LI>Next message: <A HREF="000045.html">[SCIFIO] Error reading a 32-bit nrrd image via ITK
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#44">[ date ]</a>
+              <a href="thread.html#44">[ thread ]</a>
+              <a href="subject.html#44">[ subject ]</a>
+              <a href="author.html#44">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

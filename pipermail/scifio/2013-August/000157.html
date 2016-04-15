@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] error pictures
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20error%20pictures&In-Reply-To=%3CCA%2BB%3DmGpm25EL4egWqx%3DDAw2CbSSwMSRzrJvC1c8FHALCFG7R6g%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000156.html">
+   <LINK REL="Next"  HREF="000159.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] error pictures</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20error%20pictures&In-Reply-To=%3CCA%2BB%3DmGpm25EL4egWqx%3DDAw2CbSSwMSRzrJvC1c8FHALCFG7R6g%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] error pictures">hinerm at gmail.com
+       </A><BR>
+    <I>Fri Aug 23 11:16:07 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000156.html">[SCIFIO] SCIFIO github issues
+</A></li>
+        <LI>Next message: <A HREF="000159.html">[SCIFIO] reuse reader for files of same format
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#157">[ date ]</a>
+              <a href="thread.html#157">[ thread ]</a>
+              <a href="subject.html#157">[ subject ]</a>
+              <a href="author.html#157">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Michael,
+
+ I decided to copy the scifio list on this after determining that it is a
+general issue with the SCIFIO framework.
+
+ The problem is that, although several formats allow pixel types &lt; 8 bits
+(e.g. the images you provided were binary images), all the
+SCIFIO/Bio-Formats framework is built around N-bytes per pixel image types.
+
+  I made an issue &lt;<A HREF="https://github.com/scifio/scifio/issues/55">https://github.com/scifio/scifio/issues/55</A>&gt; to support
+less than 1 bit per pixel... but I'm not fully sure how deep these changes
+would go. So I'll have to look into it.
+
+- Mark
+
+On Fri, Aug 23, 2013 at 5:29 AM, Michael Zinsmaier &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">michael.zinsmaier at gmx.de</A>
+&gt;<i> wrote:
+</I>
+&gt;<i> Hi Mark,
+</I>&gt;<i>
+</I>&gt;<i> I attached two images that throw a FormatException  ...byte depth 0....
+</I>&gt;<i> Should I report such pictures also via the mailing list (with/without the
+</I>&gt;<i> attachment)?
+</I>&gt;<i>
+</I>&gt;<i> Sry today seems to be not as troublefree as yesterday )-:
+</I>&gt;<i>
+</I>&gt;<i> Regards Michael
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130823/9ce03524/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20130823/9ce03524/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000156.html">[SCIFIO] SCIFIO github issues
+</A></li>
+	<LI>Next message: <A HREF="000159.html">[SCIFIO] reuse reader for files of same format
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#157">[ date ]</a>
+              <a href="thread.html#157">[ thread ]</a>
+              <a href="subject.html#157">[ subject ]</a>
+              <a href="author.html#157">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

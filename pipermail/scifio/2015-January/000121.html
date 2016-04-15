@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Block-wise reader
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Block-wise%20reader&In-Reply-To=%3C54C7D8B3.8080408%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000120.html">
+   <LINK REL="Next"  HREF="000122.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Block-wise reader</H1>
+    <B>Burkhard Hoeckendorf</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Block-wise%20reader&In-Reply-To=%3C54C7D8B3.8080408%40web.de%3E"
+       TITLE="[SCIFIO] Block-wise reader">burkhard.hoeckendorf at web.de
+       </A><BR>
+    <I>Tue Jan 27 12:28:03 CST 2015</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000120.html">[SCIFIO] Block-wise reader
+</A></li>
+        <LI>Next message: <A HREF="000122.html">[SCIFIO] Block-wise writer
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#121">[ date ]</a>
+              <a href="thread.html#121">[ thread ]</a>
+              <a href="subject.html#121">[ subject ]</a>
+              <a href="author.html#121">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Dear Mark,
+
+Thanks for clarifying this. Saves me the trouble of trying to figure 
+this out and running into dead ends. All the best with implementing 
+this, it would be an awesome feature for sure.
+
+Cheers,
+Burkhard
+
+
+On 1/27/2015 11:25 AM, Mark Hiner wrote:
+&gt;<i> Hi Burkhard,
+</I>&gt;<i>
+</I>&gt;<i>  &gt;I implemented a SCIFIO plugin
+</I>&gt;<i>
+</I>&gt;<i> Awesome! :)
+</I>&gt;<i>
+</I>&gt;&gt;<i>I am aware of the CellImg data structure, which seems to be just what I need, but I am unsure how to make use of it through a SCIFIO Reader
+</I>&gt;<i>
+</I>&gt;<i> When consuming software (e.g. ImageJ) calls into SCIFIO (e.g. via the
+</I>&gt;<i> DatasetIOService[1] or ImgOpener[2]) it passes a configuration object
+</I>&gt;<i> which can tell SCIFIO to use a CellImg[3]. So the Reader itself doesn't
+</I>&gt;<i> really need to know about the CellImg. The CellImg will use the select
+</I>&gt;<i> an appropriate Reader to open bytes on demand. However, right now you
+</I>&gt;<i> are still likely going to get bit by the default AbstractReader[4] or
+</I>&gt;<i> DataTools[5].
+</I>&gt;<i>
+</I>&gt;<i> If you worked around these hard-coded limitations, I don't think it will
+</I>&gt;<i> be possible to actually display your planes - at least in Fiji/ImageJ
+</I>&gt;<i> right now.
+</I>&gt;<i>
+</I>&gt;<i> Basically, the short answer is: there is no recommended way to do this
+</I>&gt;<i> at the moment.
+</I>&gt;<i>
+</I>&gt;<i> That said, along with improving performance, expanding the SCIFIOCellImg
+</I>&gt;<i> class to support sub-region caching[6] to facilitate &gt;2GB planes is
+</I>&gt;<i> extremely high on my priorities list right now. It is functionality I
+</I>&gt;<i> would like to have in SCIFIO in the very near future.
+</I>&gt;<i>
+</I>&gt;<i> Hope that helps a bit. Let us know if there's any more information that
+</I>&gt;<i> would be helpful in the mean time.
+</I>&gt;<i>
+</I>&gt;<i> Best,
+</I>&gt;<i> Mark
+</I>&gt;<i>
+</I>&gt;<i> [1]
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/services/DatasetIOService.java#L69">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/services/DatasetIOService.java#L69</A>
+</I>&gt;<i> [2]
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/ImgOpener.java#L139-147">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/ImgOpener.java#L139-147</A>
+</I>&gt;<i> [3]
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/config/SCIFIOConfig.java#L370-373">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/config/SCIFIOConfig.java#L370-373</A>
+</I>&gt;<i> [4]
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/AbstractReader.java#L134-147">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/AbstractReader.java#L134-147</A>
+</I>&gt;<i> [5]
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/common/DataTools.java#L881-888">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/common/DataTools.java#L881-888</A>
+</I>&gt;<i> [6] <A HREF="https://github.com/scifio/scifio/issues/125">https://github.com/scifio/scifio/issues/125</A>
+</I>
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000120.html">[SCIFIO] Block-wise reader
+</A></li>
+	<LI>Next message: <A HREF="000122.html">[SCIFIO] Block-wise writer
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#121">[ date ]</a>
+              <a href="thread.html#121">[ thread ]</a>
+              <a href="subject.html#121">[ subject ]</a>
+              <a href="author.html#121">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

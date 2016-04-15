@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Bio-Formats Imaris writer
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Bio-Formats%20Imaris%20writer&In-Reply-To=%3CCADN69ynbrDr5WcV5jepwFscRMKoyFEe539Seo64b_xvCEamFng%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000206.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Bio-Formats Imaris writer</H1>
+    <B>Curtis Rueden</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Bio-Formats%20Imaris%20writer&In-Reply-To=%3CCADN69ynbrDr5WcV5jepwFscRMKoyFEe539Seo64b_xvCEamFng%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Bio-Formats Imaris writer">ctrueden at wisc.edu
+       </A><BR>
+    <I>Sun Jun  1 09:27:09 CDT 2014</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000206.html">[SCIFIO] Bio-Formats Imaris writer
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#200">[ date ]</a>
+              <a href="thread.html#200">[ thread ]</a>
+              <a href="subject.html#200">[ subject ]</a>
+              <a href="author.html#200">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Henry,
+
+&gt;<i> Over the past couple years, I've been developing and testing a java
+</I>&gt;<i> library that is capable of writing Imaris .ims files. This library has
+</I>&gt;<i> allowed me to build an ImageJ plugin that automatically stitches,
+</I>&gt;<i> processes, and converts OME-TIFFs from Micro-Manager into Imaris
+</I>&gt;<i> files, which in turn allows a significantly greater throughput of
+</I>&gt;<i> imaging data with much less effort from users.
+</I>
+Sounds great!
+
+&gt;<i> This library has been instrumental to the workflow of users in the
+</I>&gt;<i> imaging center in which I work, and I want to find a way to share its
+</I>&gt;<i> utility with researchers everywhere. Incorporating it into the
+</I>&gt;<i> Bio-Formats exporter would both increase its visibility and leverage
+</I>&gt;<i> the multitude of formats on Bio-Formats' front end to make it usable
+</I>&gt;<i> with all types of microscopy data.
+</I>
+Rather than implementing a Bio-Formats writer, I encourage you to check out
+SCIFIO [1, 2, 3]. Though still in beta, SCIFIO is the core I/O mechanism of
+ImageJ2, which is finally due for release later this week. SCIFIO uses the
+SciJava plugin framework, meaning your writer would be automatically
+discovered and used as appropriate with no additional work from you. And we
+have recently integrated SCIFIO directly into ImageJ at the core level, so
+things like File &gt; Open now use it, including whatever format plugins are
+available. (SCIFIO also has a Bio-Formats format plugin, so that all of the
+BF formats work in ImageJ that way, too!)
+
+You could then serve your Imaris writer from its own ImageJ update site [4,
+5], to make it available to all ImageJ users.
+
+&gt;<i> In addition, I've convinced Bitplane to make their format open source,
+</I>&gt;<i> and I believe this may allow .ims files to grow beyond a proprietary
+</I>&gt;<i> file format into a generalized multi-resolution format useful for a
+</I>&gt;<i> variety of applications that deal with the visualization of extremely
+</I>&gt;<i> large stitched images.
+</I>
+Glad to hear that Bitplane is willing to do this. In that case, if you do
+complete a SCIFIO Imaris writer and want to donate the code upstream, you
+could file a pull request against the SCIFIO LifeSci project [6] to
+contribute it there, since that project houses readers &amp; writers for _open_
+life sciences formats. So if Bitplane publishes an open specification, we
+would be willing to add it to the project.
+
+If you have any questions about SCIFIO, please feel free to use the SCIFIO
+mailing list [7]. Or if you go the Bio-Formats route, you can use ome-devel
+[8].
+
+Regards,
+Curtis
+
+[1] <A HREF="http://loci.wisc.edu/software/scifio">http://loci.wisc.edu/software/scifio</A>
+[2] <A HREF="https://github.com/scifio/scifio">https://github.com/scifio/scifio</A>
+[3] <A HREF="https://github.com/scifio/scifio-tutorials">https://github.com/scifio/scifio-tutorials</A>
+[4] <A HREF="http://wiki.imagej.net/Update_Sites">http://wiki.imagej.net/Update_Sites</A>
+[5] <A HREF="http://wiki.imagej.net/List_of_update_sites">http://wiki.imagej.net/List_of_update_sites</A>
+ [6] <A HREF="https://github.com/scifio/scifio-lifesci">https://github.com/scifio/scifio-lifesci</A>
+[7] <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+[8] <A HREF="http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/">http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/</A>
+
+
+On Thu, May 29, 2014 at 6:55 PM, Henry Pinkard &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">henry.pinkard at gmail.com</A>&gt;
+wrote:
+
+&gt;<i> Hi Melissa and Curtis,
+</I>&gt;<i>
+</I>&gt;<i> Over the past couple years, I've been developing and testing a java
+</I>&gt;<i> library that is capable of writing Imaris .ims files. This library has
+</I>&gt;<i> allowed me to build an ImageJ plugin that automatically stitches,
+</I>&gt;<i> processes, and converts OME-TIFFs from Micro-Manager into Imaris files,
+</I>&gt;<i> which in turn allows a significantly greater throughput of imaging data
+</I>&gt;<i> with much less effort from users.
+</I>&gt;<i>
+</I>&gt;<i> This library has been instrumental to the workflow of users in the imaging
+</I>&gt;<i> center in which I work, and I want to find a way to share its utility with
+</I>&gt;<i> researchers everywhere. Incorporating it into the Bio-Formats exporter
+</I>&gt;<i> would both increase its visibility and leverage the multitude of formats on
+</I>&gt;<i> Bio-Formats' front end to make it usable with all types of microscopy data.
+</I>&gt;<i> In addition, I've convinced Bitplane to make their format open source, and
+</I>&gt;<i> I believe this may allow .ims files to grow beyond a proprietary file
+</I>&gt;<i> format into a generalized multi-resolution format useful for a variety of
+</I>&gt;<i> applications that deal with the visualization of extremely large stitched
+</I>&gt;<i> images. I'm happy to rework the library in whatever ways make it easiest to
+</I>&gt;<i> incorporate on your end. Let me know your thoughts on how to best proceed.
+</I>&gt;<i>
+</I>&gt;<i> Best,
+</I>&gt;<i> Henry
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20140601/7038c0a6/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20140601/7038c0a6/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000206.html">[SCIFIO] Bio-Formats Imaris writer
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#200">[ date ]</a>
+              <a href="thread.html#200">[ thread ]</a>
+              <a href="subject.html#200">[ subject ]</a>
+              <a href="author.html#200">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

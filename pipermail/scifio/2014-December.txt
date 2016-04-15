@@ -1,0 +1,1131 @@
+From michael.ellis at dsuk.biz  Wed Dec  3 05:29:36 2014
+From: michael.ellis at dsuk.biz (Michael Ellis)
+Date: Wed, 3 Dec 2014 11:29:36 +0000
+Subject: [SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to TIFF
+References: <E5BED793-1F40-4F81-ADAA-0B534DDECAF4@dsuk.biz>
+Message-ID: <35D1E2F5-AA86-4FDC-8580-B9217C574671@dsuk.biz>
+
+(Resending this now that I have joined the mailing list)
+
+T1dSavingImagePlanes saves a fake image ?8bit-signed&pixelType=int8&lengths=50,50,3,5,7&axes=X,Y,Z,Channel,Time.fake? as a png file.
+
+I run the program and it completes without errors.
+
+I?m curious though because I didn?t think PNG files could handle anything other than 2D images. So I try to open the SCIFIOTutorial.png
+in ImageJ and I see only a single plane image. There are no warnings or errors when saving the file to suggest that there is any loss of fidelity. Is
+that the intention?
+
+Anyway, I know TIFF files can support multiple channels, so I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program. I get the following exception:
+
+Exception in thread "main" io.scif.FormatException: Buffer too small (got 2500, expected 12500).
+	at io.scif.util.FormatTools.checkBufferSize(FormatTools.java:665)
+	at io.scif.util.FormatTools.checkPlaneForWriting(FormatTools.java:610)
+	at io.scif.AbstractWriter.checkParams(AbstractWriter.java:121)
+	at io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1291)
+	at io.scif.formats.TIFFFormat$Writer.writePlane(TIFFFormat.java:1399)
+	at io.scif.AbstractWriter.savePlane(AbstractWriter.java:168)
+	at io.scif.AbstractWriter.savePlane(AbstractWriter.java:159)
+	at io.scif.tutorials.core.T1dSavingImagePlanes.main(T1dSavingImagePlanes.java:75)
+
+Now this is most unexpected, because I would have assumed the TIFF format was able to store the images with at least the same fidelity as PNG.
+
+OK I know TIFF can save files of 3 dimensions, so I change the fake images to ?8bit-signed&pixelType=int8&lengths=50,50,7&axes=X,Y,Channel.fake?
+
+Again I get and exception.
+
+OK, how about a 2D image, ?8bit-signed&pixelType=int8&lengths=50,50&axes=X,Y.fake??
+
+And that finally works.
+
+So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+
+Thanks for any help.
+
+? Michael Ellis
+Digital Scientific UK Ltd.
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141203/c061756c/attachment-0001.html>
+
+From michael.ellis at dsuk.biz  Wed Dec  3 05:20:44 2014
+From: michael.ellis at dsuk.biz (Michael Ellis)
+Date: Wed, 3 Dec 2014 11:20:44 +0000
+Subject: [SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to TIFF
+Message-ID: <E5BED793-1F40-4F81-ADAA-0B534DDECAF4@dsuk.biz>
+
+T1dSavingImagePlanes saves a fake image ?8bit-signed&pixelType=int8&lengths=50,50,3,5,7&axes=X,Y,Z,Channel,Time.fake? as a png file.
+
+I run the program and it completes without errors.
+
+I?m curious though because I didn?t think PNG files could handle anything other than 2D images. So I try to open the SCIFIOTutorial.png
+in ImageJ and I see only a single plane image. There are no warnings or errors when saving the file to suggest that there is any loss of fidelity. Is
+that the intention?
+
+Anyway, I know TIFF files can support multiple channels, so I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program. I get the following exception:
+
+Exception in thread "main" io.scif.FormatException: Buffer too small (got 2500, expected 12500).
+	at io.scif.util.FormatTools.checkBufferSize(FormatTools.java:665)
+	at io.scif.util.FormatTools.checkPlaneForWriting(FormatTools.java:610)
+	at io.scif.AbstractWriter.checkParams(AbstractWriter.java:121)
+	at io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1291)
+	at io.scif.formats.TIFFFormat$Writer.writePlane(TIFFFormat.java:1399)
+	at io.scif.AbstractWriter.savePlane(AbstractWriter.java:168)
+	at io.scif.AbstractWriter.savePlane(AbstractWriter.java:159)
+	at io.scif.tutorials.core.T1dSavingImagePlanes.main(T1dSavingImagePlanes.java:75)
+
+Now this is most unexpected, because I would have assumed the TIFF format was able to store the images with at least the same fidelity as PNG.
+
+OK I know TIFF can save files of 3 dimensions, so I change the fake images to ?8bit-signed&pixelType=int8&lengths=50,50,7&axes=X,Y,Channel.fake?
+
+Again I get and exception.
+
+OK, how about a 2D image, ?8bit-signed&pixelType=int8&lengths=50,50&axes=X,Y.fake??
+
+And that finally works.
+
+So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+
+Thanks for any help.
+
+? Michael Ellis
+Digital Scientific UK Ltd.
+
+
+
+
+
+From ctrueden at wisc.edu  Wed Dec  3 12:26:13 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Wed, 3 Dec 2014 12:26:13 -0600
+Subject: [SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to
+	TIFF
+In-Reply-To: <E5BED793-1F40-4F81-ADAA-0B534DDECAF4@dsuk.biz>
+References: <E5BED793-1F40-4F81-ADAA-0B534DDECAF4@dsuk.biz>
+Message-ID: <CADN69ynFNKvjwVpipJU+0cWXDFfOuE=JSYhpq=d_=xOXDmEPEw@mail.gmail.com>
+
+Hi Michael,
+
+> I?m curious though because I didn?t think PNG files could handle
+> anything other than 2D images.
+
+SCIFIO writes the APNG format [1] when there are multiple planes.
+
+> So I try to open the SCIFIOTutorial.png in ImageJ and I see only a
+> single plane image.
+
+Standard PNG readers (including ImageJ 1.x's built-in PNG reader) will read
+only the first plane. Did you try with File > Import > Image... which uses
+SCIFIO when opening?
+
+> I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program.
+> I get the following exception:
+>
+> Exception in thread "main" io.scif.FormatException: Buffer too small
+> (got 2500, expected 12500).
+
+Thanks for the report. I can confirm this bug. I filed an issue for it:
+    https://github.com/scifio/scifio/issues/236
+
+> So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+
+Once that issue is resolved, things should work!
+
+Regards,
+Curtis
+
+[1] https://en.wikipedia.org/wiki/APNG
+
+On Wed, Dec 3, 2014 at 5:20 AM, Michael Ellis <michael.ellis at dsuk.biz>
+wrote:
+
+> T1dSavingImagePlanes saves a fake image
+> ?8bit-signed&pixelType=int8&lengths=50,50,3,5,7&axes=X,Y,Z,Channel,Time.fake?
+> as a png file.
+>
+> I run the program and it completes without errors.
+>
+> I?m curious though because I didn?t think PNG files could handle anything
+> other than 2D images. So I try to open the SCIFIOTutorial.png
+> in ImageJ and I see only a single plane image. There are no warnings or
+> errors when saving the file to suggest that there is any loss of fidelity.
+> Is
+> that the intention?
+>
+> Anyway, I know TIFF files can support multiple channels, so I change
+> SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program. I get the
+> following exception:
+>
+> Exception in thread "main" io.scif.FormatException: Buffer too small (got
+> 2500, expected 12500).
+>         at io.scif.util.FormatTools.checkBufferSize(FormatTools.java:665)
+>         at
+> io.scif.util.FormatTools.checkPlaneForWriting(FormatTools.java:610)
+>         at io.scif.AbstractWriter.checkParams(AbstractWriter.java:121)
+>         at
+> io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1291)
+>         at
+> io.scif.formats.TIFFFormat$Writer.writePlane(TIFFFormat.java:1399)
+>         at io.scif.AbstractWriter.savePlane(AbstractWriter.java:168)
+>         at io.scif.AbstractWriter.savePlane(AbstractWriter.java:159)
+>         at
+> io.scif.tutorials.core.T1dSavingImagePlanes.main(T1dSavingImagePlanes.java:75)
+>
+> Now this is most unexpected, because I would have assumed the TIFF format
+> was able to store the images with at least the same fidelity as PNG.
+>
+> OK I know TIFF can save files of 3 dimensions, so I change the fake images
+> to ?8bit-signed&pixelType=int8&lengths=50,50,7&axes=X,Y,Channel.fake?
+>
+> Again I get and exception.
+>
+> OK, how about a 2D image,
+> ?8bit-signed&pixelType=int8&lengths=50,50&axes=X,Y.fake??
+>
+> And that finally works.
+>
+> So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+>
+> Thanks for any help.
+>
+> ? Michael Ellis
+> Digital Scientific UK Ltd.
+>
+>
+>
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141203/26b7182f/attachment.html>
+
+From michael.ellis at dsuk.biz  Wed Dec  3 12:40:12 2014
+From: michael.ellis at dsuk.biz (Michael Ellis)
+Date: Wed, 3 Dec 2014 18:40:12 +0000
+Subject: [SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to
+	TIFF
+In-Reply-To: <CADN69ynFNKvjwVpipJU+0cWXDFfOuE=JSYhpq=d_=xOXDmEPEw@mail.gmail.com>
+References: <E5BED793-1F40-4F81-ADAA-0B534DDECAF4@dsuk.biz>
+	<CADN69ynFNKvjwVpipJU+0cWXDFfOuE=JSYhpq=d_=xOXDmEPEw@mail.gmail.com>
+Message-ID: <5CB83033-2121-4BFE-8A33-23F1232E2CDA@dsuk.biz>
+
+Curtis, many thanks.
+
+Whilst I?m on the subject of TIFF I experimented with using the TIFF specific reader/parser.
+
+Our TIFF files use the PAGE_NAME TIFF TIFF tag to give a name to each of the channel names. Is this information accessible through the SCIFIO?
+
+Many thanks ? Michael Ellis
+
+On 3 Dec 2014, at 18:26, Curtis Rueden <ctrueden at wisc.edu> wrote:
+
+> Hi Michael,
+> 
+> > I?m curious though because I didn?t think PNG files could handle
+> > anything other than 2D images.
+> 
+> SCIFIO writes the APNG format [1] when there are multiple planes.
+> 
+> > So I try to open the SCIFIOTutorial.png in ImageJ and I see only a
+> > single plane image.
+> 
+> Standard PNG readers (including ImageJ 1.x's built-in PNG reader) will read only the first plane. Did you try with File > Import > Image... which uses SCIFIO when opening?
+> 
+> > I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program.
+> > I get the following exception:
+> > 
+> > Exception in thread "main" io.scif.FormatException: Buffer too small
+> > (got 2500, expected 12500).
+> 
+> Thanks for the report. I can confirm this bug. I filed an issue for it:
+>     https://github.com/scifio/scifio/issues/236
+> 
+> > So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+> 
+> Once that issue is resolved, things should work!
+> 
+> Regards,
+> Curtis
+> 
+> [1] https://en.wikipedia.org/wiki/APNG
+> 
+> On Wed, Dec 3, 2014 at 5:20 AM, Michael Ellis <michael.ellis at dsuk.biz> wrote:
+> T1dSavingImagePlanes saves a fake image ?8bit-signed&pixelType=int8&lengths=50,50,3,5,7&axes=X,Y,Z,Channel,Time.fake? as a png file.
+> 
+> I run the program and it completes without errors.
+> 
+> I?m curious though because I didn?t think PNG files could handle anything other than 2D images. So I try to open the SCIFIOTutorial.png
+> in ImageJ and I see only a single plane image. There are no warnings or errors when saving the file to suggest that there is any loss of fidelity. Is
+> that the intention?
+> 
+> Anyway, I know TIFF files can support multiple channels, so I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program. I get the following exception:
+> 
+> Exception in thread "main" io.scif.FormatException: Buffer too small (got 2500, expected 12500).
+>         at io.scif.util.FormatTools.checkBufferSize(FormatTools.java:665)
+>         at io.scif.util.FormatTools.checkPlaneForWriting(FormatTools.java:610)
+>         at io.scif.AbstractWriter.checkParams(AbstractWriter.java:121)
+>         at io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1291)
+>         at io.scif.formats.TIFFFormat$Writer.writePlane(TIFFFormat.java:1399)
+>         at io.scif.AbstractWriter.savePlane(AbstractWriter.java:168)
+>         at io.scif.AbstractWriter.savePlane(AbstractWriter.java:159)
+>         at io.scif.tutorials.core.T1dSavingImagePlanes.main(T1dSavingImagePlanes.java:75)
+> 
+> Now this is most unexpected, because I would have assumed the TIFF format was able to store the images with at least the same fidelity as PNG.
+> 
+> OK I know TIFF can save files of 3 dimensions, so I change the fake images to ?8bit-signed&pixelType=int8&lengths=50,50,7&axes=X,Y,Channel.fake?
+> 
+> Again I get and exception.
+> 
+> OK, how about a 2D image, ?8bit-signed&pixelType=int8&lengths=50,50&axes=X,Y.fake??
+> 
+> And that finally works.
+> 
+> So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+> 
+> Thanks for any help.
+> 
+> ? Michael Ellis
+> Digital Scientific UK Ltd.
+> 
+> 
+> 
+> 
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+> 
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141203/e7cafb39/attachment.html>
+
+From hiner at wisc.edu  Fri Dec  5 09:03:59 2014
+From: hiner at wisc.edu (Mark Hiner)
+Date: Fri, 5 Dec 2014 09:03:59 -0600
+Subject: [SCIFIO] Scifio Cell Img
+In-Reply-To: <8F86540E7A8AA84DB369BD2234DDDCB301EA9569FE@JFMB1.hhmi.org>
+References: <8F86540E7A8AA84DB369BD2234DDDCB301EA9569FE@JFMB1.hhmi.org>
+Message-ID: <CA+B=mGpk833oGHWhHv4+osfQKs1tcaUmb_CFOJd8dZmg+ny5sw@mail.gmail.com>
+
+Hi Stephan!
+
+>a CellImg that is paged and can be read and written. Is this project
+already finished, does this work already?
+
+It is done! The SCIFIOCellImg
+<https://github.com/scifio/scifio/blob/dc06e67c8a60ac3e93784722a3dc64d534f24834/src/main/java/io/scif/img/cell/SCIFIOCellImg.java>was
+added a few hackathons ago with the guidance of Tobias. There are
+heuristics to use it automatically as needed by the ImgOpener
+<https://github.com/scifio/scifio/blob/dc06e67c8a60ac3e93784722a3dc64d534f24834/src/main/java/io/scif/img/ImgOpener.java>,
+and you can also configure it
+<https://github.com/scifio/scifio/blob/dc06e67c8a60ac3e93784722a3dc64d534f24834/src/main/java/io/scif/config/SCIFIOConfig.java#L364>
+to be used by default.
+
+If you're interested, there are tickets open to evaluate performance
+<https://github.com/scifio/scifio/issues/201>, and supporting large planes
+<https://github.com/scifio/scifio/issues/125> via SCIFIOCellImg is a goal
+of mine for the next hackathon.
+
+>Thanks so much and have a great day,
+
+You too! Let me know if you have any questions/problems.
+
+Best,
+Mark
+
+On Fri, Dec 5, 2014 at 4:55 AM, Preibisch, Stephan <
+preibischs at janelia.hhmi.org> wrote:
+
+>  Hi Mark,
+>
+>  I was talking to Tobias yesterday and he said you did an implementation
+> of a CellImg that is paged and can be read and written. Is this project
+> already finished, does this work already? If so that would be great as I
+> would like to use it as container for the multi-view deconvolution.
+>
+>  Thanks so much and have a great day,
+> Stephan
+>
+>  ---
+>
+>  Dr. Stephan Preibisch
+> HFSP Fellow
+> Robert H. Singer / Eugene Myers lab
+>
+>  Albert Einstein College of Medicine / HHMI Janelia Farm / MPI-CBG
+>
+>  email: stephan.preibisch at einstein.yu.edu / preibischs at janelia.hhmi.org /
+> preibisch at mpi-cbg.de
+> web: http://www.preibisch.net/ <http://fly.mpi-cbg.de/preibisch>
+>
+>
+>
+>   ---
+>
+>  Dr. Stephan Preibisch
+> HFSP Fellow
+> Robert H. Singer / Eugene Myers lab
+>
+>  Albert Einstein College of Medicine / HHMI Janelia Farm / MPI-CBG
+>
+>  email: stephan.preibisch at einstein.yu.edu / preibischs at janelia.hhmi.org /
+> preibisch at mpi-cbg.de
+> web: http://www.preibisch.net/ <http://fly.mpi-cbg.de/preibisch>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141205/71c670fa/attachment.html>
+
+From yxz949 at case.edu  Mon Dec  8 10:00:58 2014
+From: yxz949 at case.edu (Yu Zhou)
+Date: Mon, 8 Dec 2014 11:00:58 -0500
+Subject: [SCIFIO] Bio-Formats + ITK loading image so slow
+Message-ID: <CAMYuEzb5ezjrm3qnZkfe6NKGBEi5nuKT51E=yHvvm6ARS4vyOQ@mail.gmail.com>
+
+Hi folks,
+
+
+I am developing a pathology image analysis tool using ITK and Qt. In
+my program, I tried to use Bio-Formats to load big svs/TIFF images. I
+have successfully used itkSCIFIO and loaded a 20M image and did some
+image processing. But when I tried to load big images larger than 2
+Gigs, I have to use streaming to avoid memory allocation error. But
+the problem is, the image loading time is so long! It takes almost 10
+minutes to load a 2 Gigs svs image! Is this normal? Does anyone known
+how to solve this problem? Could you please give me some suggestion on
+it? Thank you so much!
+
+
+Yu
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141208/9d6eb989/attachment.html>
+
+From yxz949 at case.edu  Mon Dec  8 09:59:05 2014
+From: yxz949 at case.edu (Yu Zhou)
+Date: Mon, 8 Dec 2014 10:59:05 -0500
+Subject: [SCIFIO] Bio-Formats + ITK loading image so slow
+Message-ID: <CAMYuEzbcuPE6z9oOu+KOSi6cy9NCwkzNf_CQ+yE_O+_sw2+8dA@mail.gmail.com>
+
+Hi folks,
+
+
+I am developing a pathology image analysis tool using ITK and Qt. In
+my program, I tried to use Bio-Formats to load big svs/TIFF images. I
+have successfully used itkSCIFIO and loaded a 20M image and did some
+image processing. But when I tried to load big images larger than 2
+Gigs, I have to use streaming to avoid memory allocation error. But
+the problem is, the image loading time is so long! It takes almost 10
+minutes to load a 2 Gigs svs image! Is this normal? Does anyone known
+how to solve this problem? Could you please give me some suggestion on
+it? Thank you so much!
+
+
+Yu
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141208/ebb2b49d/attachment.html>
+
+From ctrueden at wisc.edu  Thu Dec 18 14:29:43 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Thu, 18 Dec 2014 14:29:43 -0600
+Subject: [SCIFIO] Bio-Formats + ITK loading image so slow
+In-Reply-To: <CAMYuEzbcuPE6z9oOu+KOSi6cy9NCwkzNf_CQ+yE_O+_sw2+8dA@mail.gmail.com>
+References: <CAMYuEzbcuPE6z9oOu+KOSi6cy9NCwkzNf_CQ+yE_O+_sw2+8dA@mail.gmail.com>
+Message-ID: <CADN69y=7ddsUOCaeCLz7c1TAU4x-QRQLZLFtW6XtZQ8WSGqvqg@mail.gmail.com>
+
+Hi Yu,
+
+> But the problem is, the image loading time is so long! It takes almost
+> 10 minutes to load a 2 Gigs svs image! Is this normal?
+
+I would suggest trying to load your image in Fiji via the Bio-Formats
+Importer plugin:
+
+  http://fiji.sc/Bio-Formats
+
+And see whether the load time is equivalent, or much faster.
+
+If the load time is similar, then it is a limitation of Bio-Formats. In
+that case, you can file an issue with the Bio-Formats team:
+
+  http://openmicroscopy.org/info/bio-formats/about/bug-reporting.html
+
+If the load time is much faster, then the problem is with the SCIFIO
+ImageIO plugin. In that case, there is already an entry in the issue
+tracker for this problem:
+
+  https://github.com/scifio/scifio-imageio/issues/17
+
+Feel free to comment on the issue if you want to be notified of progress.
+
+Regards,
+Curtis
+
+On Mon, Dec 8, 2014 at 9:59 AM, Yu Zhou <yxz949 at case.edu> wrote:
+>
+> Hi folks,
+>
+>
+> I am developing a pathology image analysis tool using ITK and Qt. In my program, I tried to use Bio-Formats to load big svs/TIFF images. I have successfully used itkSCIFIO and loaded a 20M image and did some image processing. But when I tried to load big images larger than 2 Gigs, I have to use streaming to avoid memory allocation error. But the problem is, the image loading time is so long! It takes almost 10 minutes to load a 2 Gigs svs image! Is this normal? Does anyone known how to solve this problem? Could you please give me some suggestion on it? Thank you so much!
+>
+>
+> Yu
+>
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141218/2e33a618/attachment.html>
+
+From ctrueden at wisc.edu  Thu Dec 18 14:30:55 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Thu, 18 Dec 2014 14:30:55 -0600
+Subject: [SCIFIO] Bio-Formats + ITK loading image so slow
+In-Reply-To: <CADN69y=7ddsUOCaeCLz7c1TAU4x-QRQLZLFtW6XtZQ8WSGqvqg@mail.gmail.com>
+References: <CAMYuEzbcuPE6z9oOu+KOSi6cy9NCwkzNf_CQ+yE_O+_sw2+8dA@mail.gmail.com>
+	<CADN69y=7ddsUOCaeCLz7c1TAU4x-QRQLZLFtW6XtZQ8WSGqvqg@mail.gmail.com>
+Message-ID: <CADN69y=7hnoB58Yua_Gm87ef1aQ7KZxRG_w4W6R8xG+twpHa8g@mail.gmail.com>
+
+Hi Yu,
+
+> In that case, there is already an entry in the issue tracker for this
+> problem:
+>
+>   https://github.com/scifio/scifio-imageio/issues/17
+
+Actually, it looks like the issue above is regarding memory performance.
+You might want to file a new issue regarding time performance, if your
+research confirms that the culprit is the SCIFIO ImageIO component.
+
+Thanks,
+Curtis
+
+On Thu, Dec 18, 2014 at 2:29 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+>
+> Hi Yu,
+>
+> > But the problem is, the image loading time is so long! It takes almost
+> > 10 minutes to load a 2 Gigs svs image! Is this normal?
+>
+> I would suggest trying to load your image in Fiji via the Bio-Formats
+> Importer plugin:
+>
+>   http://fiji.sc/Bio-Formats
+>
+> And see whether the load time is equivalent, or much faster.
+>
+> If the load time is similar, then it is a limitation of Bio-Formats. In
+> that case, you can file an issue with the Bio-Formats team:
+>
+>   http://openmicroscopy.org/info/bio-formats/about/bug-reporting.html
+>
+> If the load time is much faster, then the problem is with the SCIFIO
+> ImageIO plugin. In that case, there is already an entry in the issue
+> tracker for this problem:
+>
+>   https://github.com/scifio/scifio-imageio/issues/17
+>
+> Feel free to comment on the issue if you want to be notified of progress.
+>
+> Regards,
+> Curtis
+>
+> On Mon, Dec 8, 2014 at 9:59 AM, Yu Zhou <yxz949 at case.edu> wrote:
+>
+>> Hi folks,
+>>
+>>
+>> I am developing a pathology image analysis tool using ITK and Qt. In my program, I tried to use Bio-Formats to load big svs/TIFF images. I have successfully used itkSCIFIO and loaded a 20M image and did some image processing. But when I tried to load big images larger than 2 Gigs, I have to use streaming to avoid memory allocation error. But the problem is, the image loading time is so long! It takes almost 10 minutes to load a 2 Gigs svs image! Is this normal? Does anyone known how to solve this problem? Could you please give me some suggestion on it? Thank you so much!
+>>
+>>
+>> Yu
+>>
+>>
+>> _______________________________________________
+>> SCIFIO mailing list
+>> SCIFIO at scif.io
+>> http://scif.io/mailman/listinfo/scifio
+>>
+>>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141218/58accaf9/attachment.html>
+
+From michael.ellis at dsuk.biz  Wed Dec  3 05:29:36 2014
+From: michael.ellis at dsuk.biz (Michael Ellis)
+Date: Wed, 3 Dec 2014 11:29:36 +0000
+Subject: [SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to TIFF
+References: <E5BED793-1F40-4F81-ADAA-0B534DDECAF4@dsuk.biz>
+Message-ID: <35D1E2F5-AA86-4FDC-8580-B9217C574671@dsuk.biz>
+
+(Resending this now that I have joined the mailing list)
+
+T1dSavingImagePlanes saves a fake image ?8bit-signed&pixelType=int8&lengths=50,50,3,5,7&axes=X,Y,Z,Channel,Time.fake? as a png file.
+
+I run the program and it completes without errors.
+
+I?m curious though because I didn?t think PNG files could handle anything other than 2D images. So I try to open the SCIFIOTutorial.png
+in ImageJ and I see only a single plane image. There are no warnings or errors when saving the file to suggest that there is any loss of fidelity. Is
+that the intention?
+
+Anyway, I know TIFF files can support multiple channels, so I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program. I get the following exception:
+
+Exception in thread "main" io.scif.FormatException: Buffer too small (got 2500, expected 12500).
+	at io.scif.util.FormatTools.checkBufferSize(FormatTools.java:665)
+	at io.scif.util.FormatTools.checkPlaneForWriting(FormatTools.java:610)
+	at io.scif.AbstractWriter.checkParams(AbstractWriter.java:121)
+	at io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1291)
+	at io.scif.formats.TIFFFormat$Writer.writePlane(TIFFFormat.java:1399)
+	at io.scif.AbstractWriter.savePlane(AbstractWriter.java:168)
+	at io.scif.AbstractWriter.savePlane(AbstractWriter.java:159)
+	at io.scif.tutorials.core.T1dSavingImagePlanes.main(T1dSavingImagePlanes.java:75)
+
+Now this is most unexpected, because I would have assumed the TIFF format was able to store the images with at least the same fidelity as PNG.
+
+OK I know TIFF can save files of 3 dimensions, so I change the fake images to ?8bit-signed&pixelType=int8&lengths=50,50,7&axes=X,Y,Channel.fake?
+
+Again I get and exception.
+
+OK, how about a 2D image, ?8bit-signed&pixelType=int8&lengths=50,50&axes=X,Y.fake??
+
+And that finally works.
+
+So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+
+Thanks for any help.
+
+? Michael Ellis
+Digital Scientific UK Ltd.
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141203/c061756c/attachment-0002.html>
+
+From michael.ellis at dsuk.biz  Wed Dec  3 05:20:44 2014
+From: michael.ellis at dsuk.biz (Michael Ellis)
+Date: Wed, 3 Dec 2014 11:20:44 +0000
+Subject: [SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to TIFF
+Message-ID: <E5BED793-1F40-4F81-ADAA-0B534DDECAF4@dsuk.biz>
+
+T1dSavingImagePlanes saves a fake image ?8bit-signed&pixelType=int8&lengths=50,50,3,5,7&axes=X,Y,Z,Channel,Time.fake? as a png file.
+
+I run the program and it completes without errors.
+
+I?m curious though because I didn?t think PNG files could handle anything other than 2D images. So I try to open the SCIFIOTutorial.png
+in ImageJ and I see only a single plane image. There are no warnings or errors when saving the file to suggest that there is any loss of fidelity. Is
+that the intention?
+
+Anyway, I know TIFF files can support multiple channels, so I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program. I get the following exception:
+
+Exception in thread "main" io.scif.FormatException: Buffer too small (got 2500, expected 12500).
+	at io.scif.util.FormatTools.checkBufferSize(FormatTools.java:665)
+	at io.scif.util.FormatTools.checkPlaneForWriting(FormatTools.java:610)
+	at io.scif.AbstractWriter.checkParams(AbstractWriter.java:121)
+	at io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1291)
+	at io.scif.formats.TIFFFormat$Writer.writePlane(TIFFFormat.java:1399)
+	at io.scif.AbstractWriter.savePlane(AbstractWriter.java:168)
+	at io.scif.AbstractWriter.savePlane(AbstractWriter.java:159)
+	at io.scif.tutorials.core.T1dSavingImagePlanes.main(T1dSavingImagePlanes.java:75)
+
+Now this is most unexpected, because I would have assumed the TIFF format was able to store the images with at least the same fidelity as PNG.
+
+OK I know TIFF can save files of 3 dimensions, so I change the fake images to ?8bit-signed&pixelType=int8&lengths=50,50,7&axes=X,Y,Channel.fake?
+
+Again I get and exception.
+
+OK, how about a 2D image, ?8bit-signed&pixelType=int8&lengths=50,50&axes=X,Y.fake??
+
+And that finally works.
+
+So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+
+Thanks for any help.
+
+? Michael Ellis
+Digital Scientific UK Ltd.
+
+
+
+
+
+
+From ctrueden at wisc.edu  Wed Dec  3 12:26:13 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Wed, 3 Dec 2014 12:26:13 -0600
+Subject: [SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to
+	TIFF
+In-Reply-To: <E5BED793-1F40-4F81-ADAA-0B534DDECAF4@dsuk.biz>
+References: <E5BED793-1F40-4F81-ADAA-0B534DDECAF4@dsuk.biz>
+Message-ID: <CADN69ynFNKvjwVpipJU+0cWXDFfOuE=JSYhpq=d_=xOXDmEPEw@mail.gmail.com>
+
+Hi Michael,
+
+> I?m curious though because I didn?t think PNG files could handle
+> anything other than 2D images.
+
+SCIFIO writes the APNG format [1] when there are multiple planes.
+
+> So I try to open the SCIFIOTutorial.png in ImageJ and I see only a
+> single plane image.
+
+Standard PNG readers (including ImageJ 1.x's built-in PNG reader) will read
+only the first plane. Did you try with File > Import > Image... which uses
+SCIFIO when opening?
+
+> I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program.
+> I get the following exception:
+>
+> Exception in thread "main" io.scif.FormatException: Buffer too small
+> (got 2500, expected 12500).
+
+Thanks for the report. I can confirm this bug. I filed an issue for it:
+    https://github.com/scifio/scifio/issues/236
+
+> So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+
+Once that issue is resolved, things should work!
+
+Regards,
+Curtis
+
+[1] https://en.wikipedia.org/wiki/APNG
+
+On Wed, Dec 3, 2014 at 5:20 AM, Michael Ellis <michael.ellis at dsuk.biz>
+wrote:
+
+> T1dSavingImagePlanes saves a fake image
+> ?8bit-signed&pixelType=int8&lengths=50,50,3,5,7&axes=X,Y,Z,Channel,Time.fake?
+> as a png file.
+>
+> I run the program and it completes without errors.
+>
+> I?m curious though because I didn?t think PNG files could handle anything
+> other than 2D images. So I try to open the SCIFIOTutorial.png
+> in ImageJ and I see only a single plane image. There are no warnings or
+> errors when saving the file to suggest that there is any loss of fidelity.
+> Is
+> that the intention?
+>
+> Anyway, I know TIFF files can support multiple channels, so I change
+> SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program. I get the
+> following exception:
+>
+> Exception in thread "main" io.scif.FormatException: Buffer too small (got
+> 2500, expected 12500).
+>         at io.scif.util.FormatTools.checkBufferSize(FormatTools.java:665)
+>         at
+> io.scif.util.FormatTools.checkPlaneForWriting(FormatTools.java:610)
+>         at io.scif.AbstractWriter.checkParams(AbstractWriter.java:121)
+>         at
+> io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1291)
+>         at
+> io.scif.formats.TIFFFormat$Writer.writePlane(TIFFFormat.java:1399)
+>         at io.scif.AbstractWriter.savePlane(AbstractWriter.java:168)
+>         at io.scif.AbstractWriter.savePlane(AbstractWriter.java:159)
+>         at
+> io.scif.tutorials.core.T1dSavingImagePlanes.main(T1dSavingImagePlanes.java:75)
+>
+> Now this is most unexpected, because I would have assumed the TIFF format
+> was able to store the images with at least the same fidelity as PNG.
+>
+> OK I know TIFF can save files of 3 dimensions, so I change the fake images
+> to ?8bit-signed&pixelType=int8&lengths=50,50,7&axes=X,Y,Channel.fake?
+>
+> Again I get and exception.
+>
+> OK, how about a 2D image,
+> ?8bit-signed&pixelType=int8&lengths=50,50&axes=X,Y.fake??
+>
+> And that finally works.
+>
+> So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+>
+> Thanks for any help.
+>
+> ? Michael Ellis
+> Digital Scientific UK Ltd.
+>
+>
+>
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141203/26b7182f/attachment-0002.html>
+
+From michael.ellis at dsuk.biz  Wed Dec  3 12:40:12 2014
+From: michael.ellis at dsuk.biz (Michael Ellis)
+Date: Wed, 3 Dec 2014 18:40:12 +0000
+Subject: [SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to
+	TIFF
+In-Reply-To: <CADN69ynFNKvjwVpipJU+0cWXDFfOuE=JSYhpq=d_=xOXDmEPEw@mail.gmail.com>
+References: <E5BED793-1F40-4F81-ADAA-0B534DDECAF4@dsuk.biz>
+	<CADN69ynFNKvjwVpipJU+0cWXDFfOuE=JSYhpq=d_=xOXDmEPEw@mail.gmail.com>
+Message-ID: <5CB83033-2121-4BFE-8A33-23F1232E2CDA@dsuk.biz>
+
+Curtis, many thanks.
+
+Whilst I?m on the subject of TIFF I experimented with using the TIFF specific reader/parser.
+
+Our TIFF files use the PAGE_NAME TIFF TIFF tag to give a name to each of the channel names. Is this information accessible through the SCIFIO?
+
+Many thanks ? Michael Ellis
+
+On 3 Dec 2014, at 18:26, Curtis Rueden <ctrueden at wisc.edu> wrote:
+
+> Hi Michael,
+> 
+> > I?m curious though because I didn?t think PNG files could handle
+> > anything other than 2D images.
+> 
+> SCIFIO writes the APNG format [1] when there are multiple planes.
+> 
+> > So I try to open the SCIFIOTutorial.png in ImageJ and I see only a
+> > single plane image.
+> 
+> Standard PNG readers (including ImageJ 1.x's built-in PNG reader) will read only the first plane. Did you try with File > Import > Image... which uses SCIFIO when opening?
+> 
+> > I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program.
+> > I get the following exception:
+> > 
+> > Exception in thread "main" io.scif.FormatException: Buffer too small
+> > (got 2500, expected 12500).
+> 
+> Thanks for the report. I can confirm this bug. I filed an issue for it:
+>     https://github.com/scifio/scifio/issues/236
+> 
+> > So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+> 
+> Once that issue is resolved, things should work!
+> 
+> Regards,
+> Curtis
+> 
+> [1] https://en.wikipedia.org/wiki/APNG
+> 
+> On Wed, Dec 3, 2014 at 5:20 AM, Michael Ellis <michael.ellis at dsuk.biz> wrote:
+> T1dSavingImagePlanes saves a fake image ?8bit-signed&pixelType=int8&lengths=50,50,3,5,7&axes=X,Y,Z,Channel,Time.fake? as a png file.
+> 
+> I run the program and it completes without errors.
+> 
+> I?m curious though because I didn?t think PNG files could handle anything other than 2D images. So I try to open the SCIFIOTutorial.png
+> in ImageJ and I see only a single plane image. There are no warnings or errors when saving the file to suggest that there is any loss of fidelity. Is
+> that the intention?
+> 
+> Anyway, I know TIFF files can support multiple channels, so I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program. I get the following exception:
+> 
+> Exception in thread "main" io.scif.FormatException: Buffer too small (got 2500, expected 12500).
+>         at io.scif.util.FormatTools.checkBufferSize(FormatTools.java:665)
+>         at io.scif.util.FormatTools.checkPlaneForWriting(FormatTools.java:610)
+>         at io.scif.AbstractWriter.checkParams(AbstractWriter.java:121)
+>         at io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1291)
+>         at io.scif.formats.TIFFFormat$Writer.writePlane(TIFFFormat.java:1399)
+>         at io.scif.AbstractWriter.savePlane(AbstractWriter.java:168)
+>         at io.scif.AbstractWriter.savePlane(AbstractWriter.java:159)
+>         at io.scif.tutorials.core.T1dSavingImagePlanes.main(T1dSavingImagePlanes.java:75)
+> 
+> Now this is most unexpected, because I would have assumed the TIFF format was able to store the images with at least the same fidelity as PNG.
+> 
+> OK I know TIFF can save files of 3 dimensions, so I change the fake images to ?8bit-signed&pixelType=int8&lengths=50,50,7&axes=X,Y,Channel.fake?
+> 
+> Again I get and exception.
+> 
+> OK, how about a 2D image, ?8bit-signed&pixelType=int8&lengths=50,50&axes=X,Y.fake??
+> 
+> And that finally works.
+> 
+> So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+> 
+> Thanks for any help.
+> 
+> ? Michael Ellis
+> Digital Scientific UK Ltd.
+> 
+> 
+> 
+> 
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+> 
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141203/e7cafb39/attachment-0002.html>
+
+From hiner at wisc.edu  Fri Dec  5 09:03:59 2014
+From: hiner at wisc.edu (Mark Hiner)
+Date: Fri, 5 Dec 2014 09:03:59 -0600
+Subject: [SCIFIO] Scifio Cell Img
+In-Reply-To: <8F86540E7A8AA84DB369BD2234DDDCB301EA9569FE@JFMB1.hhmi.org>
+References: <8F86540E7A8AA84DB369BD2234DDDCB301EA9569FE@JFMB1.hhmi.org>
+Message-ID: <CA+B=mGpk833oGHWhHv4+osfQKs1tcaUmb_CFOJd8dZmg+ny5sw@mail.gmail.com>
+
+Hi Stephan!
+
+>a CellImg that is paged and can be read and written. Is this project
+already finished, does this work already?
+
+It is done! The SCIFIOCellImg
+<https://github.com/scifio/scifio/blob/dc06e67c8a60ac3e93784722a3dc64d534f24834/src/main/java/io/scif/img/cell/SCIFIOCellImg.java>was
+added a few hackathons ago with the guidance of Tobias. There are
+heuristics to use it automatically as needed by the ImgOpener
+<https://github.com/scifio/scifio/blob/dc06e67c8a60ac3e93784722a3dc64d534f24834/src/main/java/io/scif/img/ImgOpener.java>,
+and you can also configure it
+<https://github.com/scifio/scifio/blob/dc06e67c8a60ac3e93784722a3dc64d534f24834/src/main/java/io/scif/config/SCIFIOConfig.java#L364>
+to be used by default.
+
+If you're interested, there are tickets open to evaluate performance
+<https://github.com/scifio/scifio/issues/201>, and supporting large planes
+<https://github.com/scifio/scifio/issues/125> via SCIFIOCellImg is a goal
+of mine for the next hackathon.
+
+>Thanks so much and have a great day,
+
+You too! Let me know if you have any questions/problems.
+
+Best,
+Mark
+
+On Fri, Dec 5, 2014 at 4:55 AM, Preibisch, Stephan <
+preibischs at janelia.hhmi.org> wrote:
+
+>  Hi Mark,
+>
+>  I was talking to Tobias yesterday and he said you did an implementation
+> of a CellImg that is paged and can be read and written. Is this project
+> already finished, does this work already? If so that would be great as I
+> would like to use it as container for the multi-view deconvolution.
+>
+>  Thanks so much and have a great day,
+> Stephan
+>
+>  ---
+>
+>  Dr. Stephan Preibisch
+> HFSP Fellow
+> Robert H. Singer / Eugene Myers lab
+>
+>  Albert Einstein College of Medicine / HHMI Janelia Farm / MPI-CBG
+>
+>  email: stephan.preibisch at einstein.yu.edu / preibischs at janelia.hhmi.org /
+> preibisch at mpi-cbg.de
+> web: http://www.preibisch.net/ <http://fly.mpi-cbg.de/preibisch>
+>
+>
+>
+>   ---
+>
+>  Dr. Stephan Preibisch
+> HFSP Fellow
+> Robert H. Singer / Eugene Myers lab
+>
+>  Albert Einstein College of Medicine / HHMI Janelia Farm / MPI-CBG
+>
+>  email: stephan.preibisch at einstein.yu.edu / preibischs at janelia.hhmi.org /
+> preibisch at mpi-cbg.de
+> web: http://www.preibisch.net/ <http://fly.mpi-cbg.de/preibisch>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141205/71c670fa/attachment-0002.html>
+
+From yxz949 at case.edu  Mon Dec  8 10:00:58 2014
+From: yxz949 at case.edu (Yu Zhou)
+Date: Mon, 8 Dec 2014 11:00:58 -0500
+Subject: [SCIFIO] Bio-Formats + ITK loading image so slow
+Message-ID: <CAMYuEzb5ezjrm3qnZkfe6NKGBEi5nuKT51E=yHvvm6ARS4vyOQ@mail.gmail.com>
+
+Hi folks,
+
+
+I am developing a pathology image analysis tool using ITK and Qt. In
+my program, I tried to use Bio-Formats to load big svs/TIFF images. I
+have successfully used itkSCIFIO and loaded a 20M image and did some
+image processing. But when I tried to load big images larger than 2
+Gigs, I have to use streaming to avoid memory allocation error. But
+the problem is, the image loading time is so long! It takes almost 10
+minutes to load a 2 Gigs svs image! Is this normal? Does anyone known
+how to solve this problem? Could you please give me some suggestion on
+it? Thank you so much!
+
+
+Yu
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141208/9d6eb989/attachment-0002.html>
+
+From yxz949 at case.edu  Mon Dec  8 09:59:05 2014
+From: yxz949 at case.edu (Yu Zhou)
+Date: Mon, 8 Dec 2014 10:59:05 -0500
+Subject: [SCIFIO] Bio-Formats + ITK loading image so slow
+Message-ID: <CAMYuEzbcuPE6z9oOu+KOSi6cy9NCwkzNf_CQ+yE_O+_sw2+8dA@mail.gmail.com>
+
+Hi folks,
+
+
+I am developing a pathology image analysis tool using ITK and Qt. In
+my program, I tried to use Bio-Formats to load big svs/TIFF images. I
+have successfully used itkSCIFIO and loaded a 20M image and did some
+image processing. But when I tried to load big images larger than 2
+Gigs, I have to use streaming to avoid memory allocation error. But
+the problem is, the image loading time is so long! It takes almost 10
+minutes to load a 2 Gigs svs image! Is this normal? Does anyone known
+how to solve this problem? Could you please give me some suggestion on
+it? Thank you so much!
+
+
+Yu
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141208/ebb2b49d/attachment-0002.html>
+
+From ctrueden at wisc.edu  Thu Dec 18 14:29:43 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Thu, 18 Dec 2014 14:29:43 -0600
+Subject: [SCIFIO] Bio-Formats + ITK loading image so slow
+In-Reply-To: <CAMYuEzbcuPE6z9oOu+KOSi6cy9NCwkzNf_CQ+yE_O+_sw2+8dA@mail.gmail.com>
+References: <CAMYuEzbcuPE6z9oOu+KOSi6cy9NCwkzNf_CQ+yE_O+_sw2+8dA@mail.gmail.com>
+Message-ID: <CADN69y=7ddsUOCaeCLz7c1TAU4x-QRQLZLFtW6XtZQ8WSGqvqg@mail.gmail.com>
+
+Hi Yu,
+
+> But the problem is, the image loading time is so long! It takes almost
+> 10 minutes to load a 2 Gigs svs image! Is this normal?
+
+I would suggest trying to load your image in Fiji via the Bio-Formats
+Importer plugin:
+
+  http://fiji.sc/Bio-Formats
+
+And see whether the load time is equivalent, or much faster.
+
+If the load time is similar, then it is a limitation of Bio-Formats. In
+that case, you can file an issue with the Bio-Formats team:
+
+  http://openmicroscopy.org/info/bio-formats/about/bug-reporting.html
+
+If the load time is much faster, then the problem is with the SCIFIO
+ImageIO plugin. In that case, there is already an entry in the issue
+tracker for this problem:
+
+  https://github.com/scifio/scifio-imageio/issues/17
+
+Feel free to comment on the issue if you want to be notified of progress.
+
+Regards,
+Curtis
+
+On Mon, Dec 8, 2014 at 9:59 AM, Yu Zhou <yxz949 at case.edu> wrote:
+>
+> Hi folks,
+>
+>
+> I am developing a pathology image analysis tool using ITK and Qt. In my program, I tried to use Bio-Formats to load big svs/TIFF images. I have successfully used itkSCIFIO and loaded a 20M image and did some image processing. But when I tried to load big images larger than 2 Gigs, I have to use streaming to avoid memory allocation error. But the problem is, the image loading time is so long! It takes almost 10 minutes to load a 2 Gigs svs image! Is this normal? Does anyone known how to solve this problem? Could you please give me some suggestion on it? Thank you so much!
+>
+>
+> Yu
+>
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141218/2e33a618/attachment-0002.html>
+
+From ctrueden at wisc.edu  Thu Dec 18 14:30:55 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Thu, 18 Dec 2014 14:30:55 -0600
+Subject: [SCIFIO] Bio-Formats + ITK loading image so slow
+In-Reply-To: <CADN69y=7ddsUOCaeCLz7c1TAU4x-QRQLZLFtW6XtZQ8WSGqvqg@mail.gmail.com>
+References: <CAMYuEzbcuPE6z9oOu+KOSi6cy9NCwkzNf_CQ+yE_O+_sw2+8dA@mail.gmail.com>
+	<CADN69y=7ddsUOCaeCLz7c1TAU4x-QRQLZLFtW6XtZQ8WSGqvqg@mail.gmail.com>
+Message-ID: <CADN69y=7hnoB58Yua_Gm87ef1aQ7KZxRG_w4W6R8xG+twpHa8g@mail.gmail.com>
+
+Hi Yu,
+
+> In that case, there is already an entry in the issue tracker for this
+> problem:
+>
+>   https://github.com/scifio/scifio-imageio/issues/17
+
+Actually, it looks like the issue above is regarding memory performance.
+You might want to file a new issue regarding time performance, if your
+research confirms that the culprit is the SCIFIO ImageIO component.
+
+Thanks,
+Curtis
+
+On Thu, Dec 18, 2014 at 2:29 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+>
+> Hi Yu,
+>
+> > But the problem is, the image loading time is so long! It takes almost
+> > 10 minutes to load a 2 Gigs svs image! Is this normal?
+>
+> I would suggest trying to load your image in Fiji via the Bio-Formats
+> Importer plugin:
+>
+>   http://fiji.sc/Bio-Formats
+>
+> And see whether the load time is equivalent, or much faster.
+>
+> If the load time is similar, then it is a limitation of Bio-Formats. In
+> that case, you can file an issue with the Bio-Formats team:
+>
+>   http://openmicroscopy.org/info/bio-formats/about/bug-reporting.html
+>
+> If the load time is much faster, then the problem is with the SCIFIO
+> ImageIO plugin. In that case, there is already an entry in the issue
+> tracker for this problem:
+>
+>   https://github.com/scifio/scifio-imageio/issues/17
+>
+> Feel free to comment on the issue if you want to be notified of progress.
+>
+> Regards,
+> Curtis
+>
+> On Mon, Dec 8, 2014 at 9:59 AM, Yu Zhou <yxz949 at case.edu> wrote:
+>
+>> Hi folks,
+>>
+>>
+>> I am developing a pathology image analysis tool using ITK and Qt. In my program, I tried to use Bio-Formats to load big svs/TIFF images. I have successfully used itkSCIFIO and loaded a 20M image and did some image processing. But when I tried to load big images larger than 2 Gigs, I have to use streaming to avoid memory allocation error. But the problem is, the image loading time is so long! It takes almost 10 minutes to load a 2 Gigs svs image! Is this normal? Does anyone known how to solve this problem? Could you please give me some suggestion on it? Thank you so much!
+>>
+>>
+>> Yu
+>>
+>>
+>> _______________________________________________
+>> SCIFIO mailing list
+>> SCIFIO at scif.io
+>> http://scif.io/mailman/listinfo/scifio
+>>
+>>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141218/58accaf9/attachment-0002.html>
+

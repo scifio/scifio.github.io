@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] opening tiff files with ImageJ2
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20opening%20tiff%20files%20with%20ImageJ2&In-Reply-To=%3CCA%2BB%3DmGpykqkpzJ8jLn0irwAdrAOXJeVgv3yK_Hz%2BzYihEifFtA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000057.html">
+   <LINK REL="Next"  HREF="000059.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] opening tiff files with ImageJ2</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20opening%20tiff%20files%20with%20ImageJ2&In-Reply-To=%3CCA%2BB%3DmGpykqkpzJ8jLn0irwAdrAOXJeVgv3yK_Hz%2BzYihEifFtA%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] opening tiff files with ImageJ2">hiner at wisc.edu
+       </A><BR>
+    <I>Thu Jan 16 13:47:41 CST 2014</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000057.html">[SCIFIO] opening tiff files with ImageJ2
+</A></li>
+        <LI>Next message: <A HREF="000059.html">[SCIFIO] opening tiff files with ImageJ2
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#58">[ date ]</a>
+              <a href="thread.html#58">[ thread ]</a>
+              <a href="subject.html#58">[ subject ]</a>
+              <a href="author.html#58">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Martin,
+
+  There were two IFDs (id 1807 and 1808) which were unknown to us -
+presumably related to the FusionCapt software you're using. As interpreted
+by the TIFF spec they would cause reading past the EOF. There was a
+safeguard in the SCIFIO parser to truncate such a read before the EOF, but
+it wasn't implemented properly.
+
+ I fixed the bug,&lt;<A HREF="https://github.com/scifio/scifio/commit/2b9f1be852c4b2bffee40a673924780022ac2c54">https://github.com/scifio/scifio/commit/2b9f1be852c4b2bffee40a673924780022ac2c54</A>&gt;and
+added a SCIFIO-dev
+update site &lt;<A HREF="http://fiji.sc/List_of_update_sites">http://fiji.sc/List_of_update_sites</A>&gt; for Fiji. Using this
+update site will allow you to use the most recent SCIFIO. Generally, this
+isn't guaranteed to be stable, but it should help if you want to view your
+data in IJ2 between now and the next SCIFIO release.
+
+Thanks again for reporting this issue. Let me know if anything else comes
+up!
+
+- Mark
+
+
+On Wed, Jan 15, 2014 at 9:32 AM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+
+&gt;<i> Hi Martin,
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> PS - I hope this ist he right list to post. If not, maybe someone could
+</I>&gt;&gt;<i> direct me to the best suited forum
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> This is definitely a problem in SCIFIO, so this was the right place to
+</I>&gt;<i> post! I've opened a new issue&lt;<A HREF="https://github.com/scifio/scifio/issues/123">https://github.com/scifio/scifio/issues/123</A>&gt;to track this problem and will look into it today.
+</I>&gt;<i>
+</I>&gt;<i> Because this looks to be a bug in Bio-Formats as well (which is not
+</I>&gt;<i> surprising - as the SCIFIO TIFF support is derived from Bio-Formats) I am
+</I>&gt;<i> also forwarding this to the OME-Users list.
+</I>&gt;<i>
+</I>&gt;<i> Thanks for the report!
+</I>&gt;<i>
+</I>&gt;<i> - Mark
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> On Wed, Jan 15, 2014 at 6:36 AM, Martin H&#246;hne &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">martin.hoehne at uk-koeln.de</A>&gt;wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> Dear list,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> We have 16 bit Tiff files from a camera (from a Chemoluminescence
+</I>&gt;&gt;<i> detector. Fusion XL machine form Vilber Lourmat <A HREF="http://www.vilber.com/">http://www.vilber.com/</A>).
+</I>&gt;&gt;<i> The images can be opened fine in Fiji (open or drag&amp;drop). However,
+</I>&gt;&gt;<i> importing via File&gt;Import&gt;BioFormats fails. I get this error:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> &quot;Sorry, there was a problem during import&quot;. The log file is posted at the
+</I>&gt;&gt;<i> end of this mail.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> We are fine with the normal opening, however the ImageJ2 seems to try to
+</I>&gt;&gt;<i> open with the import function (2.0.0.0 beta7.6). I get this message:
+</I>&gt;&gt;<i> &quot;io.scif.img.ImgIOExceprion: java.io.EOFException: Attempting to read
+</I>&gt;&gt;<i> beyond end of file&quot;
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> The image contains some metadata I can&#180;t read when opening with ImageJ,
+</I>&gt;&gt;<i> but only when opening the file with the Fusion software from Vilber.
+</I>&gt;&gt;<i> For the attached file the metadata is at the end of this posting as well.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> The metadata is not so important, but it would be great if the images
+</I>&gt;&gt;<i> could be opened with ImageJ2 as well.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Thank you
+</I>&gt;&gt;<i> Martin
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> PS - I hope this ist he right list to post. If not, maybe someone could
+</I>&gt;&gt;<i> direct me to the best suited forum
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> System information:
+</I>&gt;&gt;<i> Win7 64bit
+</I>&gt;&gt;<i> Fiji, updatet 2014-01-15
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Log from import:
+</I>&gt;&gt;<i> Fiji(legacy mode) File&gt;Import&gt;BioFormats:
+</I>&gt;&gt;<i> loci.formats.FormatException: loci.common.ReflectException:
+</I>&gt;&gt;<i> java.lang.reflect.InvocationTargetException
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> loci.formats.in.TiffJAIReader.openBufferedImage(TiffJAIReader.java:202)
+</I>&gt;&gt;<i>         at loci.formats.in.TiffJAIReader.initFile(TiffJAIReader.java:162)
+</I>&gt;&gt;<i>         at loci.formats.FormatReader.setId(FormatReader.java:1360)
+</I>&gt;&gt;<i>         at loci.formats.DelegateReader.setId(DelegateReader.java:275)
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> loci.plugins.in.ImportProcess.initializeFile(ImportProcess.java:482)
+</I>&gt;&gt;<i>         at loci.plugins.in.ImportProcess.execute(ImportProcess.java:146)
+</I>&gt;&gt;<i>         at loci.plugins.in.Importer.showDialogs(Importer.java:141)
+</I>&gt;&gt;<i>         at loci.plugins.in.Importer.run(Importer.java:79)
+</I>&gt;&gt;<i>         at loci.plugins.LociImporter.run(LociImporter.java:81)
+</I>&gt;&gt;<i>         at ij.IJ.runUserPlugIn(IJ.java:196)
+</I>&gt;&gt;<i>         at ij.IJ.runPlugIn(IJ.java:160)
+</I>&gt;&gt;<i>         at ij.Executer.runCommand(Executer.java:131)
+</I>&gt;&gt;<i>         at ij.Executer.run(Executer.java:64)
+</I>&gt;&gt;<i>         at java.lang.Thread.run(Thread.java:662)
+</I>&gt;&gt;<i> Caused by: loci.common.ReflectException:
+</I>&gt;&gt;<i> java.lang.reflect.InvocationTargetException
+</I>&gt;&gt;<i>         at loci.common.ReflectedUniverse.exec(ReflectedUniverse.java:125)
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> loci.formats.in.TiffJAIReader.openBufferedImage(TiffJAIReader.java:197)
+</I>&gt;&gt;<i>         ... 13 more
+</I>&gt;&gt;<i> Caused by: java.lang.reflect.InvocationTargetException
+</I>&gt;&gt;<i>         at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+</I>&gt;&gt;<i>         at java.lang.reflect.Method.invoke(Method.java:597)
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> ome.scifio.common.ReflectedUniverse.exec(ReflectedUniverse.java:317)
+</I>&gt;&gt;<i>         at loci.common.ReflectedUniverse.exec(ReflectedUniverse.java:122)
+</I>&gt;&gt;<i>         ... 14 more
+</I>&gt;&gt;<i> Caused by: java.io.EOFException
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> com.sun.media.jai.codec.SeekableStream.readFully(SeekableStream.java:329)
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> com.sun.media.jai.codec.SeekableStream.readFully(SeekableStream.java:306)
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> com.sun.media.jai.codec.SeekableStream.readUnsignedIntLE(SeekableStream.java:708)
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> com.sun.media.jai.codec.TIFFDirectory.readUnsignedInt(TIFFDirectory.java:524)
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> com.sun.media.jai.codec.TIFFDirectory.initialize(TIFFDirectory.java:289)
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> com.sun.media.jai.codec.TIFFDirectory.&lt;init&gt;(TIFFDirectory.java:125)
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> com.sun.media.jai.codecimpl.TIFFImage.&lt;init&gt;(TIFFImage.java:318)
+</I>&gt;&gt;<i>         at
+</I>&gt;&gt;<i> com.sun.media.jai.codecimpl.TIFFImageDecoder.decodeAsRenderedImage(TIFFImageDecoder.java:112)
+</I>&gt;&gt;<i>         ... 20 more
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Metadata of attached image:
+</I>&gt;&gt;<i> Good Laboratory Practice:GLP
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> GENERAL INFORMATION
+</I>&gt;&gt;<i>    Title:
+</I>&gt;&gt;<i>    Comments:
+</I>&gt;&gt;<i>    Date:  Freitag, 13. Dezember 2013
+</I>&gt;&gt;<i>    Time: 13:42:04
+</I>&gt;&gt;<i>    Image name:
+</I>&gt;&gt;<i> C:\Users\nephrolab\Pictures\temp_western\mhoehne\eva24__1.TIF
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>    Software information: FusionCapt Advance  Solo 4 16.07
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> ACQUISITION PARAMETERS:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Lens information:
+</I>&gt;&gt;<i>    Iris aperture:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Camera information:
+</I>&gt;&gt;<i>    Integration time acquisition: : 0 min 50 sec 0 msec
+</I>&gt;&gt;<i>    Acquisition mode: Serial/r/n      Image 1/10
+</I>&gt;&gt;<i>    Positive acquisition
+</I>&gt;&gt;<i>    Resolution used: Binning 2x2
+</I>&gt;&gt;<i>    Pixel depth 16 Bit per pixel
+</I>&gt;&gt;<i>    Software acquisition mode: Not defined
+</I>&gt;&gt;<i>    Vigneting filter : Aperture value 0.84
+</I>&gt;&gt;<i>    Sensor area used: : (0, 0, 2048,2048)
+</I>&gt;&gt;<i>    Configuration file used: C:\Users\nephrolab\Documents\Vilber
+</I>&gt;&gt;<i> Lourmat\nephrolab_settings\2x2 binning.prt
+</I>&gt;&gt;<i>    Camera serial number: 275704
+</I>&gt;&gt;<i>    Tray position:  Non applicable
+</I>&gt;&gt;<i>    Application name: 2x2 binning
+</I>&gt;&gt;<i>    Auto mode: User defined autoexposure coef 97%
+</I>&gt;&gt;<i>    USB status: No USB detected
+</I>&gt;&gt;<i>    Imaging system: FusionCapt Advance  Solo 4 16.07
+</I>&gt;&gt;<i>    Camera serial number: 275704   - Firmware &gt;2.0.0&lt;
+</I>&gt;&gt;<i>    USB codage: No darkroom
+</I>&gt;&gt;<i>    Lens configuration: Non applicable
+</I>&gt;&gt;<i>    RGB status: Not installed
+</I>&gt;&gt;<i>    Skylight: Not installed
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Image manipulation
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>    Gray level inversion: No
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> _______________________________________________
+</I>&gt;&gt;<i> SCIFIO mailing list
+</I>&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>
+</I>&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20140116/6aafb371/attachment.html">http://scif.io/pipermail/scifio/attachments/20140116/6aafb371/attachment.html</A>&gt;
+</PRE>
+
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000057.html">[SCIFIO] opening tiff files with ImageJ2
+</A></li>
+	<LI>Next message: <A HREF="000059.html">[SCIFIO] opening tiff files with ImageJ2
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#58">[ date ]</a>
+              <a href="thread.html#58">[ thread ]</a>
+              <a href="subject.html#58">[ subject ]</a>
+              <a href="author.html#58">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

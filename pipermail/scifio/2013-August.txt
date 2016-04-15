@@ -1,0 +1,3084 @@
+From hiner at wisc.edu  Wed Aug  7 09:42:39 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 07 Aug 2013 09:42:39 -0500
+Subject: ImgOpener
+In-Reply-To: <52016EAD.808@gmx.de>
+References: <52016EAD.808@gmx.de>
+Message-ID: <CA+B=mGq3Dp2sxBpHq1mRi6DQBuLYLbKmZuA93Jgz25jyZJMq7w@mail.gmail.com>
+
+Hi Michael,
+
+ I'm copying the scifio mailing list, as this could be of general interest.
+
+bioformats, scifio and scifio-bf-compat are the latest snapshot versions
+> from the maven repository
+>
+
+First of all, I would recommend trying to use the release versions first
+(scifio 0.4.1, scifio-bf-compat 1.0.1). Is there some API in the snapshot
+versions you need specifically? If so, you could then transition from the
+release to snapshots, once you're updated to the SCIFIO 0.4.X API.
+
+Of course, SCIFIO-BF-compat 1.0.0 includes a scifio 0.3.X dependency so
+it's not compatible with 0.4.X... so I understand why you had to use
+snapshots. :(
+
+ * bioformats 4.4.8
+>  * ome-xml 4.5
+>
+
+This looks like a limitation of the current SCIFIO-BF-compat project. First
+of all, it includes bio-formats and ome-xml 4.4.8 dependencies, so you
+shouldn't need to explicitly declare them.
+
+The OME-XML 4.5 with OMEMetadata class isn't really ready for consumption
+yet. Having an OME-XML 4.5 on the classpath with the inherited 4.4.8
+dependency seems like a bad idea. So I think SCIFIO-BF-compat should have
+its own copy of the OMEMetadata class + translators for now, so you can
+translate to it to extract the OME-XML.
+
+This would be a temporary solution until our Bio-Formats fork is actually
+released (which could be a while, and would still have to resolve the 4.5.X
+and 4.4.X dependency issues).
+
+Unless anyone has other suggestions I'll do migrate over the OMEMetadata +
+translators this afternoon and release a SCIFIO-BF-compat 1.1.0. That
+should resolve your dependency issues, at least, by also updating the
+SCIFIO version to 0.4.X, so you can use actual release artifacts.
+
+The error message is "IllegalArgumentException: Invalid dimension order:
+> XYC"
+>
+
+This is a bug introduced in this
+commit<https://github.com/scifio/scifio-bf-compat/commit/677fe7645e26e9e692f0ca823698f50349b69ef7>.
+I will resolve it and make sure you can extract OME-XML with
+scifio-bf-compat + scifio 0.4.1 before releasing.
+
+Hope that helps! Thanks for testing :)
+
+- Mark
+
+
+On Tue, Aug 6, 2013 at 4:46 PM, Michael Zinsmaier
+<michael.zinsmaier at gmx.de>wrote:
+
+> Hi Mark,
+>
+> we just started to use the ImgOpener. Unfortunately I can't open .jpg
+> images.
+> The error message is "IllegalArgumentException: Invalid dimension order:
+> XYC"
+>
+> My last working testversion used
+>  * scifio3.1
+>  * bioformats 4.4.8
+>  * ome-xml 4.5
+>  * scifio-bf-compat 1.0.1
+>
+> and builds from roughly 3 weeks ago
+>
+>
+>
+> the new setup uses
+> * scifio4.2
+>  * bioformats 4.4.8
+>  * ome-xml 4.5
+>  * scifio-bf-compat 1.0.1
+>
+> bioformats, scifio and scifio-bf-compat are the latest snapshot versions
+> from the maven repository, ome-xml
+> is self build updated to the scifio branch from bioformats (last commit
+> 12.07)
+> (By the way can I add the scifio ome-xml with OMEMetadata as maven
+> dependency? If yes how do I do it?)
+>
+> Any ideas?
+>
+> Best regards
+> Michael
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130807/b39fee50/attachment.html>
+
+From michael.zinsmaier at gmx.de  Wed Aug  7 10:28:04 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Wed, 07 Aug 2013 17:28:04 +0200
+Subject: ImgOpener
+In-Reply-To:  <CA+B=mGq3Dp2sxBpHq1mRi6DQBuLYLbKmZuA93Jgz25jyZJMq7w@mail.gmail.com>
+References: <52016EAD.808@gmx.de>
+ <CA+B=mGq3Dp2sxBpHq1mRi6DQBuLYLbKmZuA93Jgz25jyZJMq7w@mail.gmail.com>
+Message-ID: <52026784.2090309@gmx.de>
+
+Hi Mark,
+
+that sound great. We used Snapshot versions because we want to actively 
+test the ImgOpener however given your fast release cycle the latest 
+stable version should be recent enough.
+Removing the need to depend on OME-XML 4.5 would be great.
+
+Regards Michael
+
+> Hi Michael,
+>
+>  I'm copying the scifio mailing list, as this could be of general
+> interest.
+>
+>     bioformats, scifio and scifio-bf-compat are the latest snapshot
+>     versions from the maven repository
+>
+>
+> First of all, I would recommend trying to use the release versions
+> first (scifio 0.4.1, scifio-bf-compat 1.0.1). Is there some API in the
+> snapshot versions you need specifically? If so, you could then
+> transition from the release to snapshots, once you're updated to the
+> SCIFIO 0.4.X API.
+>
+> Of course, SCIFIO-BF-compat 1.0.0 includes a scifio 0.3.X dependency
+> so it's not compatible with 0.4.X... so I understand why you had to
+> use snapshots. :(
+>
+>      * bioformats 4.4.8
+>      * ome-xml 4.5
+>
+>
+> This looks like a limitation of the current SCIFIO-BF-compat project.
+> First of all, it includes bio-formats and ome-xml 4.4.8 dependencies,
+> so you shouldn't need to explicitly declare them.
+>
+> The OME-XML 4.5 with OMEMetadata class isn't really ready for
+> consumption yet. Having an OME-XML 4.5 on the classpath with the
+> inherited 4.4.8 dependency seems like a bad idea. So I think
+> SCIFIO-BF-compat should have its own copy of the OMEMetadata class +
+> translators for now, so you can translate to it to extract the OME-XML.
+>
+> This would be a temporary solution until our Bio-Formats fork is
+> actually released (which could be a while, and would still have to
+> resolve the 4.5.X and 4.4.X dependency issues).
+>
+> Unless anyone has other suggestions I'll do migrate over the
+> OMEMetadata + translators this afternoon and release a
+> SCIFIO-BF-compat 1.1.0. That should resolve your dependency issues, at
+> least, by also updating the SCIFIO version to 0.4.X, so you can use
+> actual release artifacts.
+>
+>     The error message is "IllegalArgumentException: Invalid dimension
+>     order: XYC"
+>
+>
+> This is a bug introduced in this commit
+> <https://github.com/scifio/scifio-bf-compat/commit/677fe7645e26e9e692f0ca823698f50349b69ef7>.
+> I will resolve it and make sure you can extract OME-XML with
+> scifio-bf-compat + scifio 0.4.1 before releasing.
+>
+> Hope that helps! Thanks for testing :)
+>
+> - Mark
+>
+>
+> On Tue, Aug 6, 2013 at 4:46 PM, Michael Zinsmaier
+> <michael.zinsmaier at gmx.de <mailto:michael.zinsmaier at gmx.de>> wrote:
+>
+>     Hi Mark,
+>
+>     we just started to use the ImgOpener. Unfortunately I can't open
+>     .jpg images.
+>     The error message is "IllegalArgumentException: Invalid dimension
+>     order: XYC"
+>
+>     My last working testversion used
+>      * scifio3.1
+>      * bioformats 4.4.8
+>      * ome-xml 4.5
+>      * scifio-bf-compat 1.0.1
+>
+>     and builds from roughly 3 weeks ago
+>
+>
+>
+>     the new setup uses
+>     * scifio4.2
+>      * bioformats 4.4.8
+>      * ome-xml 4.5
+>      * scifio-bf-compat 1.0.1
+>
+>     bioformats, scifio and scifio-bf-compat are the latest snapshot
+>     versions from the maven repository, ome-xml
+>     is self build updated to the scifio branch from bioformats (last
+>     commit 12.07)
+>     (By the way can I add the scifio ome-xml with OMEMetadata as maven
+>     dependency? If yes how do I do it?)
+>
+>     Any ideas?
+>
+>     Best regards
+>     Michael
+>
+>
+
+
+
+From hiner at wisc.edu  Thu Aug  8 13:36:04 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Thu, 08 Aug 2013 13:36:04 -0500
+Subject: ImgOpener
+In-Reply-To: <52026784.2090309@gmx.de>
+References: <52016EAD.808@gmx.de>
+ <CA+B=mGq3Dp2sxBpHq1mRi6DQBuLYLbKmZuA93Jgz25jyZJMq7w@mail.gmail.com>
+ <52026784.2090309@gmx.de>
+Message-ID: <CA+B=mGojjXjLqcf7RZxgBU8uZbij-cCfoz3Vm8ZZiW_+5yO4mw@mail.gmail.com>
+
+Hi Michael,
+
+ Just wanted to let you know that in the latest
+commit<https://github.com/scifio/scifio/commit/9a0cd564ae4665697989cf184af7e306cf096fdb>,
+I updated ImgOptions to allow discontinuous sub-regions to be specified.
+
+ I don't love the API right now, especially since it's still tied to being
+5-D.. so I hope to refine it soon when we switch to an N-D model. But it
+does seem to be functional at least!
+
+ I have OME-XML changes ready for SCIFIO-BF-compat, so we just need to fix
+the dimension order error. Then we can start testing scifio + the
+compatibility layer together and move towards a release.
+
+  I'm out tomorrow so it may not be until early next week.
+
+- Mark
+
+
+On Wed, Aug 7, 2013 at 10:28 AM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+> Hi Mark,
+>
+> that sound great. We used Snapshot versions because we want to actively
+> test the ImgOpener however given your fast release cycle the latest stable
+> version should be recent enough.
+> Removing the need to depend on OME-XML 4.5 would be great.
+>
+> Regards Michael
+>
+>  Hi Michael,
+>>
+>>  I'm copying the scifio mailing list, as this could be of general
+>> interest.
+>>
+>>     bioformats, scifio and scifio-bf-compat are the latest snapshot
+>>     versions from the maven repository
+>>
+>>
+>> First of all, I would recommend trying to use the release versions
+>> first (scifio 0.4.1, scifio-bf-compat 1.0.1). Is there some API in the
+>> snapshot versions you need specifically? If so, you could then
+>> transition from the release to snapshots, once you're updated to the
+>> SCIFIO 0.4.X API.
+>>
+>> Of course, SCIFIO-BF-compat 1.0.0 includes a scifio 0.3.X dependency
+>> so it's not compatible with 0.4.X... so I understand why you had to
+>> use snapshots. :(
+>>
+>>      * bioformats 4.4.8
+>>      * ome-xml 4.5
+>>
+>>
+>> This looks like a limitation of the current SCIFIO-BF-compat project.
+>> First of all, it includes bio-formats and ome-xml 4.4.8 dependencies,
+>> so you shouldn't need to explicitly declare them.
+>>
+>> The OME-XML 4.5 with OMEMetadata class isn't really ready for
+>> consumption yet. Having an OME-XML 4.5 on the classpath with the
+>> inherited 4.4.8 dependency seems like a bad idea. So I think
+>> SCIFIO-BF-compat should have its own copy of the OMEMetadata class +
+>> translators for now, so you can translate to it to extract the OME-XML.
+>>
+>> This would be a temporary solution until our Bio-Formats fork is
+>> actually released (which could be a while, and would still have to
+>> resolve the 4.5.X and 4.4.X dependency issues).
+>>
+>> Unless anyone has other suggestions I'll do migrate over the
+>> OMEMetadata + translators this afternoon and release a
+>> SCIFIO-BF-compat 1.1.0. That should resolve your dependency issues, at
+>> least, by also updating the SCIFIO version to 0.4.X, so you can use
+>> actual release artifacts.
+>>
+>>     The error message is "IllegalArgumentException: Invalid dimension
+>>     order: XYC"
+>>
+>>
+>> This is a bug introduced in this commit
+>> <https://github.com/scifio/**scifio-bf-compat/commit/**
+>> 677fe7645e26e9e692f0ca823698f5**0349b69ef7<https://github.com/scifio/scifio-bf-compat/commit/677fe7645e26e9e692f0ca823698f50349b69ef7>
+>> >.
+>>
+>> I will resolve it and make sure you can extract OME-XML with
+>> scifio-bf-compat + scifio 0.4.1 before releasing.
+>>
+>> Hope that helps! Thanks for testing :)
+>>
+>> - Mark
+>>
+>>
+>> On Tue, Aug 6, 2013 at 4:46 PM, Michael Zinsmaier
+>> <michael.zinsmaier at gmx.de <mailto:michael.zinsmaier at gmx.**de<michael.zinsmaier at gmx.de>>>
+>> wrote:
+>>
+>>     Hi Mark,
+>>
+>>     we just started to use the ImgOpener. Unfortunately I can't open
+>>     .jpg images.
+>>     The error message is "IllegalArgumentException: Invalid dimension
+>>     order: XYC"
+>>
+>>     My last working testversion used
+>>      * scifio3.1
+>>      * bioformats 4.4.8
+>>      * ome-xml 4.5
+>>      * scifio-bf-compat 1.0.1
+>>
+>>     and builds from roughly 3 weeks ago
+>>
+>>
+>>
+>>     the new setup uses
+>>     * scifio4.2
+>>      * bioformats 4.4.8
+>>      * ome-xml 4.5
+>>      * scifio-bf-compat 1.0.1
+>>
+>>     bioformats, scifio and scifio-bf-compat are the latest snapshot
+>>     versions from the maven repository, ome-xml
+>>     is self build updated to the scifio branch from bioformats (last
+>>     commit 12.07)
+>>     (By the way can I add the scifio ome-xml with OMEMetadata as maven
+>>     dependency? If yes how do I do it?)
+>>
+>>     Any ideas?
+>>
+>>     Best regards
+>>     Michael
+>>
+>>
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130808/13dcf4c8/attachment.html>
+
+From michael.zinsmaier at gmx.de  Mon Aug 12 10:39:19 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Mon, 12 Aug 2013 17:39:19 +0200
+Subject: Minimal Service Setup for ImgOpener
+Message-ID: <520901A7.6090405@gmx.de>
+
+Hi all,
+
+we try to create a suitable context for the ImgOpener but on our 
+classpath are several jar files that contain services which we do not 
+intend to use and which cause problems if discovered (e.g. 
+HotdrawService is discovered but we do not include all required 
+libs...). What is the minimal set of Services that we need just for the 
+opener?
+
+or more code based:
+
+given the following methods
+
+     public void foo() {
+         Context c = new Context(getIOContextServices());
+         m_scifio = new SCIFIO(c);
+         FORMATS = m_scifio.format().getAllFormats();
+     }
+
+     private List<Class<? extends Service>> getIOContextServices() {
+         final List services = new ArrayList();
+        services.add(FormatService.class);
+        return services;
+     }
+
+what would be the minimal list of required services in order to get a 
+suitable Context for the ImgOpener?
+
+Regards Michael
+
+
+
+From ctrueden at wisc.edu  Mon Aug 12 13:29:49 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 12 Aug 2013 13:29:49 -0500
+Subject: Minimal Service Setup for ImgOpener
+In-Reply-To: <520901A7.6090405@gmx.de>
+References: <520901A7.6090405@gmx.de>
+Message-ID: <CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+
+Hi Michael,
+
+> What is the minimal set of Services that we need just for the opener?
+
+The noargs ImgOpener constructor is supposed to give you exactly that:
+
+https://github.com/scifio/scifio/blob/8037fd38419030dff000eda84fca9b35909be3a4/scifio/src/main/java/io/scif/img/AbstractImgIOComponent.java#L68
+
+Please let us know if it doesn't work for you!
+
+Regards,
+Curtis
+
+
+On Mon, Aug 12, 2013 at 10:39 AM, Michael Zinsmaier <
+michael.zinsmaier at gmx.de> wrote:
+
+> Hi all,
+>
+> we try to create a suitable context for the ImgOpener but on our classpath
+> are several jar files that contain services which we do not intend to use
+> and which cause problems if discovered (e.g. HotdrawService is discovered
+> but we do not include all required libs...). What is the minimal set of
+> Services that we need just for the opener?
+>
+> or more code based:
+>
+> given the following methods
+>
+>     public void foo() {
+>         Context c = new Context(getIOContextServices()**);
+>         m_scifio = new SCIFIO(c);
+>         FORMATS = m_scifio.format().**getAllFormats();
+>     }
+>
+>     private List<Class<? extends Service>> getIOContextServices() {
+>         final List services = new ArrayList();
+>        services.add(FormatService.**class);
+>        return services;
+>     }
+>
+> what would be the minimal list of required services in order to get a
+> suitable Context for the ImgOpener?
+>
+> Regards Michael
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130812/c756214a/attachment.html>
+
+From michael.zinsmaier at gmx.de  Tue Aug 13 09:37:27 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Tue, 13 Aug 2013 16:37:27 +0200
+Subject: Minimal Service Setup for ImgOpener
+In-Reply-To:  <CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+References: <520901A7.6090405@gmx.de>
+ <CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+Message-ID: <520A44A7.6060702@gmx.de>
+
+Hi Curtis,
+
+it does work as minimal setting.
+But we discovered that we need more services to get the functionality 
+that we need within KNIP (opening all the images that are supported by 
+bioformats). So far we added the following services to open some test 
+pictures: "FormatService.class, CodecService.class, TiffService.class, 
+JAIIIOService.class"
+
+What other services will we need? Or more specific is there a better way 
+than incrementally adding services to get a "Bioformats" ImgOpener 
+running without discovering unrelated services like HotdrawService...
+
+Best Michael
+
+> Hi Michael,
+>
+> > What is the minimal set of Services that we need just for the opener?
+>
+> The noargs ImgOpener constructor is supposed to give you exactly that:
+>
+> https://github.com/scifio/scifio/blob/8037fd38419030dff000eda84fca9b35909be3a4/scifio/src/main/java/io/scif/img/AbstractImgIOComponent.java#L68
+>
+> Please let us know if it doesn't work for you!
+>
+> Regards,
+> Curtis
+>
+>
+> On Mon, Aug 12, 2013 at 10:39 AM, Michael Zinsmaier 
+> <michael.zinsmaier at gmx.de <mailto:michael.zinsmaier at gmx.de>> wrote:
+>
+>     Hi all,
+>
+>     we try to create a suitable context for the ImgOpener but on our
+>     classpath are several jar files that contain services which we do
+>     not intend to use and which cause problems if discovered (e.g.
+>     HotdrawService is discovered but we do not include all required
+>     libs...). What is the minimal set of Services that we need just
+>     for the opener?
+>
+>     or more code based:
+>
+>     given the following methods
+>
+>         public void foo() {
+>             Context c = new Context(getIOContextServices());
+>             m_scifio = new SCIFIO(c);
+>             FORMATS = m_scifio.format().getAllFormats();
+>         }
+>
+>         private List<Class<? extends Service>> getIOContextServices() {
+>             final List services = new ArrayList();
+>            services.add(FormatService.class);
+>            return services;
+>         }
+>
+>     what would be the minimal list of required services in order to
+>     get a suitable Context for the ImgOpener?
+>
+>     Regards Michael
+>
+>
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130813/3cc9eb7b/attachment.html>
+
+From hiner at wisc.edu  Wed Aug 14 08:18:16 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 14 Aug 2013 08:18:16 -0500
+Subject: SCIFIO 0.5.0
+Message-ID: <CA+B=mGqXuTbLaCPxFKYs_dtCDRrhq-9ME0KwNqNTB__N0+9NHA@mail.gmail.com>
+
+Hi all,
+
+ Yesterday I released SCIFIO beta
+0.5.0<https://github.com/scifio/scifio/releases/tag/scifio-0.5.0>.
+There are a number of new features and significant bug fixes, including:
+
+   - Use of CalibratedAxis<https://github.com/imagej/imglib/blob/master/meta/src/main/java/net/imglib2/meta/CalibratedAxis.java>in
+SCIFIO Metadata. This allows for calibration/physical pixel size
+support
+   without requiring OME-XML.
+   - Updates to use the latest
+Scijava-common<https://github.com/scijava/scijava-common>(improved
+logging, Service support, etc..)
+   - Enhanced ImgOptions<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/ImgOptions.java>to
+allow discontinuous
+   sub-region<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/SubRegion.java>specification
+   - Improved CacheService<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/cell/cache/CacheService.java>performance/stability
+   - Fixed memory leaks
+   - Improved Filter<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/filters/Filter.java>functionality
+
+ My current goal is to release a
+SCIFIO-BF-compat<https://github.com/scifio/scifio-bf-compat>update,
+using SCIFIO 0.5.0 and introducing OME-XML Formats, Metadata and
+Translators.
+
+ The next SCIFIO release is 0.6.0, which will be a complete refactoring to
+true N-dimensionality.
+
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130814/49223d6f/attachment.html>
+
+From ctrueden at wisc.edu  Wed Aug 14 22:29:48 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Wed, 14 Aug 2013 22:29:48 -0500
+Subject: [SCIFIO] SCIFIO mailing list
+Message-ID: <CADN69y=A=Q_DGeoAySkJFW6hfsLu4NB8bHi2MZkA+4NR7fSngg@mail.gmail.com>
+
+Hi SCIFIOers,
+
+Earlier today, I discovered a mail server misconfiguration which caused
+messages to this scifio at scif.io mailing list not to be delivered to list
+members, nor archived.
+
+I have rebuilt the archives to include all (22) messages so far. Feel free
+to peruse if interested:
+    http://scif.io/pipermail/scifio/
+
+Henceforth, the list should be working properly.
+
+Regards,
+Curtis
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130814/ec0f12a5/attachment.html>
+
+From hinerm at gmail.com  Thu Aug 15 07:59:11 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Thu, 15 Aug 2013 07:59:11 -0500
+Subject: [SCIFIO] Some small bugs / feature requests
+In-Reply-To: <520CCE00.8020108@gmx.de>
+References: <520CCE00.8020108@gmx.de>
+Message-ID: <CA+B=mGqc26u6DnbdDxHs6yjyaE0BngSdnVabuFo+-HLj2tPvwA@mail.gmail.com>
+
+Hi Michael,
+
+ You're using the scifio-bf-compat snapshot right?
+
+    - we had to add two services to our Scifio Context
+> OMEXMLMetadataService.class, OMEXMLService.class
+>
+
+ Curtis and I talked about a Service solution.. it should be fairly
+straightforward, just have to do it!
+
+
+One other small bug: the OMEMetadata empty constructor is broken
+>
+>
+
+ Yeah, Curtis made the @Parameter injection smarter for Scijava-common, but
+it means no more null contexts allowed. I will fix that, thanks for
+pointing it out!
+
+- but this does not work for jpg images (index out of bounds)
+>
+
+where do you get this exception? I'll write some calibration unit tests
+today to try and cover these scenarios.
+
+Also, where is your calibration data coming from exactly? I don't believe
+there's any metadata in JPEG that's explicitly being translated to
+calibration values. So currently the expected behavior would be to see
+default calibration (1.0um) for each axis.
+
+Still, setting the calibration after initializing Metadata should work..
+can you share the code snippet that's doing the setting?
+
+    - and I have at least one .lsm image that fails with a null pointer if
+> I load it with .openImg.
+>       This error is not related to our attemps to get callibration working
+>       (img in the appendix)
+>
+
+Thanks for providing the failing image. I'll test that today.
+
+I looked today at the interval selection code. Could you add a long[]
+> constructor for DimRange? I think a simple one that just lists all included
+> indices should be enough (equivalent to the string constructor with
+> "a,b,c,d"   long[] {a,b,c,d})
+>
+
+Yep, that sounds reasonable :) I may release a 0.5.2 today because of some
+ImgSaver bug fixes I made yesterday.. so if so, this will be included as
+well.
+
+Thanks for the feedback,
+Mark
+
+
+On Thu, Aug 15, 2013 at 7:48 AM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+> Hi Mark,
+>
+> yay the new libs (currently scifio-bf-compat 1.0.1 / scifio-0.5.1 /
+> scijava-common-2.0.2) are working (-:
+>
+> Callibration still makes some trouble (I know that is super early
+> implementation stage but anyways)
+>     - we had to add two services to our Scifio Context
+> OMEXMLMetadataService.class, OMEXMLService.class
+>     - the ImgPlus returned by ImgOpener.openImg does not contain
+> callibration values
+>
+>     because of the 2nd point we added a small hack: we currently add the
+> calibration values after loading of the image (calibration values
+>     come from metadata -> ome metadata)
+>
+>     - but this does not work for jpg images (index out of bounds)
+>
+>     - and I have at least one .lsm image that fails with a null pointer if
+> I load it with .openImg.
+>       This error is not related to our attemps to get callibration working
+>       (img in the appendix)
+>
+>
+>
+> One other small bug: the OMEMetadata empty constructor is broken
+>
+>   OMEMEtadata()     ->     this(null)
+>         OMEMetadata(final Context context)       -> this(context, null);
+>             OMEMetadata(final Context context, final OMEXMLMetadata root)
+>      ->    setContext(context)
+>                     context.inject(this);
+>
+>     => NullPointer
+>
+>
+> And finally a feature request:
+> I looked today at the interval selection code. Could you add a long[]
+> constructor for DimRange? I think a simple one that just lists all included
+> indices should be enough (equivalent to the string constructor with
+> "a,b,c,d"   long[] {a,b,c,d})
+>
+> Best regards
+> Michael
+>
+>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130815/c27bb257/attachment.html>
+
+From hiner at wisc.edu  Tue Aug 20 13:47:41 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Tue, 20 Aug 2013 13:47:41 -0500
+Subject: [SCIFIO] New releases: SCIFIO 0.6.0 + SCIFIO-BF-compat 1.1.0
+Message-ID: <CA+B=mGrTLPbfwc_1K4vxXc771oUBYWY9SC1A1KoVCvL1VfT8iw@mail.gmail.com>
+
+Hi all,
+
+ Two releases today! These releases include the latest
+SciJava-common<https://github.com/scijava/scijava-common>and
+ImgLib <https://github.com/imagej/imglib>, which added the capacity to load
+multiple descendants of a single service, and fixed several bugs with
+CalibratedAxis<https://github.com/imagej/imglib/blob/master/meta/src/main/java/net/imglib2/meta/CalibratedAxis.java>,
+respectively.
+
+ Highlights of these releases include:
+
+*SCIFIO 0.6.0*
+- Created a SCIFIOService<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/SCIFIOService.java>class.
+All SCIFIO Services extend this base interface. This allows a
+SciJava Context<https://github.com/scijava/scijava-common/blob/master/src/main/java/org/scijava/Context.java>to
+be created listing just SCIFIOService.class and SciJavaService.class,
+and all necessary subclasses will be included automatically. This is the
+recommended way to create a Context if you want to limit its scope to
+classes required by SCIFIO.
+
+- Bug fixes for the use of CalibratedAxis
+
+- Several format-specific bug fixes
+
+- Bug fixes for ImgOpener and ImgSaver behavior
+
+- Added calibration value tokens to
+FakeFormat<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/formats/FakeFormat.java>
+
+*SCIFIO-BF-compat 1.1.0*
+- All services now extend SCIFIOService. Thus, if a context is created
+using SCIFIOService.class, it will not need to specify any additional
+services when scifio-bf-compat is added to the classpath.
+
+- More CalibratedAxis fixes!
+
+- Rolled back N-D logic in the BioFormatsFormat. Unfortunately, SCIFIO is
+still fixed 5-D and the N-D logic was incompatible with several utility
+methods. This will be re-introduced when SCIFIO goes N-D.
+
+- Added OME-XML<https://github.com/scifio/scifio-bf-compat/tree/master/src/main/java/io/scif/ome/xml>classes!
+All the converted OME-XML-based formats are now available in
+SCIFIO-BF-compat, including translators between several existing formats.
+Also, these classes can now take advantage of the CalibratedAxis framework
+in SCIFIO to better preserve calibration values.
+
+*Future plans*
+Hoping to get N-D refactoring into the SCIFIO 0.7.0 release. Unfortunately,
+the CalibratedAxis changes left a number of bugs that necessitated a
+release sooner rather than later.
+
+We'll also be releasing a new component between SCIFIO-bf-compat and
+SCIFIO, which includes translated Bio-Formats (proprietary) formats. Our
+first priority will be improving TIFF performance in SCIFIO, then
+translating the
+PrairieReader<https://github.com/openmicroscopy/bioformats/blob/develop/components/bio-formats/src/loci/formats/in/PrairieReader.java>to
+take advantage of the updated TIFFFormat.
+
+If you have any questions or run into bugs, let me know!
+
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130820/bedf9f75/attachment.html>
+
+From hinerm at gmail.com  Fri Aug 23 08:51:57 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Fri, 23 Aug 2013 08:51:57 -0500
+Subject: [SCIFIO] ImgOpener - ImgOptions - SubRegions
+In-Reply-To: <5217158E.20007@gmx.de>
+References: <5217158E.20007@gmx.de>
+Message-ID: <CA+B=mGrHbPHJOESKfr54PTnrEh_FtoCWWE-1S7gnsoQJAROfHA@mail.gmail.com>
+
+Hi Michael,
+
+ I was only able to reproduce this when trying to create a SubRegion for
+Axes that weren't present.
+
+ In the case of ImgOpener, Axes of length 1 are discarded... so they
+effectively "aren't present" and can't have a SubRegion applied to them
+(since they are implicitly included anyway in the image).
+
+ Unfortunately, I'm not sure how to make the error reporting better, in
+general, on this issue.. since, when constructing a SubRegion, there's no
+way to know what dataset(s) it will be applied to... it's up to the
+consuming software to use the SubRegion information when reading the
+dataset.
+
+ I could add some defensive checks to verify that axes are present.. but
+this whole system is going to be reworked in 0.7.0 for N-dimensionality. So
+I'm going to add a comment to our N-dim
+ticket<https://github.com/scifio/scifio/issues/19>to test this.
+
+ For now, in your code, can you check if an axis length is < 2 before
+creating the SubRegion, and if so - don't add it to the SubRegion
+specification?
+
+ Oh - if you are getting this issue for Axes you know have a length > 1,
+send me the dataset, because something else is going on there. :)
+
+Thanks,
+Mark
+
+
+
+
+On Fri, Aug 23, 2013 at 2:55 AM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+> Hi together,
+>
+> defining intervals via the ImgOptions mechanism seems not to work if you
+> define an Interval only for one Axes (except for Channel).
+> E.g. consider that you want to select only time=0 from a 5dim Image
+> (x,y,Channel,z,Time) and define the SubRegion as follows
+> new SubRegion(new AxesType[]{Time}, new Range[]{0}). An array index out of
+> bounds exception is thrown.
+>
+> It does however work if you do the same thing with Channel and it works
+> also if you specify Ranges for Channel, Z and Time.
+>
+> The API of SubRegion (Map Constructor) gives me the feeling that is should
+> not be necessary to specify Axes that I want to include completly.
+> I hope thats correct if not I would like to suggest to change it.
+>
+> Best regards
+> Michael
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130823/7a69e006/attachment.html>
+
+From michael.zinsmaier at gmx.de  Fri Aug 23 02:55:58 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Fri, 23 Aug 2013 09:55:58 +0200
+Subject: [SCIFIO] ImgOpener - ImgOptions - SubRegions
+Message-ID: <5217158E.20007@gmx.de>
+
+Hi together,
+
+defining intervals via the ImgOptions mechanism seems not to work if you 
+define an Interval only for one Axes (except for Channel).
+E.g. consider that you want to select only time=0 from a 5dim Image 
+(x,y,Channel,z,Time) and define the SubRegion as follows
+new SubRegion(new AxesType[]{Time}, new Range[]{0}). An array index out 
+of bounds exception is thrown.
+
+It does however work if you do the same thing with Channel and it works 
+also if you specify Ranges for Channel, Z and Time.
+
+The API of SubRegion (Map Constructor) gives me the feeling that is 
+should not be necessary to specify Axes that I want to include completly.
+I hope thats correct if not I would like to suggest to change it.
+
+Best regards
+Michael
+
+
+From hiner at wisc.edu  Fri Aug 23 10:52:05 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Fri, 23 Aug 2013 10:52:05 -0500
+Subject: [SCIFIO] SCIFIO github issues
+Message-ID: <CA+B=mGp7=7_SFfGyTnbhvO22b7LoAcR=-pr3K6to4hpLGb186Q@mail.gmail.com>
+
+Hi all,
+
+ Just wanted to let everyone know that I recently consolidated the OME trac
+and my own list of TODOs with the SCIFIO
+issues<https://github.com/scifio/scifio/issues>page on github. These
+issues are now the official location to monitor
+SCIFIO progress.
+
+ Curtis and I added a bunch of labels to approximate trac granularity, and
+I set up a few base milestones. So hopefully this will make it much easier
+to see what's going on with SCIFIO's development, and our plans for the
+future.
+
+ Let us know if you feel like anything's lacking from these issues (in
+usability, or issues themselves :) ).
+
+Thanks,
+Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130823/179d0673/attachment.html>
+
+From hinerm at gmail.com  Fri Aug 23 11:16:07 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Fri, 23 Aug 2013 11:16:07 -0500
+Subject: [SCIFIO] error pictures
+In-Reply-To: <52173987.8090805@gmx.de>
+References: <52173987.8090805@gmx.de>
+Message-ID: <CA+B=mGpm25EL4egWqx=DAw2CbSSwMSRzrJvC1c8FHALCFG7R6g@mail.gmail.com>
+
+Hi Michael,
+
+ I decided to copy the scifio list on this after determining that it is a
+general issue with the SCIFIO framework.
+
+ The problem is that, although several formats allow pixel types < 8 bits
+(e.g. the images you provided were binary images), all the
+SCIFIO/Bio-Formats framework is built around N-bytes per pixel image types.
+
+  I made an issue <https://github.com/scifio/scifio/issues/55> to support
+less than 1 bit per pixel... but I'm not fully sure how deep these changes
+would go. So I'll have to look into it.
+
+- Mark
+
+On Fri, Aug 23, 2013 at 5:29 AM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+> Hi Mark,
+>
+> I attached two images that throw a FormatException  ...byte depth 0....
+> Should I report such pictures also via the mailing list (with/without the
+> attachment)?
+>
+> Sry today seems to be not as troublefree as yesterday )-:
+>
+> Regards Michael
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130823/9ce03524/attachment.html>
+
+From michael.zinsmaier at gmx.de  Mon Aug 26 01:07:48 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Mon, 26 Aug 2013 08:07:48 +0200
+Subject: [SCIFIO] ImgOpener - ImgOptions - SubRegions
+In-Reply-To: <CA+B=mGrHbPHJOESKfr54PTnrEh_FtoCWWE-1S7gnsoQJAROfHA@mail.gmail.com>
+References: <5217158E.20007@gmx.de>
+	<CA+B=mGrHbPHJOESKfr54PTnrEh_FtoCWWE-1S7gnsoQJAROfHA@mail.gmail.com>
+Message-ID: <521AF0B4.4020007@gmx.de>
+
+Hi Mark,
+
+I get the error for a dataset with axes > 2. I perpared some sample code 
+(maybe something is wrong here) and I'll send you the file in a seperate 
+mail.
+
+Regards Michael
+
+----------------------------------------------------------------
+
+     public static void main(String[] args) throws FormatException, 
+IOException, ImgIOException, InstantiableException {
+             String imgRef = 
+"C:/Users/zinsmaie/Desktop/bilder/5d/2chZT.lsm";
+
+             Context c = new Context(SciJavaService.class, 
+SCIFIOService.class);
+             SCIFIO sci = new SCIFIO(c);
+
+             Reader reader = sci.initializer()
+                     .initializeReader(imgRef, true);
+
+             ImgOptions options = new ImgOptions();
+
+//WORKS
+//                DimRange[] ranges = new DimRange[] {new DimRange("0")};
+//                AxisType[] axes = new AxisType[] {Axes.CHANNEL};
+//EXCEPTION
+                 DimRange[] ranges = new DimRange[] {new DimRange("0-10")};
+                 AxisType[] axes = new AxisType[] {Axes.Z};
+//WORKS
+//                    DimRange[] ranges = new DimRange[] {new 
+DimRange("0"), new DimRange("0-10")};
+//                    AxisType[] axes = new AxisType[] {Axes.CHANNEL, 
+Axes.Z};
+
+
+                 options.setRegion(new SubRegion(axes, ranges));
+
+         ImgPlus<RealType> ret = new ImgOpener().openImg(reader,
+                     new UnsignedByteType(), new ArrayImgFactory(), 
+options);
+
+         System.out.println(ret.getName());
+     }
+> Hi Michael,
+>
+>  I was only able to reproduce this when trying to create a SubRegion 
+> for Axes that weren't present.
+>
+>  In the case of ImgOpener, Axes of length 1 are discarded... so they 
+> effectively "aren't present" and can't have a SubRegion applied to 
+> them (since they are implicitly included anyway in the image).
+>
+>  Unfortunately, I'm not sure how to make the error reporting better, 
+> in general, on this issue.. since, when constructing a SubRegion, 
+> there's no way to know what dataset(s) it will be applied to... it's 
+> up to the consuming software to use the SubRegion information when 
+> reading the dataset.
+>
+>  I could add some defensive checks to verify that axes are present.. 
+> but this whole system is going to be reworked in 0.7.0 for 
+> N-dimensionality. So I'm going to add a comment to our N-dim ticket 
+> <https://github.com/scifio/scifio/issues/19> to test this.
+>
+>  For now, in your code, can you check if an axis length is < 2 before 
+> creating the SubRegion, and if so - don't add it to the SubRegion 
+> specification?
+>
+>  Oh - if you are getting this issue for Axes you know have a length > 
+> 1, send me the dataset, because something else is going on there. :)
+>
+> Thanks,
+> Mark
+>
+>
+>
+>
+> On Fri, Aug 23, 2013 at 2:55 AM, Michael Zinsmaier 
+> <michael.zinsmaier at gmx.de <mailto:michael.zinsmaier at gmx.de>> wrote:
+>
+>     Hi together,
+>
+>     defining intervals via the ImgOptions mechanism seems not to work
+>     if you define an Interval only for one Axes (except for Channel).
+>     E.g. consider that you want to select only time=0 from a 5dim
+>     Image (x,y,Channel,z,Time) and define the SubRegion as follows
+>     new SubRegion(new AxesType[]{Time}, new Range[]{0}). An array
+>     index out of bounds exception is thrown.
+>
+>     It does however work if you do the same thing with Channel and it
+>     works also if you specify Ranges for Channel, Z and Time.
+>
+>     The API of SubRegion (Map Constructor) gives me the feeling that
+>     is should not be necessary to specify Axes that I want to include
+>     completly.
+>     I hope thats correct if not I would like to suggest to change it.
+>
+>     Best regards
+>     Michael
+>
+>
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130826/182c451d/attachment.html>
+
+From michael.zinsmaier at gmx.de  Mon Aug 26 07:13:16 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Mon, 26 Aug 2013 14:13:16 +0200
+Subject: [SCIFIO] reuse reader for files of same format
+Message-ID: <521B465C.3050400@gmx.de>
+
+Hi together,
+
+is it possible to use the same reader for multiple files of the same format?
+I want to read e.g. 10  .png files that may differ in their 
+dimensionality but use all the same format and encoding can I reuse a 
+reader instead of doing the potentially expensive format tests for each 
+file. We tried it naively with reader.setSource which somehow works but
+dimensionality and size data is not rediscovered => the reader tries to 
+load all images with the same size.
+
+Is their a better way to do this?
+(We still want to use the format discovery for the first image but 
+assume for all others that they have the same format.)
+
+Best Regards Michael
+
+
+From hinerm at gmail.com  Mon Aug 26 07:53:22 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 26 Aug 2013 07:53:22 -0500
+Subject: [SCIFIO] reuse reader for files of same format
+In-Reply-To: <521B465C.3050400@gmx.de>
+References: <521B465C.3050400@gmx.de>
+Message-ID: <CA+B=mGpH+N-fu=59ydpQ=QVryU59PgcaNcCnb=UsNbqrTFk9Jg@mail.gmail.com>
+
+Hi Michael,
+
+  This definitely should work. The Metadata attached to a Reader should
+determine the image dimensionality, and the Metadata should be re-parsed
+automatically when setting the source.
+
+ Oh.. but looking at the source, the PNG reader has state (it remembers the
+last plane it read. So if the reader was stateless (which it's supposed to
+be) it should work. I'll just have to make a pass through the formats and
+remove any state from the readers, or if that's not possible I'll make sure
+they reset properly when calling setSource.
+
+Thanks for pointing this out,
+Mark
+
+
+On Mon, Aug 26, 2013 at 7:13 AM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+> Hi together,
+>
+> is it possible to use the same reader for multiple files of the same
+> format?
+> I want to read e.g. 10  .png files that may differ in their dimensionality
+> but use all the same format and encoding can I reuse a reader instead of
+> doing the potentially expensive format tests for each file. We tried it
+> naively with reader.setSource which somehow works but
+> dimensionality and size data is not rediscovered => the reader tries to
+> load all images with the same size.
+>
+> Is their a better way to do this?
+> (We still want to use the format discovery for the first image but assume
+> for all others that they have the same format.)
+>
+> Best Regards Michael
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130826/b69b229b/attachment.html>
+
+From hinerm at gmail.com  Mon Aug 26 08:02:51 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 26 Aug 2013 08:02:51 -0500
+Subject: [SCIFIO] reuse reader for files of same format
+In-Reply-To: <CA+B=mGpH+N-fu=59ydpQ=QVryU59PgcaNcCnb=UsNbqrTFk9Jg@mail.gmail.com>
+References: <521B465C.3050400@gmx.de>
+	<CA+B=mGpH+N-fu=59ydpQ=QVryU59PgcaNcCnb=UsNbqrTFk9Jg@mail.gmail.com>
+Message-ID: <CA+B=mGr18DjPBMRusAsr59A06h=+WhioXCFMcxyNmvaDwdrYgQ@mail.gmail.com>
+
+See Issue 57 <https://github.com/scifio/scifio/issues/57>
+
+
+On Mon, Aug 26, 2013 at 7:53 AM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Hi Michael,
+>
+>   This definitely should work. The Metadata attached to a Reader should
+> determine the image dimensionality, and the Metadata should be re-parsed
+> automatically when setting the source.
+>
+>  Oh.. but looking at the source, the PNG reader has state (it remembers
+> the last plane it read. So if the reader was stateless (which it's supposed
+> to be) it should work. I'll just have to make a pass through the formats
+> and remove any state from the readers, or if that's not possible I'll make
+> sure they reset properly when calling setSource.
+>
+> Thanks for pointing this out,
+> Mark
+>
+>
+> On Mon, Aug 26, 2013 at 7:13 AM, Michael Zinsmaier <
+> michael.zinsmaier at gmx.de> wrote:
+>
+>> Hi together,
+>>
+>> is it possible to use the same reader for multiple files of the same
+>> format?
+>> I want to read e.g. 10  .png files that may differ in their
+>> dimensionality but use all the same format and encoding can I reuse a
+>> reader instead of doing the potentially expensive format tests for each
+>> file. We tried it naively with reader.setSource which somehow works but
+>> dimensionality and size data is not rediscovered => the reader tries to
+>> load all images with the same size.
+>>
+>> Is their a better way to do this?
+>> (We still want to use the format discovery for the first image but assume
+>> for all others that they have the same format.)
+>>
+>> Best Regards Michael
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130826/42b9a031/attachment.html>
+
+From hinerm at gmail.com  Mon Aug 26 09:44:23 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 26 Aug 2013 09:44:23 -0500
+Subject: [SCIFIO] ImgOpener - ImgOptions - SubRegions
+In-Reply-To: <521B606B.7090409@gmx.de>
+References: <5217158E.20007@gmx.de>
+	<CA+B=mGrHbPHJOESKfr54PTnrEh_FtoCWWE-1S7gnsoQJAROfHA@mail.gmail.com>
+	<521AF0B4.4020007@gmx.de>
+	<CA+B=mGos+G7zbYTkiB7NVr3z1peTShf=tC-pMuwV_vvXxS4_6g@mail.gmail.com>
+	<521B606B.7090409@gmx.de>
+Message-ID: <CA+B=mGqFmsZzfUjfM0aibs2yip8YoTpF=4_UbRLHq+cYNCGDSw@mail.gmail.com>
+
+Hi Michael,
+
+ Right now I get an ArrayIndexOutOfBounds at line 60 of the
+ByteArrayLoader, as it tries to populate the ImgPlus using planes read by
+SCIFIO.
+
+ On my end, this is because the ImgPlus gets constrained properly to the
+desired subregion, but ImgOpener tries to jam in all 21 Z slices.. so the
+source is too big for the destination, and it gets AIOOB when copying,
+eventually.
+
+  Looks like the SubRegion application only considered if the SubRegion
+actually contains a given Axis for X and Y. Then for ZCT it just always
+applies whatever constraints it has. (e.g. it was trying to constrain C to
+0-10 instead of Z, because the dimension order was CZT)
+
+  I standardized this check so it's the same for each axis, and now your
+code works for me :)
+
+  Fixed on latest master (issue 58<https://github.com/scifio/scifio/issues/58>
+).
+
+- Mark
+
+
+On Mon, Aug 26, 2013 at 9:04 AM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+> Hi Mark,
+>
+> if you get the same error that is thrown at my place its an
+> ArrayIndexOutof Bounds ...
+> I tried to track it down already and it might be an Error in ImgOpener
+> readPlanes  line 599 following.
+>
+> The while loop skips X, and Y but enters CHANNEL although the Subregion is
+> set for Z which seems to be realted to this snippet
+> "dimsPlaced < region.size()"
+>
+> I'm not sure what  is going on there but it seems somehow incorrect (-:
+> maybe this helps you
+>
+> best Michael
+>
+>
+> Am Montag, 26. August 2013 15:38:44 schrieb Mark Hiner:
+>
+>> Hi Michael,
+>>
+>>  I was able to confirm this code fails locally, although I don't think
+>> it's an issue with the calibration (or your code).
+>>
+>> Without SCIFIO-BF-compat, this fails because it defaults to the
+>> MinimalTIFFReader, which compresses the axes to a single plane (thus
+>> there is no Z, thus it fails).
+>>
+>> With SCIFIO-BF-compat, it opens correctly as an LSM.. but it seems
+>> that the ImgPlus that's created is too small. The # of dimensions are
+>> being read correctly (e.g., same as in the current FIJI) so I'm not
+>> sure why the array is the wrong size.. looking into it now.
+>>
+>> - Mark
+>>
+>>
+>> On Mon, Aug 26, 2013 at 1:07 AM, Michael Zinsmaier
+>> <michael.zinsmaier at gmx.de <mailto:michael.zinsmaier at gmx.**de<michael.zinsmaier at gmx.de>>>
+>> wrote:
+>>
+>>     Hi Mark,
+>>
+>>     I get the error for a dataset with axes > 2. I perpared some
+>>     sample code (maybe something is wrong here) and I'll send you the
+>>     file in a seperate mail.
+>>
+>>     Regards Michael
+>>
+>>     ------------------------------**------------------------------**----
+>>
+>>         public static void main(String[] args) throws FormatException,
+>>     IOException, ImgIOException, InstantiableException {
+>>                 String imgRef =
+>>     "C:/Users/zinsmaie/Desktop/**bilder/5d/2chZT.lsm";
+>>
+>>                 Context c = new Context(SciJavaService.class,
+>>     SCIFIOService.class);
+>>                 SCIFIO sci = new SCIFIO(c);
+>>
+>>                 Reader reader = sci.initializer()
+>>                         .initializeReader(imgRef, true);
+>>
+>>                 ImgOptions options = new ImgOptions();
+>>
+>>     //WORKS
+>>     //                DimRange[] ranges = new DimRange[] {new
+>>     DimRange("0")};
+>>     //                AxisType[] axes = new AxisType[] {Axes.CHANNEL};
+>>     //EXCEPTION
+>>                     DimRange[] ranges = new DimRange[] {new
+>>     DimRange("0-10")};
+>>                     AxisType[] axes = new AxisType[] {Axes.Z};
+>>     //WORKS
+>>     //                    DimRange[] ranges = new DimRange[] {new
+>>     DimRange("0"), new DimRange("0-10")};
+>>     //                    AxisType[] axes = new AxisType[]
+>>     {Axes.CHANNEL, Axes.Z};
+>>
+>>
+>>                     options.setRegion(new SubRegion(axes, ranges));
+>>
+>>             ImgPlus<RealType> ret = new ImgOpener().openImg(reader,
+>>                         new UnsignedByteType(), new ArrayImgFactory(),
+>>     options);
+>>
+>>             System.out.println(ret.**getName());
+>>         }
+>>
+>>>     Hi Michael,
+>>>
+>>>      I was only able to reproduce this when trying to create a
+>>>     SubRegion for Axes that weren't present.
+>>>
+>>>      In the case of ImgOpener, Axes of length 1 are discarded... so
+>>>     they effectively "aren't present" and can't have a SubRegion
+>>>     applied to them (since they are implicitly included anyway in the
+>>>     image).
+>>>
+>>>      Unfortunately, I'm not sure how to make the error reporting
+>>>     better, in general, on this issue.. since, when constructing a
+>>>     SubRegion, there's no way to know what dataset(s) it will be
+>>>     applied to... it's up to the consuming software to use the
+>>>     SubRegion information when reading the dataset.
+>>>
+>>>      I could add some defensive checks to verify that axes are
+>>>     present.. but this whole system is going to be reworked in 0.7.0
+>>>     for N-dimensionality. So I'm going to add a comment to our N-dim
+>>>     ticket <https://github.com/scifio/**scifio/issues/19<https://github.com/scifio/scifio/issues/19>>
+>>> to test this.
+>>>
+>>>
+>>>      For now, in your code, can you check if an axis length is < 2
+>>>     before creating the SubRegion, and if so - don't add it to the
+>>>     SubRegion specification?
+>>>
+>>>      Oh - if you are getting this issue for Axes you know have a
+>>>     length > 1, send me the dataset, because something else is going
+>>>     on there. :)
+>>>
+>>>     Thanks,
+>>>     Mark
+>>>
+>>>
+>>>
+>>>
+>>>     On Fri, Aug 23, 2013 at 2:55 AM, Michael Zinsmaier
+>>>     <michael.zinsmaier at gmx.de <mailto:michael.zinsmaier at gmx.**de<michael.zinsmaier at gmx.de>>>
+>>> wrote:
+>>>
+>>>         Hi together,
+>>>
+>>>         defining intervals via the ImgOptions mechanism seems not to
+>>>         work if you define an Interval only for one Axes (except for
+>>>         Channel).
+>>>         E.g. consider that you want to select only time=0 from a 5dim
+>>>         Image (x,y,Channel,z,Time) and define the SubRegion as follows
+>>>         new SubRegion(new AxesType[]{Time}, new Range[]{0}). An array
+>>>         index out of bounds exception is thrown.
+>>>
+>>>         It does however work if you do the same thing with Channel
+>>>         and it works also if you specify Ranges for Channel, Z and Time.
+>>>
+>>>         The API of SubRegion (Map Constructor) gives me the feeling
+>>>         that is should not be necessary to specify Axes that I want
+>>>         to include completly.
+>>>         I hope thats correct if not I would like to suggest to change it.
+>>>
+>>>         Best regards
+>>>         Michael
+>>>
+>>>
+>>>
+>>
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130826/cefaa0c3/attachment-0001.html>
+
+From hinerm at gmail.com  Mon Aug 26 13:14:57 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 26 Aug 2013 13:14:57 -0500
+Subject: [SCIFIO] reuse reader for files of same format
+In-Reply-To: <CA+B=mGr18DjPBMRusAsr59A06h=+WhioXCFMcxyNmvaDwdrYgQ@mail.gmail.com>
+References: <521B465C.3050400@gmx.de>
+	<CA+B=mGpH+N-fu=59ydpQ=QVryU59PgcaNcCnb=UsNbqrTFk9Jg@mail.gmail.com>
+	<CA+B=mGr18DjPBMRusAsr59A06h=+WhioXCFMcxyNmvaDwdrYgQ@mail.gmail.com>
+Message-ID: <CA+B=mGq97ZS8K_+Q4VndTrK-xds=5Rf7PeiGAy+jZfWsoO=V3Q@mail.gmail.com>
+
+Should be fixed on master. Let me know if you run into any more issues
+reusing readers though.
+
+
+On Mon, Aug 26, 2013 at 8:02 AM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> See Issue 57 <https://github.com/scifio/scifio/issues/57>
+>
+>
+> On Mon, Aug 26, 2013 at 7:53 AM, Mark Hiner <hinerm at gmail.com> wrote:
+>
+>> Hi Michael,
+>>
+>>   This definitely should work. The Metadata attached to a Reader should
+>> determine the image dimensionality, and the Metadata should be re-parsed
+>> automatically when setting the source.
+>>
+>>  Oh.. but looking at the source, the PNG reader has state (it remembers
+>> the last plane it read. So if the reader was stateless (which it's supposed
+>> to be) it should work. I'll just have to make a pass through the formats
+>> and remove any state from the readers, or if that's not possible I'll make
+>> sure they reset properly when calling setSource.
+>>
+>> Thanks for pointing this out,
+>> Mark
+>>
+>>
+>> On Mon, Aug 26, 2013 at 7:13 AM, Michael Zinsmaier <
+>> michael.zinsmaier at gmx.de> wrote:
+>>
+>>> Hi together,
+>>>
+>>> is it possible to use the same reader for multiple files of the same
+>>> format?
+>>> I want to read e.g. 10  .png files that may differ in their
+>>> dimensionality but use all the same format and encoding can I reuse a
+>>> reader instead of doing the potentially expensive format tests for each
+>>> file. We tried it naively with reader.setSource which somehow works but
+>>> dimensionality and size data is not rediscovered => the reader tries to
+>>> load all images with the same size.
+>>>
+>>> Is their a better way to do this?
+>>> (We still want to use the format discovery for the first image but
+>>> assume for all others that they have the same format.)
+>>>
+>>> Best Regards Michael
+>>>
+>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130826/8bcccd24/attachment.html>
+
+From hinerm at gmail.com  Tue Aug 27 09:54:01 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Tue, 27 Aug 2013 09:54:01 -0500
+Subject: [SCIFIO] reuse reader for files of same format
+In-Reply-To: <CA+B=mGq97ZS8K_+Q4VndTrK-xds=5Rf7PeiGAy+jZfWsoO=V3Q@mail.gmail.com>
+References: <521B465C.3050400@gmx.de>
+	<CA+B=mGpH+N-fu=59ydpQ=QVryU59PgcaNcCnb=UsNbqrTFk9Jg@mail.gmail.com>
+	<CA+B=mGr18DjPBMRusAsr59A06h=+WhioXCFMcxyNmvaDwdrYgQ@mail.gmail.com>
+	<CA+B=mGq97ZS8K_+Q4VndTrK-xds=5Rf7PeiGAy+jZfWsoO=V3Q@mail.gmail.com>
+Message-ID: <CA+B=mGoUpz0Tqg_TmBgK_hgUthZ1kRd_DQHs31M8D+PWW6tWyw@mail.gmail.com>
+
+Hi all,
+
+ This was an issue with ReaderFilters specifically not catching all of the
+magic that happens when setting the source on a Reader. Fixed & tested as
+of
+https://github.com/scifio/scifio/commit/fa5c4993ca429fe427378134f6cb480057fda332
+
+- Mark
+
+
+On Mon, Aug 26, 2013 at 1:14 PM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Should be fixed on master. Let me know if you run into any more issues
+> reusing readers though.
+>
+>
+> On Mon, Aug 26, 2013 at 8:02 AM, Mark Hiner <hinerm at gmail.com> wrote:
+>
+>> See Issue 57 <https://github.com/scifio/scifio/issues/57>
+>>
+>>
+>> On Mon, Aug 26, 2013 at 7:53 AM, Mark Hiner <hinerm at gmail.com> wrote:
+>>
+>>> Hi Michael,
+>>>
+>>>   This definitely should work. The Metadata attached to a Reader should
+>>> determine the image dimensionality, and the Metadata should be re-parsed
+>>> automatically when setting the source.
+>>>
+>>>  Oh.. but looking at the source, the PNG reader has state (it remembers
+>>> the last plane it read. So if the reader was stateless (which it's supposed
+>>> to be) it should work. I'll just have to make a pass through the formats
+>>> and remove any state from the readers, or if that's not possible I'll make
+>>> sure they reset properly when calling setSource.
+>>>
+>>> Thanks for pointing this out,
+>>> Mark
+>>>
+>>>
+>>> On Mon, Aug 26, 2013 at 7:13 AM, Michael Zinsmaier <
+>>> michael.zinsmaier at gmx.de> wrote:
+>>>
+>>>> Hi together,
+>>>>
+>>>> is it possible to use the same reader for multiple files of the same
+>>>> format?
+>>>> I want to read e.g. 10  .png files that may differ in their
+>>>> dimensionality but use all the same format and encoding can I reuse a
+>>>> reader instead of doing the potentially expensive format tests for each
+>>>> file. We tried it naively with reader.setSource which somehow works but
+>>>> dimensionality and size data is not rediscovered => the reader tries to
+>>>> load all images with the same size.
+>>>>
+>>>> Is their a better way to do this?
+>>>> (We still want to use the format discovery for the first image but
+>>>> assume for all others that they have the same format.)
+>>>>
+>>>> Best Regards Michael
+>>>>
+>>>
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130827/3352b231/attachment.html>
+
+From hiner at wisc.edu  Wed Aug  7 09:42:39 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 07 Aug 2013 09:42:39 -0500
+Subject: ImgOpener
+In-Reply-To: <52016EAD.808@gmx.de>
+References: <52016EAD.808@gmx.de>
+Message-ID: <CA+B=mGq3Dp2sxBpHq1mRi6DQBuLYLbKmZuA93Jgz25jyZJMq7w@mail.gmail.com>
+
+Hi Michael,
+
+ I'm copying the scifio mailing list, as this could be of general interest.
+
+bioformats, scifio and scifio-bf-compat are the latest snapshot versions
+> from the maven repository
+>
+
+First of all, I would recommend trying to use the release versions first
+(scifio 0.4.1, scifio-bf-compat 1.0.1). Is there some API in the snapshot
+versions you need specifically? If so, you could then transition from the
+release to snapshots, once you're updated to the SCIFIO 0.4.X API.
+
+Of course, SCIFIO-BF-compat 1.0.0 includes a scifio 0.3.X dependency so
+it's not compatible with 0.4.X... so I understand why you had to use
+snapshots. :(
+
+ * bioformats 4.4.8
+>  * ome-xml 4.5
+>
+
+This looks like a limitation of the current SCIFIO-BF-compat project. First
+of all, it includes bio-formats and ome-xml 4.4.8 dependencies, so you
+shouldn't need to explicitly declare them.
+
+The OME-XML 4.5 with OMEMetadata class isn't really ready for consumption
+yet. Having an OME-XML 4.5 on the classpath with the inherited 4.4.8
+dependency seems like a bad idea. So I think SCIFIO-BF-compat should have
+its own copy of the OMEMetadata class + translators for now, so you can
+translate to it to extract the OME-XML.
+
+This would be a temporary solution until our Bio-Formats fork is actually
+released (which could be a while, and would still have to resolve the 4.5.X
+and 4.4.X dependency issues).
+
+Unless anyone has other suggestions I'll do migrate over the OMEMetadata +
+translators this afternoon and release a SCIFIO-BF-compat 1.1.0. That
+should resolve your dependency issues, at least, by also updating the
+SCIFIO version to 0.4.X, so you can use actual release artifacts.
+
+The error message is "IllegalArgumentException: Invalid dimension order:
+> XYC"
+>
+
+This is a bug introduced in this
+commit<https://github.com/scifio/scifio-bf-compat/commit/677fe7645e26e9e692f0ca823698f50349b69ef7>.
+I will resolve it and make sure you can extract OME-XML with
+scifio-bf-compat + scifio 0.4.1 before releasing.
+
+Hope that helps! Thanks for testing :)
+
+- Mark
+
+
+On Tue, Aug 6, 2013 at 4:46 PM, Michael Zinsmaier
+<michael.zinsmaier at gmx.de>wrote:
+
+> Hi Mark,
+>
+> we just started to use the ImgOpener. Unfortunately I can't open .jpg
+> images.
+> The error message is "IllegalArgumentException: Invalid dimension order:
+> XYC"
+>
+> My last working testversion used
+>  * scifio3.1
+>  * bioformats 4.4.8
+>  * ome-xml 4.5
+>  * scifio-bf-compat 1.0.1
+>
+> and builds from roughly 3 weeks ago
+>
+>
+>
+> the new setup uses
+> * scifio4.2
+>  * bioformats 4.4.8
+>  * ome-xml 4.5
+>  * scifio-bf-compat 1.0.1
+>
+> bioformats, scifio and scifio-bf-compat are the latest snapshot versions
+> from the maven repository, ome-xml
+> is self build updated to the scifio branch from bioformats (last commit
+> 12.07)
+> (By the way can I add the scifio ome-xml with OMEMetadata as maven
+> dependency? If yes how do I do it?)
+>
+> Any ideas?
+>
+> Best regards
+> Michael
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130807/b39fee50/attachment-0001.html>
+
+From michael.zinsmaier at gmx.de  Wed Aug  7 10:28:04 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Wed, 07 Aug 2013 17:28:04 +0200
+Subject: ImgOpener
+In-Reply-To:  <CA+B=mGq3Dp2sxBpHq1mRi6DQBuLYLbKmZuA93Jgz25jyZJMq7w@mail.gmail.com>
+References: <52016EAD.808@gmx.de>
+ <CA+B=mGq3Dp2sxBpHq1mRi6DQBuLYLbKmZuA93Jgz25jyZJMq7w@mail.gmail.com>
+Message-ID: <52026784.2090309@gmx.de>
+
+Hi Mark,
+
+that sound great. We used Snapshot versions because we want to actively 
+test the ImgOpener however given your fast release cycle the latest 
+stable version should be recent enough.
+Removing the need to depend on OME-XML 4.5 would be great.
+
+Regards Michael
+
+> Hi Michael,
+>
+>  I'm copying the scifio mailing list, as this could be of general
+> interest.
+>
+>     bioformats, scifio and scifio-bf-compat are the latest snapshot
+>     versions from the maven repository
+>
+>
+> First of all, I would recommend trying to use the release versions
+> first (scifio 0.4.1, scifio-bf-compat 1.0.1). Is there some API in the
+> snapshot versions you need specifically? If so, you could then
+> transition from the release to snapshots, once you're updated to the
+> SCIFIO 0.4.X API.
+>
+> Of course, SCIFIO-BF-compat 1.0.0 includes a scifio 0.3.X dependency
+> so it's not compatible with 0.4.X... so I understand why you had to
+> use snapshots. :(
+>
+>      * bioformats 4.4.8
+>      * ome-xml 4.5
+>
+>
+> This looks like a limitation of the current SCIFIO-BF-compat project.
+> First of all, it includes bio-formats and ome-xml 4.4.8 dependencies,
+> so you shouldn't need to explicitly declare them.
+>
+> The OME-XML 4.5 with OMEMetadata class isn't really ready for
+> consumption yet. Having an OME-XML 4.5 on the classpath with the
+> inherited 4.4.8 dependency seems like a bad idea. So I think
+> SCIFIO-BF-compat should have its own copy of the OMEMetadata class +
+> translators for now, so you can translate to it to extract the OME-XML.
+>
+> This would be a temporary solution until our Bio-Formats fork is
+> actually released (which could be a while, and would still have to
+> resolve the 4.5.X and 4.4.X dependency issues).
+>
+> Unless anyone has other suggestions I'll do migrate over the
+> OMEMetadata + translators this afternoon and release a
+> SCIFIO-BF-compat 1.1.0. That should resolve your dependency issues, at
+> least, by also updating the SCIFIO version to 0.4.X, so you can use
+> actual release artifacts.
+>
+>     The error message is "IllegalArgumentException: Invalid dimension
+>     order: XYC"
+>
+>
+> This is a bug introduced in this commit
+> <https://github.com/scifio/scifio-bf-compat/commit/677fe7645e26e9e692f0ca823698f50349b69ef7>.
+> I will resolve it and make sure you can extract OME-XML with
+> scifio-bf-compat + scifio 0.4.1 before releasing.
+>
+> Hope that helps! Thanks for testing :)
+>
+> - Mark
+>
+>
+> On Tue, Aug 6, 2013 at 4:46 PM, Michael Zinsmaier
+> <michael.zinsmaier at gmx.de <mailto:michael.zinsmaier at gmx.de>> wrote:
+>
+>     Hi Mark,
+>
+>     we just started to use the ImgOpener. Unfortunately I can't open
+>     .jpg images.
+>     The error message is "IllegalArgumentException: Invalid dimension
+>     order: XYC"
+>
+>     My last working testversion used
+>      * scifio3.1
+>      * bioformats 4.4.8
+>      * ome-xml 4.5
+>      * scifio-bf-compat 1.0.1
+>
+>     and builds from roughly 3 weeks ago
+>
+>
+>
+>     the new setup uses
+>     * scifio4.2
+>      * bioformats 4.4.8
+>      * ome-xml 4.5
+>      * scifio-bf-compat 1.0.1
+>
+>     bioformats, scifio and scifio-bf-compat are the latest snapshot
+>     versions from the maven repository, ome-xml
+>     is self build updated to the scifio branch from bioformats (last
+>     commit 12.07)
+>     (By the way can I add the scifio ome-xml with OMEMetadata as maven
+>     dependency? If yes how do I do it?)
+>
+>     Any ideas?
+>
+>     Best regards
+>     Michael
+>
+>
+
+
+
+From hiner at wisc.edu  Thu Aug  8 13:36:04 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Thu, 08 Aug 2013 13:36:04 -0500
+Subject: ImgOpener
+In-Reply-To: <52026784.2090309@gmx.de>
+References: <52016EAD.808@gmx.de>
+ <CA+B=mGq3Dp2sxBpHq1mRi6DQBuLYLbKmZuA93Jgz25jyZJMq7w@mail.gmail.com>
+ <52026784.2090309@gmx.de>
+Message-ID: <CA+B=mGojjXjLqcf7RZxgBU8uZbij-cCfoz3Vm8ZZiW_+5yO4mw@mail.gmail.com>
+
+Hi Michael,
+
+ Just wanted to let you know that in the latest
+commit<https://github.com/scifio/scifio/commit/9a0cd564ae4665697989cf184af7e306cf096fdb>,
+I updated ImgOptions to allow discontinuous sub-regions to be specified.
+
+ I don't love the API right now, especially since it's still tied to being
+5-D.. so I hope to refine it soon when we switch to an N-D model. But it
+does seem to be functional at least!
+
+ I have OME-XML changes ready for SCIFIO-BF-compat, so we just need to fix
+the dimension order error. Then we can start testing scifio + the
+compatibility layer together and move towards a release.
+
+  I'm out tomorrow so it may not be until early next week.
+
+- Mark
+
+
+On Wed, Aug 7, 2013 at 10:28 AM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+> Hi Mark,
+>
+> that sound great. We used Snapshot versions because we want to actively
+> test the ImgOpener however given your fast release cycle the latest stable
+> version should be recent enough.
+> Removing the need to depend on OME-XML 4.5 would be great.
+>
+> Regards Michael
+>
+>  Hi Michael,
+>>
+>>  I'm copying the scifio mailing list, as this could be of general
+>> interest.
+>>
+>>     bioformats, scifio and scifio-bf-compat are the latest snapshot
+>>     versions from the maven repository
+>>
+>>
+>> First of all, I would recommend trying to use the release versions
+>> first (scifio 0.4.1, scifio-bf-compat 1.0.1). Is there some API in the
+>> snapshot versions you need specifically? If so, you could then
+>> transition from the release to snapshots, once you're updated to the
+>> SCIFIO 0.4.X API.
+>>
+>> Of course, SCIFIO-BF-compat 1.0.0 includes a scifio 0.3.X dependency
+>> so it's not compatible with 0.4.X... so I understand why you had to
+>> use snapshots. :(
+>>
+>>      * bioformats 4.4.8
+>>      * ome-xml 4.5
+>>
+>>
+>> This looks like a limitation of the current SCIFIO-BF-compat project.
+>> First of all, it includes bio-formats and ome-xml 4.4.8 dependencies,
+>> so you shouldn't need to explicitly declare them.
+>>
+>> The OME-XML 4.5 with OMEMetadata class isn't really ready for
+>> consumption yet. Having an OME-XML 4.5 on the classpath with the
+>> inherited 4.4.8 dependency seems like a bad idea. So I think
+>> SCIFIO-BF-compat should have its own copy of the OMEMetadata class +
+>> translators for now, so you can translate to it to extract the OME-XML.
+>>
+>> This would be a temporary solution until our Bio-Formats fork is
+>> actually released (which could be a while, and would still have to
+>> resolve the 4.5.X and 4.4.X dependency issues).
+>>
+>> Unless anyone has other suggestions I'll do migrate over the
+>> OMEMetadata + translators this afternoon and release a
+>> SCIFIO-BF-compat 1.1.0. That should resolve your dependency issues, at
+>> least, by also updating the SCIFIO version to 0.4.X, so you can use
+>> actual release artifacts.
+>>
+>>     The error message is "IllegalArgumentException: Invalid dimension
+>>     order: XYC"
+>>
+>>
+>> This is a bug introduced in this commit
+>> <https://github.com/scifio/**scifio-bf-compat/commit/**
+>> 677fe7645e26e9e692f0ca823698f5**0349b69ef7<https://github.com/scifio/scifio-bf-compat/commit/677fe7645e26e9e692f0ca823698f50349b69ef7>
+>> >.
+>>
+>> I will resolve it and make sure you can extract OME-XML with
+>> scifio-bf-compat + scifio 0.4.1 before releasing.
+>>
+>> Hope that helps! Thanks for testing :)
+>>
+>> - Mark
+>>
+>>
+>> On Tue, Aug 6, 2013 at 4:46 PM, Michael Zinsmaier
+>> <michael.zinsmaier at gmx.de <mailto:michael.zinsmaier at gmx.**de<michael.zinsmaier at gmx.de>>>
+>> wrote:
+>>
+>>     Hi Mark,
+>>
+>>     we just started to use the ImgOpener. Unfortunately I can't open
+>>     .jpg images.
+>>     The error message is "IllegalArgumentException: Invalid dimension
+>>     order: XYC"
+>>
+>>     My last working testversion used
+>>      * scifio3.1
+>>      * bioformats 4.4.8
+>>      * ome-xml 4.5
+>>      * scifio-bf-compat 1.0.1
+>>
+>>     and builds from roughly 3 weeks ago
+>>
+>>
+>>
+>>     the new setup uses
+>>     * scifio4.2
+>>      * bioformats 4.4.8
+>>      * ome-xml 4.5
+>>      * scifio-bf-compat 1.0.1
+>>
+>>     bioformats, scifio and scifio-bf-compat are the latest snapshot
+>>     versions from the maven repository, ome-xml
+>>     is self build updated to the scifio branch from bioformats (last
+>>     commit 12.07)
+>>     (By the way can I add the scifio ome-xml with OMEMetadata as maven
+>>     dependency? If yes how do I do it?)
+>>
+>>     Any ideas?
+>>
+>>     Best regards
+>>     Michael
+>>
+>>
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130808/13dcf4c8/attachment-0001.html>
+
+From michael.zinsmaier at gmx.de  Mon Aug 12 10:39:19 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Mon, 12 Aug 2013 17:39:19 +0200
+Subject: Minimal Service Setup for ImgOpener
+Message-ID: <520901A7.6090405@gmx.de>
+
+Hi all,
+
+we try to create a suitable context for the ImgOpener but on our 
+classpath are several jar files that contain services which we do not 
+intend to use and which cause problems if discovered (e.g. 
+HotdrawService is discovered but we do not include all required 
+libs...). What is the minimal set of Services that we need just for the 
+opener?
+
+or more code based:
+
+given the following methods
+
+     public void foo() {
+         Context c = new Context(getIOContextServices());
+         m_scifio = new SCIFIO(c);
+         FORMATS = m_scifio.format().getAllFormats();
+     }
+
+     private List<Class<? extends Service>> getIOContextServices() {
+         final List services = new ArrayList();
+        services.add(FormatService.class);
+        return services;
+     }
+
+what would be the minimal list of required services in order to get a 
+suitable Context for the ImgOpener?
+
+Regards Michael
+
+
+
+From ctrueden at wisc.edu  Mon Aug 12 13:29:49 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 12 Aug 2013 13:29:49 -0500
+Subject: Minimal Service Setup for ImgOpener
+In-Reply-To: <520901A7.6090405@gmx.de>
+References: <520901A7.6090405@gmx.de>
+Message-ID: <CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+
+Hi Michael,
+
+> What is the minimal set of Services that we need just for the opener?
+
+The noargs ImgOpener constructor is supposed to give you exactly that:
+
+https://github.com/scifio/scifio/blob/8037fd38419030dff000eda84fca9b35909be3a4/scifio/src/main/java/io/scif/img/AbstractImgIOComponent.java#L68
+
+Please let us know if it doesn't work for you!
+
+Regards,
+Curtis
+
+
+On Mon, Aug 12, 2013 at 10:39 AM, Michael Zinsmaier <
+michael.zinsmaier at gmx.de> wrote:
+
+> Hi all,
+>
+> we try to create a suitable context for the ImgOpener but on our classpath
+> are several jar files that contain services which we do not intend to use
+> and which cause problems if discovered (e.g. HotdrawService is discovered
+> but we do not include all required libs...). What is the minimal set of
+> Services that we need just for the opener?
+>
+> or more code based:
+>
+> given the following methods
+>
+>     public void foo() {
+>         Context c = new Context(getIOContextServices()**);
+>         m_scifio = new SCIFIO(c);
+>         FORMATS = m_scifio.format().**getAllFormats();
+>     }
+>
+>     private List<Class<? extends Service>> getIOContextServices() {
+>         final List services = new ArrayList();
+>        services.add(FormatService.**class);
+>        return services;
+>     }
+>
+> what would be the minimal list of required services in order to get a
+> suitable Context for the ImgOpener?
+>
+> Regards Michael
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130812/c756214a/attachment-0001.html>
+
+From michael.zinsmaier at gmx.de  Tue Aug 13 09:37:27 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Tue, 13 Aug 2013 16:37:27 +0200
+Subject: Minimal Service Setup for ImgOpener
+In-Reply-To:  <CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+References: <520901A7.6090405@gmx.de>
+ <CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+Message-ID: <520A44A7.6060702@gmx.de>
+
+Hi Curtis,
+
+it does work as minimal setting.
+But we discovered that we need more services to get the functionality 
+that we need within KNIP (opening all the images that are supported by 
+bioformats). So far we added the following services to open some test 
+pictures: "FormatService.class, CodecService.class, TiffService.class, 
+JAIIIOService.class"
+
+What other services will we need? Or more specific is there a better way 
+than incrementally adding services to get a "Bioformats" ImgOpener 
+running without discovering unrelated services like HotdrawService...
+
+Best Michael
+
+> Hi Michael,
+>
+> > What is the minimal set of Services that we need just for the opener?
+>
+> The noargs ImgOpener constructor is supposed to give you exactly that:
+>
+> https://github.com/scifio/scifio/blob/8037fd38419030dff000eda84fca9b35909be3a4/scifio/src/main/java/io/scif/img/AbstractImgIOComponent.java#L68
+>
+> Please let us know if it doesn't work for you!
+>
+> Regards,
+> Curtis
+>
+>
+> On Mon, Aug 12, 2013 at 10:39 AM, Michael Zinsmaier 
+> <michael.zinsmaier at gmx.de <mailto:michael.zinsmaier at gmx.de>> wrote:
+>
+>     Hi all,
+>
+>     we try to create a suitable context for the ImgOpener but on our
+>     classpath are several jar files that contain services which we do
+>     not intend to use and which cause problems if discovered (e.g.
+>     HotdrawService is discovered but we do not include all required
+>     libs...). What is the minimal set of Services that we need just
+>     for the opener?
+>
+>     or more code based:
+>
+>     given the following methods
+>
+>         public void foo() {
+>             Context c = new Context(getIOContextServices());
+>             m_scifio = new SCIFIO(c);
+>             FORMATS = m_scifio.format().getAllFormats();
+>         }
+>
+>         private List<Class<? extends Service>> getIOContextServices() {
+>             final List services = new ArrayList();
+>            services.add(FormatService.class);
+>            return services;
+>         }
+>
+>     what would be the minimal list of required services in order to
+>     get a suitable Context for the ImgOpener?
+>
+>     Regards Michael
+>
+>
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130813/3cc9eb7b/attachment-0001.html>
+
+From hiner at wisc.edu  Wed Aug 14 08:18:16 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 14 Aug 2013 08:18:16 -0500
+Subject: SCIFIO 0.5.0
+Message-ID: <CA+B=mGqXuTbLaCPxFKYs_dtCDRrhq-9ME0KwNqNTB__N0+9NHA@mail.gmail.com>
+
+Hi all,
+
+ Yesterday I released SCIFIO beta
+0.5.0<https://github.com/scifio/scifio/releases/tag/scifio-0.5.0>.
+There are a number of new features and significant bug fixes, including:
+
+   - Use of CalibratedAxis<https://github.com/imagej/imglib/blob/master/meta/src/main/java/net/imglib2/meta/CalibratedAxis.java>in
+SCIFIO Metadata. This allows for calibration/physical pixel size
+support
+   without requiring OME-XML.
+   - Updates to use the latest
+Scijava-common<https://github.com/scijava/scijava-common>(improved
+logging, Service support, etc..)
+   - Enhanced ImgOptions<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/ImgOptions.java>to
+allow discontinuous
+   sub-region<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/SubRegion.java>specification
+   - Improved CacheService<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/cell/cache/CacheService.java>performance/stability
+   - Fixed memory leaks
+   - Improved Filter<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/filters/Filter.java>functionality
+
+ My current goal is to release a
+SCIFIO-BF-compat<https://github.com/scifio/scifio-bf-compat>update,
+using SCIFIO 0.5.0 and introducing OME-XML Formats, Metadata and
+Translators.
+
+ The next SCIFIO release is 0.6.0, which will be a complete refactoring to
+true N-dimensionality.
+
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130814/49223d6f/attachment-0001.html>
+
+From ctrueden at wisc.edu  Wed Aug 14 22:29:48 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Wed, 14 Aug 2013 22:29:48 -0500
+Subject: [SCIFIO] SCIFIO mailing list
+Message-ID: <CADN69y=A=Q_DGeoAySkJFW6hfsLu4NB8bHi2MZkA+4NR7fSngg@mail.gmail.com>
+
+Hi SCIFIOers,
+
+Earlier today, I discovered a mail server misconfiguration which caused
+messages to this scifio at scif.io mailing list not to be delivered to list
+members, nor archived.
+
+I have rebuilt the archives to include all (22) messages so far. Feel free
+to peruse if interested:
+    http://scif.io/pipermail/scifio/
+
+Henceforth, the list should be working properly.
+
+Regards,
+Curtis
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130814/ec0f12a5/attachment-0002.html>
+
+From hinerm at gmail.com  Thu Aug 15 07:59:11 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Thu, 15 Aug 2013 07:59:11 -0500
+Subject: [SCIFIO] Some small bugs / feature requests
+In-Reply-To: <520CCE00.8020108@gmx.de>
+References: <520CCE00.8020108@gmx.de>
+Message-ID: <CA+B=mGqc26u6DnbdDxHs6yjyaE0BngSdnVabuFo+-HLj2tPvwA@mail.gmail.com>
+
+Hi Michael,
+
+ You're using the scifio-bf-compat snapshot right?
+
+    - we had to add two services to our Scifio Context
+> OMEXMLMetadataService.class, OMEXMLService.class
+>
+
+ Curtis and I talked about a Service solution.. it should be fairly
+straightforward, just have to do it!
+
+
+One other small bug: the OMEMetadata empty constructor is broken
+>
+>
+
+ Yeah, Curtis made the @Parameter injection smarter for Scijava-common, but
+it means no more null contexts allowed. I will fix that, thanks for
+pointing it out!
+
+- but this does not work for jpg images (index out of bounds)
+>
+
+where do you get this exception? I'll write some calibration unit tests
+today to try and cover these scenarios.
+
+Also, where is your calibration data coming from exactly? I don't believe
+there's any metadata in JPEG that's explicitly being translated to
+calibration values. So currently the expected behavior would be to see
+default calibration (1.0um) for each axis.
+
+Still, setting the calibration after initializing Metadata should work..
+can you share the code snippet that's doing the setting?
+
+    - and I have at least one .lsm image that fails with a null pointer if
+> I load it with .openImg.
+>       This error is not related to our attemps to get callibration working
+>       (img in the appendix)
+>
+
+Thanks for providing the failing image. I'll test that today.
+
+I looked today at the interval selection code. Could you add a long[]
+> constructor for DimRange? I think a simple one that just lists all included
+> indices should be enough (equivalent to the string constructor with
+> "a,b,c,d"   long[] {a,b,c,d})
+>
+
+Yep, that sounds reasonable :) I may release a 0.5.2 today because of some
+ImgSaver bug fixes I made yesterday.. so if so, this will be included as
+well.
+
+Thanks for the feedback,
+Mark
+
+
+On Thu, Aug 15, 2013 at 7:48 AM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+> Hi Mark,
+>
+> yay the new libs (currently scifio-bf-compat 1.0.1 / scifio-0.5.1 /
+> scijava-common-2.0.2) are working (-:
+>
+> Callibration still makes some trouble (I know that is super early
+> implementation stage but anyways)
+>     - we had to add two services to our Scifio Context
+> OMEXMLMetadataService.class, OMEXMLService.class
+>     - the ImgPlus returned by ImgOpener.openImg does not contain
+> callibration values
+>
+>     because of the 2nd point we added a small hack: we currently add the
+> calibration values after loading of the image (calibration values
+>     come from metadata -> ome metadata)
+>
+>     - but this does not work for jpg images (index out of bounds)
+>
+>     - and I have at least one .lsm image that fails with a null pointer if
+> I load it with .openImg.
+>       This error is not related to our attemps to get callibration working
+>       (img in the appendix)
+>
+>
+>
+> One other small bug: the OMEMetadata empty constructor is broken
+>
+>   OMEMEtadata()     ->     this(null)
+>         OMEMetadata(final Context context)       -> this(context, null);
+>             OMEMetadata(final Context context, final OMEXMLMetadata root)
+>      ->    setContext(context)
+>                     context.inject(this);
+>
+>     => NullPointer
+>
+>
+> And finally a feature request:
+> I looked today at the interval selection code. Could you add a long[]
+> constructor for DimRange? I think a simple one that just lists all included
+> indices should be enough (equivalent to the string constructor with
+> "a,b,c,d"   long[] {a,b,c,d})
+>
+> Best regards
+> Michael
+>
+>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130815/c27bb257/attachment-0002.html>
+
+From hiner at wisc.edu  Tue Aug 20 13:47:41 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Tue, 20 Aug 2013 13:47:41 -0500
+Subject: [SCIFIO] New releases: SCIFIO 0.6.0 + SCIFIO-BF-compat 1.1.0
+Message-ID: <CA+B=mGrTLPbfwc_1K4vxXc771oUBYWY9SC1A1KoVCvL1VfT8iw@mail.gmail.com>
+
+Hi all,
+
+ Two releases today! These releases include the latest
+SciJava-common<https://github.com/scijava/scijava-common>and
+ImgLib <https://github.com/imagej/imglib>, which added the capacity to load
+multiple descendants of a single service, and fixed several bugs with
+CalibratedAxis<https://github.com/imagej/imglib/blob/master/meta/src/main/java/net/imglib2/meta/CalibratedAxis.java>,
+respectively.
+
+ Highlights of these releases include:
+
+*SCIFIO 0.6.0*
+- Created a SCIFIOService<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/SCIFIOService.java>class.
+All SCIFIO Services extend this base interface. This allows a
+SciJava Context<https://github.com/scijava/scijava-common/blob/master/src/main/java/org/scijava/Context.java>to
+be created listing just SCIFIOService.class and SciJavaService.class,
+and all necessary subclasses will be included automatically. This is the
+recommended way to create a Context if you want to limit its scope to
+classes required by SCIFIO.
+
+- Bug fixes for the use of CalibratedAxis
+
+- Several format-specific bug fixes
+
+- Bug fixes for ImgOpener and ImgSaver behavior
+
+- Added calibration value tokens to
+FakeFormat<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/formats/FakeFormat.java>
+
+*SCIFIO-BF-compat 1.1.0*
+- All services now extend SCIFIOService. Thus, if a context is created
+using SCIFIOService.class, it will not need to specify any additional
+services when scifio-bf-compat is added to the classpath.
+
+- More CalibratedAxis fixes!
+
+- Rolled back N-D logic in the BioFormatsFormat. Unfortunately, SCIFIO is
+still fixed 5-D and the N-D logic was incompatible with several utility
+methods. This will be re-introduced when SCIFIO goes N-D.
+
+- Added OME-XML<https://github.com/scifio/scifio-bf-compat/tree/master/src/main/java/io/scif/ome/xml>classes!
+All the converted OME-XML-based formats are now available in
+SCIFIO-BF-compat, including translators between several existing formats.
+Also, these classes can now take advantage of the CalibratedAxis framework
+in SCIFIO to better preserve calibration values.
+
+*Future plans*
+Hoping to get N-D refactoring into the SCIFIO 0.7.0 release. Unfortunately,
+the CalibratedAxis changes left a number of bugs that necessitated a
+release sooner rather than later.
+
+We'll also be releasing a new component between SCIFIO-bf-compat and
+SCIFIO, which includes translated Bio-Formats (proprietary) formats. Our
+first priority will be improving TIFF performance in SCIFIO, then
+translating the
+PrairieReader<https://github.com/openmicroscopy/bioformats/blob/develop/components/bio-formats/src/loci/formats/in/PrairieReader.java>to
+take advantage of the updated TIFFFormat.
+
+If you have any questions or run into bugs, let me know!
+
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130820/bedf9f75/attachment-0002.html>
+
+From hinerm at gmail.com  Fri Aug 23 08:51:57 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Fri, 23 Aug 2013 08:51:57 -0500
+Subject: [SCIFIO] ImgOpener - ImgOptions - SubRegions
+In-Reply-To: <5217158E.20007@gmx.de>
+References: <5217158E.20007@gmx.de>
+Message-ID: <CA+B=mGrHbPHJOESKfr54PTnrEh_FtoCWWE-1S7gnsoQJAROfHA@mail.gmail.com>
+
+Hi Michael,
+
+ I was only able to reproduce this when trying to create a SubRegion for
+Axes that weren't present.
+
+ In the case of ImgOpener, Axes of length 1 are discarded... so they
+effectively "aren't present" and can't have a SubRegion applied to them
+(since they are implicitly included anyway in the image).
+
+ Unfortunately, I'm not sure how to make the error reporting better, in
+general, on this issue.. since, when constructing a SubRegion, there's no
+way to know what dataset(s) it will be applied to... it's up to the
+consuming software to use the SubRegion information when reading the
+dataset.
+
+ I could add some defensive checks to verify that axes are present.. but
+this whole system is going to be reworked in 0.7.0 for N-dimensionality. So
+I'm going to add a comment to our N-dim
+ticket<https://github.com/scifio/scifio/issues/19>to test this.
+
+ For now, in your code, can you check if an axis length is < 2 before
+creating the SubRegion, and if so - don't add it to the SubRegion
+specification?
+
+ Oh - if you are getting this issue for Axes you know have a length > 1,
+send me the dataset, because something else is going on there. :)
+
+Thanks,
+Mark
+
+
+
+
+On Fri, Aug 23, 2013 at 2:55 AM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+> Hi together,
+>
+> defining intervals via the ImgOptions mechanism seems not to work if you
+> define an Interval only for one Axes (except for Channel).
+> E.g. consider that you want to select only time=0 from a 5dim Image
+> (x,y,Channel,z,Time) and define the SubRegion as follows
+> new SubRegion(new AxesType[]{Time}, new Range[]{0}). An array index out of
+> bounds exception is thrown.
+>
+> It does however work if you do the same thing with Channel and it works
+> also if you specify Ranges for Channel, Z and Time.
+>
+> The API of SubRegion (Map Constructor) gives me the feeling that is should
+> not be necessary to specify Axes that I want to include completly.
+> I hope thats correct if not I would like to suggest to change it.
+>
+> Best regards
+> Michael
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130823/7a69e006/attachment-0002.html>
+
+From michael.zinsmaier at gmx.de  Fri Aug 23 02:55:58 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Fri, 23 Aug 2013 09:55:58 +0200
+Subject: [SCIFIO] ImgOpener - ImgOptions - SubRegions
+Message-ID: <5217158E.20007@gmx.de>
+
+Hi together,
+
+defining intervals via the ImgOptions mechanism seems not to work if you 
+define an Interval only for one Axes (except for Channel).
+E.g. consider that you want to select only time=0 from a 5dim Image 
+(x,y,Channel,z,Time) and define the SubRegion as follows
+new SubRegion(new AxesType[]{Time}, new Range[]{0}). An array index out 
+of bounds exception is thrown.
+
+It does however work if you do the same thing with Channel and it works 
+also if you specify Ranges for Channel, Z and Time.
+
+The API of SubRegion (Map Constructor) gives me the feeling that is 
+should not be necessary to specify Axes that I want to include completly.
+I hope thats correct if not I would like to suggest to change it.
+
+Best regards
+Michael
+
+
+
+From hiner at wisc.edu  Fri Aug 23 10:52:05 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Fri, 23 Aug 2013 10:52:05 -0500
+Subject: [SCIFIO] SCIFIO github issues
+Message-ID: <CA+B=mGp7=7_SFfGyTnbhvO22b7LoAcR=-pr3K6to4hpLGb186Q@mail.gmail.com>
+
+Hi all,
+
+ Just wanted to let everyone know that I recently consolidated the OME trac
+and my own list of TODOs with the SCIFIO
+issues<https://github.com/scifio/scifio/issues>page on github. These
+issues are now the official location to monitor
+SCIFIO progress.
+
+ Curtis and I added a bunch of labels to approximate trac granularity, and
+I set up a few base milestones. So hopefully this will make it much easier
+to see what's going on with SCIFIO's development, and our plans for the
+future.
+
+ Let us know if you feel like anything's lacking from these issues (in
+usability, or issues themselves :) ).
+
+Thanks,
+Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130823/179d0673/attachment-0002.html>
+
+From hinerm at gmail.com  Fri Aug 23 11:16:07 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Fri, 23 Aug 2013 11:16:07 -0500
+Subject: [SCIFIO] error pictures
+In-Reply-To: <52173987.8090805@gmx.de>
+References: <52173987.8090805@gmx.de>
+Message-ID: <CA+B=mGpm25EL4egWqx=DAw2CbSSwMSRzrJvC1c8FHALCFG7R6g@mail.gmail.com>
+
+Hi Michael,
+
+ I decided to copy the scifio list on this after determining that it is a
+general issue with the SCIFIO framework.
+
+ The problem is that, although several formats allow pixel types < 8 bits
+(e.g. the images you provided were binary images), all the
+SCIFIO/Bio-Formats framework is built around N-bytes per pixel image types.
+
+  I made an issue <https://github.com/scifio/scifio/issues/55> to support
+less than 1 bit per pixel... but I'm not fully sure how deep these changes
+would go. So I'll have to look into it.
+
+- Mark
+
+On Fri, Aug 23, 2013 at 5:29 AM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+> Hi Mark,
+>
+> I attached two images that throw a FormatException  ...byte depth 0....
+> Should I report such pictures also via the mailing list (with/without the
+> attachment)?
+>
+> Sry today seems to be not as troublefree as yesterday )-:
+>
+> Regards Michael
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130823/9ce03524/attachment-0002.html>
+
+From michael.zinsmaier at gmx.de  Mon Aug 26 01:07:48 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Mon, 26 Aug 2013 08:07:48 +0200
+Subject: [SCIFIO] ImgOpener - ImgOptions - SubRegions
+In-Reply-To: <CA+B=mGrHbPHJOESKfr54PTnrEh_FtoCWWE-1S7gnsoQJAROfHA@mail.gmail.com>
+References: <5217158E.20007@gmx.de>
+	<CA+B=mGrHbPHJOESKfr54PTnrEh_FtoCWWE-1S7gnsoQJAROfHA@mail.gmail.com>
+Message-ID: <521AF0B4.4020007@gmx.de>
+
+Hi Mark,
+
+I get the error for a dataset with axes > 2. I perpared some sample code 
+(maybe something is wrong here) and I'll send you the file in a seperate 
+mail.
+
+Regards Michael
+
+----------------------------------------------------------------
+
+     public static void main(String[] args) throws FormatException, 
+IOException, ImgIOException, InstantiableException {
+             String imgRef = 
+"C:/Users/zinsmaie/Desktop/bilder/5d/2chZT.lsm";
+
+             Context c = new Context(SciJavaService.class, 
+SCIFIOService.class);
+             SCIFIO sci = new SCIFIO(c);
+
+             Reader reader = sci.initializer()
+                     .initializeReader(imgRef, true);
+
+             ImgOptions options = new ImgOptions();
+
+//WORKS
+//                DimRange[] ranges = new DimRange[] {new DimRange("0")};
+//                AxisType[] axes = new AxisType[] {Axes.CHANNEL};
+//EXCEPTION
+                 DimRange[] ranges = new DimRange[] {new DimRange("0-10")};
+                 AxisType[] axes = new AxisType[] {Axes.Z};
+//WORKS
+//                    DimRange[] ranges = new DimRange[] {new 
+DimRange("0"), new DimRange("0-10")};
+//                    AxisType[] axes = new AxisType[] {Axes.CHANNEL, 
+Axes.Z};
+
+
+                 options.setRegion(new SubRegion(axes, ranges));
+
+         ImgPlus<RealType> ret = new ImgOpener().openImg(reader,
+                     new UnsignedByteType(), new ArrayImgFactory(), 
+options);
+
+         System.out.println(ret.getName());
+     }
+> Hi Michael,
+>
+>  I was only able to reproduce this when trying to create a SubRegion 
+> for Axes that weren't present.
+>
+>  In the case of ImgOpener, Axes of length 1 are discarded... so they 
+> effectively "aren't present" and can't have a SubRegion applied to 
+> them (since they are implicitly included anyway in the image).
+>
+>  Unfortunately, I'm not sure how to make the error reporting better, 
+> in general, on this issue.. since, when constructing a SubRegion, 
+> there's no way to know what dataset(s) it will be applied to... it's 
+> up to the consuming software to use the SubRegion information when 
+> reading the dataset.
+>
+>  I could add some defensive checks to verify that axes are present.. 
+> but this whole system is going to be reworked in 0.7.0 for 
+> N-dimensionality. So I'm going to add a comment to our N-dim ticket 
+> <https://github.com/scifio/scifio/issues/19> to test this.
+>
+>  For now, in your code, can you check if an axis length is < 2 before 
+> creating the SubRegion, and if so - don't add it to the SubRegion 
+> specification?
+>
+>  Oh - if you are getting this issue for Axes you know have a length > 
+> 1, send me the dataset, because something else is going on there. :)
+>
+> Thanks,
+> Mark
+>
+>
+>
+>
+> On Fri, Aug 23, 2013 at 2:55 AM, Michael Zinsmaier 
+> <michael.zinsmaier at gmx.de <mailto:michael.zinsmaier at gmx.de>> wrote:
+>
+>     Hi together,
+>
+>     defining intervals via the ImgOptions mechanism seems not to work
+>     if you define an Interval only for one Axes (except for Channel).
+>     E.g. consider that you want to select only time=0 from a 5dim
+>     Image (x,y,Channel,z,Time) and define the SubRegion as follows
+>     new SubRegion(new AxesType[]{Time}, new Range[]{0}). An array
+>     index out of bounds exception is thrown.
+>
+>     It does however work if you do the same thing with Channel and it
+>     works also if you specify Ranges for Channel, Z and Time.
+>
+>     The API of SubRegion (Map Constructor) gives me the feeling that
+>     is should not be necessary to specify Axes that I want to include
+>     completly.
+>     I hope thats correct if not I would like to suggest to change it.
+>
+>     Best regards
+>     Michael
+>
+>
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130826/182c451d/attachment-0002.html>
+
+From michael.zinsmaier at gmx.de  Mon Aug 26 07:13:16 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Mon, 26 Aug 2013 14:13:16 +0200
+Subject: [SCIFIO] reuse reader for files of same format
+Message-ID: <521B465C.3050400@gmx.de>
+
+Hi together,
+
+is it possible to use the same reader for multiple files of the same format?
+I want to read e.g. 10  .png files that may differ in their 
+dimensionality but use all the same format and encoding can I reuse a 
+reader instead of doing the potentially expensive format tests for each 
+file. We tried it naively with reader.setSource which somehow works but
+dimensionality and size data is not rediscovered => the reader tries to 
+load all images with the same size.
+
+Is their a better way to do this?
+(We still want to use the format discovery for the first image but 
+assume for all others that they have the same format.)
+
+Best Regards Michael
+
+
+
+From hinerm at gmail.com  Mon Aug 26 07:53:22 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 26 Aug 2013 07:53:22 -0500
+Subject: [SCIFIO] reuse reader for files of same format
+In-Reply-To: <521B465C.3050400@gmx.de>
+References: <521B465C.3050400@gmx.de>
+Message-ID: <CA+B=mGpH+N-fu=59ydpQ=QVryU59PgcaNcCnb=UsNbqrTFk9Jg@mail.gmail.com>
+
+Hi Michael,
+
+  This definitely should work. The Metadata attached to a Reader should
+determine the image dimensionality, and the Metadata should be re-parsed
+automatically when setting the source.
+
+ Oh.. but looking at the source, the PNG reader has state (it remembers the
+last plane it read. So if the reader was stateless (which it's supposed to
+be) it should work. I'll just have to make a pass through the formats and
+remove any state from the readers, or if that's not possible I'll make sure
+they reset properly when calling setSource.
+
+Thanks for pointing this out,
+Mark
+
+
+On Mon, Aug 26, 2013 at 7:13 AM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+> Hi together,
+>
+> is it possible to use the same reader for multiple files of the same
+> format?
+> I want to read e.g. 10  .png files that may differ in their dimensionality
+> but use all the same format and encoding can I reuse a reader instead of
+> doing the potentially expensive format tests for each file. We tried it
+> naively with reader.setSource which somehow works but
+> dimensionality and size data is not rediscovered => the reader tries to
+> load all images with the same size.
+>
+> Is their a better way to do this?
+> (We still want to use the format discovery for the first image but assume
+> for all others that they have the same format.)
+>
+> Best Regards Michael
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130826/b69b229b/attachment-0002.html>
+
+From hinerm at gmail.com  Mon Aug 26 08:02:51 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 26 Aug 2013 08:02:51 -0500
+Subject: [SCIFIO] reuse reader for files of same format
+In-Reply-To: <CA+B=mGpH+N-fu=59ydpQ=QVryU59PgcaNcCnb=UsNbqrTFk9Jg@mail.gmail.com>
+References: <521B465C.3050400@gmx.de>
+	<CA+B=mGpH+N-fu=59ydpQ=QVryU59PgcaNcCnb=UsNbqrTFk9Jg@mail.gmail.com>
+Message-ID: <CA+B=mGr18DjPBMRusAsr59A06h=+WhioXCFMcxyNmvaDwdrYgQ@mail.gmail.com>
+
+See Issue 57 <https://github.com/scifio/scifio/issues/57>
+
+
+On Mon, Aug 26, 2013 at 7:53 AM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Hi Michael,
+>
+>   This definitely should work. The Metadata attached to a Reader should
+> determine the image dimensionality, and the Metadata should be re-parsed
+> automatically when setting the source.
+>
+>  Oh.. but looking at the source, the PNG reader has state (it remembers
+> the last plane it read. So if the reader was stateless (which it's supposed
+> to be) it should work. I'll just have to make a pass through the formats
+> and remove any state from the readers, or if that's not possible I'll make
+> sure they reset properly when calling setSource.
+>
+> Thanks for pointing this out,
+> Mark
+>
+>
+> On Mon, Aug 26, 2013 at 7:13 AM, Michael Zinsmaier <
+> michael.zinsmaier at gmx.de> wrote:
+>
+>> Hi together,
+>>
+>> is it possible to use the same reader for multiple files of the same
+>> format?
+>> I want to read e.g. 10  .png files that may differ in their
+>> dimensionality but use all the same format and encoding can I reuse a
+>> reader instead of doing the potentially expensive format tests for each
+>> file. We tried it naively with reader.setSource which somehow works but
+>> dimensionality and size data is not rediscovered => the reader tries to
+>> load all images with the same size.
+>>
+>> Is their a better way to do this?
+>> (We still want to use the format discovery for the first image but assume
+>> for all others that they have the same format.)
+>>
+>> Best Regards Michael
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130826/42b9a031/attachment-0002.html>
+
+From hinerm at gmail.com  Mon Aug 26 09:44:23 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 26 Aug 2013 09:44:23 -0500
+Subject: [SCIFIO] ImgOpener - ImgOptions - SubRegions
+In-Reply-To: <521B606B.7090409@gmx.de>
+References: <5217158E.20007@gmx.de>
+	<CA+B=mGrHbPHJOESKfr54PTnrEh_FtoCWWE-1S7gnsoQJAROfHA@mail.gmail.com>
+	<521AF0B4.4020007@gmx.de>
+	<CA+B=mGos+G7zbYTkiB7NVr3z1peTShf=tC-pMuwV_vvXxS4_6g@mail.gmail.com>
+	<521B606B.7090409@gmx.de>
+Message-ID: <CA+B=mGqFmsZzfUjfM0aibs2yip8YoTpF=4_UbRLHq+cYNCGDSw@mail.gmail.com>
+
+Hi Michael,
+
+ Right now I get an ArrayIndexOutOfBounds at line 60 of the
+ByteArrayLoader, as it tries to populate the ImgPlus using planes read by
+SCIFIO.
+
+ On my end, this is because the ImgPlus gets constrained properly to the
+desired subregion, but ImgOpener tries to jam in all 21 Z slices.. so the
+source is too big for the destination, and it gets AIOOB when copying,
+eventually.
+
+  Looks like the SubRegion application only considered if the SubRegion
+actually contains a given Axis for X and Y. Then for ZCT it just always
+applies whatever constraints it has. (e.g. it was trying to constrain C to
+0-10 instead of Z, because the dimension order was CZT)
+
+  I standardized this check so it's the same for each axis, and now your
+code works for me :)
+
+  Fixed on latest master (issue 58<https://github.com/scifio/scifio/issues/58>
+).
+
+- Mark
+
+
+On Mon, Aug 26, 2013 at 9:04 AM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+> Hi Mark,
+>
+> if you get the same error that is thrown at my place its an
+> ArrayIndexOutof Bounds ...
+> I tried to track it down already and it might be an Error in ImgOpener
+> readPlanes  line 599 following.
+>
+> The while loop skips X, and Y but enters CHANNEL although the Subregion is
+> set for Z which seems to be realted to this snippet
+> "dimsPlaced < region.size()"
+>
+> I'm not sure what  is going on there but it seems somehow incorrect (-:
+> maybe this helps you
+>
+> best Michael
+>
+>
+> Am Montag, 26. August 2013 15:38:44 schrieb Mark Hiner:
+>
+>> Hi Michael,
+>>
+>>  I was able to confirm this code fails locally, although I don't think
+>> it's an issue with the calibration (or your code).
+>>
+>> Without SCIFIO-BF-compat, this fails because it defaults to the
+>> MinimalTIFFReader, which compresses the axes to a single plane (thus
+>> there is no Z, thus it fails).
+>>
+>> With SCIFIO-BF-compat, it opens correctly as an LSM.. but it seems
+>> that the ImgPlus that's created is too small. The # of dimensions are
+>> being read correctly (e.g., same as in the current FIJI) so I'm not
+>> sure why the array is the wrong size.. looking into it now.
+>>
+>> - Mark
+>>
+>>
+>> On Mon, Aug 26, 2013 at 1:07 AM, Michael Zinsmaier
+>> <michael.zinsmaier at gmx.de <mailto:michael.zinsmaier at gmx.**de<michael.zinsmaier at gmx.de>>>
+>> wrote:
+>>
+>>     Hi Mark,
+>>
+>>     I get the error for a dataset with axes > 2. I perpared some
+>>     sample code (maybe something is wrong here) and I'll send you the
+>>     file in a seperate mail.
+>>
+>>     Regards Michael
+>>
+>>     ------------------------------**------------------------------**----
+>>
+>>         public static void main(String[] args) throws FormatException,
+>>     IOException, ImgIOException, InstantiableException {
+>>                 String imgRef =
+>>     "C:/Users/zinsmaie/Desktop/**bilder/5d/2chZT.lsm";
+>>
+>>                 Context c = new Context(SciJavaService.class,
+>>     SCIFIOService.class);
+>>                 SCIFIO sci = new SCIFIO(c);
+>>
+>>                 Reader reader = sci.initializer()
+>>                         .initializeReader(imgRef, true);
+>>
+>>                 ImgOptions options = new ImgOptions();
+>>
+>>     //WORKS
+>>     //                DimRange[] ranges = new DimRange[] {new
+>>     DimRange("0")};
+>>     //                AxisType[] axes = new AxisType[] {Axes.CHANNEL};
+>>     //EXCEPTION
+>>                     DimRange[] ranges = new DimRange[] {new
+>>     DimRange("0-10")};
+>>                     AxisType[] axes = new AxisType[] {Axes.Z};
+>>     //WORKS
+>>     //                    DimRange[] ranges = new DimRange[] {new
+>>     DimRange("0"), new DimRange("0-10")};
+>>     //                    AxisType[] axes = new AxisType[]
+>>     {Axes.CHANNEL, Axes.Z};
+>>
+>>
+>>                     options.setRegion(new SubRegion(axes, ranges));
+>>
+>>             ImgPlus<RealType> ret = new ImgOpener().openImg(reader,
+>>                         new UnsignedByteType(), new ArrayImgFactory(),
+>>     options);
+>>
+>>             System.out.println(ret.**getName());
+>>         }
+>>
+>>>     Hi Michael,
+>>>
+>>>      I was only able to reproduce this when trying to create a
+>>>     SubRegion for Axes that weren't present.
+>>>
+>>>      In the case of ImgOpener, Axes of length 1 are discarded... so
+>>>     they effectively "aren't present" and can't have a SubRegion
+>>>     applied to them (since they are implicitly included anyway in the
+>>>     image).
+>>>
+>>>      Unfortunately, I'm not sure how to make the error reporting
+>>>     better, in general, on this issue.. since, when constructing a
+>>>     SubRegion, there's no way to know what dataset(s) it will be
+>>>     applied to... it's up to the consuming software to use the
+>>>     SubRegion information when reading the dataset.
+>>>
+>>>      I could add some defensive checks to verify that axes are
+>>>     present.. but this whole system is going to be reworked in 0.7.0
+>>>     for N-dimensionality. So I'm going to add a comment to our N-dim
+>>>     ticket <https://github.com/scifio/**scifio/issues/19<https://github.com/scifio/scifio/issues/19>>
+>>> to test this.
+>>>
+>>>
+>>>      For now, in your code, can you check if an axis length is < 2
+>>>     before creating the SubRegion, and if so - don't add it to the
+>>>     SubRegion specification?
+>>>
+>>>      Oh - if you are getting this issue for Axes you know have a
+>>>     length > 1, send me the dataset, because something else is going
+>>>     on there. :)
+>>>
+>>>     Thanks,
+>>>     Mark
+>>>
+>>>
+>>>
+>>>
+>>>     On Fri, Aug 23, 2013 at 2:55 AM, Michael Zinsmaier
+>>>     <michael.zinsmaier at gmx.de <mailto:michael.zinsmaier at gmx.**de<michael.zinsmaier at gmx.de>>>
+>>> wrote:
+>>>
+>>>         Hi together,
+>>>
+>>>         defining intervals via the ImgOptions mechanism seems not to
+>>>         work if you define an Interval only for one Axes (except for
+>>>         Channel).
+>>>         E.g. consider that you want to select only time=0 from a 5dim
+>>>         Image (x,y,Channel,z,Time) and define the SubRegion as follows
+>>>         new SubRegion(new AxesType[]{Time}, new Range[]{0}). An array
+>>>         index out of bounds exception is thrown.
+>>>
+>>>         It does however work if you do the same thing with Channel
+>>>         and it works also if you specify Ranges for Channel, Z and Time.
+>>>
+>>>         The API of SubRegion (Map Constructor) gives me the feeling
+>>>         that is should not be necessary to specify Axes that I want
+>>>         to include completly.
+>>>         I hope thats correct if not I would like to suggest to change it.
+>>>
+>>>         Best regards
+>>>         Michael
+>>>
+>>>
+>>>
+>>
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130826/cefaa0c3/attachment-0002.html>
+
+From hinerm at gmail.com  Mon Aug 26 13:14:57 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 26 Aug 2013 13:14:57 -0500
+Subject: [SCIFIO] reuse reader for files of same format
+In-Reply-To: <CA+B=mGr18DjPBMRusAsr59A06h=+WhioXCFMcxyNmvaDwdrYgQ@mail.gmail.com>
+References: <521B465C.3050400@gmx.de>
+	<CA+B=mGpH+N-fu=59ydpQ=QVryU59PgcaNcCnb=UsNbqrTFk9Jg@mail.gmail.com>
+	<CA+B=mGr18DjPBMRusAsr59A06h=+WhioXCFMcxyNmvaDwdrYgQ@mail.gmail.com>
+Message-ID: <CA+B=mGq97ZS8K_+Q4VndTrK-xds=5Rf7PeiGAy+jZfWsoO=V3Q@mail.gmail.com>
+
+Should be fixed on master. Let me know if you run into any more issues
+reusing readers though.
+
+
+On Mon, Aug 26, 2013 at 8:02 AM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> See Issue 57 <https://github.com/scifio/scifio/issues/57>
+>
+>
+> On Mon, Aug 26, 2013 at 7:53 AM, Mark Hiner <hinerm at gmail.com> wrote:
+>
+>> Hi Michael,
+>>
+>>   This definitely should work. The Metadata attached to a Reader should
+>> determine the image dimensionality, and the Metadata should be re-parsed
+>> automatically when setting the source.
+>>
+>>  Oh.. but looking at the source, the PNG reader has state (it remembers
+>> the last plane it read. So if the reader was stateless (which it's supposed
+>> to be) it should work. I'll just have to make a pass through the formats
+>> and remove any state from the readers, or if that's not possible I'll make
+>> sure they reset properly when calling setSource.
+>>
+>> Thanks for pointing this out,
+>> Mark
+>>
+>>
+>> On Mon, Aug 26, 2013 at 7:13 AM, Michael Zinsmaier <
+>> michael.zinsmaier at gmx.de> wrote:
+>>
+>>> Hi together,
+>>>
+>>> is it possible to use the same reader for multiple files of the same
+>>> format?
+>>> I want to read e.g. 10  .png files that may differ in their
+>>> dimensionality but use all the same format and encoding can I reuse a
+>>> reader instead of doing the potentially expensive format tests for each
+>>> file. We tried it naively with reader.setSource which somehow works but
+>>> dimensionality and size data is not rediscovered => the reader tries to
+>>> load all images with the same size.
+>>>
+>>> Is their a better way to do this?
+>>> (We still want to use the format discovery for the first image but
+>>> assume for all others that they have the same format.)
+>>>
+>>> Best Regards Michael
+>>>
+>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130826/8bcccd24/attachment-0002.html>
+
+From hinerm at gmail.com  Tue Aug 27 09:54:01 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Tue, 27 Aug 2013 09:54:01 -0500
+Subject: [SCIFIO] reuse reader for files of same format
+In-Reply-To: <CA+B=mGq97ZS8K_+Q4VndTrK-xds=5Rf7PeiGAy+jZfWsoO=V3Q@mail.gmail.com>
+References: <521B465C.3050400@gmx.de>
+	<CA+B=mGpH+N-fu=59ydpQ=QVryU59PgcaNcCnb=UsNbqrTFk9Jg@mail.gmail.com>
+	<CA+B=mGr18DjPBMRusAsr59A06h=+WhioXCFMcxyNmvaDwdrYgQ@mail.gmail.com>
+	<CA+B=mGq97ZS8K_+Q4VndTrK-xds=5Rf7PeiGAy+jZfWsoO=V3Q@mail.gmail.com>
+Message-ID: <CA+B=mGoUpz0Tqg_TmBgK_hgUthZ1kRd_DQHs31M8D+PWW6tWyw@mail.gmail.com>
+
+Hi all,
+
+ This was an issue with ReaderFilters specifically not catching all of the
+magic that happens when setting the source on a Reader. Fixed & tested as
+of
+https://github.com/scifio/scifio/commit/fa5c4993ca429fe427378134f6cb480057fda332
+
+- Mark
+
+
+On Mon, Aug 26, 2013 at 1:14 PM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Should be fixed on master. Let me know if you run into any more issues
+> reusing readers though.
+>
+>
+> On Mon, Aug 26, 2013 at 8:02 AM, Mark Hiner <hinerm at gmail.com> wrote:
+>
+>> See Issue 57 <https://github.com/scifio/scifio/issues/57>
+>>
+>>
+>> On Mon, Aug 26, 2013 at 7:53 AM, Mark Hiner <hinerm at gmail.com> wrote:
+>>
+>>> Hi Michael,
+>>>
+>>>   This definitely should work. The Metadata attached to a Reader should
+>>> determine the image dimensionality, and the Metadata should be re-parsed
+>>> automatically when setting the source.
+>>>
+>>>  Oh.. but looking at the source, the PNG reader has state (it remembers
+>>> the last plane it read. So if the reader was stateless (which it's supposed
+>>> to be) it should work. I'll just have to make a pass through the formats
+>>> and remove any state from the readers, or if that's not possible I'll make
+>>> sure they reset properly when calling setSource.
+>>>
+>>> Thanks for pointing this out,
+>>> Mark
+>>>
+>>>
+>>> On Mon, Aug 26, 2013 at 7:13 AM, Michael Zinsmaier <
+>>> michael.zinsmaier at gmx.de> wrote:
+>>>
+>>>> Hi together,
+>>>>
+>>>> is it possible to use the same reader for multiple files of the same
+>>>> format?
+>>>> I want to read e.g. 10  .png files that may differ in their
+>>>> dimensionality but use all the same format and encoding can I reuse a
+>>>> reader instead of doing the potentially expensive format tests for each
+>>>> file. We tried it naively with reader.setSource which somehow works but
+>>>> dimensionality and size data is not rediscovered => the reader tries to
+>>>> load all images with the same size.
+>>>>
+>>>> Is their a better way to do this?
+>>>> (We still want to use the format discovery for the first image but
+>>>> assume for all others that they have the same format.)
+>>>>
+>>>> Best Regards Michael
+>>>>
+>>>
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130827/3352b231/attachment-0002.html>
+

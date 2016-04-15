@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Minimal Service Setup for ImgOpener
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Minimal%20Service%20Setup%20for%20ImgOpener&In-Reply-To=%3CCADN69y%3DwpQnYVQ-NjQWxEONdcnRjDTS3gECU0pjMi89jeSnQxw%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000165.html">
+   <LINK REL="Next"  HREF="000167.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Minimal Service Setup for ImgOpener</H1>
+    <B>Curtis Rueden</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Minimal%20Service%20Setup%20for%20ImgOpener&In-Reply-To=%3CCADN69y%3DwpQnYVQ-NjQWxEONdcnRjDTS3gECU0pjMi89jeSnQxw%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Minimal Service Setup for ImgOpener">ctrueden at wisc.edu
+       </A><BR>
+    <I>Wed Sep 25 00:00:08 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000165.html">[SCIFIO] NullPointer using the DICOMOMETranslator to extract	calibration data
+</A></li>
+        <LI>Next message: <A HREF="000167.html">[SCIFIO] Minimal Service Setup for ImgOpener
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#166">[ date ]</a>
+              <a href="thread.html#166">[ thread ]</a>
+              <a href="subject.html#166">[ subject ]</a>
+              <a href="author.html#166">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Michael &amp; all,
+
+&gt;<i> Or more specific is there a better way than incrementally adding
+</I>&gt;<i> services to get a &quot;Bioformats&quot; ImgOpener running without discovering
+</I>&gt;<i> unrelated services like HotdrawService...
+</I>
+Just to follow up on this thread: the scifio-0.6.1 and scifio-0.6.2
+releases have improved the default io.scif.SCIFIO constructor to behave
+this way. This constructor creates an application context with all
+available core SciJava &amp; SCIFIO services using the invocation:
+
+        new Context(SciJavaService.class, SCIFIOService.class);
+
+The behavior of the SciJava application context was improved to load all
+services extending each given type. After some discussion we believe this
+is the simplest and most consistent way to do things. The SciJavaService
+interface is extended by all base SciJava services (e.g., PluginService).
+And the SCIFIOService interface is extended by all SCIFIO-related services.
+ImageJ2 also has an ImageJService now too for the same reasons. In this
+way, it is possible to easily restrict which sorts of services get added to
+the context in an extensible way.
+
+Regards,
+Curtis
+
+P.S. The only slightly unintuitive thing (IMHO) is that non-core services
+should *not* extend SciJavaService, because that interface is intended for
+use by the org.scijava.* services *only*. (E.g., SCIFIOService does not
+extend it.)
+
+
+On Tue, Aug 13, 2013 at 3:37 PM, Michael Zinsmaier &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">michael.zinsmaier at gmx.de</A>
+&gt;<i> wrote:
+</I>
+&gt;<i>  Hi Curtis,
+</I>&gt;<i>
+</I>&gt;<i> it does work as minimal setting.
+</I>&gt;<i> But we discovered that we need more services to get the functionality that
+</I>&gt;<i> we need within KNIP (opening all the images that are supported by
+</I>&gt;<i> bioformats). So far we added the following services to open some test
+</I>&gt;<i> pictures: &quot;FormatService.class, CodecService.class, TiffService.class,
+</I>&gt;<i> JAIIIOService.class&quot;
+</I>&gt;<i>
+</I>&gt;<i> What other services will we need? Or more specific is there a better way
+</I>&gt;<i> than incrementally adding services to get a &quot;Bioformats&quot; ImgOpener running
+</I>&gt;<i> without discovering unrelated services like HotdrawService...
+</I>&gt;<i>
+</I>&gt;<i> Best Michael
+</I>&gt;<i>
+</I>&gt;<i>  Hi Michael,
+</I>&gt;<i>
+</I>&gt;<i>  &gt; What is the minimal set of Services that we need just for the opener?
+</I>&gt;<i>
+</I>&gt;<i>  The noargs ImgOpener constructor is supposed to give you exactly that:
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/8037fd38419030dff000eda84fca9b35909be3a4/scifio/src/main/java/io/scif/img/AbstractImgIOComponent.java#L68">https://github.com/scifio/scifio/blob/8037fd38419030dff000eda84fca9b35909be3a4/scifio/src/main/java/io/scif/img/AbstractImgIOComponent.java#L68</A>
+</I>&gt;<i>
+</I>&gt;<i>  Please let us know if it doesn't work for you!
+</I>&gt;<i>
+</I>&gt;<i>  Regards,
+</I>&gt;<i> Curtis
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> On Mon, Aug 12, 2013 at 10:39 AM, Michael Zinsmaier &lt;
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">michael.zinsmaier at gmx.de</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> Hi all,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> we try to create a suitable context for the ImgOpener but on our
+</I>&gt;&gt;<i> classpath are several jar files that contain services which we do not
+</I>&gt;&gt;<i> intend to use and which cause problems if discovered (e.g. HotdrawService
+</I>&gt;&gt;<i> is discovered but we do not include all required libs...). What is the
+</I>&gt;&gt;<i> minimal set of Services that we need just for the opener?
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> or more code based:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> given the following methods
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>     public void foo() {
+</I>&gt;&gt;<i>         Context c = new Context(getIOContextServices());
+</I>&gt;&gt;<i>         m_scifio = new SCIFIO(c);
+</I>&gt;&gt;<i>         FORMATS = m_scifio.format().getAllFormats();
+</I>&gt;&gt;<i>     }
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>     private List&lt;Class&lt;? extends Service&gt;&gt; getIOContextServices() {
+</I>&gt;&gt;<i>         final List services = new ArrayList();
+</I>&gt;&gt;<i>        services.add(FormatService.class);
+</I>&gt;&gt;<i>        return services;
+</I>&gt;&gt;<i>     }
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> what would be the minimal list of required services in order to get a
+</I>&gt;&gt;<i> suitable Context for the ImgOpener?
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Regards Michael
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130925/b3f95edf/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20130925/b3f95edf/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000165.html">[SCIFIO] NullPointer using the DICOMOMETranslator to extract	calibration data
+</A></li>
+	<LI>Next message: <A HREF="000167.html">[SCIFIO] Minimal Service Setup for ImgOpener
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#166">[ date ]</a>
+              <a href="thread.html#166">[ thread ]</a>
+              <a href="subject.html#166">[ subject ]</a>
+              <a href="author.html#166">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

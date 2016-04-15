@@ -1,0 +1,125 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Hi&nbsp;Burkhard,&lt;br&gt;&lt;br&gt;&gt;That&nbsp;being&nbsp;said,&nbsp;I&#39;ve&nbsp;tried&nbsp;this&nbsp;strategy&nbsp;(in&nbsp;an&nbsp;unrelated&nbsp;project)&nbsp;to&nbsp;<br>
+override&nbsp;a&nbsp;format&nbsp;implementation&nbsp;in&nbsp;SCIFIO&nbsp;with&nbsp;our&nbsp;own&nbsp;implementation.&nbsp;<br>
+Back&nbsp;then&nbsp;(a&nbsp;few&nbsp;months&nbsp;ago),&nbsp;it&nbsp;did&nbsp;not&nbsp;work&nbsp;reliably&nbsp;in&nbsp;my&nbsp;hands.&lt;br&gt;&lt;br&gt;&lt;/div&gt;If&nbsp;you&#39;re&nbsp;still&nbsp;unable&nbsp;to&nbsp;override&nbsp;formats&nbsp;using&nbsp;Plugin&nbsp;priority&nbsp;then&nbsp;that&#39;s&nbsp;certainly&nbsp;worrisome&nbsp;-&nbsp;please&nbsp;let&nbsp;me&nbsp;know&nbsp;how&nbsp;it&nbsp;goes.&nbsp;I&#39;m&nbsp;happy&nbsp;to&nbsp;look&nbsp;at&nbsp;code&nbsp;samples&nbsp;to&nbsp;help&nbsp;identify&nbsp;problems;&nbsp;this&nbsp;is&nbsp;fundamental&nbsp;functionality&nbsp;that&nbsp;we&nbsp;want&nbsp;to&nbsp;ensure&nbsp;is&nbsp;both&nbsp;working&nbsp;properly,&nbsp;and&nbsp;easy&nbsp;for&nbsp;users/developers&nbsp;to&nbsp;implement.&lt;br&gt;&lt;br&gt;&gt;Another&nbsp;question&nbsp;is&nbsp;whether&nbsp;there&nbsp;is&nbsp;an&nbsp;option&nbsp;to&nbsp;turn&nbsp;off&nbsp;the&nbsp;automatic<br>
+&nbsp;min-max&nbsp;computation.&nbsp;Thanks&nbsp;to&nbsp;SCIFIO,&nbsp;we&#39;ve&nbsp;found&nbsp;a&nbsp;nice&nbsp;way&nbsp;to&nbsp;<br>
+integrate&nbsp;our&nbsp;format&nbsp;with&nbsp;ImageJ,&nbsp;but&nbsp;using&nbsp;this&nbsp;comes&nbsp;at&nbsp;the&nbsp;price&nbsp;of&nbsp;a<br>
+&nbsp;pretty&nbsp;&lt;br&gt;&gt;substantial&nbsp;IO&nbsp;performance&nbsp;hit&nbsp;that&nbsp;frankly&nbsp;is&nbsp;a&nbsp;source&nbsp;of&nbsp;<br>
+constant&nbsp;dissatisfaction.&lt;br&gt;&lt;br&gt;&lt;/div&gt;Yes;&nbsp;I&nbsp;actually&nbsp;did&nbsp;some&nbsp;performance&nbsp;profiling&nbsp;in&nbsp;February&nbsp;and&nbsp;thought&nbsp;automatic&nbsp;min-max&nbsp;computation&nbsp;had&nbsp;been&nbsp;disabled.&nbsp;But&nbsp;it&nbsp;does&nbsp;seem&nbsp;like&nbsp;it&nbsp;may&nbsp;not&nbsp;be&nbsp;working&nbsp;as&nbsp;intended[1].&nbsp;The&nbsp;desire&nbsp;is&nbsp;that&nbsp;if&nbsp;SCIFIO&nbsp;is&nbsp;used&nbsp;via&nbsp;&quot;File&nbsp;&gt;&nbsp;Open&quot;&nbsp;or&nbsp;drag&nbsp;and&nbsp;drop,&nbsp;we&nbsp;won&#39;t&nbsp;force&nbsp;min-max&nbsp;computation.&nbsp;If&nbsp;SCIFIO&nbsp;is&nbsp;used&nbsp;explicitly&nbsp;(via&nbsp;File&nbsp;&gt;&nbsp;Import&nbsp;&gt;&nbsp;Image...)&nbsp;there&nbsp;should&nbsp;be&nbsp;a&nbsp;checkbox&nbsp;to&nbsp;use&nbsp;it,&nbsp;which&nbsp;I&nbsp;will&nbsp;add[2].&lt;br&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;If&nbsp;you&nbsp;still&nbsp;have&nbsp;performance&nbsp;issues&nbsp;after&nbsp;any&nbsp;min-max&nbsp;computation&nbsp;fixes,&nbsp;please&nbsp;continue&nbsp;to&nbsp;let&nbsp;us&nbsp;know!&lt;br&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Thanks&nbsp;again,&lt;br&gt;&lt;/div&gt;&lt;div&gt;Mark&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;[1]&nbsp;&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio/issues/269&quot;&gt;https://github.com/scifio/scifio/issues/269&lt;/a&gt;&lt;br&gt;&lt;div&gt;[2]&nbsp;&lt;a&nbsp;href=&quot;https://github.com/imagej/imagej-plugins-commands/issues/23&quot;&gt;https://github.com/imagej/imagej-plugins-commands/issues/23&lt;/a&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Mon,&nbsp;Apr&nbsp;13,&nbsp;2015&nbsp;at&nbsp;2:23&nbsp;PM,&nbsp;Burkhard&nbsp;Hoeckendorf&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:burkhard.hoeckendorf@web.de&quot;&nbsp;target=&quot;_blank&quot;&gt;burkhard.hoeckendorf@web.de&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;Dear&nbsp;Mark,&lt;br&gt;<br>
+&lt;br&gt;<br>
+Thanks&nbsp;a&nbsp;lot&nbsp;for&nbsp;your&nbsp;help.&nbsp;I&#39;ll&nbsp;try&nbsp;playing&nbsp;with&nbsp;the&nbsp;format&nbsp;priority.&nbsp;That&nbsp;being&nbsp;said,&nbsp;I&#39;ve&nbsp;tried&nbsp;this&nbsp;strategy&nbsp;(in&nbsp;an&nbsp;unrelated&nbsp;project)&nbsp;to&nbsp;override&nbsp;a&nbsp;format&nbsp;implementation&nbsp;in&nbsp;SCIFIO&nbsp;with&nbsp;our&nbsp;own&nbsp;implementation.&nbsp;Back&nbsp;then&nbsp;(a&nbsp;few&nbsp;months&nbsp;ago),&nbsp;it&nbsp;did&nbsp;not&nbsp;work&nbsp;reliably&nbsp;in&nbsp;my&nbsp;hands.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Another&nbsp;question&nbsp;is&nbsp;whether&nbsp;there&nbsp;is&nbsp;an&nbsp;option&nbsp;to&nbsp;turn&nbsp;off&nbsp;the&nbsp;automatic&nbsp;min-max&nbsp;computation.&nbsp;Thanks&nbsp;to&nbsp;SCIFIO,&nbsp;we&#39;ve&nbsp;found&nbsp;a&nbsp;nice&nbsp;way&nbsp;to&nbsp;integrate&nbsp;our&nbsp;format&nbsp;with&nbsp;ImageJ,&nbsp;but&nbsp;using&nbsp;this&nbsp;comes&nbsp;at&nbsp;the&nbsp;price&nbsp;of&nbsp;a&nbsp;pretty&nbsp;substantial&nbsp;IO&nbsp;performance&nbsp;hit&nbsp;that&nbsp;frankly&nbsp;is&nbsp;a&nbsp;source&nbsp;of&nbsp;constant&nbsp;dissatisfaction.&nbsp;I&nbsp;suspect&nbsp;deactivating&nbsp;the&nbsp;min-max&nbsp;computation&nbsp;may&nbsp;be&nbsp;an&nbsp;easy&nbsp;way&nbsp;to&nbsp;improve&nbsp;things,&nbsp;presumably&nbsp;without&nbsp;breaking&nbsp;anything&nbsp;else&nbsp;(?)&lt;br&gt;<br>
+&lt;br&gt;<br>
+Best,&lt;br&gt;<br>
+Burkhard&lt;div&gt;&lt;div&nbsp;class=&quot;h5&quot;&gt;&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+On&nbsp;4/13/2015&nbsp;2:37&nbsp;PM,&nbsp;Mark&nbsp;Hiner&nbsp;wrote:&lt;br&gt;<br>
+&lt;/div&gt;&lt;/div&gt;&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;&lt;div&gt;&lt;div&nbsp;class=&quot;h5&quot;&gt;<br>
+Hi&nbsp;Burkhard,&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &gt;I&nbsp;apologize&nbsp;in&nbsp;case&nbsp;I&nbsp;am&nbsp;posting&nbsp;this&nbsp;mail&nbsp;twice.&nbsp;The&nbsp;first&nbsp;attempt&nbsp;at&lt;br&gt;<br>
+the&nbsp;end&nbsp;of&nbsp;last&nbsp;week&nbsp;came&nbsp;with&nbsp;an&nbsp;attachment&nbsp;and&nbsp;I&nbsp;assume&nbsp;it&nbsp;was&lt;br&gt;<br>
+probably&nbsp;scrubbed&nbsp;(and&nbsp;rightly&nbsp;so).&lt;br&gt;<br>
+&lt;br&gt;<br>
+No&nbsp;worries&nbsp;-&nbsp;there&nbsp;actually&nbsp;was&nbsp;a&nbsp;technical&nbsp;issue&nbsp;with&nbsp;the&nbsp;mailing&nbsp;list&lt;br&gt;<br>
+that&#39;s&nbsp;now&nbsp;fixed.&nbsp;Sorry&nbsp;about&nbsp;that!&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &gt;As&nbsp;it&nbsp;turns&nbsp;out,&nbsp;even&nbsp;before&nbsp;looking&nbsp;at&nbsp;its&nbsp;file&nbsp;name&nbsp;extension,&lt;br&gt;<br>
+SCIFIO&nbsp;opened&nbsp;the&nbsp;file&nbsp;and&nbsp;tried&nbsp;to&nbsp;detect&nbsp;whether&nbsp;its&nbsp;header&nbsp;is&nbsp;in&lt;br&gt;<br>
+DICOM&nbsp;format&lt;br&gt;<br>
+&lt;br&gt;<br>
+DICOM&nbsp;is&nbsp;an&nbsp;unfortunate&nbsp;example&nbsp;that&nbsp;has&nbsp;some&nbsp;history&nbsp;in&nbsp;Bio-Formats&lt;br&gt;<br>
+(extensionless&nbsp;DICOM&nbsp;images,&nbsp;DICOM&nbsp;images&nbsp;with&nbsp;no&nbsp;magic&nbsp;string)&nbsp;that&lt;br&gt;<br>
+carried&nbsp;over&nbsp;to&nbsp;the&nbsp;SCIFIO&nbsp;implementation&nbsp;with&nbsp;potential&nbsp;for&nbsp;false&lt;br&gt;<br>
+positives.&nbsp;However,&nbsp;I&nbsp;think&nbsp;the&nbsp;best&nbsp;solution&nbsp;right&nbsp;now&nbsp;is&nbsp;to&nbsp;set&nbsp;your&lt;br&gt;<br>
+format&nbsp;to&nbsp;a&nbsp;higher&nbsp;priority.&nbsp;Formats&nbsp;are&nbsp;checked&nbsp;in&nbsp;plugin&nbsp;priority&nbsp;order.&lt;br&gt;<br>
+&lt;br&gt;<br>
+For&nbsp;example,&nbsp;see&nbsp;a&nbsp;sample&nbsp;format&nbsp;that&nbsp;uses&nbsp;a&nbsp;higher&nbsp;priority[1].&nbsp;DICOM&lt;br&gt;<br>
+uses&nbsp;the&nbsp;normal&nbsp;priority&nbsp;(0),&nbsp;so&nbsp;you&nbsp;can&nbsp;use&nbsp;any&nbsp;of&nbsp;the&nbsp;higher&lt;br&gt;<br>
+constants[2]&nbsp;or&nbsp;set&nbsp;it&nbsp;manually[3]&nbsp;to&nbsp;a&nbsp;value&nbsp;&gt;&nbsp;0&nbsp;for&nbsp;your&nbsp;format&nbsp;to&nbsp;be&lt;br&gt;<br>
+detected&nbsp;first.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &gt;More&nbsp;generally&nbsp;though,&nbsp;this&nbsp;experience&nbsp;has&nbsp;led&nbsp;me&nbsp;to&nbsp;wonder&nbsp;whether&lt;br&gt;<br>
+the&nbsp;order&nbsp;in&nbsp;which&nbsp;file&nbsp;formats&nbsp;are&nbsp;detected&nbsp;could&nbsp;be&nbsp;tweaked&nbsp;such&nbsp;that&lt;br&gt;<br>
+the&nbsp;ones&nbsp;requiring&nbsp;the&nbsp;most&nbsp;work&nbsp;are&nbsp;only&nbsp;attempted&nbsp;when&nbsp;the&nbsp;easier&nbsp;ones&lt;br&gt;<br>
+fail.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Agreed&nbsp;completely.&nbsp;Plugin&nbsp;priority&nbsp;was&nbsp;a&nbsp;starting&nbsp;point,&nbsp;but&nbsp;we&nbsp;have&lt;br&gt;<br>
+started&nbsp;discussing&nbsp;how&nbsp;exactly&nbsp;to&nbsp;do&nbsp;things&nbsp;better[4]&nbsp;with&nbsp;some&nbsp;ideas&lt;br&gt;<br>
+very&nbsp;similar&nbsp;to&nbsp;what&nbsp;you&nbsp;outline.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Thanks&nbsp;for&nbsp;the&nbsp;feedback,&nbsp;let&nbsp;us&nbsp;know&nbsp;if&nbsp;you&nbsp;have&nbsp;any&nbsp;more&nbsp;suggestions&nbsp;or&lt;br&gt;<br>
+questions.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Best,&lt;br&gt;<br>
+Mark&lt;br&gt;<br>
+&lt;br&gt;<br>
+[1]&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio-bf-compat/blob/scifio-bf-compat-1.11.0/src/main/java/io/scif/bf/BioFormatsFormat.java#L79-80&quot;&nbsp;target=&quot;_blank&quot;&gt;https://github.com/scifio/&lt;u&gt;&lt;/u&gt;scifio-bf-compat/blob/scifio-&lt;u&gt;&lt;/u&gt;bf-compat-1.11.0/src/main/&lt;u&gt;&lt;/u&gt;java/io/scif/bf/&lt;u&gt;&lt;/u&gt;BioFormatsFormat.java#L79-80&lt;/a&gt;&lt;br&gt;<br>
+[2]&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/Priority.java#L48-55&quot;&nbsp;target=&quot;_blank&quot;&gt;https://github.com/scijava/&lt;u&gt;&lt;/u&gt;scijava-common/blob/scijava-&lt;u&gt;&lt;/u&gt;common-2.40.0/src/main/java/&lt;u&gt;&lt;/u&gt;org/scijava/Priority.java#L48-&lt;u&gt;&lt;/u&gt;55&lt;/a&gt;&lt;br&gt;<br>
+[3]&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/plugin/Plugin.java#L108-129&quot;&nbsp;target=&quot;_blank&quot;&gt;https://github.com/scijava/&lt;u&gt;&lt;/u&gt;scijava-common/blob/scijava-&lt;u&gt;&lt;/u&gt;common-2.40.0/src/main/java/&lt;u&gt;&lt;/u&gt;org/scijava/plugin/Plugin.&lt;u&gt;&lt;/u&gt;java#L108-129&lt;/a&gt;&lt;br&gt;<br>
+[4]&nbsp;&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio/issues/39&quot;&nbsp;target=&quot;_blank&quot;&gt;https://github.com/scifio/&lt;u&gt;&lt;/u&gt;scifio/issues/39&lt;/a&gt;&lt;br&gt;<br>
+&lt;br&gt;<br>
+On&nbsp;Mon,&nbsp;Apr&nbsp;13,&nbsp;2015&nbsp;at&nbsp;12:59&nbsp;PM,&nbsp;Burkhard&nbsp;Hoeckendorf&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;div&nbsp;class=&quot;h5&quot;&gt;<br>
+&lt;&lt;a&nbsp;href=&quot;mailto:burkhard.hoeckendorf@web.de&quot;&nbsp;target=&quot;_blank&quot;&gt;burkhard.hoeckendorf@web.de&lt;/a&gt;&nbsp;&lt;mailto:&lt;a&nbsp;href=&quot;mailto:burkhard.hoeckendorf@web.de&quot;&nbsp;target=&quot;_blank&quot;&gt;burkhard.hoeckendorf@&lt;u&gt;&lt;/u&gt;web.de&lt;/a&gt;&gt;&gt;&nbsp;wrote:&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;Dear&nbsp;List,&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;I&nbsp;apologize&nbsp;in&nbsp;case&nbsp;I&nbsp;am&nbsp;posting&nbsp;this&nbsp;mail&nbsp;twice.&nbsp;The&nbsp;first&nbsp;attempt&lt;br&gt;<br>
+ &nbsp; &nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;last&nbsp;week&nbsp;came&nbsp;with&nbsp;an&nbsp;attachment&nbsp;and&nbsp;I&nbsp;assume&nbsp;it&nbsp;was&lt;br&gt;<br>
+ &nbsp; &nbsp;probably&nbsp;scrubbed&nbsp;(and&nbsp;rightly&nbsp;so).&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;We&nbsp;recently&nbsp;ran&nbsp;into&nbsp;an&nbsp;issue&nbsp;with&nbsp;DICOM&nbsp;format&nbsp;detection.&nbsp;We&nbsp;use&nbsp;a&lt;br&gt;<br>
+ &nbsp; &nbsp;custom&nbsp;file&nbsp;format&nbsp;that&nbsp;is&nbsp;completely&nbsp;unrelated&nbsp;to&nbsp;DICOM&nbsp;and&nbsp;that&nbsp;is&lt;br&gt;<br>
+ &nbsp; &nbsp;implemented&nbsp;for&nbsp;SCIFIO&nbsp;such&nbsp;that&nbsp;the&nbsp;file&nbsp;name&nbsp;extension&nbsp;alone&nbsp;is&lt;br&gt;<br>
+ &nbsp; &nbsp;necessary&nbsp;and&nbsp;sufficient&nbsp;to&nbsp;recognize&nbsp;it.&nbsp;This&nbsp;works&nbsp;well,&nbsp;except&lt;br&gt;<br>
+ &nbsp; &nbsp;for&nbsp;a&nbsp;single&nbsp;file&nbsp;which&nbsp;we&nbsp;couldn&#39;t&nbsp;open&nbsp;in&nbsp;Fiji.&nbsp;Reading&nbsp;it&nbsp;by&lt;br&gt;<br>
+ &nbsp; &nbsp;other&nbsp;means&nbsp;(C++,&nbsp;MATLAB)&nbsp;worked&nbsp;fine.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;As&nbsp;it&nbsp;turns&nbsp;out,&nbsp;even&nbsp;before&nbsp;looking&nbsp;at&nbsp;its&nbsp;file&nbsp;name&nbsp;extension,&lt;br&gt;<br>
+ &nbsp; &nbsp;SCIFIO&nbsp;opened&nbsp;the&nbsp;file&nbsp;and&nbsp;tried&nbsp;to&nbsp;detect&nbsp;whether&nbsp;its&nbsp;header&nbsp;is&nbsp;in&lt;br&gt;<br>
+ &nbsp; &nbsp;DICOM&nbsp;format.&nbsp;I&nbsp;am&nbsp;unfamiliar&nbsp;with&nbsp;the&nbsp;DICOM&nbsp;standard&nbsp;and&nbsp;not&nbsp;a&lt;br&gt;<br>
+ &nbsp; &nbsp;professional&nbsp;Programmer,&nbsp;but&nbsp;from&nbsp;the&nbsp;SCIFIO&nbsp;implementation&lt;br&gt;<br>
+ &nbsp; &nbsp;(io.scif.formats.DICOMFormat)&nbsp;it&nbsp;appears&nbsp;to&nbsp;me&nbsp;that&nbsp;the&nbsp;magic&nbsp;&#39;DICM&#39;&lt;br&gt;<br>
+ &nbsp; &nbsp;string&nbsp;in&nbsp;the&nbsp;header&nbsp;is&nbsp;treated&nbsp;as&nbsp;optional.&nbsp;If&nbsp;it&nbsp;is&nbsp;not&nbsp;found,&lt;br&gt;<br>
+ &nbsp; &nbsp;SCIFIO&nbsp;tries&nbsp;to&nbsp;read&nbsp;a&nbsp;single&nbsp;header&nbsp;field,&nbsp;and&nbsp;if&nbsp;successful&lt;br&gt;<br>
+ &nbsp; &nbsp;considers&nbsp;the&nbsp;file&nbsp;a&nbsp;DICOM&nbsp;file.&nbsp;In&nbsp;our&nbsp;case,&nbsp;we&nbsp;got&nbsp;unlucky&nbsp;and&nbsp;by&lt;br&gt;<br>
+ &nbsp; &nbsp;accident&nbsp;SCIFIO&nbsp;retrieved&nbsp;a&nbsp;valid-enough&nbsp;result&nbsp;when&nbsp;reading&nbsp;the&lt;br&gt;<br>
+ &nbsp; &nbsp;corresponding&nbsp;position&nbsp;in&nbsp;the&nbsp;non-DICOM&nbsp;file.&nbsp;Hence,&nbsp;it&nbsp;was&nbsp;wrongly&lt;br&gt;<br>
+ &nbsp; &nbsp;detected&nbsp;as&nbsp;a&nbsp;DICOM&nbsp;file.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;For&nbsp;the&nbsp;time&nbsp;being,&nbsp;we&nbsp;are&nbsp;now&nbsp;running&nbsp;our&nbsp;own,&nbsp;locally&nbsp;modified&lt;br&gt;<br>
+ &nbsp; &nbsp;SCIFIO&nbsp;that&nbsp;does&nbsp;not&nbsp;try&nbsp;harder&nbsp;when&nbsp;the&nbsp;&#39;DICM&#39;&nbsp;string&nbsp;is&nbsp;missing,&lt;br&gt;<br>
+ &nbsp; &nbsp;and&nbsp;this&nbsp;solved&nbsp;our&nbsp;problem.&nbsp;For&nbsp;reference,&nbsp;we&nbsp;modified&nbsp;line&nbsp;1079&nbsp;in&lt;br&gt;<br>
+ &nbsp; &nbsp;io.scif.formats.DICOMFormat.&nbsp;I&nbsp;am&nbsp;also&nbsp;happy&nbsp;to&nbsp;send&nbsp;this&nbsp;as&nbsp;a&nbsp;pull&lt;br&gt;<br>
+ &nbsp; &nbsp;request,&nbsp;but&nbsp;I&nbsp;am&nbsp;not&nbsp;a&nbsp;DICOM&nbsp;user,&nbsp;so&nbsp;can&nbsp;not&nbsp;comment&nbsp;whether&nbsp;or&lt;br&gt;<br>
+ &nbsp; &nbsp;not&nbsp;this&nbsp;is&nbsp;actually&nbsp;a&nbsp;workable&nbsp;solution.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;More&nbsp;generally&nbsp;though,&nbsp;this&nbsp;experience&nbsp;has&nbsp;led&nbsp;me&nbsp;to&nbsp;wonder&nbsp;whether&lt;br&gt;<br>
+ &nbsp; &nbsp;the&nbsp;order&nbsp;in&nbsp;which&nbsp;file&nbsp;formats&nbsp;are&nbsp;detected&nbsp;could&nbsp;be&nbsp;tweaked&nbsp;such&lt;br&gt;<br>
+ &nbsp; &nbsp;that&nbsp;the&nbsp;ones&nbsp;requiring&nbsp;the&nbsp;most&nbsp;work&nbsp;are&nbsp;only&nbsp;attempted&nbsp;when&nbsp;the&lt;br&gt;<br>
+ &nbsp; &nbsp;easier&nbsp;ones&nbsp;fail.&nbsp;DICOM&nbsp;format&nbsp;detection&nbsp;would&nbsp;thus&nbsp;only&nbsp;occur&nbsp;when&lt;br&gt;<br>
+ &nbsp; &nbsp;the&nbsp;file&nbsp;name&nbsp;extension&nbsp;does&nbsp;not&nbsp;match&nbsp;that&nbsp;of&nbsp;any&nbsp;format&nbsp;where&nbsp;the&lt;br&gt;<br>
+ &nbsp; &nbsp;extension&nbsp;alone&nbsp;is&nbsp;necessary&nbsp;and&nbsp;sufficient.&nbsp;This&nbsp;may&nbsp;help&nbsp;prevent&lt;br&gt;<br>
+ &nbsp; &nbsp;similar&nbsp;conflicts&nbsp;in&nbsp;the&nbsp;future&nbsp;and&nbsp;may&nbsp;additionally&nbsp;contribute&nbsp;a&lt;br&gt;<br>
+ &nbsp; &nbsp;little&nbsp;bit&nbsp;to&nbsp;a&nbsp;much&nbsp;needed&nbsp;performance&nbsp;increase.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;Cheers,&lt;br&gt;<br>
+ &nbsp; &nbsp;Burkhard&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;/div&gt;&lt;/div&gt;&lt;/blockquote&gt;<br>
+&lt;br&gt;<br>
+______________________________&lt;u&gt;&lt;/u&gt;_________________&lt;br&gt;<br>
+SCIFIO&nbsp;mailing&nbsp;list&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;mailto:SCIFIO@scif.io&quot;&nbsp;target=&quot;_blank&quot;&gt;SCIFIO@scif.io&lt;/a&gt;&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;http://scif.io/mailman/listinfo/scifio&quot;&nbsp;target=&quot;_blank&quot;&gt;http://scif.io/mailman/&lt;u&gt;&lt;/u&gt;listinfo/scifio&lt;/a&gt;&lt;br&gt;<br>
+&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+
+</tt>

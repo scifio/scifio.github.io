@@ -1,0 +1,1611 @@
+From ctrueden at wisc.edu  Sun Jun  1 09:27:09 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Sun, 1 Jun 2014 09:27:09 -0500
+Subject: [SCIFIO] Bio-Formats Imaris writer
+In-Reply-To: <CAHQgS3_4ypPJanhXv1dr=j8go_rsSRzkh-3QG0jH3ssx=BLgZg@mail.gmail.com>
+References: <CAHQgS3_4ypPJanhXv1dr=j8go_rsSRzkh-3QG0jH3ssx=BLgZg@mail.gmail.com>
+Message-ID: <CADN69ynbrDr5WcV5jepwFscRMKoyFEe539Seo64b_xvCEamFng@mail.gmail.com>
+
+Hi Henry,
+
+> Over the past couple years, I've been developing and testing a java
+> library that is capable of writing Imaris .ims files. This library has
+> allowed me to build an ImageJ plugin that automatically stitches,
+> processes, and converts OME-TIFFs from Micro-Manager into Imaris
+> files, which in turn allows a significantly greater throughput of
+> imaging data with much less effort from users.
+
+Sounds great!
+
+> This library has been instrumental to the workflow of users in the
+> imaging center in which I work, and I want to find a way to share its
+> utility with researchers everywhere. Incorporating it into the
+> Bio-Formats exporter would both increase its visibility and leverage
+> the multitude of formats on Bio-Formats' front end to make it usable
+> with all types of microscopy data.
+
+Rather than implementing a Bio-Formats writer, I encourage you to check out
+SCIFIO [1, 2, 3]. Though still in beta, SCIFIO is the core I/O mechanism of
+ImageJ2, which is finally due for release later this week. SCIFIO uses the
+SciJava plugin framework, meaning your writer would be automatically
+discovered and used as appropriate with no additional work from you. And we
+have recently integrated SCIFIO directly into ImageJ at the core level, so
+things like File > Open now use it, including whatever format plugins are
+available. (SCIFIO also has a Bio-Formats format plugin, so that all of the
+BF formats work in ImageJ that way, too!)
+
+You could then serve your Imaris writer from its own ImageJ update site [4,
+5], to make it available to all ImageJ users.
+
+> In addition, I've convinced Bitplane to make their format open source,
+> and I believe this may allow .ims files to grow beyond a proprietary
+> file format into a generalized multi-resolution format useful for a
+> variety of applications that deal with the visualization of extremely
+> large stitched images.
+
+Glad to hear that Bitplane is willing to do this. In that case, if you do
+complete a SCIFIO Imaris writer and want to donate the code upstream, you
+could file a pull request against the SCIFIO LifeSci project [6] to
+contribute it there, since that project houses readers & writers for _open_
+life sciences formats. So if Bitplane publishes an open specification, we
+would be willing to add it to the project.
+
+If you have any questions about SCIFIO, please feel free to use the SCIFIO
+mailing list [7]. Or if you go the Bio-Formats route, you can use ome-devel
+[8].
+
+Regards,
+Curtis
+
+[1] http://loci.wisc.edu/software/scifio
+[2] https://github.com/scifio/scifio
+[3] https://github.com/scifio/scifio-tutorials
+[4] http://wiki.imagej.net/Update_Sites
+[5] http://wiki.imagej.net/List_of_update_sites
+ [6] https://github.com/scifio/scifio-lifesci
+[7] http://scif.io/mailman/listinfo/scifio
+[8] http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/
+
+
+On Thu, May 29, 2014 at 6:55 PM, Henry Pinkard <henry.pinkard at gmail.com>
+wrote:
+
+> Hi Melissa and Curtis,
+>
+> Over the past couple years, I've been developing and testing a java
+> library that is capable of writing Imaris .ims files. This library has
+> allowed me to build an ImageJ plugin that automatically stitches,
+> processes, and converts OME-TIFFs from Micro-Manager into Imaris files,
+> which in turn allows a significantly greater throughput of imaging data
+> with much less effort from users.
+>
+> This library has been instrumental to the workflow of users in the imaging
+> center in which I work, and I want to find a way to share its utility with
+> researchers everywhere. Incorporating it into the Bio-Formats exporter
+> would both increase its visibility and leverage the multitude of formats on
+> Bio-Formats' front end to make it usable with all types of microscopy data.
+> In addition, I've convinced Bitplane to make their format open source, and
+> I believe this may allow .ims files to grow beyond a proprietary file
+> format into a generalized multi-resolution format useful for a variety of
+> applications that deal with the visualization of extremely large stitched
+> images. I'm happy to rework the library in whatever ways make it easiest to
+> incorporate on your end. Let me know your thoughts on how to best proceed.
+>
+> Best,
+> Henry
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140601/7038c0a6/attachment.html>
+
+From hinerm at gmail.com  Thu Jun 19 07:34:03 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Thu, 19 Jun 2014 07:34:03 -0500
+Subject: [SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+In-Reply-To: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+References: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+Message-ID: <CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+
+Hi Kedar,
+
+ Just wanted to let you know that I'll be out of the country for two weeks
+starting tomorrow, and all of my time right now is being spent on the ImageJ2
+release
+<http://developer.imagej.net/2014/06/04/imagej-200-release-candidate>.
+
+ Would you mind filing this as an issue on the scifio-itk-bridge github
+site: https://github.com/scifio/scifio-itk-bridge ? That way it won't get
+lost in my e-mail and I can investigate when I get back.
+
+Thanks!
+- Mark
+
+
+On Wed, Jun 18, 2014 at 2:39 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+
+> Hi Mark,
+>
+> I used SCIFIO to write czi as a 3d stack of either nrrd or tiffs. I get
+> tiles that are scrambled and this happens at random. My code to convert the
+> files is here:
+>
+> https://github.com/gbkedar/farsight/blob/IlluminationGraphCuts/IlluminationCorrection/readCziWriteCorrectedTiles.cpp
+>
+> I have made montages of the same image in three instances where tiles were
+> scrambled and once when it worked. The czi file is similar to the one I
+> sent you in June or July last year. Please let me know if you need the file
+> that I'm using right now and I'll upload it.
+>
+> Thanks,
+>
+> -Kedar
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140619/d975b1ea/attachment.html>
+
+From broysam at Central.UH.EDU  Thu Jun 19 08:10:37 2014
+From: broysam at Central.UH.EDU (Roysam, Badri)
+Date: Thu, 19 Jun 2014 08:10:37 -0500
+Subject: [SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+In-Reply-To: <CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+References: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+	<CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+Message-ID: <CFC84B53.B644A%broysam@central.uh.edu>
+
+Gentlemen, Can anyone help us sooner? I am worried that this project is falling behind.
+Thanks,
+
+Badri Roysam, D.Sc.
+Hugh Roy and Lillie Cranz Cullen University Professor
+Chair, Electrical & Computer Engineering
+N325, Engineering Building 1
+University of Houston
+Houston, Texas 77204-4005
+Office: 713-743-1773/4435
+Lab (W349): 713-743-0790
+Fax:  713-743-4444
+Email: broysam at central.uh.edu
+ECE Department website: www.ee.uh.edu<http://www.ee.uh.edu>
+Laboratory website: www.farsight-toolkit.org
+
+
+[cid:90E25201-50A2-4ADF-A9CB-F8931F26DA67]
+
+From: Mark Hiner <hinerm at gmail.com<mailto:hinerm at gmail.com>>
+Date: Thursday, June 19, 2014 7:34 AM
+To: Kedar Grama <gbkedar at gmail.com<mailto:gbkedar at gmail.com>>, "scifio at scif.io<mailto:scifio at scif.io>" <scifio at scif.io<mailto:scifio at scif.io>>
+Cc: Dragan Maric <maricd at ninds.nih.gov<mailto:maricd at ninds.nih.gov>>, Matt McCormick <matt.mccormick at kitware.com<mailto:matt.mccormick at kitware.com>>, Curtis Rueden <ctrueden.wisc at gmail.com<mailto:ctrueden.wisc at gmail.com>>, Badri Roysam <broysam at central.uh.edu<mailto:broysam at central.uh.edu>>
+Subject: Re: Scrambled tiles in czi files with Scifio-Itk bridge
+
+Hi Kedar,
+
+ Just wanted to let you know that I'll be out of the country for two weeks starting tomorrow, and all of my time right now is being spent on the ImageJ2 release<http://developer.imagej.net/2014/06/04/imagej-200-release-candidate>.
+
+ Would you mind filing this as an issue on the scifio-itk-bridge github site: https://github.com/scifio/scifio-itk-bridge ? That way it won't get lost in my e-mail and I can investigate when I get back.
+
+Thanks!
+- Mark
+
+
+On Wed, Jun 18, 2014 at 2:39 PM, Kedar Grama <gbkedar at gmail.com<mailto:gbkedar at gmail.com>> wrote:
+Hi Mark,
+
+I used SCIFIO to write czi as a 3d stack of either nrrd or tiffs. I get tiles that are scrambled and this happens at random. My code to convert the files is here:
+https://github.com/gbkedar/farsight/blob/IlluminationGraphCuts/IlluminationCorrection/readCziWriteCorrectedTiles.cpp
+
+I have made montages of the same image in three instances where tiles were scrambled and once when it worked. The czi file is similar to the one I sent you in June or July last year. Please let me know if you need the file that I'm using right now and I'll upload it.
+
+Thanks,
+
+-Kedar
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140619/cee8ac0c/attachment-0001.html>
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: A9808313-E6D2-4B1B-9ADC-50EA095D0B4D[3].png
+Type: image/png
+Size: 12409 bytes
+Desc: A9808313-E6D2-4B1B-9ADC-50EA095D0B4D[3].png
+URL: <http://scif.io/pipermail/scifio/attachments/20140619/cee8ac0c/attachment-0001.png>
+
+From gbkedar at gmail.com  Thu Jun 19 09:20:25 2014
+From: gbkedar at gmail.com (Kedar Grama)
+Date: Thu, 19 Jun 2014 10:20:25 -0400
+Subject: [SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+In-Reply-To: <CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+References: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+	<CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+Message-ID: <CAHfi=GKaJWgeKKXUiKnOPyd8ebimciumdxeoYN81g5s6XPgGzQ@mail.gmail.com>
+
+Hi Mark,
+
+I have filed an issue on the github site scifio-itk-bridge. We will work
+around the issue for now.
+
+Thanks,
+
+-Kedar
+
+
+On Thu, Jun 19, 2014 at 8:34 AM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Hi Kedar,
+>
+>  Just wanted to let you know that I'll be out of the country for two weeks
+> starting tomorrow, and all of my time right now is being spent on the ImageJ2
+> release
+> <http://developer.imagej.net/2014/06/04/imagej-200-release-candidate>.
+>
+>  Would you mind filing this as an issue on the scifio-itk-bridge github
+> site: https://github.com/scifio/scifio-itk-bridge ? That way it won't get
+> lost in my e-mail and I can investigate when I get back.
+>
+> Thanks!
+> - Mark
+>
+>
+> On Wed, Jun 18, 2014 at 2:39 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+>
+>> Hi Mark,
+>>
+>> I used SCIFIO to write czi as a 3d stack of either nrrd or tiffs. I get
+>> tiles that are scrambled and this happens at random. My code to convert the
+>> files is here:
+>>
+>> https://github.com/gbkedar/farsight/blob/IlluminationGraphCuts/IlluminationCorrection/readCziWriteCorrectedTiles.cpp
+>>
+>> I have made montages of the same image in three instances where tiles
+>> were scrambled and once when it worked. The czi file is similar to the one
+>> I sent you in June or July last year. Please let me know if you need the
+>> file that I'm using right now and I'll upload it.
+>>
+>> Thanks,
+>>
+>> -Kedar
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140619/af3ff146/attachment.html>
+
+From ctrueden at wisc.edu  Thu Jun 19 14:48:46 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Thu, 19 Jun 2014 14:48:46 -0500
+Subject: [SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+In-Reply-To: <CAHfi=GKaJWgeKKXUiKnOPyd8ebimciumdxeoYN81g5s6XPgGzQ@mail.gmail.com>
+References: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+	<CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+	<CAHfi=GKaJWgeKKXUiKnOPyd8ebimciumdxeoYN81g5s6XPgGzQ@mail.gmail.com>
+Message-ID: <CADN69y=fHP39Tp8RpwYyZnHhEuZUWOcaF6RU-AGVruai9Xxk5g@mail.gmail.com>
+
+Hi Kedar,
+
+> I have made montages of the same image in three instances where tiles
+> were scrambled and once when it worked.
+
+When you have file-format-specific problems like this, it is very important
+to understand at what layer the problem is occurring. Please test with
+Bio-Formats 5.0.2 -- e.g., with the command line tools, or in an up-to-date
+version of Fiji -- and verify whether you see the same faulty behavior.
+Then test with an older version of Bio-Formats [1], too. If the problem
+occurs with 5.0.2 on its own, that rules out the SCIFIO-ITK bridge layer as
+the culprit, meaning the bug should be reported to the ome-users list [2]
+so that the Bio-Formats developers can address it.
+
+Or if the problem truly is with the ITK bridge, then Mark is the best
+person to investigate, when he returns from vacation.
+
+Regards,
+Curtis
+
+[1] http://downloads.openmicroscopy.org/bio-formats/
+[2] http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users/
+
+
+On Thu, Jun 19, 2014 at 9:20 AM, Kedar Grama <gbkedar at gmail.com> wrote:
+
+> Hi Mark,
+>
+> I have filed an issue on the github site scifio-itk-bridge. We will work
+> around the issue for now.
+>
+> Thanks,
+>
+> -Kedar
+>
+>
+> On Thu, Jun 19, 2014 at 8:34 AM, Mark Hiner <hinerm at gmail.com> wrote:
+>
+>> Hi Kedar,
+>>
+>>  Just wanted to let you know that I'll be out of the country for two
+>> weeks starting tomorrow, and all of my time right now is being spent on the ImageJ2
+>> release
+>> <http://developer.imagej.net/2014/06/04/imagej-200-release-candidate>.
+>>
+>>  Would you mind filing this as an issue on the scifio-itk-bridge github
+>> site: https://github.com/scifio/scifio-itk-bridge ? That way it won't
+>> get lost in my e-mail and I can investigate when I get back.
+>>
+>> Thanks!
+>> - Mark
+>>
+>>
+>> On Wed, Jun 18, 2014 at 2:39 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+>>
+>>> Hi Mark,
+>>>
+>>> I used SCIFIO to write czi as a 3d stack of either nrrd or tiffs. I get
+>>> tiles that are scrambled and this happens at random. My code to convert the
+>>> files is here:
+>>>
+>>> https://github.com/gbkedar/farsight/blob/IlluminationGraphCuts/IlluminationCorrection/readCziWriteCorrectedTiles.cpp
+>>>
+>>> I have made montages of the same image in three instances where tiles
+>>> were scrambled and once when it worked. The czi file is similar to the one
+>>> I sent you in June or July last year. Please let me know if you need the
+>>> file that I'm using right now and I'll upload it.
+>>>
+>>> Thanks,
+>>>
+>>> -Kedar
+>>>
+>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140619/3210df39/attachment.html>
+
+From gbkedar at gmail.com  Thu Jun 19 14:58:51 2014
+From: gbkedar at gmail.com (Kedar Grama)
+Date: Thu, 19 Jun 2014 15:58:51 -0400
+Subject: [SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+In-Reply-To: <CADN69y=fHP39Tp8RpwYyZnHhEuZUWOcaF6RU-AGVruai9Xxk5g@mail.gmail.com>
+References: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+	<CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+	<CAHfi=GKaJWgeKKXUiKnOPyd8ebimciumdxeoYN81g5s6XPgGzQ@mail.gmail.com>
+	<CADN69y=fHP39Tp8RpwYyZnHhEuZUWOcaF6RU-AGVruai9Xxk5g@mail.gmail.com>
+Message-ID: <CAHfi=GLe5iZN_U-MZd6wRquXvjBNvoH5u9-LndyPZj5Cq0T3BQ@mail.gmail.com>
+
+Hi Curtis,
+
+I have wrapped the Bioformats tools and am using it for now. I'll let you
+know and e-mail the ome-users list if the problem recurs.
+
+Thanks,
+
+-Kedar
+
+
+On Thu, Jun 19, 2014 at 3:48 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+
+> Hi Kedar,
+>
+> > I have made montages of the same image in three instances where tiles
+> > were scrambled and once when it worked.
+>
+> When you have file-format-specific problems like this, it is very
+> important to understand at what layer the problem is occurring. Please test
+> with Bio-Formats 5.0.2 -- e.g., with the command line tools, or in an
+> up-to-date version of Fiji -- and verify whether you see the same faulty
+> behavior. Then test with an older version of Bio-Formats [1], too. If the
+> problem occurs with 5.0.2 on its own, that rules out the SCIFIO-ITK bridge
+> layer as the culprit, meaning the bug should be reported to the ome-users
+> list [2] so that the Bio-Formats developers can address it.
+>
+> Or if the problem truly is with the ITK bridge, then Mark is the best
+> person to investigate, when he returns from vacation.
+>
+> Regards,
+> Curtis
+>
+> [1] http://downloads.openmicroscopy.org/bio-formats/
+> [2] http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users/
+>
+>
+> On Thu, Jun 19, 2014 at 9:20 AM, Kedar Grama <gbkedar at gmail.com> wrote:
+>
+>> Hi Mark,
+>>
+>> I have filed an issue on the github site scifio-itk-bridge. We will work
+>> around the issue for now.
+>>
+>> Thanks,
+>>
+>> -Kedar
+>>
+>>
+>> On Thu, Jun 19, 2014 at 8:34 AM, Mark Hiner <hinerm at gmail.com> wrote:
+>>
+>>> Hi Kedar,
+>>>
+>>>  Just wanted to let you know that I'll be out of the country for two
+>>> weeks starting tomorrow, and all of my time right now is being spent on the ImageJ2
+>>> release
+>>> <http://developer.imagej.net/2014/06/04/imagej-200-release-candidate>.
+>>>
+>>>  Would you mind filing this as an issue on the scifio-itk-bridge github
+>>> site: https://github.com/scifio/scifio-itk-bridge ? That way it won't
+>>> get lost in my e-mail and I can investigate when I get back.
+>>>
+>>> Thanks!
+>>> - Mark
+>>>
+>>>
+>>> On Wed, Jun 18, 2014 at 2:39 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+>>>
+>>>> Hi Mark,
+>>>>
+>>>> I used SCIFIO to write czi as a 3d stack of either nrrd or tiffs. I get
+>>>> tiles that are scrambled and this happens at random. My code to convert the
+>>>> files is here:
+>>>>
+>>>> https://github.com/gbkedar/farsight/blob/IlluminationGraphCuts/IlluminationCorrection/readCziWriteCorrectedTiles.cpp
+>>>>
+>>>> I have made montages of the same image in three instances where tiles
+>>>> were scrambled and once when it worked. The czi file is similar to the one
+>>>> I sent you in June or July last year. Please let me know if you need the
+>>>> file that I'm using right now and I'll upload it.
+>>>>
+>>>> Thanks,
+>>>>
+>>>> -Kedar
+>>>>
+>>>
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140619/7bcaf2f4/attachment.html>
+
+From henry.pinkard at gmail.com  Wed Jun 25 13:21:45 2014
+From: henry.pinkard at gmail.com (Henry Pinkard)
+Date: Wed, 25 Jun 2014 11:21:45 -0700
+Subject: [SCIFIO] Bio-Formats Imaris writer
+In-Reply-To: <CADN69ynbrDr5WcV5jepwFscRMKoyFEe539Seo64b_xvCEamFng@mail.gmail.com>
+References: <CAHQgS3_4ypPJanhXv1dr=j8go_rsSRzkh-3QG0jH3ssx=BLgZg@mail.gmail.com>
+	<CADN69ynbrDr5WcV5jepwFscRMKoyFEe539Seo64b_xvCEamFng@mail.gmail.com>
+Message-ID: <CAHQgS39WcwSZQz6TsPEuC6sK7E0=wUHa8qRgonzpL42HSwn6Cg@mail.gmail.com>
+
+Hi Curtis,
+
+This all sounds great. I've cloned the SCIFIO core as well as the
+tutorials, which have been quite helpful in getting things set up.
+
+I've created a class in the io.scif.formats package for my writer. Since I
+only have the writer components, but not the reader, how should I go about
+implementing all of the component classes of Format (Metadata, Parser,
+Checker, Reader, Writer, Translator). The first 4 are listed as mandatory
+in the tutorial, but it seems like I shouldn't need all of them for writing
+functionality alone.
+
+Best,
+Henry
+
+
+On Sun, Jun 1, 2014 at 7:27 AM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+
+> Hi Henry,
+>
+> > Over the past couple years, I've been developing and testing a java
+> > library that is capable of writing Imaris .ims files. This library has
+> > allowed me to build an ImageJ plugin that automatically stitches,
+> > processes, and converts OME-TIFFs from Micro-Manager into Imaris
+> > files, which in turn allows a significantly greater throughput of
+> > imaging data with much less effort from users.
+>
+> Sounds great!
+>
+> > This library has been instrumental to the workflow of users in the
+> > imaging center in which I work, and I want to find a way to share its
+> > utility with researchers everywhere. Incorporating it into the
+> > Bio-Formats exporter would both increase its visibility and leverage
+> > the multitude of formats on Bio-Formats' front end to make it usable
+> > with all types of microscopy data.
+>
+> Rather than implementing a Bio-Formats writer, I encourage you to check
+> out SCIFIO [1, 2, 3]. Though still in beta, SCIFIO is the core I/O
+> mechanism of ImageJ2, which is finally due for release later this week.
+> SCIFIO uses the SciJava plugin framework, meaning your writer would be
+> automatically discovered and used as appropriate with no additional work
+> from you. And we have recently integrated SCIFIO directly into ImageJ at
+> the core level, so things like File > Open now use it, including whatever
+> format plugins are available. (SCIFIO also has a Bio-Formats format plugin,
+> so that all of the BF formats work in ImageJ that way, too!)
+>
+> You could then serve your Imaris writer from its own ImageJ update site
+> [4, 5], to make it available to all ImageJ users.
+>
+> > In addition, I've convinced Bitplane to make their format open source,
+> > and I believe this may allow .ims files to grow beyond a proprietary
+> > file format into a generalized multi-resolution format useful for a
+> > variety of applications that deal with the visualization of extremely
+> > large stitched images.
+>
+> Glad to hear that Bitplane is willing to do this. In that case, if you do
+> complete a SCIFIO Imaris writer and want to donate the code upstream, you
+> could file a pull request against the SCIFIO LifeSci project [6] to
+> contribute it there, since that project houses readers & writers for _open_
+> life sciences formats. So if Bitplane publishes an open specification, we
+> would be willing to add it to the project.
+>
+> If you have any questions about SCIFIO, please feel free to use the SCIFIO
+> mailing list [7]. Or if you go the Bio-Formats route, you can use ome-devel
+> [8].
+>
+> Regards,
+> Curtis
+>
+> [1] http://loci.wisc.edu/software/scifio
+> [2] https://github.com/scifio/scifio
+> [3] https://github.com/scifio/scifio-tutorials
+> [4] http://wiki.imagej.net/Update_Sites
+> [5] http://wiki.imagej.net/List_of_update_sites
+>  [6] https://github.com/scifio/scifio-lifesci
+> [7] http://scif.io/mailman/listinfo/scifio
+> [8] http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/
+>
+>
+> On Thu, May 29, 2014 at 6:55 PM, Henry Pinkard <henry.pinkard at gmail.com>
+> wrote:
+>
+>> Hi Melissa and Curtis,
+>>
+>> Over the past couple years, I've been developing and testing a java
+>> library that is capable of writing Imaris .ims files. This library has
+>> allowed me to build an ImageJ plugin that automatically stitches,
+>> processes, and converts OME-TIFFs from Micro-Manager into Imaris files,
+>> which in turn allows a significantly greater throughput of imaging data
+>> with much less effort from users.
+>>
+>> This library has been instrumental to the workflow of users in the
+>> imaging center in which I work, and I want to find a way to share its
+>> utility with researchers everywhere. Incorporating it into the Bio-Formats
+>> exporter would both increase its visibility and leverage the multitude of
+>> formats on Bio-Formats' front end to make it usable with all types of
+>> microscopy data. In addition, I've convinced Bitplane to make their format
+>> open source, and I believe this may allow .ims files to grow beyond a
+>> proprietary file format into a generalized multi-resolution format useful
+>> for a variety of applications that deal with the visualization of extremely
+>> large stitched images. I'm happy to rework the library in whatever ways
+>> make it easiest to incorporate on your end. Let me know your thoughts on
+>> how to best proceed.
+>>
+>> Best,
+>> Henry
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140625/2c0bca15/attachment.html>
+
+From eliceiri at wisc.edu  Wed Jun 25 13:22:56 2014
+From: eliceiri at wisc.edu (Kevin W Eliceiri)
+Date: Wed, 25 Jun 2014 13:22:56 -0500
+Subject: [SCIFIO] Bio-Formats Imaris writer
+In-Reply-To: <CAHQgS39WcwSZQz6TsPEuC6sK7E0=wUHa8qRgonzpL42HSwn6Cg@mail.gmail.com>
+References: <CAHQgS3_4ypPJanhXv1dr=j8go_rsSRzkh-3QG0jH3ssx=BLgZg@mail.gmail.com>
+	<CADN69ynbrDr5WcV5jepwFscRMKoyFEe539Seo64b_xvCEamFng@mail.gmail.com>
+	<CAHQgS39WcwSZQz6TsPEuC6sK7E0=wUHa8qRgonzpL42HSwn6Cg@mail.gmail.com>
+Message-ID: <7660b9c412402.53aacd30@wiscmail.wisc.edu>
+
+this is great Henry
+
+best
+kevin
+
+On 06/25/14, Henry Pinkard  wrote:
+> Hi Curtis,
+> 
+> This all sounds great. I&#39;ve cloned the SCIFIO core as well as the tutorials, which have been quite helpful in getting things set up. 
+> 
+> 
+> I&#39;ve created a class in the io.scif.formats package for my writer. Since I only have the writer components, but not the reader, how should I go about implementing all of the component classes of Format (Metadata, Parser, Checker, Reader, Writer, Translator). The first 4 are listed as mandatory in the tutorial, but it seems like I shouldn&#39;t need all of them for writing functionality alone.
+> 
+> 
+> Best,
+> Henry
+> 
+> 
+> 
+> On Sun, Jun 1, 2014 at 7:27 AM, Curtis Rueden <ctrueden at wisc.edu(javascript:main.compose()> wrote:
+> 
+> > Hi Henry,
+> > 
+> > > Over the past couple years, I&#39;ve been developing and testing a java
+> > > library that is capable of writing Imaris .ims files. This library has
+> > > allowed me to build an ImageJ plugin that automatically stitches,
+> > > processes, and converts OME-TIFFs from Micro-Manager into Imaris
+> > > files, which in turn allows a significantly greater throughput of
+> > > imaging data with much less effort from users.
+> > 
+> > 
+> > 
+> > 
+> > Sounds great!
+> > 
+> > 
+> > > This library has been instrumental to the workflow of users in the
+> > > imaging center in which I work, and I want to find a way to share its
+> > > utility with researchers everywhere. Incorporating it into the
+> > > Bio-Formats exporter would both increase its visibility and leverage
+> > > the multitude of formats on Bio-Formats&#39; front end to make it usable
+> > > with all types of microscopy data.
+> > 
+> > 
+> > 
+> > 
+> > Rather than implementing a Bio-Formats writer, I encourage you to check out SCIFIO [1, 2, 3]. Though still in beta, SCIFIO is the core I/O mechanism of ImageJ2, which is finally due for release later this week. SCIFIO uses the SciJava plugin framework, meaning your writer would be automatically discovered and used as appropriate with no additional work from you. And we have recently integrated SCIFIO directly into ImageJ at the core level, so things like File > Open now use it, including whatever format plugins are available. (SCIFIO also has a Bio-Formats format plugin, so that all of the BF formats work in ImageJ that way, too!)
+> > 
+> > 
+> > You could then serve your Imaris writer from its own ImageJ update site [4, 5], to make it available to all ImageJ users.
+> > 
+> > 
+> > > In addition, I&#39;ve convinced Bitplane to make their format open source,
+> > > and I believe this may allow .ims files to grow beyond a proprietary
+> > > file format into a generalized multi-resolution format useful for a
+> > > variety of applications that deal with the visualization of extremely
+> > > large stitched images.
+> > 
+> > 
+> > 
+> > 
+> > Glad to hear that Bitplane is willing to do this. In that case, if you do complete a SCIFIO Imaris writer and want to donate the code upstream, you could file a pull request against the SCIFIO LifeSci project [6] to contribute it there, since that project houses readers & writers for _open_ life sciences formats. So if Bitplane publishes an open specification, we would be willing to add it to the project.
+> > 
+> > 
+> > If you have any questions about SCIFIO, please feel free to use the SCIFIO mailing list [7]. Or if you go the Bio-Formats route, you can use ome-devel [8].
+> > 
+> > 
+> > Regards,
+> > Curtis
+> > 
+> > 
+> > [1] http://loci.wisc.edu/software/scifio
+> > [2] https://github.com/scifio/scifio
+> > [3] https://github.com/scifio/scifio-tutorials
+> > [4]?http://wiki.imagej.net/Update_Sites
+> > [5]?http://wiki.imagej.net/List_of_update_sites
+> > [6]?https://github.com/scifio/scifio-lifesci
+> > [7]?http://scif.io/mailman/listinfo/scifio
+> > [8]?http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/
+> > 
+> > 
+> > On Thu, May 29, 2014 at 6:55 PM, Henry Pinkard <henry.pinkard at gmail.com(javascript:main.compose()> wrote:
+> > 
+> > > Hi Melissa and Curtis,
+> > > 
+> > > Over the past couple years, I&#39;ve been developing and testing a java library that is capable of writing Imaris .ims files. This library has allowed me to build an ImageJ plugin that automatically stitches, processes, and converts OME-TIFFs from Micro-Manager into Imaris files, which in turn allows a significantly greater throughput of imaging data with much less effort from users.
+> > > 
+> > > 
+> > > This library has been instrumental to the workflow of users in the imaging center in which I work, and I want to find a way to share its utility with researchers everywhere. Incorporating it into the Bio-Formats exporter would both increase its visibility and leverage the multitude of formats on Bio-Formats&#39; front end to make it usable with all types of microscopy data. In addition, I&#39;ve convinced Bitplane to make their format open source, and I believe this may allow .ims files to grow beyond a proprietary file format into a generalized multi-resolution format useful for a variety of applications that deal with the visualization of extremely large stitched images. I&#39;m happy to rework the library in whatever ways make it easiest to incorporate on your end. Let me know your thoughts on how to best proceed.
+> > > 
+> > > 
+> > > Best,
+> > > Henry
+> > > 
+> > > 
+> > 
+> > 
+> > 
+> > 
+> > 
+> > 
+> > 
+
+--
+Kevin W. Eliceiri
+Director,?Laboratory for Optical and Computational Instrumentation (LOCI)
+Departments Cell and Molecular Biology and Biomedical Engineering
+Affiliate Principal Investigator, Morgridge Institute for Research (MIR)
+Room 271 Animal Sciences,?1675 Observatory Drive,?Madison, WI 53706
+Phone: 608-263-6288
+
+
+From Camille.Godon at leica-microsystems.com  Mon Jun 30 03:51:54 2014
+From: Camille.Godon at leica-microsystems.com (Godon, Camille)
+Date: Mon, 30 Jun 2014 08:51:54 +0000
+Subject: [SCIFIO] LAS AF 4.0
+Message-ID: <44AFCC3C671B7A448F44D7C5DAD9B530957E39@DHREUSVXM04.danaher.org>
+
+Dear all,
+
+Do you know when it would be possible to open in ImageJ .lif files acquired with the new version of LAS AF (4.0)? (So when Bio-Formats will be updated with LAS AF 4?)
+Many thanks for your help.
+
+Kind regards,
+Camille Godon.
+
+
+Please be advised that this email may contain confidential 
+information.  If you are not the intended recipient, please notify us 
+by email by replying to the sender and delete this message.  The 
+sender disclaims that the content of this email constitutes an offer 
+to enter into, or the acceptance of, any agreement; provided that the 
+foregoing does not invalidate the binding effect of any digital or 
+other electronic reproduction of a manual signature that is included 
+in any attachment.
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140630/f8844e21/attachment.html>
+
+From ctrueden at wisc.edu  Mon Jun 30 12:57:12 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 30 Jun 2014 12:57:12 -0500
+Subject: [SCIFIO] LAS AF 4.0
+In-Reply-To: <44AFCC3C671B7A448F44D7C5DAD9B530957E39@DHREUSVXM04.danaher.org>
+References: <44AFCC3C671B7A448F44D7C5DAD9B530957E39@DHREUSVXM04.danaher.org>
+Message-ID: <CADN69y=EdDCECW90oyKHoSaEr3AdcoAKf=L3nkGLwyWUt4Q2gQ@mail.gmail.com>
+
+Hi Camille,
+
+> Do you know when it would be possible to open in ImageJ .lif files
+> acquired with the new version of LAS AF (4.0)? (So when Bio-Formats
+> will be updated with LAS AF 4?)
+
+This is a question to direct to the OME-users mailing list, which is the
+best place to ask Bio-Formats questions.
+http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users
+
+Have you been in contact with the Bio-Formats team previously with an LAS
+AF 4 specification document, and/or any sample non-working files? The team
+will need them in order to improve the LIF reader. You can upload sample
+data using the OME QA system: http://qa.openmicroscopy.org.uk/qa/upload/
+
+Once you report the issue to the OME team, a ticket will created in the OME
+issue tracker so that you can follow the status of the new feature.
+
+Regards,
+Curtis
+
+
+On Mon, Jun 30, 2014 at 3:51 AM, Godon, Camille <
+Camille.Godon at leica-microsystems.com> wrote:
+
+>  Dear all,
+>
+>
+>
+> Do you know when it would be possible to open in ImageJ .lif files
+> acquired with the new version of LAS AF (4.0)? (So when Bio-Formats will be
+> updated with LAS AF 4?)
+>
+> Many thanks for your help.
+>
+>
+>
+> Kind regards,
+>
+> Camille Godon.
+>
+> Please be advised that this email may contain confidential information. If
+> you are not the intended recipient, please notify us by email by replying
+> to the sender and delete this message. The sender disclaims that the
+> content of this email constitutes an offer to enter into, or the acceptance
+> of, any agreement; provided that the foregoing does not invalidate the
+> binding effect of any digital or other electronic reproduction of a manual
+> signature that is included in any attachment.
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140630/69a47a82/attachment.html>
+
+From ctrueden at wisc.edu  Sun Jun  1 09:27:09 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Sun, 1 Jun 2014 09:27:09 -0500
+Subject: [SCIFIO] Bio-Formats Imaris writer
+In-Reply-To: <CAHQgS3_4ypPJanhXv1dr=j8go_rsSRzkh-3QG0jH3ssx=BLgZg@mail.gmail.com>
+References: <CAHQgS3_4ypPJanhXv1dr=j8go_rsSRzkh-3QG0jH3ssx=BLgZg@mail.gmail.com>
+Message-ID: <CADN69ynbrDr5WcV5jepwFscRMKoyFEe539Seo64b_xvCEamFng@mail.gmail.com>
+
+Hi Henry,
+
+> Over the past couple years, I've been developing and testing a java
+> library that is capable of writing Imaris .ims files. This library has
+> allowed me to build an ImageJ plugin that automatically stitches,
+> processes, and converts OME-TIFFs from Micro-Manager into Imaris
+> files, which in turn allows a significantly greater throughput of
+> imaging data with much less effort from users.
+
+Sounds great!
+
+> This library has been instrumental to the workflow of users in the
+> imaging center in which I work, and I want to find a way to share its
+> utility with researchers everywhere. Incorporating it into the
+> Bio-Formats exporter would both increase its visibility and leverage
+> the multitude of formats on Bio-Formats' front end to make it usable
+> with all types of microscopy data.
+
+Rather than implementing a Bio-Formats writer, I encourage you to check out
+SCIFIO [1, 2, 3]. Though still in beta, SCIFIO is the core I/O mechanism of
+ImageJ2, which is finally due for release later this week. SCIFIO uses the
+SciJava plugin framework, meaning your writer would be automatically
+discovered and used as appropriate with no additional work from you. And we
+have recently integrated SCIFIO directly into ImageJ at the core level, so
+things like File > Open now use it, including whatever format plugins are
+available. (SCIFIO also has a Bio-Formats format plugin, so that all of the
+BF formats work in ImageJ that way, too!)
+
+You could then serve your Imaris writer from its own ImageJ update site [4,
+5], to make it available to all ImageJ users.
+
+> In addition, I've convinced Bitplane to make their format open source,
+> and I believe this may allow .ims files to grow beyond a proprietary
+> file format into a generalized multi-resolution format useful for a
+> variety of applications that deal with the visualization of extremely
+> large stitched images.
+
+Glad to hear that Bitplane is willing to do this. In that case, if you do
+complete a SCIFIO Imaris writer and want to donate the code upstream, you
+could file a pull request against the SCIFIO LifeSci project [6] to
+contribute it there, since that project houses readers & writers for _open_
+life sciences formats. So if Bitplane publishes an open specification, we
+would be willing to add it to the project.
+
+If you have any questions about SCIFIO, please feel free to use the SCIFIO
+mailing list [7]. Or if you go the Bio-Formats route, you can use ome-devel
+[8].
+
+Regards,
+Curtis
+
+[1] http://loci.wisc.edu/software/scifio
+[2] https://github.com/scifio/scifio
+[3] https://github.com/scifio/scifio-tutorials
+[4] http://wiki.imagej.net/Update_Sites
+[5] http://wiki.imagej.net/List_of_update_sites
+ [6] https://github.com/scifio/scifio-lifesci
+[7] http://scif.io/mailman/listinfo/scifio
+[8] http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/
+
+
+On Thu, May 29, 2014 at 6:55 PM, Henry Pinkard <henry.pinkard at gmail.com>
+wrote:
+
+> Hi Melissa and Curtis,
+>
+> Over the past couple years, I've been developing and testing a java
+> library that is capable of writing Imaris .ims files. This library has
+> allowed me to build an ImageJ plugin that automatically stitches,
+> processes, and converts OME-TIFFs from Micro-Manager into Imaris files,
+> which in turn allows a significantly greater throughput of imaging data
+> with much less effort from users.
+>
+> This library has been instrumental to the workflow of users in the imaging
+> center in which I work, and I want to find a way to share its utility with
+> researchers everywhere. Incorporating it into the Bio-Formats exporter
+> would both increase its visibility and leverage the multitude of formats on
+> Bio-Formats' front end to make it usable with all types of microscopy data.
+> In addition, I've convinced Bitplane to make their format open source, and
+> I believe this may allow .ims files to grow beyond a proprietary file
+> format into a generalized multi-resolution format useful for a variety of
+> applications that deal with the visualization of extremely large stitched
+> images. I'm happy to rework the library in whatever ways make it easiest to
+> incorporate on your end. Let me know your thoughts on how to best proceed.
+>
+> Best,
+> Henry
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140601/7038c0a6/attachment-0002.html>
+
+From hinerm at gmail.com  Thu Jun 19 07:34:03 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Thu, 19 Jun 2014 07:34:03 -0500
+Subject: [SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+In-Reply-To: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+References: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+Message-ID: <CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+
+Hi Kedar,
+
+ Just wanted to let you know that I'll be out of the country for two weeks
+starting tomorrow, and all of my time right now is being spent on the ImageJ2
+release
+<http://developer.imagej.net/2014/06/04/imagej-200-release-candidate>.
+
+ Would you mind filing this as an issue on the scifio-itk-bridge github
+site: https://github.com/scifio/scifio-itk-bridge ? That way it won't get
+lost in my e-mail and I can investigate when I get back.
+
+Thanks!
+- Mark
+
+
+On Wed, Jun 18, 2014 at 2:39 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+
+> Hi Mark,
+>
+> I used SCIFIO to write czi as a 3d stack of either nrrd or tiffs. I get
+> tiles that are scrambled and this happens at random. My code to convert the
+> files is here:
+>
+> https://github.com/gbkedar/farsight/blob/IlluminationGraphCuts/IlluminationCorrection/readCziWriteCorrectedTiles.cpp
+>
+> I have made montages of the same image in three instances where tiles were
+> scrambled and once when it worked. The czi file is similar to the one I
+> sent you in June or July last year. Please let me know if you need the file
+> that I'm using right now and I'll upload it.
+>
+> Thanks,
+>
+> -Kedar
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140619/d975b1ea/attachment-0002.html>
+
+From broysam at Central.UH.EDU  Thu Jun 19 08:10:37 2014
+From: broysam at Central.UH.EDU (Roysam, Badri)
+Date: Thu, 19 Jun 2014 08:10:37 -0500
+Subject: [SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+In-Reply-To: <CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+References: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+	<CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+Message-ID: <CFC84B53.B644A%broysam@central.uh.edu>
+
+Gentlemen, Can anyone help us sooner? I am worried that this project is falling behind.
+Thanks,
+
+Badri Roysam, D.Sc.
+Hugh Roy and Lillie Cranz Cullen University Professor
+Chair, Electrical & Computer Engineering
+N325, Engineering Building 1
+University of Houston
+Houston, Texas 77204-4005
+Office: 713-743-1773/4435
+Lab (W349): 713-743-0790
+Fax:  713-743-4444
+Email: broysam at central.uh.edu
+ECE Department website: www.ee.uh.edu<http://www.ee.uh.edu>
+Laboratory website: www.farsight-toolkit.org
+
+
+[cid:90E25201-50A2-4ADF-A9CB-F8931F26DA67]
+
+From: Mark Hiner <hinerm at gmail.com<mailto:hinerm at gmail.com>>
+Date: Thursday, June 19, 2014 7:34 AM
+To: Kedar Grama <gbkedar at gmail.com<mailto:gbkedar at gmail.com>>, "scifio at scif.io<mailto:scifio at scif.io>" <scifio at scif.io<mailto:scifio at scif.io>>
+Cc: Dragan Maric <maricd at ninds.nih.gov<mailto:maricd at ninds.nih.gov>>, Matt McCormick <matt.mccormick at kitware.com<mailto:matt.mccormick at kitware.com>>, Curtis Rueden <ctrueden.wisc at gmail.com<mailto:ctrueden.wisc at gmail.com>>, Badri Roysam <broysam at central.uh.edu<mailto:broysam at central.uh.edu>>
+Subject: Re: Scrambled tiles in czi files with Scifio-Itk bridge
+
+Hi Kedar,
+
+ Just wanted to let you know that I'll be out of the country for two weeks starting tomorrow, and all of my time right now is being spent on the ImageJ2 release<http://developer.imagej.net/2014/06/04/imagej-200-release-candidate>.
+
+ Would you mind filing this as an issue on the scifio-itk-bridge github site: https://github.com/scifio/scifio-itk-bridge ? That way it won't get lost in my e-mail and I can investigate when I get back.
+
+Thanks!
+- Mark
+
+
+On Wed, Jun 18, 2014 at 2:39 PM, Kedar Grama <gbkedar at gmail.com<mailto:gbkedar at gmail.com>> wrote:
+Hi Mark,
+
+I used SCIFIO to write czi as a 3d stack of either nrrd or tiffs. I get tiles that are scrambled and this happens at random. My code to convert the files is here:
+https://github.com/gbkedar/farsight/blob/IlluminationGraphCuts/IlluminationCorrection/readCziWriteCorrectedTiles.cpp
+
+I have made montages of the same image in three instances where tiles were scrambled and once when it worked. The czi file is similar to the one I sent you in June or July last year. Please let me know if you need the file that I'm using right now and I'll upload it.
+
+Thanks,
+
+-Kedar
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140619/cee8ac0c/attachment-0002.html>
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: A9808313-E6D2-4B1B-9ADC-50EA095D0B4D[3].png
+Type: image/png
+Size: 12409 bytes
+Desc: A9808313-E6D2-4B1B-9ADC-50EA095D0B4D[3].png
+URL: <http://scif.io/pipermail/scifio/attachments/20140619/cee8ac0c/attachment-0002.png>
+
+From gbkedar at gmail.com  Thu Jun 19 09:20:25 2014
+From: gbkedar at gmail.com (Kedar Grama)
+Date: Thu, 19 Jun 2014 10:20:25 -0400
+Subject: [SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+In-Reply-To: <CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+References: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+	<CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+Message-ID: <CAHfi=GKaJWgeKKXUiKnOPyd8ebimciumdxeoYN81g5s6XPgGzQ@mail.gmail.com>
+
+Hi Mark,
+
+I have filed an issue on the github site scifio-itk-bridge. We will work
+around the issue for now.
+
+Thanks,
+
+-Kedar
+
+
+On Thu, Jun 19, 2014 at 8:34 AM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Hi Kedar,
+>
+>  Just wanted to let you know that I'll be out of the country for two weeks
+> starting tomorrow, and all of my time right now is being spent on the ImageJ2
+> release
+> <http://developer.imagej.net/2014/06/04/imagej-200-release-candidate>.
+>
+>  Would you mind filing this as an issue on the scifio-itk-bridge github
+> site: https://github.com/scifio/scifio-itk-bridge ? That way it won't get
+> lost in my e-mail and I can investigate when I get back.
+>
+> Thanks!
+> - Mark
+>
+>
+> On Wed, Jun 18, 2014 at 2:39 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+>
+>> Hi Mark,
+>>
+>> I used SCIFIO to write czi as a 3d stack of either nrrd or tiffs. I get
+>> tiles that are scrambled and this happens at random. My code to convert the
+>> files is here:
+>>
+>> https://github.com/gbkedar/farsight/blob/IlluminationGraphCuts/IlluminationCorrection/readCziWriteCorrectedTiles.cpp
+>>
+>> I have made montages of the same image in three instances where tiles
+>> were scrambled and once when it worked. The czi file is similar to the one
+>> I sent you in June or July last year. Please let me know if you need the
+>> file that I'm using right now and I'll upload it.
+>>
+>> Thanks,
+>>
+>> -Kedar
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140619/af3ff146/attachment-0002.html>
+
+From ctrueden at wisc.edu  Thu Jun 19 14:48:46 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Thu, 19 Jun 2014 14:48:46 -0500
+Subject: [SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+In-Reply-To: <CAHfi=GKaJWgeKKXUiKnOPyd8ebimciumdxeoYN81g5s6XPgGzQ@mail.gmail.com>
+References: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+	<CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+	<CAHfi=GKaJWgeKKXUiKnOPyd8ebimciumdxeoYN81g5s6XPgGzQ@mail.gmail.com>
+Message-ID: <CADN69y=fHP39Tp8RpwYyZnHhEuZUWOcaF6RU-AGVruai9Xxk5g@mail.gmail.com>
+
+Hi Kedar,
+
+> I have made montages of the same image in three instances where tiles
+> were scrambled and once when it worked.
+
+When you have file-format-specific problems like this, it is very important
+to understand at what layer the problem is occurring. Please test with
+Bio-Formats 5.0.2 -- e.g., with the command line tools, or in an up-to-date
+version of Fiji -- and verify whether you see the same faulty behavior.
+Then test with an older version of Bio-Formats [1], too. If the problem
+occurs with 5.0.2 on its own, that rules out the SCIFIO-ITK bridge layer as
+the culprit, meaning the bug should be reported to the ome-users list [2]
+so that the Bio-Formats developers can address it.
+
+Or if the problem truly is with the ITK bridge, then Mark is the best
+person to investigate, when he returns from vacation.
+
+Regards,
+Curtis
+
+[1] http://downloads.openmicroscopy.org/bio-formats/
+[2] http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users/
+
+
+On Thu, Jun 19, 2014 at 9:20 AM, Kedar Grama <gbkedar at gmail.com> wrote:
+
+> Hi Mark,
+>
+> I have filed an issue on the github site scifio-itk-bridge. We will work
+> around the issue for now.
+>
+> Thanks,
+>
+> -Kedar
+>
+>
+> On Thu, Jun 19, 2014 at 8:34 AM, Mark Hiner <hinerm at gmail.com> wrote:
+>
+>> Hi Kedar,
+>>
+>>  Just wanted to let you know that I'll be out of the country for two
+>> weeks starting tomorrow, and all of my time right now is being spent on the ImageJ2
+>> release
+>> <http://developer.imagej.net/2014/06/04/imagej-200-release-candidate>.
+>>
+>>  Would you mind filing this as an issue on the scifio-itk-bridge github
+>> site: https://github.com/scifio/scifio-itk-bridge ? That way it won't
+>> get lost in my e-mail and I can investigate when I get back.
+>>
+>> Thanks!
+>> - Mark
+>>
+>>
+>> On Wed, Jun 18, 2014 at 2:39 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+>>
+>>> Hi Mark,
+>>>
+>>> I used SCIFIO to write czi as a 3d stack of either nrrd or tiffs. I get
+>>> tiles that are scrambled and this happens at random. My code to convert the
+>>> files is here:
+>>>
+>>> https://github.com/gbkedar/farsight/blob/IlluminationGraphCuts/IlluminationCorrection/readCziWriteCorrectedTiles.cpp
+>>>
+>>> I have made montages of the same image in three instances where tiles
+>>> were scrambled and once when it worked. The czi file is similar to the one
+>>> I sent you in June or July last year. Please let me know if you need the
+>>> file that I'm using right now and I'll upload it.
+>>>
+>>> Thanks,
+>>>
+>>> -Kedar
+>>>
+>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140619/3210df39/attachment-0002.html>
+
+From gbkedar at gmail.com  Thu Jun 19 14:58:51 2014
+From: gbkedar at gmail.com (Kedar Grama)
+Date: Thu, 19 Jun 2014 15:58:51 -0400
+Subject: [SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+In-Reply-To: <CADN69y=fHP39Tp8RpwYyZnHhEuZUWOcaF6RU-AGVruai9Xxk5g@mail.gmail.com>
+References: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+	<CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+	<CAHfi=GKaJWgeKKXUiKnOPyd8ebimciumdxeoYN81g5s6XPgGzQ@mail.gmail.com>
+	<CADN69y=fHP39Tp8RpwYyZnHhEuZUWOcaF6RU-AGVruai9Xxk5g@mail.gmail.com>
+Message-ID: <CAHfi=GLe5iZN_U-MZd6wRquXvjBNvoH5u9-LndyPZj5Cq0T3BQ@mail.gmail.com>
+
+Hi Curtis,
+
+I have wrapped the Bioformats tools and am using it for now. I'll let you
+know and e-mail the ome-users list if the problem recurs.
+
+Thanks,
+
+-Kedar
+
+
+On Thu, Jun 19, 2014 at 3:48 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+
+> Hi Kedar,
+>
+> > I have made montages of the same image in three instances where tiles
+> > were scrambled and once when it worked.
+>
+> When you have file-format-specific problems like this, it is very
+> important to understand at what layer the problem is occurring. Please test
+> with Bio-Formats 5.0.2 -- e.g., with the command line tools, or in an
+> up-to-date version of Fiji -- and verify whether you see the same faulty
+> behavior. Then test with an older version of Bio-Formats [1], too. If the
+> problem occurs with 5.0.2 on its own, that rules out the SCIFIO-ITK bridge
+> layer as the culprit, meaning the bug should be reported to the ome-users
+> list [2] so that the Bio-Formats developers can address it.
+>
+> Or if the problem truly is with the ITK bridge, then Mark is the best
+> person to investigate, when he returns from vacation.
+>
+> Regards,
+> Curtis
+>
+> [1] http://downloads.openmicroscopy.org/bio-formats/
+> [2] http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users/
+>
+>
+> On Thu, Jun 19, 2014 at 9:20 AM, Kedar Grama <gbkedar at gmail.com> wrote:
+>
+>> Hi Mark,
+>>
+>> I have filed an issue on the github site scifio-itk-bridge. We will work
+>> around the issue for now.
+>>
+>> Thanks,
+>>
+>> -Kedar
+>>
+>>
+>> On Thu, Jun 19, 2014 at 8:34 AM, Mark Hiner <hinerm at gmail.com> wrote:
+>>
+>>> Hi Kedar,
+>>>
+>>>  Just wanted to let you know that I'll be out of the country for two
+>>> weeks starting tomorrow, and all of my time right now is being spent on the ImageJ2
+>>> release
+>>> <http://developer.imagej.net/2014/06/04/imagej-200-release-candidate>.
+>>>
+>>>  Would you mind filing this as an issue on the scifio-itk-bridge github
+>>> site: https://github.com/scifio/scifio-itk-bridge ? That way it won't
+>>> get lost in my e-mail and I can investigate when I get back.
+>>>
+>>> Thanks!
+>>> - Mark
+>>>
+>>>
+>>> On Wed, Jun 18, 2014 at 2:39 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+>>>
+>>>> Hi Mark,
+>>>>
+>>>> I used SCIFIO to write czi as a 3d stack of either nrrd or tiffs. I get
+>>>> tiles that are scrambled and this happens at random. My code to convert the
+>>>> files is here:
+>>>>
+>>>> https://github.com/gbkedar/farsight/blob/IlluminationGraphCuts/IlluminationCorrection/readCziWriteCorrectedTiles.cpp
+>>>>
+>>>> I have made montages of the same image in three instances where tiles
+>>>> were scrambled and once when it worked. The czi file is similar to the one
+>>>> I sent you in June or July last year. Please let me know if you need the
+>>>> file that I'm using right now and I'll upload it.
+>>>>
+>>>> Thanks,
+>>>>
+>>>> -Kedar
+>>>>
+>>>
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140619/7bcaf2f4/attachment-0002.html>
+
+From henry.pinkard at gmail.com  Wed Jun 25 13:21:45 2014
+From: henry.pinkard at gmail.com (Henry Pinkard)
+Date: Wed, 25 Jun 2014 11:21:45 -0700
+Subject: [SCIFIO] Bio-Formats Imaris writer
+In-Reply-To: <CADN69ynbrDr5WcV5jepwFscRMKoyFEe539Seo64b_xvCEamFng@mail.gmail.com>
+References: <CAHQgS3_4ypPJanhXv1dr=j8go_rsSRzkh-3QG0jH3ssx=BLgZg@mail.gmail.com>
+	<CADN69ynbrDr5WcV5jepwFscRMKoyFEe539Seo64b_xvCEamFng@mail.gmail.com>
+Message-ID: <CAHQgS39WcwSZQz6TsPEuC6sK7E0=wUHa8qRgonzpL42HSwn6Cg@mail.gmail.com>
+
+Hi Curtis,
+
+This all sounds great. I've cloned the SCIFIO core as well as the
+tutorials, which have been quite helpful in getting things set up.
+
+I've created a class in the io.scif.formats package for my writer. Since I
+only have the writer components, but not the reader, how should I go about
+implementing all of the component classes of Format (Metadata, Parser,
+Checker, Reader, Writer, Translator). The first 4 are listed as mandatory
+in the tutorial, but it seems like I shouldn't need all of them for writing
+functionality alone.
+
+Best,
+Henry
+
+
+On Sun, Jun 1, 2014 at 7:27 AM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+
+> Hi Henry,
+>
+> > Over the past couple years, I've been developing and testing a java
+> > library that is capable of writing Imaris .ims files. This library has
+> > allowed me to build an ImageJ plugin that automatically stitches,
+> > processes, and converts OME-TIFFs from Micro-Manager into Imaris
+> > files, which in turn allows a significantly greater throughput of
+> > imaging data with much less effort from users.
+>
+> Sounds great!
+>
+> > This library has been instrumental to the workflow of users in the
+> > imaging center in which I work, and I want to find a way to share its
+> > utility with researchers everywhere. Incorporating it into the
+> > Bio-Formats exporter would both increase its visibility and leverage
+> > the multitude of formats on Bio-Formats' front end to make it usable
+> > with all types of microscopy data.
+>
+> Rather than implementing a Bio-Formats writer, I encourage you to check
+> out SCIFIO [1, 2, 3]. Though still in beta, SCIFIO is the core I/O
+> mechanism of ImageJ2, which is finally due for release later this week.
+> SCIFIO uses the SciJava plugin framework, meaning your writer would be
+> automatically discovered and used as appropriate with no additional work
+> from you. And we have recently integrated SCIFIO directly into ImageJ at
+> the core level, so things like File > Open now use it, including whatever
+> format plugins are available. (SCIFIO also has a Bio-Formats format plugin,
+> so that all of the BF formats work in ImageJ that way, too!)
+>
+> You could then serve your Imaris writer from its own ImageJ update site
+> [4, 5], to make it available to all ImageJ users.
+>
+> > In addition, I've convinced Bitplane to make their format open source,
+> > and I believe this may allow .ims files to grow beyond a proprietary
+> > file format into a generalized multi-resolution format useful for a
+> > variety of applications that deal with the visualization of extremely
+> > large stitched images.
+>
+> Glad to hear that Bitplane is willing to do this. In that case, if you do
+> complete a SCIFIO Imaris writer and want to donate the code upstream, you
+> could file a pull request against the SCIFIO LifeSci project [6] to
+> contribute it there, since that project houses readers & writers for _open_
+> life sciences formats. So if Bitplane publishes an open specification, we
+> would be willing to add it to the project.
+>
+> If you have any questions about SCIFIO, please feel free to use the SCIFIO
+> mailing list [7]. Or if you go the Bio-Formats route, you can use ome-devel
+> [8].
+>
+> Regards,
+> Curtis
+>
+> [1] http://loci.wisc.edu/software/scifio
+> [2] https://github.com/scifio/scifio
+> [3] https://github.com/scifio/scifio-tutorials
+> [4] http://wiki.imagej.net/Update_Sites
+> [5] http://wiki.imagej.net/List_of_update_sites
+>  [6] https://github.com/scifio/scifio-lifesci
+> [7] http://scif.io/mailman/listinfo/scifio
+> [8] http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/
+>
+>
+> On Thu, May 29, 2014 at 6:55 PM, Henry Pinkard <henry.pinkard at gmail.com>
+> wrote:
+>
+>> Hi Melissa and Curtis,
+>>
+>> Over the past couple years, I've been developing and testing a java
+>> library that is capable of writing Imaris .ims files. This library has
+>> allowed me to build an ImageJ plugin that automatically stitches,
+>> processes, and converts OME-TIFFs from Micro-Manager into Imaris files,
+>> which in turn allows a significantly greater throughput of imaging data
+>> with much less effort from users.
+>>
+>> This library has been instrumental to the workflow of users in the
+>> imaging center in which I work, and I want to find a way to share its
+>> utility with researchers everywhere. Incorporating it into the Bio-Formats
+>> exporter would both increase its visibility and leverage the multitude of
+>> formats on Bio-Formats' front end to make it usable with all types of
+>> microscopy data. In addition, I've convinced Bitplane to make their format
+>> open source, and I believe this may allow .ims files to grow beyond a
+>> proprietary file format into a generalized multi-resolution format useful
+>> for a variety of applications that deal with the visualization of extremely
+>> large stitched images. I'm happy to rework the library in whatever ways
+>> make it easiest to incorporate on your end. Let me know your thoughts on
+>> how to best proceed.
+>>
+>> Best,
+>> Henry
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140625/2c0bca15/attachment-0002.html>
+
+From eliceiri at wisc.edu  Wed Jun 25 13:22:56 2014
+From: eliceiri at wisc.edu (Kevin W Eliceiri)
+Date: Wed, 25 Jun 2014 13:22:56 -0500
+Subject: [SCIFIO] Bio-Formats Imaris writer
+In-Reply-To: <CAHQgS39WcwSZQz6TsPEuC6sK7E0=wUHa8qRgonzpL42HSwn6Cg@mail.gmail.com>
+References: <CAHQgS3_4ypPJanhXv1dr=j8go_rsSRzkh-3QG0jH3ssx=BLgZg@mail.gmail.com>
+	<CADN69ynbrDr5WcV5jepwFscRMKoyFEe539Seo64b_xvCEamFng@mail.gmail.com>
+	<CAHQgS39WcwSZQz6TsPEuC6sK7E0=wUHa8qRgonzpL42HSwn6Cg@mail.gmail.com>
+Message-ID: <7660b9c412402.53aacd30@wiscmail.wisc.edu>
+
+this is great Henry
+
+best
+kevin
+
+On 06/25/14, Henry Pinkard  wrote:
+> Hi Curtis,
+> 
+> This all sounds great. I&#39;ve cloned the SCIFIO core as well as the tutorials, which have been quite helpful in getting things set up. 
+> 
+> 
+> I&#39;ve created a class in the io.scif.formats package for my writer. Since I only have the writer components, but not the reader, how should I go about implementing all of the component classes of Format (Metadata, Parser, Checker, Reader, Writer, Translator). The first 4 are listed as mandatory in the tutorial, but it seems like I shouldn&#39;t need all of them for writing functionality alone.
+> 
+> 
+> Best,
+> Henry
+> 
+> 
+> 
+> On Sun, Jun 1, 2014 at 7:27 AM, Curtis Rueden <ctrueden at wisc.edu(javascript:main.compose()> wrote:
+> 
+> > Hi Henry,
+> > 
+> > > Over the past couple years, I&#39;ve been developing and testing a java
+> > > library that is capable of writing Imaris .ims files. This library has
+> > > allowed me to build an ImageJ plugin that automatically stitches,
+> > > processes, and converts OME-TIFFs from Micro-Manager into Imaris
+> > > files, which in turn allows a significantly greater throughput of
+> > > imaging data with much less effort from users.
+> > 
+> > 
+> > 
+> > 
+> > Sounds great!
+> > 
+> > 
+> > > This library has been instrumental to the workflow of users in the
+> > > imaging center in which I work, and I want to find a way to share its
+> > > utility with researchers everywhere. Incorporating it into the
+> > > Bio-Formats exporter would both increase its visibility and leverage
+> > > the multitude of formats on Bio-Formats&#39; front end to make it usable
+> > > with all types of microscopy data.
+> > 
+> > 
+> > 
+> > 
+> > Rather than implementing a Bio-Formats writer, I encourage you to check out SCIFIO [1, 2, 3]. Though still in beta, SCIFIO is the core I/O mechanism of ImageJ2, which is finally due for release later this week. SCIFIO uses the SciJava plugin framework, meaning your writer would be automatically discovered and used as appropriate with no additional work from you. And we have recently integrated SCIFIO directly into ImageJ at the core level, so things like File > Open now use it, including whatever format plugins are available. (SCIFIO also has a Bio-Formats format plugin, so that all of the BF formats work in ImageJ that way, too!)
+> > 
+> > 
+> > You could then serve your Imaris writer from its own ImageJ update site [4, 5], to make it available to all ImageJ users.
+> > 
+> > 
+> > > In addition, I&#39;ve convinced Bitplane to make their format open source,
+> > > and I believe this may allow .ims files to grow beyond a proprietary
+> > > file format into a generalized multi-resolution format useful for a
+> > > variety of applications that deal with the visualization of extremely
+> > > large stitched images.
+> > 
+> > 
+> > 
+> > 
+> > Glad to hear that Bitplane is willing to do this. In that case, if you do complete a SCIFIO Imaris writer and want to donate the code upstream, you could file a pull request against the SCIFIO LifeSci project [6] to contribute it there, since that project houses readers & writers for _open_ life sciences formats. So if Bitplane publishes an open specification, we would be willing to add it to the project.
+> > 
+> > 
+> > If you have any questions about SCIFIO, please feel free to use the SCIFIO mailing list [7]. Or if you go the Bio-Formats route, you can use ome-devel [8].
+> > 
+> > 
+> > Regards,
+> > Curtis
+> > 
+> > 
+> > [1] http://loci.wisc.edu/software/scifio
+> > [2] https://github.com/scifio/scifio
+> > [3] https://github.com/scifio/scifio-tutorials
+> > [4]?http://wiki.imagej.net/Update_Sites
+> > [5]?http://wiki.imagej.net/List_of_update_sites
+> > [6]?https://github.com/scifio/scifio-lifesci
+> > [7]?http://scif.io/mailman/listinfo/scifio
+> > [8]?http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/
+> > 
+> > 
+> > On Thu, May 29, 2014 at 6:55 PM, Henry Pinkard <henry.pinkard at gmail.com(javascript:main.compose()> wrote:
+> > 
+> > > Hi Melissa and Curtis,
+> > > 
+> > > Over the past couple years, I&#39;ve been developing and testing a java library that is capable of writing Imaris .ims files. This library has allowed me to build an ImageJ plugin that automatically stitches, processes, and converts OME-TIFFs from Micro-Manager into Imaris files, which in turn allows a significantly greater throughput of imaging data with much less effort from users.
+> > > 
+> > > 
+> > > This library has been instrumental to the workflow of users in the imaging center in which I work, and I want to find a way to share its utility with researchers everywhere. Incorporating it into the Bio-Formats exporter would both increase its visibility and leverage the multitude of formats on Bio-Formats&#39; front end to make it usable with all types of microscopy data. In addition, I&#39;ve convinced Bitplane to make their format open source, and I believe this may allow .ims files to grow beyond a proprietary file format into a generalized multi-resolution format useful for a variety of applications that deal with the visualization of extremely large stitched images. I&#39;m happy to rework the library in whatever ways make it easiest to incorporate on your end. Let me know your thoughts on how to best proceed.
+> > > 
+> > > 
+> > > Best,
+> > > Henry
+> > > 
+> > > 
+> > 
+> > 
+> > 
+> > 
+> > 
+> > 
+> > 
+
+--
+Kevin W. Eliceiri
+Director,?Laboratory for Optical and Computational Instrumentation (LOCI)
+Departments Cell and Molecular Biology and Biomedical Engineering
+Affiliate Principal Investigator, Morgridge Institute for Research (MIR)
+Room 271 Animal Sciences,?1675 Observatory Drive,?Madison, WI 53706
+Phone: 608-263-6288
+
+
+
+From Camille.Godon at leica-microsystems.com  Mon Jun 30 03:51:54 2014
+From: Camille.Godon at leica-microsystems.com (Godon, Camille)
+Date: Mon, 30 Jun 2014 08:51:54 +0000
+Subject: [SCIFIO] LAS AF 4.0
+Message-ID: <44AFCC3C671B7A448F44D7C5DAD9B530957E39@DHREUSVXM04.danaher.org>
+
+Dear all,
+
+Do you know when it would be possible to open in ImageJ .lif files acquired with the new version of LAS AF (4.0)? (So when Bio-Formats will be updated with LAS AF 4?)
+Many thanks for your help.
+
+Kind regards,
+Camille Godon.
+
+
+Please be advised that this email may contain confidential 
+information.  If you are not the intended recipient, please notify us 
+by email by replying to the sender and delete this message.  The 
+sender disclaims that the content of this email constitutes an offer 
+to enter into, or the acceptance of, any agreement; provided that the 
+foregoing does not invalidate the binding effect of any digital or 
+other electronic reproduction of a manual signature that is included 
+in any attachment.
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140630/f8844e21/attachment-0002.html>
+
+From ctrueden at wisc.edu  Mon Jun 30 12:57:12 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 30 Jun 2014 12:57:12 -0500
+Subject: [SCIFIO] LAS AF 4.0
+In-Reply-To: <44AFCC3C671B7A448F44D7C5DAD9B530957E39@DHREUSVXM04.danaher.org>
+References: <44AFCC3C671B7A448F44D7C5DAD9B530957E39@DHREUSVXM04.danaher.org>
+Message-ID: <CADN69y=EdDCECW90oyKHoSaEr3AdcoAKf=L3nkGLwyWUt4Q2gQ@mail.gmail.com>
+
+Hi Camille,
+
+> Do you know when it would be possible to open in ImageJ .lif files
+> acquired with the new version of LAS AF (4.0)? (So when Bio-Formats
+> will be updated with LAS AF 4?)
+
+This is a question to direct to the OME-users mailing list, which is the
+best place to ask Bio-Formats questions.
+http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users
+
+Have you been in contact with the Bio-Formats team previously with an LAS
+AF 4 specification document, and/or any sample non-working files? The team
+will need them in order to improve the LIF reader. You can upload sample
+data using the OME QA system: http://qa.openmicroscopy.org.uk/qa/upload/
+
+Once you report the issue to the OME team, a ticket will created in the OME
+issue tracker so that you can follow the status of the new feature.
+
+Regards,
+Curtis
+
+
+On Mon, Jun 30, 2014 at 3:51 AM, Godon, Camille <
+Camille.Godon at leica-microsystems.com> wrote:
+
+>  Dear all,
+>
+>
+>
+> Do you know when it would be possible to open in ImageJ .lif files
+> acquired with the new version of LAS AF (4.0)? (So when Bio-Formats will be
+> updated with LAS AF 4?)
+>
+> Many thanks for your help.
+>
+>
+>
+> Kind regards,
+>
+> Camille Godon.
+>
+> Please be advised that this email may contain confidential information. If
+> you are not the intended recipient, please notify us by email by replying
+> to the sender and delete this message. The sender disclaims that the
+> content of this email constitutes an offer to enter into, or the acceptance
+> of, any agreement; provided that the foregoing does not invalidate the
+> binding effect of any digital or other electronic reproduction of a manual
+> signature that is included in any attachment.
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140630/69a47a82/attachment-0002.html>
+

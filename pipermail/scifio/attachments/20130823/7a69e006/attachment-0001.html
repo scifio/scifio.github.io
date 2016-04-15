@@ -1,0 +1,27 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Hi&nbsp;Michael,&lt;br&gt;&lt;br&gt;&lt;/div&gt; I&nbsp;was&nbsp;only&nbsp;able&nbsp;to&nbsp;reproduce&nbsp;this&nbsp;when&nbsp;trying&nbsp;to&nbsp;create&nbsp;a&nbsp;SubRegion&nbsp;for&nbsp;Axes&nbsp;that&nbsp;weren&#39;t&nbsp;present.&lt;br&gt;&lt;br&gt;&lt;/div&gt; In&nbsp;the&nbsp;case&nbsp;of&nbsp;ImgOpener,&nbsp;Axes&nbsp;of&nbsp;length&nbsp;1&nbsp;are&nbsp;discarded...&nbsp;so&nbsp;they&nbsp;effectively&nbsp;&quot;aren&#39;t&nbsp;present&quot;&nbsp;and&nbsp;can&#39;t&nbsp;have&nbsp;a&nbsp;SubRegion&nbsp;applied&nbsp;to&nbsp;them&nbsp;(since&nbsp;they&nbsp;are&nbsp;implicitly&nbsp;included&nbsp;anyway&nbsp;in&nbsp;the&nbsp;image).&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt; Unfortunately,&nbsp;I&#39;m&nbsp;not&nbsp;sure&nbsp;how&nbsp;to&nbsp;make&nbsp;the&nbsp;error&nbsp;reporting&nbsp;better,&nbsp;in&nbsp;general,&nbsp;on&nbsp;this&nbsp;issue..&nbsp;since,&nbsp;when&nbsp;constructing&nbsp;a&nbsp;SubRegion,&nbsp;there&#39;s&nbsp;no&nbsp;way&nbsp;to&nbsp;know&nbsp;what&nbsp;dataset(s)&nbsp;it&nbsp;will&nbsp;be&nbsp;applied&nbsp;to...&nbsp;it&#39;s&nbsp;up&nbsp;to&nbsp;the&nbsp;consuming&nbsp;software&nbsp;to&nbsp;use&nbsp;the&nbsp;SubRegion&nbsp;information&nbsp;when&nbsp;reading&nbsp;the&nbsp;dataset.&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt; I&nbsp;could&nbsp;add&nbsp;some&nbsp;defensive&nbsp;checks&nbsp;to&nbsp;verify&nbsp;that&nbsp;axes&nbsp;are&nbsp;present..&nbsp;but&nbsp;this&nbsp;whole&nbsp;system&nbsp;is&nbsp;going&nbsp;to&nbsp;be&nbsp;reworked&nbsp;in&nbsp;0.7.0&nbsp;for&nbsp;N-dimensionality.&nbsp;So&nbsp;I&#39;m&nbsp;going&nbsp;to&nbsp;add&nbsp;a&nbsp;comment&nbsp;to&nbsp;our&nbsp;&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio/issues/19&quot;&gt;N-dim&nbsp;ticket&lt;/a&gt;&nbsp;to&nbsp;test&nbsp;this.&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt; For&nbsp;now,&nbsp;in&nbsp;your&nbsp;code,&nbsp;can&nbsp;you&nbsp;check&nbsp;if&nbsp;an&nbsp;axis&nbsp;length&nbsp;is&nbsp;&lt;&nbsp;2&nbsp;before&nbsp;creating&nbsp;the&nbsp;SubRegion,&nbsp;and&nbsp;if&nbsp;so&nbsp;-&nbsp;don&#39;t&nbsp;add&nbsp;it&nbsp;to&nbsp;the&nbsp;SubRegion&nbsp;specification?&lt;br&gt;&lt;br&gt;&lt;/div&gt; Oh&nbsp;-&nbsp;if&nbsp;you&nbsp;are&nbsp;getting&nbsp;this&nbsp;issue&nbsp;for&nbsp;Axes&nbsp;you&nbsp;know&nbsp;have&nbsp;a&nbsp;length&nbsp;&gt;&nbsp;1,&nbsp;send&nbsp;me&nbsp;the&nbsp;dataset,&nbsp;because&nbsp;something&nbsp;else&nbsp;is&nbsp;going&nbsp;on&nbsp;there.&nbsp;:)&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt;Thanks,&lt;br&gt;Mark&lt;br&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;br&gt; &nbsp;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Fri,&nbsp;Aug&nbsp;23,&nbsp;2013&nbsp;at&nbsp;2:55&nbsp;AM,&nbsp;Michael&nbsp;Zinsmaier&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:michael.zinsmaier@gmx.de&quot;&nbsp;target=&quot;_blank&quot;&gt;michael.zinsmaier@gmx.de&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;Hi&nbsp;together,&lt;br&gt;<br>
+&lt;br&gt;<br>
+defining&nbsp;intervals&nbsp;via&nbsp;the&nbsp;ImgOptions&nbsp;mechanism&nbsp;seems&nbsp;not&nbsp;to&nbsp;work&nbsp;if&nbsp;you&nbsp;define&nbsp;an&nbsp;Interval&nbsp;only&nbsp;for&nbsp;one&nbsp;Axes&nbsp;(except&nbsp;for&nbsp;Channel).&lt;br&gt;<br>
+E.g.&nbsp;consider&nbsp;that&nbsp;you&nbsp;want&nbsp;to&nbsp;select&nbsp;only&nbsp;time=0&nbsp;from&nbsp;a&nbsp;5dim&nbsp;Image&nbsp;(x,y,Channel,z,Time)&nbsp;and&nbsp;define&nbsp;the&nbsp;SubRegion&nbsp;as&nbsp;follows&lt;br&gt;<br>
+new&nbsp;SubRegion(new&nbsp;AxesType[]{Time},&nbsp;new&nbsp;Range[]{0}).&nbsp;An&nbsp;array&nbsp;index&nbsp;out&nbsp;of&nbsp;bounds&nbsp;exception&nbsp;is&nbsp;thrown.&lt;br&gt;<br>
+&lt;br&gt;<br>
+It&nbsp;does&nbsp;however&nbsp;work&nbsp;if&nbsp;you&nbsp;do&nbsp;the&nbsp;same&nbsp;thing&nbsp;with&nbsp;Channel&nbsp;and&nbsp;it&nbsp;works&nbsp;also&nbsp;if&nbsp;you&nbsp;specify&nbsp;Ranges&nbsp;for&nbsp;Channel,&nbsp;Z&nbsp;and&nbsp;Time.&lt;br&gt;<br>
+&lt;br&gt;<br>
+The&nbsp;API&nbsp;of&nbsp;SubRegion&nbsp;(Map&nbsp;Constructor)&nbsp;gives&nbsp;me&nbsp;the&nbsp;feeling&nbsp;that&nbsp;is&nbsp;should&nbsp;not&nbsp;be&nbsp;necessary&nbsp;to&nbsp;specify&nbsp;Axes&nbsp;that&nbsp;I&nbsp;want&nbsp;to&nbsp;include&nbsp;completly.&lt;br&gt;<br>
+I&nbsp;hope&nbsp;thats&nbsp;correct&nbsp;if&nbsp;not&nbsp;I&nbsp;would&nbsp;like&nbsp;to&nbsp;suggest&nbsp;to&nbsp;change&nbsp;it.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Best&nbsp;regards&lt;span&nbsp;class=&quot;HOEnZb&quot;&gt;&lt;font&nbsp;color=&quot;#888888&quot;&gt;&lt;br&gt;<br>
+Michael&lt;br&gt;<br>
+&lt;/font&gt;&lt;/span&gt;&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+
+</tt>

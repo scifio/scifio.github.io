@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] spacing lost
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20spacing%20lost&In-Reply-To=%3CCAKSZWGy4BmU0GfMGWC407Ny9xf2jGwjK2KSD%2Bpjt%2BQPHb0Ed%2BQ%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000267.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] spacing lost</H1>
+    <B>Michael Meuli</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20spacing%20lost&In-Reply-To=%3CCAKSZWGy4BmU0GfMGWC407Ny9xf2jGwjK2KSD%2Bpjt%2BQPHb0Ed%2BQ%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] spacing lost">michael.meuli at gmail.com
+       </A><BR>
+    <I>Wed Jul 15 09:52:39 CDT 2015</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000267.html">[SCIFIO] Your visit and Bioformats
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#266">[ date ]</a>
+              <a href="thread.html#266">[ thread ]</a>
+              <a href="subject.html#266">[ subject ]</a>
+              <a href="author.html#266">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi,
+
+I have a .tif image with z-stacks of three channels (cropped version
+attached).
+
+With Fiji I can see that the spacing is set correctly:
+Voxel size: 0.0616x0.0616x0.1998 micron^3
+
+If I do:
+./SCIFIOTestDriver itkSCIFIOImageIOTest /home/mmeuli/Bioimage/ITK/1-1.tif
+/home/mmeuli/Bioimage/ITK/test.ome.tiff -w -a -d 5
+
+The spacing in test.ome.tiff is lost:
+Voxel size: 1x1x1 cm^3
+
+If I set the spacing with itk::ChangeInformationImageFilter the spacing is
+nicely set in itk but not written correctly to .ome.tiff or .tiff ...
+I've compiled ITK on 29th June with an up to date master-branch.
+
+No validation errors found:
+<A HREF="http://scif.io/mailman/listinfo/scifio">mmeuli at mmeuli</A>:~/Bioimage/Bio-Formats 5.1.2/bftools$ ./tiffcomment
+../test.ome.tiff | ./xmlvalid
+Parsing schema path
+<A HREF="http://www.openmicroscopy.org/Schemas/OME/2013-06/ome.xsd">http://www.openmicroscopy.org/Schemas/OME/2013-06/ome.xsd</A>
+Validating &lt;stdin&gt;
+No validation errors found.
+
+
+Best regards
+Michael
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20150715/2fb4eb1c/attachment-0001.html">http://scif.io/pipermail/scifio/attachments/20150715/2fb4eb1c/attachment-0001.html</A>&gt;
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: 1-1.tif
+Type: image/tiff
+Size: 1260038 bytes
+Desc: not available
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20150715/2fb4eb1c/attachment-0001.tif">http://scif.io/pipermail/scifio/attachments/20150715/2fb4eb1c/attachment-0001.tif</A>&gt;
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000267.html">[SCIFIO] Your visit and Bioformats
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#266">[ date ]</a>
+              <a href="thread.html#266">[ thread ]</a>
+              <a href="subject.html#266">[ subject ]</a>
+              <a href="author.html#266">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

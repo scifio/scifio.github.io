@@ -1,0 +1,124 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Hi&nbsp;Martin,&lt;br&gt;&lt;br&gt;&lt;blockquote&nbsp;style=&quot;margin:0px&nbsp;0px&nbsp;0px&nbsp;0.8ex;border-left:1px&nbsp;solid&nbsp;rgb(204,204,204);padding-left:1ex&quot;&nbsp;class=&quot;gmail_quote&quot;&gt;<br>
+PS&nbsp;-&nbsp;I&nbsp;hope&nbsp;this&nbsp;ist&nbsp;he&nbsp;right&nbsp;list&nbsp;to&nbsp;post.&nbsp;If&nbsp;not,&nbsp;maybe&nbsp;someone&nbsp;could&nbsp;direct&nbsp;me&nbsp;to&nbsp;the&nbsp;best&nbsp;suited&nbsp;forum&lt;br&gt;&lt;/blockquote&gt;&lt;br&gt;&lt;/div&gt;This&nbsp;is&nbsp;definitely&nbsp;a&nbsp;problem&nbsp;in&nbsp;SCIFIO,&nbsp;so&nbsp;this&nbsp;was&nbsp;the&nbsp;right&nbsp;place&nbsp;to&nbsp;post!&nbsp;I&#39;ve&nbsp;opened&nbsp;&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio/issues/123&quot;&gt;a&nbsp;new&nbsp;issue&lt;/a&gt;&nbsp;to&nbsp;track&nbsp;this&nbsp;problem&nbsp;and&nbsp;will&nbsp;look&nbsp;into&nbsp;it&nbsp;today.&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt;Because&nbsp;this&nbsp;looks&nbsp;to&nbsp;be&nbsp;a&nbsp;bug&nbsp;in&nbsp;Bio-Formats&nbsp;as&nbsp;well&nbsp;(which&nbsp;is&nbsp;not&nbsp;surprising&nbsp;-&nbsp;as&nbsp;the&nbsp;SCIFIO&nbsp;TIFF&nbsp;support&nbsp;is&nbsp;derived&nbsp;from&nbsp;Bio-Formats)&nbsp;I&nbsp;am&nbsp;also&nbsp;forwarding&nbsp;this&nbsp;to&nbsp;the&nbsp;OME-Users&nbsp;list.&lt;br&gt;&lt;br&gt;&lt;/div&gt;Thanks&nbsp;for&nbsp;the&nbsp;report!&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt;-&nbsp;Mark&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Wed,&nbsp;Jan&nbsp;15,&nbsp;2014&nbsp;at&nbsp;6:36&nbsp;AM,&nbsp;Martin&nbsp;Höhne&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:martin.hoehne@uk-koeln.de&quot;&nbsp;target=&quot;_blank&quot;&gt;martin.hoehne@uk-koeln.de&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;Dear&nbsp;list,&lt;br&gt;<br>
+&lt;br&gt;<br>
+We&nbsp;have&nbsp;16&nbsp;bit&nbsp;Tiff&nbsp;files&nbsp;from&nbsp;a&nbsp;camera&nbsp;(from&nbsp;a&nbsp;Chemoluminescence&nbsp;detector.&nbsp;Fusion&nbsp;XL&nbsp;machine&nbsp;form&nbsp;Vilber&nbsp;Lourmat&nbsp;&lt;a&nbsp;href=&quot;http://www.vilber.com/&quot;&nbsp;target=&quot;_blank&quot;&gt;http://www.vilber.com/&lt;/a&gt;).&nbsp;The&nbsp;images&nbsp;can&nbsp;be&nbsp;opened&nbsp;fine&nbsp;in&nbsp;Fiji&nbsp;(open&nbsp;or&nbsp;drag&amp;drop).&nbsp;However,&nbsp;importing&nbsp;via&nbsp;File&gt;Import&gt;BioFormats&nbsp;fails.&nbsp;I&nbsp;get&nbsp;this&nbsp;error:&lt;br&gt;<br>
+<br>
+<br>
+&lt;br&gt;<br>
+&quot;Sorry,&nbsp;there&nbsp;was&nbsp;a&nbsp;problem&nbsp;during&nbsp;import&quot;.&nbsp;The&nbsp;log&nbsp;file&nbsp;is&nbsp;posted&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;this&nbsp;mail.&lt;br&gt;<br>
+&lt;br&gt;<br>
+We&nbsp;are&nbsp;fine&nbsp;with&nbsp;the&nbsp;normal&nbsp;opening,&nbsp;however&nbsp;the&nbsp;ImageJ2&nbsp;seems&nbsp;to&nbsp;try&nbsp;to&nbsp;open&nbsp;with&nbsp;the&nbsp;import&nbsp;function&nbsp;(2.0.0.0&nbsp;beta7.6).&nbsp;I&nbsp;get&nbsp;this&nbsp;message:&lt;br&gt;<br>
+&quot;io.scif.img.ImgIOExceprion:&nbsp;java.io.EOFException:&nbsp;Attempting&nbsp;to&nbsp;read&nbsp;beyond&nbsp;end&nbsp;of&nbsp;file&quot;&lt;br&gt;<br>
+&lt;br&gt;<br>
+The&nbsp;image&nbsp;contains&nbsp;some&nbsp;metadata&nbsp;I&nbsp;can´t&nbsp;read&nbsp;when&nbsp;opening&nbsp;with&nbsp;ImageJ,&nbsp;but&nbsp;only&nbsp;when&nbsp;opening&nbsp;the&nbsp;file&nbsp;with&nbsp;the&nbsp;Fusion&nbsp;software&nbsp;from&nbsp;Vilber.&lt;br&gt;<br>
+For&nbsp;the&nbsp;attached&nbsp;file&nbsp;the&nbsp;metadata&nbsp;is&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;this&nbsp;posting&nbsp;as&nbsp;well.&lt;br&gt;<br>
+&lt;br&gt;<br>
+The&nbsp;metadata&nbsp;is&nbsp;not&nbsp;so&nbsp;important,&nbsp;but&nbsp;it&nbsp;would&nbsp;be&nbsp;great&nbsp;if&nbsp;the&nbsp;images&nbsp;could&nbsp;be&nbsp;opened&nbsp;with&nbsp;ImageJ2&nbsp;as&nbsp;well.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Thank&nbsp;you&lt;br&gt;<br>
+Martin&lt;br&gt;<br>
+&lt;br&gt;<br>
+PS&nbsp;-&nbsp;I&nbsp;hope&nbsp;this&nbsp;ist&nbsp;he&nbsp;right&nbsp;list&nbsp;to&nbsp;post.&nbsp;If&nbsp;not,&nbsp;maybe&nbsp;someone&nbsp;could&nbsp;direct&nbsp;me&nbsp;to&nbsp;the&nbsp;best&nbsp;suited&nbsp;forum&lt;br&gt;<br>
+&lt;br&gt;<br>
+System&nbsp;information:&lt;br&gt;<br>
+Win7&nbsp;64bit&lt;br&gt;<br>
+Fiji,&nbsp;updatet&nbsp;2014-01-15&lt;br&gt;<br>
+&lt;br&gt;<br>
+Log&nbsp;from&nbsp;import:&lt;br&gt;<br>
+Fiji(legacy&nbsp;mode)&nbsp;File&gt;Import&gt;BioFormats:&lt;br&gt;<br>
+loci.formats.FormatException:&nbsp;loci.common.ReflectException:&nbsp;java.lang.reflect.InvocationTargetException&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;loci.formats.in.TiffJAIReader.openBufferedImage(TiffJAIReader.java:202)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;loci.formats.in.TiffJAIReader.initFile(TiffJAIReader.java:162)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;loci.formats.FormatReader.setId(FormatReader.java:1360)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;loci.formats.DelegateReader.setId(DelegateReader.java:275)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;loci.plugins.in.ImportProcess.initializeFile(ImportProcess.java:482)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;loci.plugins.in.ImportProcess.execute(ImportProcess.java:146)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;loci.plugins.in.Importer.showDialogs(Importer.java:141)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;loci.plugins.in.Importer.run(Importer.java:79)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;loci.plugins.LociImporter.run(LociImporter.java:81)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;ij.IJ.runUserPlugIn(IJ.java:196)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;ij.IJ.runPlugIn(IJ.java:160)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;ij.Executer.runCommand(Executer.java:131)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;ij.Executer.run(Executer.java:64)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;java.lang.Thread.run(Thread.java:662)&lt;br&gt;<br>
+Caused&nbsp;by:&nbsp;loci.common.ReflectException:&nbsp;java.lang.reflect.InvocationTargetException&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;loci.common.ReflectedUniverse.exec(ReflectedUniverse.java:125)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;loci.formats.in.TiffJAIReader.openBufferedImage(TiffJAIReader.java:197)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;...&nbsp;13&nbsp;more&lt;br&gt;<br>
+Caused&nbsp;by:&nbsp;java.lang.reflect.InvocationTargetException&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;sun.reflect.NativeMethodAccessorImpl.invoke0(Native&nbsp;Method)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;java.lang.reflect.Method.invoke(Method.java:597)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;ome.scifio.common.ReflectedUniverse.exec(ReflectedUniverse.java:317)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;loci.common.ReflectedUniverse.exec(ReflectedUniverse.java:122)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;...&nbsp;14&nbsp;more&lt;br&gt;<br>
+Caused&nbsp;by:&nbsp;java.io.EOFException&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;com.sun.media.jai.codec.SeekableStream.readFully(SeekableStream.java:329)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;com.sun.media.jai.codec.SeekableStream.readFully(SeekableStream.java:306)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;com.sun.media.jai.codec.SeekableStream.readUnsignedIntLE(SeekableStream.java:708)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;com.sun.media.jai.codec.TIFFDirectory.readUnsignedInt(TIFFDirectory.java:524)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;com.sun.media.jai.codec.TIFFDirectory.initialize(TIFFDirectory.java:289)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;com.sun.media.jai.codec.TIFFDirectory.&lt;init&gt;(TIFFDirectory.java:125)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;com.sun.media.jai.codecimpl.TIFFImage.&lt;init&gt;(TIFFImage.java:318)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;at&nbsp;com.sun.media.jai.codecimpl.TIFFImageDecoder.decodeAsRenderedImage(TIFFImageDecoder.java:112)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;...&nbsp;20&nbsp;more&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+Metadata&nbsp;of&nbsp;attached&nbsp;image:&lt;br&gt;<br>
+Good&nbsp;Laboratory&nbsp;Practice:GLP&lt;br&gt;<br>
+&lt;br&gt;<br>
+GENERAL&nbsp;INFORMATION&lt;br&gt;<br>
+ &nbsp; Title:&lt;br&gt;<br>
+ &nbsp; Comments:&lt;br&gt;<br>
+ &nbsp; Date:&nbsp; Freitag,&nbsp;13.&nbsp;Dezember&nbsp;2013&lt;br&gt;<br>
+ &nbsp; Time:&nbsp;13:42:04&lt;br&gt;<br>
+ &nbsp; Image&nbsp;name:&nbsp;C:\Users\nephrolab\Pictures\temp_western\mhoehne\eva24__1.TIF&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; Software&nbsp;information:&nbsp;FusionCapt&nbsp;Advance&nbsp; Solo&nbsp;4&nbsp;16.07&lt;br&gt;<br>
+&lt;br&gt;<br>
+ACQUISITION&nbsp;PARAMETERS:&lt;br&gt;<br>
+&lt;br&gt;<br>
+Lens&nbsp;information:&lt;br&gt;<br>
+ &nbsp; Iris&nbsp;aperture:&lt;br&gt;<br>
+&lt;br&gt;<br>
+Camera&nbsp;information:&lt;br&gt;<br>
+ &nbsp; Integration&nbsp;time&nbsp;acquisition:&nbsp;:&nbsp;0&nbsp;min&nbsp;50&nbsp;sec&nbsp;0&nbsp;msec&lt;br&gt;<br>
+ &nbsp; Acquisition&nbsp;mode:&nbsp;Serial/r/n&nbsp; &nbsp; &nbsp; Image&nbsp;1/10&lt;br&gt;<br>
+ &nbsp; Positive&nbsp;acquisition&lt;br&gt;<br>
+ &nbsp; Resolution&nbsp;used:&nbsp;Binning&nbsp;2x2&lt;br&gt;<br>
+ &nbsp; Pixel&nbsp;depth&nbsp;16&nbsp;Bit&nbsp;per&nbsp;pixel&lt;br&gt;<br>
+ &nbsp; Software&nbsp;acquisition&nbsp;mode:&nbsp;Not&nbsp;defined&lt;br&gt;<br>
+ &nbsp; Vigneting&nbsp;filter&nbsp;:&nbsp;Aperture&nbsp;value&nbsp;0.84&lt;br&gt;<br>
+ &nbsp; Sensor&nbsp;area&nbsp;used:&nbsp;:&nbsp;(0,&nbsp;0,&nbsp;2048,2048)&lt;br&gt;<br>
+ &nbsp; Configuration&nbsp;file&nbsp;used:&nbsp;C:\Users\nephrolab\Documents\Vilber&nbsp;Lourmat\nephrolab_settings\2x2&nbsp;binning.prt&lt;br&gt;<br>
+ &nbsp; Camera&nbsp;serial&nbsp;number:&nbsp;275704&lt;br&gt;<br>
+ &nbsp; Tray&nbsp;position:&nbsp; Non&nbsp;applicable&lt;br&gt;<br>
+ &nbsp; Application&nbsp;name:&nbsp;2x2&nbsp;binning&lt;br&gt;<br>
+ &nbsp; Auto&nbsp;mode:&nbsp;User&nbsp;defined&nbsp;autoexposure&nbsp;coef&nbsp;97%&lt;br&gt;<br>
+ &nbsp; USB&nbsp;status:&nbsp;No&nbsp;USB&nbsp;detected&lt;br&gt;<br>
+ &nbsp; Imaging&nbsp;system:&nbsp;FusionCapt&nbsp;Advance&nbsp; Solo&nbsp;4&nbsp;16.07&lt;br&gt;<br>
+ &nbsp; Camera&nbsp;serial&nbsp;number:&nbsp;275704&nbsp; &nbsp;-&nbsp;Firmware&nbsp;&gt;2.0.0&lt;&lt;br&gt;<br>
+ &nbsp; USB&nbsp;codage:&nbsp;No&nbsp;darkroom&lt;br&gt;<br>
+ &nbsp; Lens&nbsp;configuration:&nbsp;Non&nbsp;applicable&lt;br&gt;<br>
+ &nbsp; RGB&nbsp;status:&nbsp;Not&nbsp;installed&lt;br&gt;<br>
+ &nbsp; Skylight:&nbsp;Not&nbsp;installed&lt;br&gt;<br>
+&lt;br&gt;<br>
+Image&nbsp;manipulation&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; Gray&nbsp;level&nbsp;inversion:&nbsp;No&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;_______________________________________________&lt;br&gt;<br>
+SCIFIO&nbsp;mailing&nbsp;list&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;mailto:SCIFIO@scif.io&quot;&gt;SCIFIO@scif.io&lt;/a&gt;&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;http://scif.io/mailman/listinfo/scifio&quot;&nbsp;target=&quot;_blank&quot;&gt;http://scif.io/mailman/listinfo/scifio&lt;/a&gt;&lt;br&gt;<br>
+&lt;br&gt;&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+
+</tt>

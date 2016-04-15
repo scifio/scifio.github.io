@@ -1,0 +1,312 @@
+From henry.pinkard at gmail.com  Mon Mar  2 10:13:19 2015
+From: henry.pinkard at gmail.com (Henry Pinkard)
+Date: Mon, 2 Mar 2015 08:13:19 -0800
+Subject: [SCIFIO] Imaris writer in FIJI
+Message-ID: <CAHQgS3_NiR9M0QPSGoP+5ibLNBSY7RPx2mVdw-iFPGfAOiAyDA@mail.gmail.com>
+
+Hi Curtis and Mark,
+
+Has the Imaris writer been adde to FIJI yet? Where should I look to find
+it--in the save as menu?
+
+Best,
+Henry
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150302/f451da02/attachment.html>
+
+From ctrueden at wisc.edu  Mon Mar  2 10:38:20 2015
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 2 Mar 2015 10:38:20 -0600
+Subject: [SCIFIO] Imaris writer in FIJI
+In-Reply-To: <CAHQgS3_NiR9M0QPSGoP+5ibLNBSY7RPx2mVdw-iFPGfAOiAyDA@mail.gmail.com>
+References: <CAHQgS3_NiR9M0QPSGoP+5ibLNBSY7RPx2mVdw-iFPGfAOiAyDA@mail.gmail.com>
+Message-ID: <CADN69y=Gm+a=RupiTPk0eVUSj0FwtRO=8Z-_tY8o+ENuL-urwQ@mail.gmail.com>
+
+Hi Henry,
+
+> Has the Imaris writer been adde to FIJI yet?
+
+Yes, it was added on February 3.
+
+> Where should I look to find it--in the save as menu?
+
+No one added an ImageJ command for it, so it will not be in the menus. (We
+learned that having a separate menu item for every file format does not
+scale well.)
+
+Rather, the writer will be invoked automatically by the File > Export >
+Image... command when a file with extension .ims is specified.
+
+Unfortunately, in my tests just now, there are bugs. I filed some issues
+for them:
+
+* https://github.com/scifio/scifio/issues/261
+* https://github.com/scifio/scifio/issues/262
+
+We will investigate these problems later this week.
+
+Regards,
+Curtis
+
+On Mon, Mar 2, 2015 at 10:13 AM, Henry Pinkard <henry.pinkard at gmail.com>
+wrote:
+
+> Hi Curtis and Mark,
+>
+> Has the Imaris writer been adde to FIJI yet? Where should I look to find
+> it--in the save as menu?
+>
+> Best,
+> Henry
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150302/74e42f86/attachment.html>
+
+From hiner at wisc.edu  Fri Mar  6 10:24:51 2015
+From: hiner at wisc.edu (Mark Hiner)
+Date: Fri, 6 Mar 2015 10:24:51 -0600
+Subject: [SCIFIO] Imaris writer in FIJI
+In-Reply-To: <CADN69y=Gm+a=RupiTPk0eVUSj0FwtRO=8Z-_tY8o+ENuL-urwQ@mail.gmail.com>
+References: <CAHQgS3_NiR9M0QPSGoP+5ibLNBSY7RPx2mVdw-iFPGfAOiAyDA@mail.gmail.com>
+	<CADN69y=Gm+a=RupiTPk0eVUSj0FwtRO=8Z-_tY8o+ENuL-urwQ@mail.gmail.com>
+Message-ID: <CA+B=mGoYrACoC9Y-thHV11Xu5JmNvybMC_3dXguThzCxTTqiHg@mail.gmail.com>
+
+Hi all,
+
+>Unfortunately, in my tests just now, there are bugs. I filed some issues
+for them:
+>
+> * https://github.com/scifio/scifio/issues/261
+> * https://github.com/scifio/scifio/issues/262
+
+For anyone who's interested, these issues are now fixed on master branches
+and can be tested by enabling the SCIFIO-dev update site[1,2]
+
+Thanks!
+- Mark
+
+[1] http://imagej.net/How_to_follow_a_3rd_party_update_site
+[2] http://imagej.net/List_of_update_sites
+
+
+
+On Mon, Mar 2, 2015 at 10:38 AM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+
+> Hi Henry,
+>
+> > Has the Imaris writer been adde to FIJI yet?
+>
+> Yes, it was added on February 3.
+>
+> > Where should I look to find it--in the save as menu?
+>
+> No one added an ImageJ command for it, so it will not be in the menus. (We
+> learned that having a separate menu item for every file format does not
+> scale well.)
+>
+> Rather, the writer will be invoked automatically by the File > Export >
+> Image... command when a file with extension .ims is specified.
+>
+> Unfortunately, in my tests just now, there are bugs. I filed some issues
+> for them:
+>
+> * https://github.com/scifio/scifio/issues/261
+> * https://github.com/scifio/scifio/issues/262
+>
+> We will investigate these problems later this week.
+>
+> Regards,
+> Curtis
+>
+> On Mon, Mar 2, 2015 at 10:13 AM, Henry Pinkard <henry.pinkard at gmail.com>
+> wrote:
+>
+>> Hi Curtis and Mark,
+>>
+>> Has the Imaris writer been adde to FIJI yet? Where should I look to find
+>> it--in the save as menu?
+>>
+>> Best,
+>> Henry
+>>
+>> _______________________________________________
+>> SCIFIO mailing list
+>> SCIFIO at scif.io
+>> http://scif.io/mailman/listinfo/scifio
+>>
+>>
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150306/cc04fb80/attachment.html>
+
+From henry.pinkard at gmail.com  Mon Mar  2 10:13:19 2015
+From: henry.pinkard at gmail.com (Henry Pinkard)
+Date: Mon, 2 Mar 2015 08:13:19 -0800
+Subject: [SCIFIO] Imaris writer in FIJI
+Message-ID: <CAHQgS3_NiR9M0QPSGoP+5ibLNBSY7RPx2mVdw-iFPGfAOiAyDA@mail.gmail.com>
+
+Hi Curtis and Mark,
+
+Has the Imaris writer been adde to FIJI yet? Where should I look to find
+it--in the save as menu?
+
+Best,
+Henry
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150302/f451da02/attachment-0002.html>
+
+From ctrueden at wisc.edu  Mon Mar  2 10:38:20 2015
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 2 Mar 2015 10:38:20 -0600
+Subject: [SCIFIO] Imaris writer in FIJI
+In-Reply-To: <CAHQgS3_NiR9M0QPSGoP+5ibLNBSY7RPx2mVdw-iFPGfAOiAyDA@mail.gmail.com>
+References: <CAHQgS3_NiR9M0QPSGoP+5ibLNBSY7RPx2mVdw-iFPGfAOiAyDA@mail.gmail.com>
+Message-ID: <CADN69y=Gm+a=RupiTPk0eVUSj0FwtRO=8Z-_tY8o+ENuL-urwQ@mail.gmail.com>
+
+Hi Henry,
+
+> Has the Imaris writer been adde to FIJI yet?
+
+Yes, it was added on February 3.
+
+> Where should I look to find it--in the save as menu?
+
+No one added an ImageJ command for it, so it will not be in the menus. (We
+learned that having a separate menu item for every file format does not
+scale well.)
+
+Rather, the writer will be invoked automatically by the File > Export >
+Image... command when a file with extension .ims is specified.
+
+Unfortunately, in my tests just now, there are bugs. I filed some issues
+for them:
+
+* https://github.com/scifio/scifio/issues/261
+* https://github.com/scifio/scifio/issues/262
+
+We will investigate these problems later this week.
+
+Regards,
+Curtis
+
+On Mon, Mar 2, 2015 at 10:13 AM, Henry Pinkard <henry.pinkard at gmail.com>
+wrote:
+
+> Hi Curtis and Mark,
+>
+> Has the Imaris writer been adde to FIJI yet? Where should I look to find
+> it--in the save as menu?
+>
+> Best,
+> Henry
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150302/74e42f86/attachment-0002.html>
+
+From hiner at wisc.edu  Fri Mar  6 10:24:51 2015
+From: hiner at wisc.edu (Mark Hiner)
+Date: Fri, 6 Mar 2015 10:24:51 -0600
+Subject: [SCIFIO] Imaris writer in FIJI
+In-Reply-To: <CADN69y=Gm+a=RupiTPk0eVUSj0FwtRO=8Z-_tY8o+ENuL-urwQ@mail.gmail.com>
+References: <CAHQgS3_NiR9M0QPSGoP+5ibLNBSY7RPx2mVdw-iFPGfAOiAyDA@mail.gmail.com>
+	<CADN69y=Gm+a=RupiTPk0eVUSj0FwtRO=8Z-_tY8o+ENuL-urwQ@mail.gmail.com>
+Message-ID: <CA+B=mGoYrACoC9Y-thHV11Xu5JmNvybMC_3dXguThzCxTTqiHg@mail.gmail.com>
+
+Hi all,
+
+>Unfortunately, in my tests just now, there are bugs. I filed some issues
+for them:
+>
+> * https://github.com/scifio/scifio/issues/261
+> * https://github.com/scifio/scifio/issues/262
+
+For anyone who's interested, these issues are now fixed on master branches
+and can be tested by enabling the SCIFIO-dev update site[1,2]
+
+Thanks!
+- Mark
+
+[1] http://imagej.net/How_to_follow_a_3rd_party_update_site
+[2] http://imagej.net/List_of_update_sites
+
+
+
+On Mon, Mar 2, 2015 at 10:38 AM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+
+> Hi Henry,
+>
+> > Has the Imaris writer been adde to FIJI yet?
+>
+> Yes, it was added on February 3.
+>
+> > Where should I look to find it--in the save as menu?
+>
+> No one added an ImageJ command for it, so it will not be in the menus. (We
+> learned that having a separate menu item for every file format does not
+> scale well.)
+>
+> Rather, the writer will be invoked automatically by the File > Export >
+> Image... command when a file with extension .ims is specified.
+>
+> Unfortunately, in my tests just now, there are bugs. I filed some issues
+> for them:
+>
+> * https://github.com/scifio/scifio/issues/261
+> * https://github.com/scifio/scifio/issues/262
+>
+> We will investigate these problems later this week.
+>
+> Regards,
+> Curtis
+>
+> On Mon, Mar 2, 2015 at 10:13 AM, Henry Pinkard <henry.pinkard at gmail.com>
+> wrote:
+>
+>> Hi Curtis and Mark,
+>>
+>> Has the Imaris writer been adde to FIJI yet? Where should I look to find
+>> it--in the save as menu?
+>>
+>> Best,
+>> Henry
+>>
+>> _______________________________________________
+>> SCIFIO mailing list
+>> SCIFIO at scif.io
+>> http://scif.io/mailman/listinfo/scifio
+>>
+>>
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150306/cc04fb80/attachment-0002.html>
+

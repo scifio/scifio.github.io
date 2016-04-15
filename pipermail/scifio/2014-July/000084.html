@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] SCIFIO does not seem to release memory of closed images
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%20does%20not%20seem%20to%20release%20memory%20of%20closed%20images&In-Reply-To=%3C53C18477.6090302%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000083.html">
+   <LINK REL="Next"  HREF="000086.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] SCIFIO does not seem to release memory of closed images</H1>
+    <B>Burkhard H&#246;ckendorf</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%20does%20not%20seem%20to%20release%20memory%20of%20closed%20images&In-Reply-To=%3C53C18477.6090302%40web.de%3E"
+       TITLE="[SCIFIO] SCIFIO does not seem to release memory of closed images">burkhard.hoeckendorf at web.de
+       </A><BR>
+    <I>Sat Jul 12 13:54:47 CDT 2014</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000083.html">[SCIFIO] jpeg2000format.java error
+</A></li>
+        <LI>Next message: <A HREF="000086.html">[SCIFIO] SCIFIO does not seem to release memory of closed images
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#84">[ date ]</a>
+              <a href="thread.html#84">[ thread ]</a>
+              <a href="subject.html#84">[ subject ]</a>
+              <a href="author.html#84">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Dear List,
+
+First of all thanks for developing scifio and doing that open source. I 
+have started to use it with ImageJ, since Fiji now offers the option to 
+use it. Having said that, I may also have stumbled upon an issue. I'm 
+unsure when (or whether) scifio releases the corresponding memory after 
+images are closed. To look at this in a somewhat systematic way, I ran a 
+macro (see below) to repeatedly open and close a 3GB single file 
+uncompressed TIFF stack (2048x2048x367x16bits) and record some 
+performance stats along the way. I ran this using a new download of Fiji.
+
+Here are the results with scifio disabled:
+      11450 ms to open files
+   28578184 mem before opening files
+9282667288 mem after opening files
+9272732560 mem after opening files &amp; GC
+9272780080 mem after closing files
+   24220936 mem after closing files &amp; GC
+
+And here with scifio enabled:
+       43715 ms to open files
+    26765224 mem before opening files
+10517954400 mem after opening files
+  9327459480 mem after opening files &amp; GC
+  9327506440 mem after closing files
+  9314822896 mem after closing files &amp; GC
+
+I have also checked, whether memory is freed a couple of minutes after 
+closing the images, which does not appear to be the case.
+
+Note that scifio is also somewhat slower, although I'm a bit hesitant to 
+bring this up, because it is still relatively young and I can see a few 
+&quot;improve ... performance&quot; tickets in the issue tracker.
+
+Below is the macro.
+Kind regards,
+Burkhard
+
+
+nOpenTimes = 3;
+file = &quot;/path/to/stack&quot;;
+
+run(&quot;Collect Garbage&quot;);
+memBefore = IJ.currentMemory();
+
+msToOpen = getTime();
+for (i=0; i&lt;nOpenTimes; i+=1) {
+	open(file);
+}
+msToOpen = getTime() - msToOpen;
+
+memFilesOpen = IJ.currentMemory();
+run(&quot;Collect Garbage&quot;);
+memFilesOpenGC = IJ.currentMemory();
+
+for (i=0; i&lt;nOpenTimes; i+=1) {
+	close();
+}
+memFilesClosed = IJ.currentMemory();
+run(&quot;Collect Garbage&quot;);
+memFilesClosedGC = IJ.currentMemory();
+
+print(&quot;&quot;+ msToOpen + &quot; ms to open files&quot;);
+print(&quot;&quot;+ memBefore + &quot; mem before opening files&quot;);
+print(&quot;&quot;+ memFilesOpen + &quot; mem after opening files&quot;);
+print(&quot;&quot;+ memFilesOpenGC + &quot; mem after opening files &amp; GC&quot;);
+print(&quot;&quot;+ memFilesClosed + &quot; mem after closing files&quot;);
+print(&quot;&quot;+ memFilesClosedGC + &quot; mem after closing files &amp; GC&quot;);
+
+</PRE>
+
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000083.html">[SCIFIO] jpeg2000format.java error
+</A></li>
+	<LI>Next message: <A HREF="000086.html">[SCIFIO] SCIFIO does not seem to release memory of closed images
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#84">[ date ]</a>
+              <a href="thread.html#84">[ thread ]</a>
+              <a href="subject.html#84">[ subject ]</a>
+              <a href="author.html#84">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

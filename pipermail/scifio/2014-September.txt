@@ -1,0 +1,422 @@
+From hiner at wisc.edu  Wed Sep 10 15:11:56 2014
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 10 Sep 2014 15:11:56 -0500
+Subject: [SCIFIO] [ome-users] converting lif files to ome-tiff
+In-Reply-To: <CA+B=mGphC__Vv8Orfv4qWma3U9++pKV3+XbvQ6HDeu2JCES-Bg@mail.gmail.com>
+References: <CAKSZWGyeBwBEsyPMqRrfiWbCRQSb8jn+uqbobO8L5UOjjgkX3A@mail.gmail.com>
+	<53F4B64C.8090506@dundee.ac.uk>
+	<CA+B=mGphC__Vv8Orfv4qWma3U9++pKV3+XbvQ6HDeu2JCES-Bg@mail.gmail.com>
+Message-ID: <CA+B=mGqGg99i1JxxJL1uiMr-hpxR6GRyPb08x_Tg9cVOAVaTmg@mail.gmail.com>
+
+Hi Michael,
+
+I opened a pull request <http://review.source.kitware.com/#/c/16967/> to
+get the latest SCIFIO-ITK imageIO incorporated into the master ITK branch.
+
+This fixes the metadata bug suspected by Roger (the dimensions of the first
+series were always being used, which would crash on encountering a dataset
+with smaller dimensions). It also upgrades the ImageIO to use Bio-Formats
+5.0.4, and has some other minor fixes and improvements.
+
+With these updates I was able to fully convert your image as a multi-series
+image, using the command:
+SCIFIOTestDriver ko-A.ome.tiff out.ome.tif -w -a -d 5
+
+Thanks for the report, it was very helpful. Please let us know if you run
+into any more problems.
+
+Regards,
+Mark
+
+On Wed, Aug 20, 2014 at 12:05 PM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Hi all,
+>
+> >While I'm not entirely sure of the separation of responsibilities between
+> ITK, SCIFIO and Bio-Formats for this
+> >particular task
+>
+> The readme for the SCIFIO-ITK ImageIO (
+> https://github.com/scifio/scifio-imageio) was out of date. It should now
+> correctly instruct users to e-mail scifio at scif.io (copied) for ITK
+> imageIO troubleshooting.
+>
+> > I found this only occurs when you enable "-w" to use SCIFIO for output.
+>
+> Note that without the -w flag, the default ITK TIFF writer will be used,
+> which I thought was limited to 3 dimensions (or at least it was at one
+> time). If you want to write an .ome.tiff it has to be written with
+> Bio-Formats, anyway.
+>
+> > Looks like it's trying to read z plane 60 when there are only 60 planes
+>
+> I'm assuming the # of planes to read isn't being updated for each series..
+> I'll look into it when I get a chance.
+>
+> Thanks for the report,
+> Mark
+>
+>
+> On Wed, Aug 20, 2014 at 9:53 AM, Roger Leigh <rleigh at dundee.ac.uk> wrote:
+>
+>> On 19/08/14 19:52, Michael Meuli wrote:
+>>
+>> Dear Michael,
+>>
+>>
+>>  I have some problems converting my .lif files to ome-tiff.
+>>> I have converted my .lif files originating from a "CLSM Leica SP 8"
+>>> with bfconvert of Bio-Formats 5.0.3.
+>>> Trying to make it reproducible I took the file "ko-A.ome.tiff" which
+>>> can be found here:
+>>> "https://www.dropbox.com/sh/t2z0f4jttcnfh8s/AADq21HNR7EwH1JFxskhXXhea"
+>>>    in the ome-tiff-files folder.
+>>>
+>>
+>> Thanks.  I've been able to reproduce the validation problems.  I have
+>> opened a ticket for this and CC'd you on it; please see
+>> https://trac.openmicroscopy.org.uk/ome/ticket/12532
+>>
+>> Note however that the above validation error is harmless; it does not
+>> affect bioformats' correct reading of the OME-TIFF and I was able to
+>> read all planes of every series without trouble, and also convert the
+>> file to a new OME-TIFF which strips out the MetadataOnly elements.  I
+>> don't think this is in any way related to your other problem, below.
+>>
+>>
+>>  Below you can find the output of bfconvert, xmlvalid and
+>>> SCIFIOTestDriver itkSCIFIOImageIOTest with the -a flag.
+>>> The output of tiffcomment you can find as attachment.
+>>> itkSCIFIOImageIOTest in this example crashes trying to read the third
+>>> series.
+>>>
+>>
+>> I built ITK with itkscifio to test this.  I found this only occurs when
+>> you enable "-w" to use SCIFIO for output.
+>>
+>> While I'm not entirely sure of the separation of responsibilities
+>> between ITK, SCIFIO and Bio-Formats for this particular task, I don't
+>> think the problem is in Bio-Formats, but in SCIFIO setting the wrong
+>> plane index when reading the image data, as shown by your stacktrace.
+>> Looks like it's trying to read z plane 60 when there are only 60 planes
+>> (0-59), assuming it's series 2; the others all have too different z
+>> sizes.  I would suggest reporting this to the SCIFIO developers at
+>> https://github.com/scifio/scifio
+>>
+>>
+>> Regards,
+>> Roger Leigh
+>>
+>> --
+>> Dr Roger Leigh -- Open Microscopy Environment
+>> Wellcome Trust Centre for Gene Regulation and Expression,
+>> College of Life Sciences, University of Dundee, Dow Street,
+>> Dundee DD1 5EH Scotland UK   Tel: (01382) 386364
+>>
+>> The University of Dundee is a registered Scottish Charity, No: SC015096
+>> _______________________________________________
+>> ome-users mailing list
+>> ome-users at lists.openmicroscopy.org.uk
+>> http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140910/8c9e08e6/attachment.html>
+
+From hiner at wisc.edu  Fri Sep 12 09:49:09 2014
+From: hiner at wisc.edu (Mark Hiner)
+Date: Fri, 12 Sep 2014 09:49:09 -0500
+Subject: [SCIFIO] New file format for SCIFIO
+In-Reply-To: <CANNFgrR+arPhzTTZ0wmCitc6z1XRiA8Kj2gy=3CrEV6J6zCRbg@mail.gmail.com>
+References: <CANNFgrR+arPhzTTZ0wmCitc6z1XRiA8Kj2gy=3CrEV6J6zCRbg@mail.gmail.com>
+Message-ID: <CA+B=mGpz-0mJxp_RZHVwyZiCtHb-uZDb6Eno8j3CjGwKwY4K-Q@mail.gmail.com>
+
+Hi Jerome,
+
+ It's great to hear your interest in integrating your format with SCIFIO
+and ImageJ2. I'm copying this mail to the SCIFIO mailing list, as this
+would be of interest and benefit to the community.
+
+>I hope you could add this the the SCIFIO or explain me where to integrate
+this modification.
+
+ There is a SCIFIO component, SCIFIO-tutorials
+<https://github.com/scifio/scifio-tutorials>, which was designed to
+introduce the API to developers. In particular, the Custom Format
+<https://github.com/scifio/scifio-tutorials/blob/master/core/src/main/java/io/scif/tutorials/core/T3aCustomFormats.java>
+tutorial and studying a simple existing format
+<https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/formats/PCXFormat.java>
+would be the recommended starting point. If anything is unclear in these
+tutorials or if you have further questions about how the SCIFIO format
+should be structured, please feel welcome to ask questions on this list,
+and to report issues on GitHub.
+
+ Once you have a SCIFIO reader for your format, you can distribute it to
+users via an update site
+<http://imagej.net/How_to_set_up_and_populate_an_update_site>.
+
+ With a little work <https://github.com/scifio/scifio-bf-compat/issues/4>
+on my part, your new SCIFIO reader will get picked up by Bio-Formats, which
+will then allow it to work in Stitching.
+
+ We're happy to provide any guidance we can - looking forward to your
+contributions and feedback!
+
+Regards,
+Mark
+
+On Fri, Sep 12, 2014 at 7:01 AM, J?r?me Parent <jerome.parent at lynceetec.com>
+wrote:
+>
+> Hello,
+> I am working for Lynceetec a Swiss company that develop and manufacture
+> Digital Holographic Microscope (DHM). This microscope are used in Life and
+> Material Science.
+> In the past I have written a plugin for ImageJ 1 to read our file format
+> .bin file (attached to this email).
+> There is a new class Koala_Bin_Reader and the file
+> HandleExtraFileTypes.java is updated. This plugin works fine in ImageJ 1
+>
+> Now I wonder if we can integrate this reader to SCIFIO and ImageJ2 to
+> improve our user experience.
+>
+> The Stitching of Fijii is powerfull but the stitching module cannot load
+> our binary format because is not currently supported in Fijii.
+>
+> I hope you could add this the the SCIFIO or explain me where to integrate
+> this modification.
+>
+> Congratulations for the great job and contribution to ImageJ project, I
+> use it for a long time and love it.
+>
+> Best Regards,
+> Jerome
+>
+> *J?r?me Parent*
+> Area Sales Manager
+> Office : 0041 21 693 02 27
+> Mobile : 0041 79 193 91 69
+> www.lynceetec.com
+>
+> *Lync?e Tec SA*
+> PSE-A
+> CH-1015 Lausanne
+> Switzerland
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140912/3a39b2cf/attachment.html>
+
+From hiner at wisc.edu  Wed Sep 10 15:11:56 2014
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 10 Sep 2014 15:11:56 -0500
+Subject: [SCIFIO] [ome-users] converting lif files to ome-tiff
+In-Reply-To: <CA+B=mGphC__Vv8Orfv4qWma3U9++pKV3+XbvQ6HDeu2JCES-Bg@mail.gmail.com>
+References: <CAKSZWGyeBwBEsyPMqRrfiWbCRQSb8jn+uqbobO8L5UOjjgkX3A@mail.gmail.com>
+	<53F4B64C.8090506@dundee.ac.uk>
+	<CA+B=mGphC__Vv8Orfv4qWma3U9++pKV3+XbvQ6HDeu2JCES-Bg@mail.gmail.com>
+Message-ID: <CA+B=mGqGg99i1JxxJL1uiMr-hpxR6GRyPb08x_Tg9cVOAVaTmg@mail.gmail.com>
+
+Hi Michael,
+
+I opened a pull request <http://review.source.kitware.com/#/c/16967/> to
+get the latest SCIFIO-ITK imageIO incorporated into the master ITK branch.
+
+This fixes the metadata bug suspected by Roger (the dimensions of the first
+series were always being used, which would crash on encountering a dataset
+with smaller dimensions). It also upgrades the ImageIO to use Bio-Formats
+5.0.4, and has some other minor fixes and improvements.
+
+With these updates I was able to fully convert your image as a multi-series
+image, using the command:
+SCIFIOTestDriver ko-A.ome.tiff out.ome.tif -w -a -d 5
+
+Thanks for the report, it was very helpful. Please let us know if you run
+into any more problems.
+
+Regards,
+Mark
+
+On Wed, Aug 20, 2014 at 12:05 PM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Hi all,
+>
+> >While I'm not entirely sure of the separation of responsibilities between
+> ITK, SCIFIO and Bio-Formats for this
+> >particular task
+>
+> The readme for the SCIFIO-ITK ImageIO (
+> https://github.com/scifio/scifio-imageio) was out of date. It should now
+> correctly instruct users to e-mail scifio at scif.io (copied) for ITK
+> imageIO troubleshooting.
+>
+> > I found this only occurs when you enable "-w" to use SCIFIO for output.
+>
+> Note that without the -w flag, the default ITK TIFF writer will be used,
+> which I thought was limited to 3 dimensions (or at least it was at one
+> time). If you want to write an .ome.tiff it has to be written with
+> Bio-Formats, anyway.
+>
+> > Looks like it's trying to read z plane 60 when there are only 60 planes
+>
+> I'm assuming the # of planes to read isn't being updated for each series..
+> I'll look into it when I get a chance.
+>
+> Thanks for the report,
+> Mark
+>
+>
+> On Wed, Aug 20, 2014 at 9:53 AM, Roger Leigh <rleigh at dundee.ac.uk> wrote:
+>
+>> On 19/08/14 19:52, Michael Meuli wrote:
+>>
+>> Dear Michael,
+>>
+>>
+>>  I have some problems converting my .lif files to ome-tiff.
+>>> I have converted my .lif files originating from a "CLSM Leica SP 8"
+>>> with bfconvert of Bio-Formats 5.0.3.
+>>> Trying to make it reproducible I took the file "ko-A.ome.tiff" which
+>>> can be found here:
+>>> "https://www.dropbox.com/sh/t2z0f4jttcnfh8s/AADq21HNR7EwH1JFxskhXXhea"
+>>>    in the ome-tiff-files folder.
+>>>
+>>
+>> Thanks.  I've been able to reproduce the validation problems.  I have
+>> opened a ticket for this and CC'd you on it; please see
+>> https://trac.openmicroscopy.org.uk/ome/ticket/12532
+>>
+>> Note however that the above validation error is harmless; it does not
+>> affect bioformats' correct reading of the OME-TIFF and I was able to
+>> read all planes of every series without trouble, and also convert the
+>> file to a new OME-TIFF which strips out the MetadataOnly elements.  I
+>> don't think this is in any way related to your other problem, below.
+>>
+>>
+>>  Below you can find the output of bfconvert, xmlvalid and
+>>> SCIFIOTestDriver itkSCIFIOImageIOTest with the -a flag.
+>>> The output of tiffcomment you can find as attachment.
+>>> itkSCIFIOImageIOTest in this example crashes trying to read the third
+>>> series.
+>>>
+>>
+>> I built ITK with itkscifio to test this.  I found this only occurs when
+>> you enable "-w" to use SCIFIO for output.
+>>
+>> While I'm not entirely sure of the separation of responsibilities
+>> between ITK, SCIFIO and Bio-Formats for this particular task, I don't
+>> think the problem is in Bio-Formats, but in SCIFIO setting the wrong
+>> plane index when reading the image data, as shown by your stacktrace.
+>> Looks like it's trying to read z plane 60 when there are only 60 planes
+>> (0-59), assuming it's series 2; the others all have too different z
+>> sizes.  I would suggest reporting this to the SCIFIO developers at
+>> https://github.com/scifio/scifio
+>>
+>>
+>> Regards,
+>> Roger Leigh
+>>
+>> --
+>> Dr Roger Leigh -- Open Microscopy Environment
+>> Wellcome Trust Centre for Gene Regulation and Expression,
+>> College of Life Sciences, University of Dundee, Dow Street,
+>> Dundee DD1 5EH Scotland UK   Tel: (01382) 386364
+>>
+>> The University of Dundee is a registered Scottish Charity, No: SC015096
+>> _______________________________________________
+>> ome-users mailing list
+>> ome-users at lists.openmicroscopy.org.uk
+>> http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140910/8c9e08e6/attachment-0002.html>
+
+From hiner at wisc.edu  Fri Sep 12 09:49:09 2014
+From: hiner at wisc.edu (Mark Hiner)
+Date: Fri, 12 Sep 2014 09:49:09 -0500
+Subject: [SCIFIO] New file format for SCIFIO
+In-Reply-To: <CANNFgrR+arPhzTTZ0wmCitc6z1XRiA8Kj2gy=3CrEV6J6zCRbg@mail.gmail.com>
+References: <CANNFgrR+arPhzTTZ0wmCitc6z1XRiA8Kj2gy=3CrEV6J6zCRbg@mail.gmail.com>
+Message-ID: <CA+B=mGpz-0mJxp_RZHVwyZiCtHb-uZDb6Eno8j3CjGwKwY4K-Q@mail.gmail.com>
+
+Hi Jerome,
+
+ It's great to hear your interest in integrating your format with SCIFIO
+and ImageJ2. I'm copying this mail to the SCIFIO mailing list, as this
+would be of interest and benefit to the community.
+
+>I hope you could add this the the SCIFIO or explain me where to integrate
+this modification.
+
+ There is a SCIFIO component, SCIFIO-tutorials
+<https://github.com/scifio/scifio-tutorials>, which was designed to
+introduce the API to developers. In particular, the Custom Format
+<https://github.com/scifio/scifio-tutorials/blob/master/core/src/main/java/io/scif/tutorials/core/T3aCustomFormats.java>
+tutorial and studying a simple existing format
+<https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/formats/PCXFormat.java>
+would be the recommended starting point. If anything is unclear in these
+tutorials or if you have further questions about how the SCIFIO format
+should be structured, please feel welcome to ask questions on this list,
+and to report issues on GitHub.
+
+ Once you have a SCIFIO reader for your format, you can distribute it to
+users via an update site
+<http://imagej.net/How_to_set_up_and_populate_an_update_site>.
+
+ With a little work <https://github.com/scifio/scifio-bf-compat/issues/4>
+on my part, your new SCIFIO reader will get picked up by Bio-Formats, which
+will then allow it to work in Stitching.
+
+ We're happy to provide any guidance we can - looking forward to your
+contributions and feedback!
+
+Regards,
+Mark
+
+On Fri, Sep 12, 2014 at 7:01 AM, J?r?me Parent <jerome.parent at lynceetec.com>
+wrote:
+>
+> Hello,
+> I am working for Lynceetec a Swiss company that develop and manufacture
+> Digital Holographic Microscope (DHM). This microscope are used in Life and
+> Material Science.
+> In the past I have written a plugin for ImageJ 1 to read our file format
+> .bin file (attached to this email).
+> There is a new class Koala_Bin_Reader and the file
+> HandleExtraFileTypes.java is updated. This plugin works fine in ImageJ 1
+>
+> Now I wonder if we can integrate this reader to SCIFIO and ImageJ2 to
+> improve our user experience.
+>
+> The Stitching of Fijii is powerfull but the stitching module cannot load
+> our binary format because is not currently supported in Fijii.
+>
+> I hope you could add this the the SCIFIO or explain me where to integrate
+> this modification.
+>
+> Congratulations for the great job and contribution to ImageJ project, I
+> use it for a long time and love it.
+>
+> Best Regards,
+> Jerome
+>
+> *J?r?me Parent*
+> Area Sales Manager
+> Office : 0041 21 693 02 27
+> Mobile : 0041 79 193 91 69
+> www.lynceetec.com
+>
+> *Lync?e Tec SA*
+> PSE-A
+> CH-1015 Lausanne
+> Switzerland
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140912/3a39b2cf/attachment-0002.html>
+

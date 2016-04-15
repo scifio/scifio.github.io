@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] DICOM format detection
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20DICOM%20format%20detection&In-Reply-To=%3C552C17A7.7060500%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000259.html">
+   <LINK REL="Next"  HREF="000261.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] DICOM format detection</H1>
+    <B>Burkhard Hoeckendorf</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20DICOM%20format%20detection&In-Reply-To=%3C552C17A7.7060500%40web.de%3E"
+       TITLE="[SCIFIO] DICOM format detection">burkhard.hoeckendorf at web.de
+       </A><BR>
+    <I>Mon Apr 13 14:23:19 CDT 2015</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000259.html">[SCIFIO] DICOM format detection
+</A></li>
+        <LI>Next message: <A HREF="000261.html">[SCIFIO] DICOM format detection
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#260">[ date ]</a>
+              <a href="thread.html#260">[ thread ]</a>
+              <a href="subject.html#260">[ subject ]</a>
+              <a href="author.html#260">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Dear Mark,
+
+Thanks a lot for your help. I'll try playing with the format priority. 
+That being said, I've tried this strategy (in an unrelated project) to 
+override a format implementation in SCIFIO with our own implementation. 
+Back then (a few months ago), it did not work reliably in my hands.
+
+Another question is whether there is an option to turn off the automatic 
+min-max computation. Thanks to SCIFIO, we've found a nice way to 
+integrate our format with ImageJ, but using this comes at the price of a 
+pretty substantial IO performance hit that frankly is a source of 
+constant dissatisfaction. I suspect deactivating the min-max computation 
+may be an easy way to improve things, presumably without breaking 
+anything else (?)
+
+Best,
+Burkhard
+
+
+
+On 4/13/2015 2:37 PM, Mark Hiner wrote:
+&gt;<i> Hi Burkhard,
+</I>&gt;<i>
+</I>&gt;<i>  &gt;I apologize in case I am posting this mail twice. The first attempt at
+</I>&gt;<i> the end of last week came with an attachment and I assume it was
+</I>&gt;<i> probably scrubbed (and rightly so).
+</I>&gt;<i>
+</I>&gt;<i> No worries - there actually was a technical issue with the mailing list
+</I>&gt;<i> that's now fixed. Sorry about that!
+</I>&gt;<i>
+</I>&gt;<i>  &gt;As it turns out, even before looking at its file name extension,
+</I>&gt;<i> SCIFIO opened the file and tried to detect whether its header is in
+</I>&gt;<i> DICOM format
+</I>&gt;<i>
+</I>&gt;<i> DICOM is an unfortunate example that has some history in Bio-Formats
+</I>&gt;<i> (extensionless DICOM images, DICOM images with no magic string) that
+</I>&gt;<i> carried over to the SCIFIO implementation with potential for false
+</I>&gt;<i> positives. However, I think the best solution right now is to set your
+</I>&gt;<i> format to a higher priority. Formats are checked in plugin priority order.
+</I>&gt;<i>
+</I>&gt;<i> For example, see a sample format that uses a higher priority[1]. DICOM
+</I>&gt;<i> uses the normal priority (0), so you can use any of the higher
+</I>&gt;<i> constants[2] or set it manually[3] to a value &gt; 0 for your format to be
+</I>&gt;<i> detected first.
+</I>&gt;<i>
+</I>&gt;<i>  &gt;More generally though, this experience has led me to wonder whether
+</I>&gt;<i> the order in which file formats are detected could be tweaked such that
+</I>&gt;<i> the ones requiring the most work are only attempted when the easier ones
+</I>&gt;<i> fail.
+</I>&gt;<i>
+</I>&gt;<i> Agreed completely. Plugin priority was a starting point, but we have
+</I>&gt;<i> started discussing how exactly to do things better[4] with some ideas
+</I>&gt;<i> very similar to what you outline.
+</I>&gt;<i>
+</I>&gt;<i> Thanks for the feedback, let us know if you have any more suggestions or
+</I>&gt;<i> questions.
+</I>&gt;<i>
+</I>&gt;<i> Best,
+</I>&gt;<i> Mark
+</I>&gt;<i>
+</I>&gt;<i> [1]
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio-bf-compat/blob/scifio-bf-compat-1.11.0/src/main/java/io/scif/bf/BioFormatsFormat.java#L79-80">https://github.com/scifio/scifio-bf-compat/blob/scifio-bf-compat-1.11.0/src/main/java/io/scif/bf/BioFormatsFormat.java#L79-80</A>
+</I>&gt;<i> [2]
+</I>&gt;<i> <A HREF="https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/Priority.java#L48-55">https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/Priority.java#L48-55</A>
+</I>&gt;<i> [3]
+</I>&gt;<i> <A HREF="https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/plugin/Plugin.java#L108-129">https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/plugin/Plugin.java#L108-129</A>
+</I>&gt;<i> [4] <A HREF="https://github.com/scifio/scifio/issues/39">https://github.com/scifio/scifio/issues/39</A>
+</I>&gt;<i>
+</I>&gt;<i> On Mon, Apr 13, 2015 at 12:59 PM, Burkhard Hoeckendorf
+</I>&gt;<i> &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">burkhard.hoeckendorf at web.de</A> &lt;mailto:<A HREF="http://scif.io/mailman/listinfo/scifio">burkhard.hoeckendorf at web.de</A>&gt;&gt; wrote:
+</I>&gt;<i>
+</I>&gt;<i>     Dear List,
+</I>&gt;<i>
+</I>&gt;<i>     I apologize in case I am posting this mail twice. The first attempt
+</I>&gt;<i>     at the end of last week came with an attachment and I assume it was
+</I>&gt;<i>     probably scrubbed (and rightly so).
+</I>&gt;<i>
+</I>&gt;<i>     We recently ran into an issue with DICOM format detection. We use a
+</I>&gt;<i>     custom file format that is completely unrelated to DICOM and that is
+</I>&gt;<i>     implemented for SCIFIO such that the file name extension alone is
+</I>&gt;<i>     necessary and sufficient to recognize it. This works well, except
+</I>&gt;<i>     for a single file which we couldn't open in Fiji. Reading it by
+</I>&gt;<i>     other means (C++, MATLAB) worked fine.
+</I>&gt;<i>
+</I>&gt;<i>     As it turns out, even before looking at its file name extension,
+</I>&gt;<i>     SCIFIO opened the file and tried to detect whether its header is in
+</I>&gt;<i>     DICOM format. I am unfamiliar with the DICOM standard and not a
+</I>&gt;<i>     professional Programmer, but from the SCIFIO implementation
+</I>&gt;<i>     (io.scif.formats.DICOMFormat) it appears to me that the magic 'DICM'
+</I>&gt;<i>     string in the header is treated as optional. If it is not found,
+</I>&gt;<i>     SCIFIO tries to read a single header field, and if successful
+</I>&gt;<i>     considers the file a DICOM file. In our case, we got unlucky and by
+</I>&gt;<i>     accident SCIFIO retrieved a valid-enough result when reading the
+</I>&gt;<i>     corresponding position in the non-DICOM file. Hence, it was wrongly
+</I>&gt;<i>     detected as a DICOM file.
+</I>&gt;<i>
+</I>&gt;<i>     For the time being, we are now running our own, locally modified
+</I>&gt;<i>     SCIFIO that does not try harder when the 'DICM' string is missing,
+</I>&gt;<i>     and this solved our problem. For reference, we modified line 1079 in
+</I>&gt;<i>     io.scif.formats.DICOMFormat. I am also happy to send this as a pull
+</I>&gt;<i>     request, but I am not a DICOM user, so can not comment whether or
+</I>&gt;<i>     not this is actually a workable solution.
+</I>&gt;<i>
+</I>&gt;<i>     More generally though, this experience has led me to wonder whether
+</I>&gt;<i>     the order in which file formats are detected could be tweaked such
+</I>&gt;<i>     that the ones requiring the most work are only attempted when the
+</I>&gt;<i>     easier ones fail. DICOM format detection would thus only occur when
+</I>&gt;<i>     the file name extension does not match that of any format where the
+</I>&gt;<i>     extension alone is necessary and sufficient. This may help prevent
+</I>&gt;<i>     similar conflicts in the future and may additionally contribute a
+</I>&gt;<i>     little bit to a much needed performance increase.
+</I>&gt;<i>
+</I>&gt;<i>     Cheers,
+</I>&gt;<i>     Burkhard
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000259.html">[SCIFIO] DICOM format detection
+</A></li>
+	<LI>Next message: <A HREF="000261.html">[SCIFIO] DICOM format detection
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#260">[ date ]</a>
+              <a href="thread.html#260">[ thread ]</a>
+              <a href="subject.html#260">[ subject ]</a>
+              <a href="author.html#260">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

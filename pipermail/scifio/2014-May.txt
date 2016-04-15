@@ -1,0 +1,140 @@
+From ctrueden at wisc.edu  Mon May 12 12:52:12 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 12 May 2014 12:52:12 -0500
+Subject: [SCIFIO] Fiji Plugin Almost Finished
+In-Reply-To: <alpine.DEB.1.00.1405111957130.14982@s15462909.onlinehome-server.info>
+References: <CACxuvABOCds9KB6gQaUgO_vpvWgjerpfeHrYhYj==6C-5zOrFw@mail.gmail.com>
+	<alpine.DEB.1.00.1405111957130.14982@s15462909.onlinehome-server.info>
+Message-ID: <CADN69yk7d-9t4zEW0uea=L_xWhg=v9_OZj_obdxAARRHexuFqQ@mail.gmail.com>
+
+Hi Ajeet,
+
+[CCing scifio mailing list, which is the best place to discuss these sorts
+of file format issues.]
+
+> Johannes, I have a tiff image stack of images all of different width and
+> height. When reading with the bioformats importer, it assumes that all
+> images are the same size and sets the width/height for all images to
+> that of the first image. Curtis and I have filed a ticket to correct for
+> this in the future, but is there a way to get the dimensions of an
+> individual image in a tiff stack? (The first image in my stack is
+> 1008x3008, and the last one is supposed to be like 40000x70000. I need
+> the exact dimensions of the last image.)
+
+For others' reference: https://github.com/scifio/scifio/issues/159
+
+Ajeet: SCIFIO has a low-level TIFF API you can use to do it:
+https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/formats/tiff/TiffParser.java
+https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/formats/tiff/IFD.java
+
+See in particular IFD#getImageWidth() and IFD#getImageHeight().
+
+Better would be to fix the bug in SCIFIO's TiffFormat, such that it reports
+a different Image per plane size. Want to try your hand at it? Mark and I
+would be happy to answer any technical questions.
+
+-Curtis
+
+
+On Sun, May 11, 2014 at 12:58 PM, Johannes Schindelin
+<schindelin at wisc.edu>wrote:
+
+> Hi Ajeet,
+>
+> On Sun, 11 May 2014, Ajeet Vivekanandan wrote:
+>
+> > I finished the Ventana ROI to WiscScan converter (FIJI/ImageJ plugin).
+> > There is only one issue that I would need Johannes's help for, but I'm
+> > ready to test/use this as soon as that's done.
+> >
+> > Johannes, I have a tiff image stack of images all of different width and
+> > height. When reading with the bioformats importer, it assumes that all
+> > images are the same size and sets the width/height for all images to
+> > that of the first image. Curtis and I have filed a ticket to correct for
+> > this in the future, but is there a way to get the dimensions of an
+> > individual image in a tiff stack? (The first image in my stack is
+> > 1008x3008, and the last one is supposed to be like 40000x70000. I need
+> > the exact dimensions of the last image.)
+>
+> If you are talking about an ImageJ 1.x style ImageStack data structure:
+> this data structure can only contain images of identical X/Y dimension.
+> There is simply no way to represent a collection of images with different
+> dimensions as a single ImageStack.
+>
+> Ciao,
+> Johannes
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140512/76552d68/attachment.html>
+
+From ctrueden at wisc.edu  Mon May 12 12:52:12 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 12 May 2014 12:52:12 -0500
+Subject: [SCIFIO] Fiji Plugin Almost Finished
+In-Reply-To: <alpine.DEB.1.00.1405111957130.14982@s15462909.onlinehome-server.info>
+References: <CACxuvABOCds9KB6gQaUgO_vpvWgjerpfeHrYhYj==6C-5zOrFw@mail.gmail.com>
+	<alpine.DEB.1.00.1405111957130.14982@s15462909.onlinehome-server.info>
+Message-ID: <CADN69yk7d-9t4zEW0uea=L_xWhg=v9_OZj_obdxAARRHexuFqQ@mail.gmail.com>
+
+Hi Ajeet,
+
+[CCing scifio mailing list, which is the best place to discuss these sorts
+of file format issues.]
+
+> Johannes, I have a tiff image stack of images all of different width and
+> height. When reading with the bioformats importer, it assumes that all
+> images are the same size and sets the width/height for all images to
+> that of the first image. Curtis and I have filed a ticket to correct for
+> this in the future, but is there a way to get the dimensions of an
+> individual image in a tiff stack? (The first image in my stack is
+> 1008x3008, and the last one is supposed to be like 40000x70000. I need
+> the exact dimensions of the last image.)
+
+For others' reference: https://github.com/scifio/scifio/issues/159
+
+Ajeet: SCIFIO has a low-level TIFF API you can use to do it:
+https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/formats/tiff/TiffParser.java
+https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/formats/tiff/IFD.java
+
+See in particular IFD#getImageWidth() and IFD#getImageHeight().
+
+Better would be to fix the bug in SCIFIO's TiffFormat, such that it reports
+a different Image per plane size. Want to try your hand at it? Mark and I
+would be happy to answer any technical questions.
+
+-Curtis
+
+
+On Sun, May 11, 2014 at 12:58 PM, Johannes Schindelin
+<schindelin at wisc.edu>wrote:
+
+> Hi Ajeet,
+>
+> On Sun, 11 May 2014, Ajeet Vivekanandan wrote:
+>
+> > I finished the Ventana ROI to WiscScan converter (FIJI/ImageJ plugin).
+> > There is only one issue that I would need Johannes's help for, but I'm
+> > ready to test/use this as soon as that's done.
+> >
+> > Johannes, I have a tiff image stack of images all of different width and
+> > height. When reading with the bioformats importer, it assumes that all
+> > images are the same size and sets the width/height for all images to
+> > that of the first image. Curtis and I have filed a ticket to correct for
+> > this in the future, but is there a way to get the dimensions of an
+> > individual image in a tiff stack? (The first image in my stack is
+> > 1008x3008, and the last one is supposed to be like 40000x70000. I need
+> > the exact dimensions of the last image.)
+>
+> If you are talking about an ImageJ 1.x style ImageStack data structure:
+> this data structure can only contain images of identical X/Y dimension.
+> There is simply no way to represent a collection of images with different
+> dimensions as a single ImageStack.
+>
+> Ciao,
+> Johannes
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140512/76552d68/attachment-0002.html>
+

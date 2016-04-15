@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] SCIFIO or Bio-Formats for C++?
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%20or%20Bio-Formats%20for%20C%2B%2B%3F&In-Reply-To=%3CCA%2BB%3DmGoXRmMRf_R7NqQeGoJQ0n6Yto61qyFfT%2B0yr7dBY7uupA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000264.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] SCIFIO or Bio-Formats for C++?</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%20or%20Bio-Formats%20for%20C%2B%2B%3F&In-Reply-To=%3CCA%2BB%3DmGoXRmMRf_R7NqQeGoJQ0n6Yto61qyFfT%2B0yr7dBY7uupA%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] SCIFIO or Bio-Formats for C++?">hiner at wisc.edu
+       </A><BR>
+    <I>Wed Jun 17 11:37:37 CDT 2015</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000264.html">[SCIFIO]  SCIFIO or Bio-Formats for C++?
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#265">[ date ]</a>
+              <a href="thread.html#265">[ thread ]</a>
+              <a href="subject.html#265">[ subject ]</a>
+              <a href="author.html#265">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Joe,
+
+This article[1] has good links to discussions on this topic (and Java/C++
+interoperability in general).
+
+&gt;<i> Bio-Formats C++
+</I>
+Your observations are right on - this is the only option that avoids
+C++/Java cross-talk, but would require implementation of the Bio-Formats
+reader(s) you're interested in.
+
+&gt;<i> Bio-Formats C++ Bindings
+</I>
+Since these are C++ wrappers that call into Java code, this is likely the
+easiest/fastest way to get immediate C++ support for all of Bio-Formats.
+
+&gt;<i> SCIFIO-imageio
+</I>
+This is an unfortunate victim of early SCIFIO brand/library conflation:
+it's not actually SCIFIO-based right now, but uses Bio-Formats (C++/Java
+communication is accomplished via pipes, instead of the C++ bindings).
+Since it's ITK-based I don't think it will meet your needs.
+
+There will likely eventually be a C++ SCIFIO (or ImageJ) core that will
+give you all the Bio-Formats format support, but for now I would recommend
+trying out the C++ Bindings. If the ND2 reader is added to Bio-Formats C++
+then that may be a good fit for your application.
+
+Hope that helps.
+
+Best,
+Mark
+
+[1]
+<A HREF="https://www.openmicroscopy.org/site/support/bio-formats5.1/developers/non-java-code.html">https://www.openmicroscopy.org/site/support/bio-formats5.1/developers/non-java-code.html</A>
+
+On Wed, Jun 17, 2015 at 10:45 AM, Joe Ping-Lin Hsiao &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">phsiao at cs.unc.edu</A>&gt;
+wrote:
+
+&gt;<i> Hi,
+</I>&gt;<i>
+</I>&gt;<i> I wanted to add Nikon Elements nd formats support to a program written in
+</I>&gt;<i> C++, and I think integrating SCIFIO or Bio-Formats into the program do the
+</I>&gt;<i> job.
+</I>&gt;<i>
+</I>&gt;<i> After Google searching for a while, I am still very confused and not sure
+</I>&gt;<i> which one to use.
+</I>&gt;<i> Bio-Fomrats C++
+</I>&gt;<i> &lt;<A HREF="http://www.openmicroscopy.org/site/support/bio-formats5.1/developers/cpp/overview.html">http://www.openmicroscopy.org/site/support/bio-formats5.1/developers/cpp/overview.html</A>&gt; seems
+</I>&gt;<i> to be a newer method and the most native to C++ , but on the page it says
+</I>&gt;<i> it only supports TIFF and OME-TIFF and all other readers and writers from
+</I>&gt;<i> the Java implementation are currently unavailable.
+</I>&gt;<i> Bio-Formats C++ bindings
+</I>&gt;<i> &lt;<A HREF="http://www.openmicroscopy.org/site/support/bio-formats5.1/developers/jace/overview.html">http://www.openmicroscopy.org/site/support/bio-formats5.1/developers/jace/overview.html</A>&gt; has
+</I>&gt;<i> been there for a long time. Maybe this is still the way to go?
+</I>&gt;<i> SCIFIO-imageio &lt;<A HREF="https://github.com/scifio/scifio-imageio">https://github.com/scifio/scifio-imageio</A>&gt; is the only
+</I>&gt;<i> SCIFIO project related to C++ that I could find, but it was written for ITK.
+</I>&gt;<i>
+</I>&gt;<i> Are these the options that I have now for my need?
+</I>&gt;<i>
+</I>&gt;<i> Thanks,
+</I>&gt;<i> Joe
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> _______________________________________________
+</I>&gt;<i> SCIFIO mailing list
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20150617/fb435602/attachment.html">http://scif.io/pipermail/scifio/attachments/20150617/fb435602/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000264.html">[SCIFIO]  SCIFIO or Bio-Formats for C++?
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#265">[ date ]</a>
+              <a href="thread.html#265">[ thread ]</a>
+              <a href="subject.html#265">[ subject ]</a>
+              <a href="author.html#265">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

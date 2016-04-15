@@ -1,0 +1,205 @@
+From thomas.julou at normalesup.org  Fri Aug  7 03:34:30 2015
+From: thomas.julou at normalesup.org (Thomas Julou)
+Date: Fri, 7 Aug 2015 10:34:30 +0200
+Subject: [SCIFIO] Open Micro-Manager dataset in Fiji using SCIFIO
+Message-ID: <3E848941-8DF4-43BF-8D8A-8224B09A1877@normalesup.org>
+
+Hello,
+
+In line with earlier posts on ome-users mailing list [1], I?m trying to find a convenient way to open large Micro-Manager stacks in Fiji (in particular, such stacks are split in several 4.2gb tif files because MM doesn?t handle bigtiff). My problem so far has been that Bio-formats is parsing all positions in a dataset even when opening a single one. Mark Tsuchida (MM?s developer) suggested that using SCIFIO might be a workaround [2].
+
+I tried the following:
+- File > Import > SCIFIO
+This raises an exception and open an error dialog? You might want to fix this, unless it?s a fiji specific issue?
+- File > Open after selecting ?Use SCIFIO? in Options > ImageJ2
+This successfully opens the file but it?s slower than the File > Import > BioFormats! Moreover it parses metadata for all positions in the dataset (even when they are saved to different files). I can?t understand this behaviour since there is no way to choose to open all related positions? In my opinion the appropriate behaviour would be: if the MM dataset is saved with all positions in the same stack (i.e. no ?_Posxx.ome.tif? in the file name; possibly split in several .tif files) then open each position in a separate window, if the MM dataset is saved with positions in separate files (i.e. ?_Posxx.ome.tif? found in the file name; again possibly split in several .tif files if a given position is larger than 4.2gb) then **parse only** and open only the selected position? This would really speed things up for stacks acquired in datasets with many positions (of a few large ones).
+
+I hope that this makes sense and that the issue can be addressed.
+Thanks for your help. Best,
+
+Thomas
+
+[1] http://lists.openmicroscopy.org.uk/pipermail/ome-users/2015-March/005101.html
+[2] http://micro-manager.3463995.n2.nabble.com/BigTiff-support-tt7580735.html#a7585743
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150807/a857a5c0/attachment.html>
+
+From hiner at wisc.edu  Mon Aug 10 09:15:32 2015
+From: hiner at wisc.edu (Mark Hiner)
+Date: Mon, 10 Aug 2015 09:15:32 -0500
+Subject: [SCIFIO] Janelia hackathon
+Message-ID: <CA+B=mGrkytC4Ys_1v46CJoJyOKuvtQiYYqY18T2Oi9i0hDaS2A@mail.gmail.com>
+
+Hi all,
+
+For those interested, Curtis and I spent the last week of July in Janelia
+for hackathon, at the kind invitation of Stephan Saalfeld and Philipp
+Keller.
+
+There was significant impact on the future direction of SCIFIO development
+(planar generalization and better integration with ImgLib2) and plugin
+testing throughout the ImageJ ecosystem (a "melting pot" test to identify
+conflicts between components in complex systems.. i.e. Fiji).
+
+A full summary is available, as always, on the wiki:
+
+http://imagej.net/2015-07-27-Janelia_Hackathon
+
+Best,
+Mark Hiner
+ImageJ2 developer
+LOCI, UW-Madison
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150810/6764f83e/attachment.html>
+
+From ctrueden at wisc.edu  Tue Aug 11 17:14:08 2015
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Tue, 11 Aug 2015 17:14:08 -0500
+Subject: [SCIFIO] Open Micro-Manager dataset in Fiji using SCIFIO
+In-Reply-To: <3E848941-8DF4-43BF-8D8A-8224B09A1877@normalesup.org>
+References: <3E848941-8DF4-43BF-8D8A-8224B09A1877@normalesup.org>
+Message-ID: <CADN69y=uRdcCYmnT3NLcypDYND-jZ1kL5sn7wGDE690P5=9_+g@mail.gmail.com>
+
+Hi Thomas,
+
+Thanks for the report. I filed an issue in the SCIFIO issue tracker with
+these details:
+
+https://github.com/scifio/scifio/issues/279
+
+Things are crazy busy until the ImageJ conference this September, but we
+will try to respond more thoroughly later this fall.
+
+In the meantime, in case you didn't already know, the relevant source code
+is here:
+https://github.com/scifio/scifio/blob/scifio-0.24.0/src/main/java/io/scif/formats/MicromanagerFormat.java
+
+Be warned that SCIFIO is undergoing a substantial refactoring at the
+moment, to move away from plane-centric API toward a block-based one.
+
+Regards,
+Curtis
+
+On Fri, Aug 7, 2015 at 3:34 AM, Thomas Julou <thomas.julou at normalesup.org>
+wrote:
+
+> Hello,
+>
+> In line with earlier posts on ome-users mailing list [1], I?m trying to
+> find a convenient way to open large Micro-Manager stacks in Fiji (in
+> particular, such stacks are split in several 4.2gb tif files because MM
+> doesn?t handle bigtiff). My problem so far has been that Bio-formats is
+> parsing all positions in a dataset even when opening a single one. Mark
+> Tsuchida (MM?s developer) suggested that using SCIFIO might be a workaround
+> [2].
+>
+> I tried the following:
+> - File > Import > SCIFIO
+> This raises an exception and open an error dialog? You might want to fix
+> this, unless it?s a fiji specific issue?
+> - File > Open after selecting ?Use SCIFIO? in Options > ImageJ2
+> This successfully opens the file but it?s slower than the File > Import >
+> BioFormats! Moreover it parses metadata for all positions in the dataset
+> (even when they are saved to different files). I can?t understand this
+> behaviour since there is no way to choose to open all related positions? In
+> my opinion the appropriate behaviour would be: if the MM dataset is saved
+> with all positions in the same stack (i.e. no ?_Posxx.ome.tif? in the file
+> name; possibly split in several .tif files) then open each position in a
+> separate window, if the MM dataset is saved with positions in separate
+> files (i.e. ?_Posxx.ome.tif? found in the file name; again possibly split
+> in several .tif files if a given position is larger than 4.2gb) then ***parse
+> only*** and open only the selected position? This would really speed
+> things up for stacks acquired in datasets with many positions (of a few
+> large ones).
+>
+> I hope that this makes sense and that the issue can be addressed.
+> Thanks for your help. Best,
+>
+> Thomas
+>
+> [1]
+> http://lists.openmicroscopy.org.uk/pipermail/ome-users/2015-March/005101.html
+> [2]
+> http://micro-manager.3463995.n2.nabble.com/BigTiff-support-tt7580735.html#a7585743
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150811/c36fa4c8/attachment.html>
+
+From thomas.julou at normalesup.org  Wed Aug 12 03:07:07 2015
+From: thomas.julou at normalesup.org (Thomas Julou)
+Date: Wed, 12 Aug 2015 10:07:07 +0200
+Subject: [SCIFIO] Open Micro-Manager dataset in Fiji using SCIFIO
+In-Reply-To: <CADN69y=uRdcCYmnT3NLcypDYND-jZ1kL5sn7wGDE690P5=9_+g@mail.gmail.com>
+References: <3E848941-8DF4-43BF-8D8A-8224B09A1877@normalesup.org>
+	<CADN69y=uRdcCYmnT3NLcypDYND-jZ1kL5sn7wGDE690P5=9_+g@mail.gmail.com>
+Message-ID: <7EADA035-C7DD-46CD-A21C-8BF08D360F99@normalesup.org>
+
+Dear Curtis,
+
+thanks for your answer.
+In fact, I?m not sure whether it?s more a scifio issue or a fiji one. My point is that in the fiji interface, open parses all positions although it opens a single file. 
+
+Does scifio aim at handling entire datasets? then I understands that it has the ability to parse entire datasets, but the way it?s called by fiji could probably be significantly more efficient. or at least open a bioformat-like dialog offering to open all positions.
+If scifio is designed with single images, then its code could probably be stripped down to parse metadata more efficiently?
+
+Best,
+Thomas
+
+
+
+> On 12 Aug 2015, at 00:14, Curtis Rueden <ctrueden at wisc.edu> wrote:
+> 
+> Hi Thomas,
+> 
+> Thanks for the report. I filed an issue in the SCIFIO issue tracker with these details:
+> 
+> https://github.com/scifio/scifio/issues/279 <https://github.com/scifio/scifio/issues/279>
+> 
+> Things are crazy busy until the ImageJ conference this September, but we will try to respond more thoroughly later this fall.
+> 
+> In the meantime, in case you didn't already know, the relevant source code is here:
+> https://github.com/scifio/scifio/blob/scifio-0.24.0/src/main/java/io/scif/formats/MicromanagerFormat.java <https://github.com/scifio/scifio/blob/scifio-0.24.0/src/main/java/io/scif/formats/MicromanagerFormat.java>
+> 
+> Be warned that SCIFIO is undergoing a substantial refactoring at the moment, to move away from plane-centric API toward a block-based one.
+> 
+> Regards,
+> Curtis
+> 
+> On Fri, Aug 7, 2015 at 3:34 AM, Thomas Julou <thomas.julou at normalesup.org <mailto:thomas.julou at normalesup.org>> wrote:
+> Hello,
+> 
+> In line with earlier posts on ome-users mailing list [1], I?m trying to find a convenient way to open large Micro-Manager stacks in Fiji (in particular, such stacks are split in several 4.2gb tif files because MM doesn?t handle bigtiff). My problem so far has been that Bio-formats is parsing all positions in a dataset even when opening a single one. Mark Tsuchida (MM?s developer) suggested that using SCIFIO might be a workaround [2].
+> 
+> I tried the following:
+> - File > Import > SCIFIO
+> This raises an exception and open an error dialog? You might want to fix this, unless it?s a fiji specific issue?
+> - File > Open after selecting ?Use SCIFIO? in Options > ImageJ2
+> This successfully opens the file but it?s slower than the File > Import > BioFormats! Moreover it parses metadata for all positions in the dataset (even when they are saved to different files). I can?t understand this behaviour since there is no way to choose to open all related positions? In my opinion the appropriate behaviour would be: if the MM dataset is saved with all positions in the same stack (i.e. no ?_Posxx.ome.tif? in the file name; possibly split in several .tif files) then open each position in a separate window, if the MM dataset is saved with positions in separate files (i.e. ?_Posxx.ome.tif? found in the file name; again possibly split in several .tif files if a given position is larger than 4.2gb) then **parse only** and open only the selected position? This would really speed things up for stacks acquired in datasets with many positions (of a few large ones).
+> 
+> I hope that this makes sense and that the issue can be addressed.
+> Thanks for your help. Best,
+> 
+> Thomas
+> 
+> [1] http://lists.openmicroscopy.org.uk/pipermail/ome-users/2015-March/005101.html <http://lists.openmicroscopy.org.uk/pipermail/ome-users/2015-March/005101.html>
+> [2] http://micro-manager.3463995.n2.nabble.com/BigTiff-support-tt7580735.html#a7585743 <http://micro-manager.3463995.n2.nabble.com/BigTiff-support-tt7580735.html#a7585743>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io <mailto:SCIFIO at scif.io>
+> http://scif.io/mailman/listinfo/scifio <http://scif.io/mailman/listinfo/scifio>
+> 
+> 
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150812/5df1d68e/attachment.html>
+

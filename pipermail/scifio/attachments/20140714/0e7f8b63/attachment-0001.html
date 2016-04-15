@@ -1,0 +1,87 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;Hi&nbsp;Burkhard,&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt; &gt; &lt;span&nbsp;style=&quot;font-family:arial,sans-serif;font-size:13.333333969116211px&quot;&gt;run(&quot;Collect&nbsp;Garbage&quot;);&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span&nbsp;style=&quot;font-family:arial,sans-serif;font-size:13.333333969116211px&quot;&gt;&lt;br&gt;<br>
+<br>
+&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span&nbsp;style=&quot;font-family:arial,sans-serif;font-size:13.333333969116211px&quot;&gt; This&nbsp;just&nbsp;calls&nbsp;System.gc()..&nbsp;twice,&nbsp;actually.&nbsp;There&nbsp;are&nbsp;many&nbsp;articles&nbsp;and&nbsp;StackOverflow&nbsp;posts&nbsp;about&nbsp;&lt;a&nbsp;href=&quot;http://stackoverflow.com/questions/2414105/why-is-it-a-bad-practice-to-call-system-gc&quot;&gt;why&nbsp;System.gc()&nbsp;is&nbsp;unreliable&lt;/a&gt;.&nbsp;I&nbsp;personally&nbsp;have&nbsp;seen&nbsp;endlessly&nbsp;repeated&nbsp;System.gc()&nbsp;calls&nbsp;effectively&nbsp;do&nbsp;nothing,&nbsp;necessitating&nbsp;the&nbsp;creation&nbsp;of&nbsp;large&nbsp;objects&nbsp;to&nbsp;force&nbsp;memory&nbsp;to&nbsp;be&nbsp;released.&lt;/span&gt;&lt;/div&gt;<br>
+<br>
+&lt;div&gt;&lt;span&nbsp;style=&quot;font-family:arial,sans-serif;font-size:13.333333969116211px&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span&nbsp;style=&quot;font-family:arial,sans-serif;font-size:13.333333969116211px&quot;&gt; Also,&nbsp;the&nbsp;JVM&nbsp;should&nbsp;automatically&nbsp;attempt&nbsp;to&nbsp;run&nbsp;the&nbsp;garbage&nbsp;collector&nbsp;when&nbsp;memory&nbsp;is&nbsp;requested&nbsp;for&nbsp;allocation&nbsp;in&nbsp;excess&nbsp;of&nbsp;the&nbsp;JVM&#39;s&nbsp;memory&nbsp;limits.&nbsp;So&nbsp;the&nbsp;best&nbsp;way&nbsp;to&nbsp;test&nbsp;if&nbsp;SCIFIO&nbsp;has&nbsp;a&nbsp;memory&nbsp;leak&nbsp;would&nbsp;be:&lt;/span&gt;&lt;/div&gt;<br>
+<br>
+&lt;div&gt;&lt;span&nbsp;style=&quot;font-family:arial,sans-serif;font-size:13.333333969116211px&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;font&nbsp;face=&quot;arial,&nbsp;sans-serif&quot;&gt;1)&nbsp;Open&nbsp;datasets&nbsp;that&nbsp;occupy&nbsp;slightly&nbsp;less&nbsp;than&nbsp;the&nbsp;max&nbsp;memory&nbsp;allocated&nbsp;to&nbsp;your&nbsp;Fiji&lt;/font&gt;&lt;/div&gt;<br>
+<br>
+&lt;div&gt;&lt;font&nbsp;face=&quot;arial,&nbsp;sans-serif&quot;&gt;2)&nbsp;Close&nbsp;these&nbsp;datasets&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&nbsp;face=&quot;arial,&nbsp;sans-serif&quot;&gt;3)&nbsp;Try&nbsp;opening&nbsp;more&nbsp;datasets&nbsp;(of&nbsp;a&nbsp;size&nbsp;such&nbsp;that,&nbsp;if&nbsp;the&nbsp;original&nbsp;datasets&nbsp;not&nbsp;released,&nbsp;the&nbsp;total&nbsp;memory&nbsp;used&nbsp;would&nbsp;exceed&nbsp;the&nbsp;max&nbsp;allocation)&lt;/font&gt;&lt;/div&gt;<br>
+<br>
+&lt;div&gt;&lt;font&nbsp;face=&quot;arial,&nbsp;sans-serif&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&nbsp;face=&quot;arial,&nbsp;sans-serif&quot;&gt;If&nbsp;you&nbsp;see&nbsp;OutOfMemory&nbsp;errors&nbsp;then&nbsp;there&nbsp;could&nbsp;quite&nbsp;possibly&nbsp;be&nbsp;a&nbsp;leak.&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&nbsp;face=&quot;arial,&nbsp;sans-serif&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;<br>
+<br>
+&lt;div&gt;&lt;font&nbsp;face=&quot;arial,&nbsp;sans-serif&quot;&gt;Note&nbsp;also&nbsp;that&nbsp;we&nbsp;have&nbsp;unit&nbsp;tests&nbsp;in&nbsp;place&nbsp;designed&nbsp;to&nbsp;catch&nbsp;these&nbsp;leaks: &lt;a&nbsp;href=&quot;https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java&quot;&gt;https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java&lt;/a&gt;.&nbsp;An&nbsp;excellent&nbsp;way&nbsp;to&nbsp;demonstrate&nbsp;the&nbsp;memory&nbsp;error&nbsp;would&nbsp;be&nbsp;to&nbsp;come&nbsp;up&nbsp;with&nbsp;another&nbsp;test&nbsp;in&nbsp;this&nbsp;class&nbsp;that&nbsp;fails.&lt;/font&gt;&lt;/div&gt;<br>
+<br>
+&lt;div&gt;&lt;font&nbsp;face=&quot;arial,&nbsp;sans-serif&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&nbsp;face=&quot;arial,&nbsp;sans-serif&quot;&gt;Thanks,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&nbsp;face=&quot;arial,&nbsp;sans-serif&quot;&gt;Mark&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;<br>
+<br>
+On&nbsp;Sat,&nbsp;Jul&nbsp;12,&nbsp;2014&nbsp;at&nbsp;1:54&nbsp;PM,&nbsp;Burkhard&nbsp;Höckendorf&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:burkhard.hoeckendorf@web.de&quot;&nbsp;target=&quot;_blank&quot;&gt;burkhard.hoeckendorf@web.de&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;<br>
+<br>
+Dear&nbsp;List,&lt;br&gt;<br>
+&lt;br&gt;<br>
+First&nbsp;of&nbsp;all&nbsp;thanks&nbsp;for&nbsp;developing&nbsp;scifio&nbsp;and&nbsp;doing&nbsp;that&nbsp;open&nbsp;source.&nbsp;I&nbsp;have&nbsp;started&nbsp;to&nbsp;use&nbsp;it&nbsp;with&nbsp;ImageJ,&nbsp;since&nbsp;Fiji&nbsp;now&nbsp;offers&nbsp;the&nbsp;option&nbsp;to&nbsp;use&nbsp;it.&nbsp;Having&nbsp;said&nbsp;that,&nbsp;I&nbsp;may&nbsp;also&nbsp;have&nbsp;stumbled&nbsp;upon&nbsp;an&nbsp;issue.&nbsp;I&#39;m&nbsp;unsure&nbsp;when&nbsp;(or&nbsp;whether)&nbsp;scifio&nbsp;releases&nbsp;the&nbsp;corresponding&nbsp;memory&nbsp;after&nbsp;images&nbsp;are&nbsp;closed.&nbsp;To&nbsp;look&nbsp;at&nbsp;this&nbsp;in&nbsp;a&nbsp;somewhat&nbsp;systematic&nbsp;way,&nbsp;I&nbsp;ran&nbsp;a&nbsp;macro&nbsp;(see&nbsp;below)&nbsp;to&nbsp;repeatedly&nbsp;open&nbsp;and&nbsp;close&nbsp;a&nbsp;3GB&nbsp;single&nbsp;file&nbsp;uncompressed&nbsp;TIFF&nbsp;stack&nbsp;(2048x2048x367x16bits)&nbsp;and&nbsp;record&nbsp;some&nbsp;performance&nbsp;stats&nbsp;along&nbsp;the&nbsp;way.&nbsp;I&nbsp;ran&nbsp;this&nbsp;using&nbsp;a&nbsp;new&nbsp;download&nbsp;of&nbsp;Fiji.&lt;br&gt;<br>
+<br>
+<br>
+&lt;br&gt;<br>
+Here&nbsp;are&nbsp;the&nbsp;results&nbsp;with&nbsp;scifio&nbsp;disabled:&lt;br&gt;<br>
+ &nbsp; &nbsp; 11450&nbsp;ms&nbsp;to&nbsp;open&nbsp;files&lt;br&gt;<br>
+ &nbsp;28578184&nbsp;mem&nbsp;before&nbsp;opening&nbsp;files&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;tel:9282667288&quot;&nbsp;value=&quot;+19282667288&quot;&nbsp;target=&quot;_blank&quot;&gt;9282667288&lt;/a&gt; mem&nbsp;after&nbsp;opening&nbsp;files&lt;br&gt;<br>
+9272732560&nbsp;mem&nbsp;after&nbsp;opening&nbsp;files&nbsp;&amp;&nbsp;GC&lt;br&gt;<br>
+9272780080&nbsp;mem&nbsp;after&nbsp;closing&nbsp;files&lt;br&gt;<br>
+ &nbsp;24220936&nbsp;mem&nbsp;after&nbsp;closing&nbsp;files&nbsp;&amp;&nbsp;GC&lt;br&gt;<br>
+&lt;br&gt;<br>
+And&nbsp;here&nbsp;with&nbsp;scifio&nbsp;enabled:&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp;43715&nbsp;ms&nbsp;to&nbsp;open&nbsp;files&lt;br&gt;<br>
+ &nbsp; 26765224&nbsp;mem&nbsp;before&nbsp;opening&nbsp;files&lt;br&gt;<br>
+10517954400&nbsp;mem&nbsp;after&nbsp;opening&nbsp;files&lt;br&gt;<br>
+ 9327459480&nbsp;mem&nbsp;after&nbsp;opening&nbsp;files&nbsp;&amp;&nbsp;GC&lt;br&gt;<br>
+ 9327506440&nbsp;mem&nbsp;after&nbsp;closing&nbsp;files&lt;br&gt;<br>
+ &lt;a&nbsp;href=&quot;tel:9314822896&quot;&nbsp;value=&quot;+19314822896&quot;&nbsp;target=&quot;_blank&quot;&gt;9314822896&lt;/a&gt;&nbsp;mem&nbsp;after&nbsp;closing&nbsp;files&nbsp;&amp;&nbsp;GC&lt;br&gt;<br>
+&lt;br&gt;<br>
+I&nbsp;have&nbsp;also&nbsp;checked,&nbsp;whether&nbsp;memory&nbsp;is&nbsp;freed&nbsp;a&nbsp;couple&nbsp;of&nbsp;minutes&nbsp;after&nbsp;closing&nbsp;the&nbsp;images,&nbsp;which&nbsp;does&nbsp;not&nbsp;appear&nbsp;to&nbsp;be&nbsp;the&nbsp;case.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Note&nbsp;that&nbsp;scifio&nbsp;is&nbsp;also&nbsp;somewhat&nbsp;slower,&nbsp;although&nbsp;I&#39;m&nbsp;a&nbsp;bit&nbsp;hesitant&nbsp;to&nbsp;bring&nbsp;this&nbsp;up,&nbsp;because&nbsp;it&nbsp;is&nbsp;still&nbsp;relatively&nbsp;young&nbsp;and&nbsp;I&nbsp;can&nbsp;see&nbsp;a&nbsp;few&nbsp;&quot;improve&nbsp;...&nbsp;performance&quot;&nbsp;tickets&nbsp;in&nbsp;the&nbsp;issue&nbsp;tracker.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Below&nbsp;is&nbsp;the&nbsp;macro.&lt;br&gt;<br>
+Kind&nbsp;regards,&lt;br&gt;<br>
+Burkhard&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+nOpenTimes&nbsp;=&nbsp;3;&lt;br&gt;<br>
+file&nbsp;=&nbsp;&quot;/path/to/stack&quot;;&lt;br&gt;<br>
+&lt;br&gt;<br>
+run(&quot;Collect&nbsp;Garbage&quot;);&lt;br&gt;<br>
+memBefore&nbsp;=&nbsp;IJ.currentMemory();&lt;br&gt;<br>
+&lt;br&gt;<br>
+msToOpen&nbsp;=&nbsp;getTime();&lt;br&gt;<br>
+for&nbsp;(i=0;&nbsp;i&lt;nOpenTimes;&nbsp;i+=1)&nbsp;{&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;open(file);&lt;br&gt;<br>
+}&lt;br&gt;<br>
+msToOpen&nbsp;=&nbsp;getTime()&nbsp;-&nbsp;msToOpen;&lt;br&gt;<br>
+&lt;br&gt;<br>
+memFilesOpen&nbsp;=&nbsp;IJ.currentMemory();&lt;br&gt;<br>
+run(&quot;Collect&nbsp;Garbage&quot;);&lt;br&gt;<br>
+memFilesOpenGC&nbsp;=&nbsp;IJ.currentMemory();&lt;br&gt;<br>
+&lt;br&gt;<br>
+for&nbsp;(i=0;&nbsp;i&lt;nOpenTimes;&nbsp;i+=1)&nbsp;{&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;close();&lt;br&gt;<br>
+}&lt;br&gt;<br>
+memFilesClosed&nbsp;=&nbsp;IJ.currentMemory();&lt;br&gt;<br>
+run(&quot;Collect&nbsp;Garbage&quot;);&lt;br&gt;<br>
+memFilesClosedGC&nbsp;=&nbsp;IJ.currentMemory();&lt;br&gt;<br>
+&lt;br&gt;<br>
+print(&quot;&quot;+&nbsp;msToOpen&nbsp;+&nbsp;&quot;&nbsp;ms&nbsp;to&nbsp;open&nbsp;files&quot;);&lt;br&gt;<br>
+print(&quot;&quot;+&nbsp;memBefore&nbsp;+&nbsp;&quot;&nbsp;mem&nbsp;before&nbsp;opening&nbsp;files&quot;);&lt;br&gt;<br>
+print(&quot;&quot;+&nbsp;memFilesOpen&nbsp;+&nbsp;&quot;&nbsp;mem&nbsp;after&nbsp;opening&nbsp;files&quot;);&lt;br&gt;<br>
+print(&quot;&quot;+&nbsp;memFilesOpenGC&nbsp;+&nbsp;&quot;&nbsp;mem&nbsp;after&nbsp;opening&nbsp;files&nbsp;&amp;&nbsp;GC&quot;);&lt;br&gt;<br>
+print(&quot;&quot;+&nbsp;memFilesClosed&nbsp;+&nbsp;&quot;&nbsp;mem&nbsp;after&nbsp;closing&nbsp;files&quot;);&lt;br&gt;<br>
+print(&quot;&quot;+&nbsp;memFilesClosedGC&nbsp;+&nbsp;&quot;&nbsp;mem&nbsp;after&nbsp;closing&nbsp;files&nbsp;&amp;&nbsp;GC&quot;);&lt;br&gt;<br>
+&lt;br&gt;<br>
+______________________________&lt;u&gt;&lt;/u&gt;_________________&lt;br&gt;<br>
+SCIFIO&nbsp;mailing&nbsp;list&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;mailto:SCIFIO@scif.io&quot;&nbsp;target=&quot;_blank&quot;&gt;SCIFIO@scif.io&lt;/a&gt;&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;http://scif.io/mailman/listinfo/scifio&quot;&nbsp;target=&quot;_blank&quot;&gt;http://scif.io/mailman/&lt;u&gt;&lt;/u&gt;listinfo/scifio&lt;/a&gt;&lt;br&gt;<br>
+&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+
+</tt>

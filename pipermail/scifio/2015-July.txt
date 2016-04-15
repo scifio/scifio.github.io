@@ -1,0 +1,1123 @@
+From michael.meuli at gmail.com  Wed Jul 15 09:52:39 2015
+From: michael.meuli at gmail.com (Michael Meuli)
+Date: Wed, 15 Jul 2015 16:52:39 +0200
+Subject: [SCIFIO] spacing lost
+Message-ID: <CAKSZWGy4BmU0GfMGWC407Ny9xf2jGwjK2KSD+pjt+QPHb0Ed+Q@mail.gmail.com>
+
+Hi,
+
+I have a .tif image with z-stacks of three channels (cropped version
+attached).
+
+With Fiji I can see that the spacing is set correctly:
+Voxel size: 0.0616x0.0616x0.1998 micron^3
+
+If I do:
+./SCIFIOTestDriver itkSCIFIOImageIOTest /home/mmeuli/Bioimage/ITK/1-1.tif
+/home/mmeuli/Bioimage/ITK/test.ome.tiff -w -a -d 5
+
+The spacing in test.ome.tiff is lost:
+Voxel size: 1x1x1 cm^3
+
+If I set the spacing with itk::ChangeInformationImageFilter the spacing is
+nicely set in itk but not written correctly to .ome.tiff or .tiff ...
+I've compiled ITK on 29th June with an up to date master-branch.
+
+No validation errors found:
+mmeuli at mmeuli:~/Bioimage/Bio-Formats 5.1.2/bftools$ ./tiffcomment
+../test.ome.tiff | ./xmlvalid
+Parsing schema path
+http://www.openmicroscopy.org/Schemas/OME/2013-06/ome.xsd
+Validating <stdin>
+No validation errors found.
+
+
+Best regards
+Michael
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150715/2fb4eb1c/attachment-0001.html>
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: 1-1.tif
+Type: image/tiff
+Size: 1260038 bytes
+Desc: not available
+URL: <http://scif.io/pipermail/scifio/attachments/20150715/2fb4eb1c/attachment-0001.tif>
+
+From ctrueden at wisc.edu  Tue Jul 21 16:08:10 2015
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Tue, 21 Jul 2015 16:08:10 -0500
+Subject: [SCIFIO] Your visit and Bioformats
+In-Reply-To: <2C5B2FA0626E8646BBC99CF97BBDEABA0ECCCBF3@BRNO852M.w2k.feico.com>
+References: <06BBB464458A5542825FFDB0C559DCE101E2EBBAF3@hlexc07.w2k.feico.com>
+	<87D76E225D2FE44BAE44AA4615206E7F17C108E0@BRNO852M.w2k.feico.com>
+	<2C5B2FA0626E8646BBC99CF97BBDEABA0ECCCBF3@BRNO852M.w2k.feico.com>
+Message-ID: <CADN69ykq9yHXKyfkV=oxbFG+mEap+xMWkJpZE1OSDPWOizFyxg@mail.gmail.com>
+
+Hi Teddy & Christian,
+
+Teddy Voinson wrote:
+> I am currently working on interfacing Amira with SCIFIO using the ITK4
+> bridge that you mentioned
+
+Very glad to hear it is useful!
+
+I mentioned the ITK bridge as an example of how to interface Bio-Formats
+and/or SCIFIO with native C++ code. But I did not intend to imply that it
+would meet your use case "out of the box." It uses pipes and is
+surprisingly fast, and the code is not too complex, so it serves as a nice
+example of how to integrate Java with non-Java using pipes.
+
+You have a few different options here for how to improve the code to suit
+your needs:
+
+1) Fork scifio-itk-bridge and scifio-imageio, then hack them to match your
+use case.
+
+2) Generalize scifio-itk-bridge so that the C++ side has more control over
+the "info" command [1]. This could be as simple as adding a new command
+e.g. "info-verbose" that includes more metadata fields. It would do no harm
+to add this to the Java side, even if ITK doesn't use it, if it makes the
+Java library usable for you without further modifications.
+
+If you opt for option 2, you are warmly welcome to submit a PR on GitHub
+[2] containing the changes you need. And if you require technical
+assistance with any details, we are happy to help.
+
+Christian Wietholt wrote:
+> We were wondering if you know of any trick that could give us access
+> to all the header information through the ITK bridge, e.g. a pointer
+> to the headers of all TIFF files in a data set. Do you think that the
+> ITK bridge is capable of this, or do you have a different suggestion?
+
+Adding support for delivering that information across the pipe would be
+very easy on the Java side, since Bio-Formats certainly knows which TIFF
+files belong to the dataset.
+
+However, the next issue then becomes how you are consuming that information
+the C++ side. It sounds like your software is actually using ITK. Simplest
+then might be to simply add more key/value pairs to the dictionary which is
+passed across the pipe and stored in the ITK image [3]. If we do that, then
+you would require zero changes on the C++ side?only additions on the Java
+side as discussed above. And then your own C++ code would extract the
+values of interest from the ITK object's dictionary.
+
+But if you are only using ITK because that's what scifio-imageio provides,
+you may want to consider crafting your own C++ "client" which communicates
+with the scifio-itk-bridge "server" in its own way, for maximum flexibility.
+
+I have CCed the SCIFIO mailing list, which includes Mark Hiner, the primary
+author and maintainer of the SCIFIO ITK bridge components. Perhaps he will
+have additional thoughts and suggestions that I missed.
+
+Regards,
+Curtis
+
+[1]
+https://github.com/scifio/scifio-itk-bridge/blob/3d47613686be450d4a672992fb499793cf4d480e/src/main/java/io/scif/itk/SCIFIOITKBridge.java#L250-L379
+
+[2] http://imagej.net/GitHub
+
+[3]
+https://github.com/scifio/scifio-imageio/blob/9346dbbf30b64645ebd9546fbf82f5438dc88a48/src/itkSCIFIOImageIO.cxx.in#L752-L754
+
+
+On Tue, Jul 21, 2015 at 2:59 PM, Wietholt, Christian <
+Christian.Wietholt at fei.com> wrote:
+
+> The main problem right now is the header information of OME TIFF files
+> that is stored in:
+>
+>
+>
+> <OME:TiffData IFD="0" FirstZ="0" FirstT="0" FirstC="0" />
+>
+>
+>
+> This information does not seem to be transmitted through the bridge using
+> the ?ReadImageInformation? function, and we are relying solely on the file
+> names to sort the order of slices, channels and time steps. I think this is
+> okay at the moment for the z information, but can certainly cause issues
+> when using 4D or 5D images and a none standard file naming scheme. Thus, we
+> would prefer access to the above header information. In addition, we
+> typically try to import all relevant header information into Amira and try
+> to add as much information to the data object in Amira as possible. We
+> typically do this in form of parameter bundles that are stored in the
+> header of the Amira Mesh file. This will give access to all information
+> about the file to Amira users.
+>
+>
+>
+> Teddy and Nicolas mentioned to me that the 8 or 9 functions in the ITK
+> bridge only provide access to the information that Teddy listed in his
+> email. We were wondering if you know of any trick that could give us access
+> to all the header information through the ITK bridge, e.g. a pointer to the
+> headers of all TIFF files in a data set. Do you think that the ITK bridge
+> is capable of this, or do you have a different suggestion?
+>
+>
+>
+> I would greatly appreciate your input on this.
+>
+>
+>
+> Many Thanks,
+>
+>
+>
+> Christian
+>
+>
+>
+>
+>
+>
+>
+> *Christian Wietholt, Ph.D. *| Product Manager, Life Sciences
+>
+> *FEI **Visualization Sciences Group*
+>
+> 16700 Park Row Dr.      Houston, Texas 77084      USA
+>
+> *T* +1 630 687 0215 *fei.com <http://fei.com/>*
+>
+> *Explore. Discover. Resolve.*
+>
+
+On Mon, Jul 20, 2015 at 12:21 PM, Voinson, Teddy <Teddy.Voinson at fei.com>
+wrote:
+
+>  Hi,
+>
+>
+>
+> I am one of the developer of Amira and I am following Christian message to
+> let you know that I am currently working on interfacing Amira with SCIFIO
+> using the ITK4 bridge that you mentioned when you visited us.
+>
+> I am using the itk 4.7.2 bridge in order to read OME-TIFF file format and
+> I am probably doing something wrong.
+>
+> You can probably help me.
+>
+>
+>
+> Currently, using the ITK bridge, I can get some file information with the
+> SCIFIOImageIO::ReadImageInformation().
+>
+> I join an example image to this message.
+>
+> On the example image, I get only:
+>
+> Interleaved
+>
+> 0
+>
+> LittleEndian
+>
+> 1
+>
+> PixelType
+>
+> 3
+>
+> SizeX
+>
+> 1344
+>
+> SizeY
+>
+> 1024
+>
+> SizeZ
+>
+> 1
+>
+> SizeT
+>
+> 1
+>
+> SizeC
+>
+> 1
+>
+> RGBChannelCount
+>
+> 1
+>
+> PixelsPhysicalSizeX
+>
+> 1.027921E-4
+>
+> PixelsPhysicalSizeY
+>
+> 1.027921E-4
+>
+> PixelsPhysicalSizeZ
+>
+> 1.244898E-4
+>
+> PixelsPhysicalSizeT
+>
+> 1.0
+>
+> PixelsPhysicalSizeC
+>
+> 1.0
+>
+> UseLUT
+>
+> False
+>
+> Which is clearly not the complete header of the file (which is also
+> attached to the email).
+>
+>
+>
+> Do you have any clue on how to get the other information of the header?
+>
+> Thanks in advance,
+>
+>
+>
+> Teddy
+>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150721/9e0c1088/attachment.html>
+
+From ctrueden at wisc.edu  Wed Jul 22 15:27:36 2015
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Wed, 22 Jul 2015 15:27:36 -0500
+Subject: [SCIFIO] Your visit and Bioformats
+In-Reply-To: <06BBB464458A5542825FFDB0C559DCE101E2F00739@hlexc07.w2k.feico.com>
+References: <06BBB464458A5542825FFDB0C559DCE101E2EBBAF3@hlexc07.w2k.feico.com>
+	<87D76E225D2FE44BAE44AA4615206E7F17C108E0@BRNO852M.w2k.feico.com>
+	<2C5B2FA0626E8646BBC99CF97BBDEABA0ECCCBF3@BRNO852M.w2k.feico.com>
+	<CADN69ykq9yHXKyfkV=oxbFG+mEap+xMWkJpZE1OSDPWOizFyxg@mail.gmail.com>
+	<06BBB464458A5542825FFDB0C559DCE101E2F00739@hlexc07.w2k.feico.com>
+Message-ID: <CADN69y=tXr8aTjGiPYDFsViDsPBzuFNC0LThZLnH+Yt-9eQrMg@mail.gmail.com>
+
+Hi Christian,
+
+> We will discuss this in the team hopefully this week and decide on the
+> best option for us soon.
+
+Just for completeness, the other most common integration options are:
+
+1) Native Bio-Formats C++ library.
+https://www.openmicroscopy.org/site/support/bio-formats5.1/developers/cpp/overview.html
+This can read and write OME-TIFF, but is complex to build.
+
+2) Bio-Formats C++ bindings.
+http://www.openmicroscopy.org/site/support/bio-formats5.0/developers/c-bindings.html
+This wraps the Java code with a C++ library exposing the entire Java API as
+C++.
+This would require you to ship a JVM (or ask user to install one).
+It may also no longer be supported with BF5.1+; I am not sure.
+
+If you opt to go for either of the above options over the ITK bindings,
+then the best place to write for help is the ome-devel list, since those
+tools are maintained by the OME team.
+
+See also:
+http://loci.wisc.edu/software/interfacing-non-java-code
+
+Regards,
+Curtis
+
+
+On Wed, Jul 22, 2015 at 1:29 PM, Wietholt, Christian <
+Christian.Wietholt at fei.com> wrote:
+
+>  Hi Curtis,
+>
+>
+>
+> Thank you very much for your very detailed answer, I really appreciate the
+> support. We will discuss this in the team hopefully this week and decide on
+> the best option for us soon.
+>
+>
+>
+> Best Regards,
+>
+>
+>
+> Christian
+>
+>
+>
+> *Christian Wietholt, Ph.D. *| Product Manager, Life Sciences
+>
+> *FEI **Visualization Sciences Group*
+>
+> 16700 Park Row Dr.      Houston, Texas 77084      USA
+>
+> *T* +1 630 687 0215 *fei.com <http://fei.com>*
+>
+> *Explore. Discover. Resolve.*
+>
+>
+>
+> *From:* ctrueden.wisc at gmail.com [mailto:ctrueden.wisc at gmail.com] *On
+> Behalf Of *Curtis Rueden
+> *Sent:* Tuesday, July 21, 2015 16:08
+> *To:* Voinson, Teddy; Wietholt, Christian
+> *Cc:* Combaret, Nicolas; SCIFIO
+> *Subject:* Re: Your visit and Bioformats
+>
+>
+>
+> Hi Teddy & Christian,
+>
+>
+>
+> Teddy Voinson wrote:
+>
+> > I am currently working on interfacing Amira with SCIFIO using the ITK4
+>
+> > bridge that you mentioned
+>
+>
+>
+> Very glad to hear it is useful!
+>
+>
+>
+> I mentioned the ITK bridge as an example of how to interface Bio-Formats
+> and/or SCIFIO with native C++ code. But I did not intend to imply that it
+> would meet your use case "out of the box." It uses pipes and is
+> surprisingly fast, and the code is not too complex, so it serves as a nice
+> example of how to integrate Java with non-Java using pipes.
+>
+>
+>
+> You have a few different options here for how to improve the code to suit
+> your needs:
+>
+>
+>
+> 1) Fork scifio-itk-bridge and scifio-imageio, then hack them to match your
+> use case.
+>
+>
+>
+> 2) Generalize scifio-itk-bridge so that the C++ side has more control over
+> the "info" command [1]. This could be as simple as adding a new command
+> e.g. "info-verbose" that includes more metadata fields. It would do no harm
+> to add this to the Java side, even if ITK doesn't use it, if it makes the
+> Java library usable for you without further modifications.
+>
+>
+>
+> If you opt for option 2, you are warmly welcome to submit a PR on GitHub
+> [2] containing the changes you need. And if you require technical
+> assistance with any details, we are happy to help.
+>
+>
+>
+> Christian Wietholt wrote:
+>
+> > We were wondering if you know of any trick that could give us access
+>
+> > to all the header information through the ITK bridge, e.g. a pointer
+>
+> > to the headers of all TIFF files in a data set. Do you think that the
+>
+> > ITK bridge is capable of this, or do you have a different suggestion?
+>
+>
+>
+> Adding support for delivering that information across the pipe would be
+> very easy on the Java side, since Bio-Formats certainly knows which TIFF
+> files belong to the dataset.
+>
+>
+>
+> However, the next issue then becomes how you are consuming that
+> information the C++ side. It sounds like your software is actually using
+> ITK. Simplest then might be to simply add more key/value pairs to the
+> dictionary which is passed across the pipe and stored in the ITK image [3].
+> If we do that, then you would require zero changes on the C++ side?only
+> additions on the Java side as discussed above. And then your own C++ code
+> would extract the values of interest from the ITK object's dictionary.
+>
+>
+>
+> But if you are only using ITK because that's what scifio-imageio provides,
+> you may want to consider crafting your own C++ "client" which communicates
+> with the scifio-itk-bridge "server" in its own way, for maximum flexibility.
+>
+>
+>
+> I have CCed the SCIFIO mailing list, which includes Mark Hiner, the
+> primary author and maintainer of the SCIFIO ITK bridge components. Perhaps
+> he will have additional thoughts and suggestions that I missed.
+>
+>
+>
+> Regards,
+>
+> Curtis
+>
+>
+>
+> [1]
+> https://github.com/scifio/scifio-itk-bridge/blob/3d47613686be450d4a672992fb499793cf4d480e/src/main/java/io/scif/itk/SCIFIOITKBridge.java#L250-L379
+>
+>
+>
+> [2] http://imagej.net/GitHub
+>
+>
+>
+> [3]
+> https://github.com/scifio/scifio-imageio/blob/9346dbbf30b64645ebd9546fbf82f5438dc88a48/src/itkSCIFIOImageIO.cxx.in#L752-L754
+>
+>
+>
+> On Tue, Jul 21, 2015 at 2:59 PM, Wietholt, Christian <
+> Christian.Wietholt at fei.com> wrote:
+>
+> The main problem right now is the header information of OME TIFF files
+> that is stored in:
+>
+>
+>
+> <OME:TiffData IFD="0" FirstZ="0" FirstT="0" FirstC="0" />
+>
+>
+>
+> This information does not seem to be transmitted through the bridge using
+> the ?ReadImageInformation? function, and we are relying solely on the file
+> names to sort the order of slices, channels and time steps. I think this is
+> okay at the moment for the z information, but can certainly cause issues
+> when using 4D or 5D images and a none standard file naming scheme. Thus, we
+> would prefer access to the above header information. In addition, we
+> typically try to import all relevant header information into Amira and try
+> to add as much information to the data object in Amira as possible. We
+> typically do this in form of parameter bundles that are stored in the
+> header of the Amira Mesh file. This will give access to all information
+> about the file to Amira users.
+>
+>
+>
+> Teddy and Nicolas mentioned to me that the 8 or 9 functions in the ITK
+> bridge only provide access to the information that Teddy listed in his
+> email. We were wondering if you know of any trick that could give us access
+> to all the header information through the ITK bridge, e.g. a pointer to the
+> headers of all TIFF files in a data set. Do you think that the ITK bridge
+> is capable of this, or do you have a different suggestion?
+>
+>
+>
+> I would greatly appreciate your input on this.
+>
+>
+>
+> Many Thanks,
+>
+>
+>
+> Christian
+>
+>
+>
+>
+>
+>
+>
+> *Christian Wietholt, Ph.D. *| Product Manager, Life Sciences
+>
+> *FEI Visualization Sciences Group*
+>
+> 16700 Park Row Dr.      Houston, Texas 77084      USA
+>
+> *T *+1 630 687 0215 *fei.com <http://fei.com/>*
+>
+> *Explore. Discover. Resolve.*
+>
+>
+>
+> On Mon, Jul 20, 2015 at 12:21 PM, Voinson, Teddy <Teddy.Voinson at fei.com>
+> wrote:
+>
+> Hi,
+>
+>
+>
+> I am one of the developer of Amira and I am following Christian message to
+> let you know that I am currently working on interfacing Amira with SCIFIO
+> using the ITK4 bridge that you mentioned when you visited us.
+>
+> I am using the itk 4.7.2 bridge in order to read OME-TIFF file format and
+> I am probably doing something wrong.
+>
+> You can probably help me.
+>
+>
+>
+> Currently, using the ITK bridge, I can get some file information with the
+> SCIFIOImageIO::ReadImageInformation().
+>
+> I join an example image to this message.
+>
+> On the example image, I get only:
+>
+> Interleaved
+>
+> 0
+>
+> LittleEndian
+>
+> 1
+>
+> PixelType
+>
+> 3
+>
+> SizeX
+>
+> 1344
+>
+> SizeY
+>
+> 1024
+>
+> SizeZ
+>
+> 1
+>
+> SizeT
+>
+> 1
+>
+> SizeC
+>
+> 1
+>
+> RGBChannelCount
+>
+> 1
+>
+> PixelsPhysicalSizeX
+>
+> 1.027921E-4
+>
+> PixelsPhysicalSizeY
+>
+> 1.027921E-4
+>
+> PixelsPhysicalSizeZ
+>
+> 1.244898E-4
+>
+> PixelsPhysicalSizeT
+>
+> 1.0
+>
+> PixelsPhysicalSizeC
+>
+> 1.0
+>
+> UseLUT
+>
+> False
+>
+> Which is clearly not the complete header of the file (which is also
+> attached to the email).
+>
+>
+>
+> Do you have any clue on how to get the other information of the header?
+>
+> Thanks in advance,
+>
+>
+>
+> Teddy
+>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150722/17c7a979/attachment-0001.html>
+
+From Christian.Wietholt at fei.com  Wed Jul 22 13:29:25 2015
+From: Christian.Wietholt at fei.com (Wietholt, Christian)
+Date: Wed, 22 Jul 2015 18:29:25 +0000
+Subject: [SCIFIO] Your visit and Bioformats
+In-Reply-To: <CADN69ykq9yHXKyfkV=oxbFG+mEap+xMWkJpZE1OSDPWOizFyxg@mail.gmail.com>
+References: <06BBB464458A5542825FFDB0C559DCE101E2EBBAF3@hlexc07.w2k.feico.com>
+	<87D76E225D2FE44BAE44AA4615206E7F17C108E0@BRNO852M.w2k.feico.com>
+	<2C5B2FA0626E8646BBC99CF97BBDEABA0ECCCBF3@BRNO852M.w2k.feico.com>
+	<CADN69ykq9yHXKyfkV=oxbFG+mEap+xMWkJpZE1OSDPWOizFyxg@mail.gmail.com>
+Message-ID: <06BBB464458A5542825FFDB0C559DCE101E2F00739@hlexc07.w2k.feico.com>
+
+Hi Curtis,
+
+Thank you very much for your very detailed answer, I really appreciate the support. We will discuss this in the team hopefully this week and decide on the best option for us soon.
+
+Best Regards,
+
+Christian
+
+Christian Wietholt, Ph.D. | Product Manager, Life Sciences
+FEI Visualization Sciences Group
+16700 Park Row Dr.      Houston, Texas 77084      USA
+T +1 630 687 0215 fei.com
+Explore. Discover. Resolve.
+
+From: ctrueden.wisc at gmail.com [mailto:ctrueden.wisc at gmail.com] On Behalf Of Curtis Rueden
+Sent: Tuesday, July 21, 2015 16:08
+To: Voinson, Teddy; Wietholt, Christian
+Cc: Combaret, Nicolas; SCIFIO
+Subject: Re: Your visit and Bioformats
+
+Hi Teddy & Christian,
+
+Teddy Voinson wrote:
+> I am currently working on interfacing Amira with SCIFIO using the ITK4
+> bridge that you mentioned
+
+Very glad to hear it is useful!
+
+I mentioned the ITK bridge as an example of how to interface Bio-Formats and/or SCIFIO with native C++ code. But I did not intend to imply that it would meet your use case "out of the box." It uses pipes and is surprisingly fast, and the code is not too complex, so it serves as a nice example of how to integrate Java with non-Java using pipes.
+
+You have a few different options here for how to improve the code to suit your needs:
+
+1) Fork scifio-itk-bridge and scifio-imageio, then hack them to match your use case.
+
+2) Generalize scifio-itk-bridge so that the C++ side has more control over the "info" command [1]. This could be as simple as adding a new command e.g. "info-verbose" that includes more metadata fields. It would do no harm to add this to the Java side, even if ITK doesn't use it, if it makes the Java library usable for you without further modifications.
+
+If you opt for option 2, you are warmly welcome to submit a PR on GitHub [2] containing the changes you need. And if you require technical assistance with any details, we are happy to help.
+
+Christian Wietholt wrote:
+> We were wondering if you know of any trick that could give us access
+> to all the header information through the ITK bridge, e.g. a pointer
+> to the headers of all TIFF files in a data set. Do you think that the
+> ITK bridge is capable of this, or do you have a different suggestion?
+
+Adding support for delivering that information across the pipe would be very easy on the Java side, since Bio-Formats certainly knows which TIFF files belong to the dataset.
+
+However, the next issue then becomes how you are consuming that information the C++ side. It sounds like your software is actually using ITK. Simplest then might be to simply add more key/value pairs to the dictionary which is passed across the pipe and stored in the ITK image [3]. If we do that, then you would require zero changes on the C++ side?only additions on the Java side as discussed above. And then your own C++ code would extract the values of interest from the ITK object's dictionary.
+
+But if you are only using ITK because that's what scifio-imageio provides, you may want to consider crafting your own C++ "client" which communicates with the scifio-itk-bridge "server" in its own way, for maximum flexibility.
+
+I have CCed the SCIFIO mailing list, which includes Mark Hiner, the primary author and maintainer of the SCIFIO ITK bridge components. Perhaps he will have additional thoughts and suggestions that I missed.
+
+Regards,
+Curtis
+
+[1] https://github.com/scifio/scifio-itk-bridge/blob/3d47613686be450d4a672992fb499793cf4d480e/src/main/java/io/scif/itk/SCIFIOITKBridge.java#L250-L379
+
+[2] http://imagej.net/GitHub
+
+[3] https://github.com/scifio/scifio-imageio/blob/9346dbbf30b64645ebd9546fbf82f5438dc88a48/src/itkSCIFIOImageIO.cxx.in#L752-L754
+
+On Tue, Jul 21, 2015 at 2:59 PM, Wietholt, Christian <Christian.Wietholt at fei.com<mailto:Christian.Wietholt at fei.com>> wrote:
+The main problem right now is the header information of OME TIFF files that is stored in:
+
+<OME:TiffData IFD="0" FirstZ="0" FirstT="0" FirstC="0" />
+
+This information does not seem to be transmitted through the bridge using the ?ReadImageInformation? function, and we are relying solely on the file names to sort the order of slices, channels and time steps. I think this is okay at the moment for the z information, but can certainly cause issues when using 4D or 5D images and a none standard file naming scheme. Thus, we would prefer access to the above header information. In addition, we typically try to import all relevant header information into Amira and try to add as much information to the data object in Amira as possible. We typically do this in form of parameter bundles that are stored in the header of the Amira Mesh file. This will give access to all information about the file to Amira users.
+
+Teddy and Nicolas mentioned to me that the 8 or 9 functions in the ITK bridge only provide access to the information that Teddy listed in his email. We were wondering if you know of any trick that could give us access to all the header information through the ITK bridge, e.g. a pointer to the headers of all TIFF files in a data set. Do you think that the ITK bridge is capable of this, or do you have a different suggestion?
+
+I would greatly appreciate your input on this.
+
+Many Thanks,
+
+Christian
+
+
+
+Christian Wietholt, Ph.D. | Product Manager, Life Sciences
+FEI Visualization Sciences Group
+16700 Park Row Dr.      Houston, Texas 77084      USA
+T +1 630 687 0215 fei.com<http://fei.com/>
+Explore. Discover. Resolve.
+
+On Mon, Jul 20, 2015 at 12:21 PM, Voinson, Teddy <Teddy.Voinson at fei.com<mailto:Teddy.Voinson at fei.com>> wrote:
+Hi,
+
+I am one of the developer of Amira and I am following Christian message to let you know that I am currently working on interfacing Amira with SCIFIO using the ITK4 bridge that you mentioned when you visited us.
+I am using the itk 4.7.2 bridge in order to read OME-TIFF file format and I am probably doing something wrong.
+You can probably help me.
+
+Currently, using the ITK bridge, I can get some file information with the SCIFIOImageIO::ReadImageInformation().
+I join an example image to this message.
+On the example image, I get only:
+Interleaved
+0
+LittleEndian
+1
+PixelType
+3
+SizeX
+1344
+SizeY
+1024
+SizeZ
+1
+SizeT
+1
+SizeC
+1
+RGBChannelCount
+1
+PixelsPhysicalSizeX
+1.027921E-4
+PixelsPhysicalSizeY
+1.027921E-4
+PixelsPhysicalSizeZ
+1.244898E-4
+PixelsPhysicalSizeT
+1.0
+PixelsPhysicalSizeC
+1.0
+UseLUT
+False
+Which is clearly not the complete header of the file (which is also attached to the email).
+
+Do you have any clue on how to get the other information of the header?
+Thanks in advance,
+
+Teddy
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150722/bbba8356/attachment-0001.html>
+
+From eliceiri at wisc.edu  Thu Jul 23 14:55:08 2015
+From: eliceiri at wisc.edu (Kevin W Eliceiri)
+Date: Thu, 23 Jul 2015 14:55:08 -0500
+Subject: [SCIFIO] Your visit and Bioformats
+In-Reply-To: <06BBB464458A5542825FFDB0C559DCE101E2F00739@hlexc07.w2k.feico.com>
+References: <06BBB464458A5542825FFDB0C559DCE101E2EBBAF3@hlexc07.w2k.feico.com>
+	<87D76E225D2FE44BAE44AA4615206E7F17C108E0@BRNO852M.w2k.feico.com>
+	<2C5B2FA0626E8646BBC99CF97BBDEABA0ECCCBF3@BRNO852M.w2k.feico.com>
+	<CADN69ykq9yHXKyfkV=oxbFG+mEap+xMWkJpZE1OSDPWOizFyxg@mail.gmail.com>
+	<06BBB464458A5542825FFDB0C559DCE101E2F00739@hlexc07.w2k.feico.com>
+Message-ID: <74b086d2194ce4.55b1004c@wiscmail.wisc.edu>
+
+Great,k
+
+On 07/23/15, "Wietholt, Christian"  wrote:
+> 
+> 
+> 
+> 
+> Hi Curtis, 
+> 
+> 
+> 
+> Thank you very much for your very detailed answer, I really appreciate the support. We will discuss this in the team hopefully this week and decide on the best option for us soon. 
+> 
+> 
+> 
+> Best Regards, 
+> 
+> 
+> 
+> Christian
+> 
+> 
+> 
+> Christian Wietholt, Ph.D. | Product Manager, Life Sciences
+> 
+> FEI Visualization Sciences Group
+> 
+> 16700 Park Row Dr. Houston, Texas 77084 USA
+> 
+> T &#43;1 630 687 0215 fei.com
+> 
+> Explore. Discover. Resolve.
+> 
+> 
+> 
+> From: ctrueden.wisc at gmail.com [mailto:ctrueden.wisc at gmail.com] On Behalf Of Curtis Rueden
+> Sent: Tuesday, July 21, 2015 16:08
+> To: Voinson, Teddy; Wietholt, Christian
+> Cc: Combaret, Nicolas; SCIFIO
+> Subject: Re: Your visit and Bioformats
+> 
+> 
+> 
+> Hi Teddy & Christian,
+> 
+> 
+> 
+> 
+> Teddy Voinson wrote:
+> 
+> 
+> > I am currently working on interfacing Amira with SCIFIO using the ITK4
+> 
+> 
+> > bridge that you mentioned
+> 
+> 
+> 
+> 
+> 
+> 
+> Very glad to hear it is useful!
+> 
+> 
+> 
+> 
+> 
+> I mentioned the ITK bridge as an example of how to interface Bio-Formats and/or SCIFIO with native C&#43;&#43; code. But I did not intend to imply that it would meet your use case "out of the box." It uses pipes and is surprisingly fast, and the code is not too complex, so it serves as a nice example of how to integrate Java with non-Java using pipes.
+> 
+> 
+> 
+> 
+> 
+> You have a few different options here for how to improve the code to suit your needs:
+> 
+> 
+> 
+> 
+> 
+> 1) Fork scifio-itk-bridge and scifio-imageio, then hack them to match your use case.
+> 
+> 
+> 
+> 
+> 
+> 2) Generalize scifio-itk-bridge so that the C&#43;&#43; side has more control over the "info" command [1]. This could be as simple as adding a new command e.g. "info-verbose" that includes more metadata fields. It would do no harm to add this to the Java side, even if ITK doesn't use it, if it makes the Java library usable for you without further modifications.
+> 
+> 
+> 
+> 
+> 
+> If you opt for option 2, you are warmly welcome to submit a PR on GitHub [2] containing the changes you need. And if you require technical assistance with any details, we are happy to help.
+> 
+> 
+> 
+> 
+> 
+> Christian Wietholt wrote:
+> 
+> 
+> > We were wondering if you know of any trick that could give us access
+> 
+> 
+> > to all the header information through the ITK bridge, e.g. a pointer
+> 
+> 
+> > to the headers of all TIFF files in a data set. Do you think that the
+> 
+> 
+> > ITK bridge is capable of this, or do you have a different suggestion?
+> 
+> 
+> 
+> 
+> 
+> 
+> Adding support for delivering that information across the pipe would be very easy on the Java side, since Bio-Formats certainly knows which TIFF files belong to the dataset.
+> 
+> 
+> 
+> 
+> 
+> However, the next issue then becomes how you are consuming that information the C&#43;&#43; side. It sounds like your software is actually using ITK. Simplest then might be to simply add more key/value pairs to the dictionary which is passed across the pipe and stored in the ITK image [3]. If we do that, then you would require zero changes on the C&#43;&#43; side?only additions on the Java side as discussed above. And then your own C&#43;&#43; code would extract the values of interest from the ITK object's dictionary.
+> 
+> 
+> 
+> 
+> 
+> But if you are only using ITK because that's what scifio-imageio provides, you may want to consider crafting your own C&#43;&#43; "client" which communicates with the scifio-itk-bridge "server" in its own way, for maximum flexibility.
+> 
+> 
+> 
+> 
+> 
+> I have CCed the SCIFIO mailing list, which includes Mark Hiner, the primary author and maintainer of the SCIFIO ITK bridge components. Perhaps he will have additional thoughts and suggestions that I missed.
+> 
+> 
+> 
+> 
+> 
+> Regards,
+> 
+> 
+> Curtis
+> 
+> 
+> 
+> 
+> [1] https://github.com/scifio/scifio-itk-bridge/blob/3d47613686be450d4a672992fb499793cf4d480e/src/main/java/io/scif/itk/SCIFIOITKBridge.java#L250-L379
+> 
+> 
+> 
+> 
+> 
+> [2] http://imagej.net/GitHub
+> 
+> 
+> 
+> 
+> 
+> [3] https://github.com/scifio/scifio-imageio/blob/9346dbbf30b64645ebd9546fbf82f5438dc88a48/src/itkSCIFIOImageIO.cxx.in#L752-L754
+> 
+> 
+> 
+> 
+> On Tue, Jul 21, 2015 at 2:59 PM, Wietholt, Christian <Christian.Wietholt at fei.com(javascript:main.compose()> wrote:
+> 
+> The main problem right now is the header information of OME TIFF files that is stored in:
+> 
+> 
+> 
+> <OME:TiffData IFD="0" FirstZ="0" FirstT="0" FirstC="0" />
+> 
+> 
+> 
+> This information does not seem to be transmitted through the bridge using the ?ReadImageInformation? function, and we are relying solely on the file names to sort the order of slices, channels and time steps. I think this is okay at the moment for the z information, but can certainly cause issues when using 4D or 5D images and a none standard file naming scheme. Thus, we would prefer access to the above header information. In addition, we typically try to import all relevant header information into Amira and try to add as much information to the data object in Amira as possible. We typically do this in form of parameter bundles that are stored in the header of the Amira Mesh file. This will give access to all information about the file to Amira users.
+> 
+> 
+> 
+> Teddy and Nicolas mentioned to me that the 8 or 9 functions in the ITK bridge only provide access to the information that Teddy listed in his email. We were wondering if you know of any trick that could give us access to all the header information through the ITK bridge, e.g. a pointer to the headers of all TIFF files in a data set. Do you think that the ITK bridge is capable of this, or do you have a different suggestion?
+> 
+> 
+> 
+> I would greatly appreciate your input on this.
+> 
+> 
+> 
+> Many Thanks,
+> 
+> 
+> 
+> Christian
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> Christian Wietholt, Ph.D. | Product Manager, Life Sciences
+> 
+> FEI Visualization Sciences Group
+> 
+> 16700 Park Row Dr. Houston, Texas 77084 USA
+> 
+> T &#43;1 630 687 0215 fei.com(http://fei.com/)
+> 
+> Explore. Discover. Resolve.
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> On Mon, Jul 20, 2015 at 12:21 PM, Voinson, Teddy <Teddy.Voinson at fei.com(javascript:main.compose()> wrote:
+> 
+> Hi,
+> 
+> 
+> 
+> I am one of the developer of Amira and I am following Christian message to let you know that I am currently working on interfacing Amira with SCIFIO using the ITK4 bridge that you mentioned when you visited us.
+> 
+> I am using the itk 4.7.2 bridge in order to read OME-TIFF file format and I am probably doing something wrong.
+> 
+> You can probably help me.
+> 
+> 
+> 
+> Currently, using the ITK bridge, I can get some file information with the SCIFIOImageIO::ReadImageInformation().
+> 
+> I join an example image to this message.
+> 
+> On the example image, I get only:
+> 
+> Interleaved
+> 
+> 0
+> 
+> LittleEndian
+> 
+> 1
+> 
+> PixelType
+> 
+> 3
+> 
+> SizeX
+> 
+> 1344
+> 
+> SizeY
+> 
+> 1024
+> 
+> SizeZ
+> 
+> 1
+> 
+> SizeT
+> 
+> 1
+> 
+> SizeC
+> 
+> 1
+> 
+> RGBChannelCount
+> 
+> 1
+> 
+> PixelsPhysicalSizeX
+> 
+> 1.027921E-4
+> 
+> PixelsPhysicalSizeY
+> 
+> 1.027921E-4
+> 
+> PixelsPhysicalSizeZ
+> 
+> 1.244898E-4
+> 
+> PixelsPhysicalSizeT
+> 
+> 1.0
+> 
+> PixelsPhysicalSizeC
+> 
+> 1.0
+> 
+> UseLUT
+> 
+> False
+> 
+> Which is clearly not the complete header of the file (which is also attached to the email).
+> 
+> 
+> 
+> Do you have any clue on how to get the other information of the header?
+> 
+> Thanks in advance,
+> 
+> 
+> 
+> Teddy
+
+--
+Kevin W. Eliceiri
+Director,?Laboratory for Optical and Computational Instrumentation (LOCI)
+Departments Cell and Molecular Biology and Biomedical Engineering
+Director Medical Engineering, Morgridge Institute for Research (MIR)
+Room 271 Animal Sciences,?1675 Observatory Drive,?Madison, WI 53706
+Phone: 608-263-6288
+
+

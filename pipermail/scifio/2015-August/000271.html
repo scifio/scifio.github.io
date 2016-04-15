@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Open Micro-Manager dataset in Fiji using SCIFIO
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Open%20Micro-Manager%20dataset%20in%20Fiji%20using%20SCIFIO&In-Reply-To=%3C3E848941-8DF4-43BF-8D8A-8224B09A1877%40normalesup.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000273.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Open Micro-Manager dataset in Fiji using SCIFIO</H1>
+    <B>Thomas Julou</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Open%20Micro-Manager%20dataset%20in%20Fiji%20using%20SCIFIO&In-Reply-To=%3C3E848941-8DF4-43BF-8D8A-8224B09A1877%40normalesup.org%3E"
+       TITLE="[SCIFIO] Open Micro-Manager dataset in Fiji using SCIFIO">thomas.julou at normalesup.org
+       </A><BR>
+    <I>Fri Aug  7 03:34:30 CDT 2015</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000273.html">[SCIFIO] Open Micro-Manager dataset in Fiji using SCIFIO
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#271">[ date ]</a>
+              <a href="thread.html#271">[ thread ]</a>
+              <a href="subject.html#271">[ subject ]</a>
+              <a href="author.html#271">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hello,
+
+In line with earlier posts on ome-users mailing list [1], I&#8217;m trying to find a convenient way to open large Micro-Manager stacks in Fiji (in particular, such stacks are split in several 4.2gb tif files because MM doesn&#8217;t handle bigtiff). My problem so far has been that Bio-formats is parsing all positions in a dataset even when opening a single one. Mark Tsuchida (MM&#8217;s developer) suggested that using SCIFIO might be a workaround [2].
+
+I tried the following:
+- File &gt; Import &gt; SCIFIO
+This raises an exception and open an error dialog&#8230; You might want to fix this, unless it&#8217;s a fiji specific issue&#8230;
+- File &gt; Open after selecting &#8220;Use SCIFIO&#8221; in Options &gt; ImageJ2
+This successfully opens the file but it&#8217;s slower than the File &gt; Import &gt; BioFormats! Moreover it parses metadata for all positions in the dataset (even when they are saved to different files). I can&#8217;t understand this behaviour since there is no way to choose to open all related positions&#8230; In my opinion the appropriate behaviour would be: if the MM dataset is saved with all positions in the same stack (i.e. no &#8220;_Posxx.ome.tif&#8221; in the file name; possibly split in several .tif files) then open each position in a separate window, if the MM dataset is saved with positions in separate files (i.e. &#8220;_Posxx.ome.tif&#8221; found in the file name; again possibly split in several .tif files if a given position is larger than 4.2gb) then **parse only** and open only the selected position&#8230; This would really speed things up for stacks acquired in datasets with many positions (of a few large ones).
+
+I hope that this makes sense and that the issue can be addressed.
+Thanks for your help. Best,
+
+Thomas
+
+[1] <A HREF="http://lists.openmicroscopy.org.uk/pipermail/ome-users/2015-March/005101.html">http://lists.openmicroscopy.org.uk/pipermail/ome-users/2015-March/005101.html</A>
+[2] <A HREF="http://micro-manager.3463995.n2.nabble.com/BigTiff-support-tt7580735.html#a7585743">http://micro-manager.3463995.n2.nabble.com/BigTiff-support-tt7580735.html#a7585743</A>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20150807/a857a5c0/attachment.html">http://scif.io/pipermail/scifio/attachments/20150807/a857a5c0/attachment.html</A>&gt;
+</PRE>
+
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000273.html">[SCIFIO] Open Micro-Manager dataset in Fiji using SCIFIO
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#271">[ date ]</a>
+              <a href="thread.html#271">[ thread ]</a>
+              <a href="subject.html#271">[ subject ]</a>
+              <a href="author.html#271">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Fiji Plugin Almost Finished
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Fiji%20Plugin%20Almost%20Finished&In-Reply-To=%3CCADN69yk7d-9t4zEW0uea%3DL_xWhg%3Dv9_OZj_obdxAARRHexuFqQ%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Fiji Plugin Almost Finished</H1>
+    <B>Curtis Rueden</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Fiji%20Plugin%20Almost%20Finished&In-Reply-To=%3CCADN69yk7d-9t4zEW0uea%3DL_xWhg%3Dv9_OZj_obdxAARRHexuFqQ%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Fiji Plugin Almost Finished">ctrueden at wisc.edu
+       </A><BR>
+    <I>Mon May 12 12:52:12 CDT 2014</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#70">[ date ]</a>
+              <a href="thread.html#70">[ thread ]</a>
+              <a href="subject.html#70">[ subject ]</a>
+              <a href="author.html#70">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Ajeet,
+
+[CCing scifio mailing list, which is the best place to discuss these sorts
+of file format issues.]
+
+&gt;<i> Johannes, I have a tiff image stack of images all of different width and
+</I>&gt;<i> height. When reading with the bioformats importer, it assumes that all
+</I>&gt;<i> images are the same size and sets the width/height for all images to
+</I>&gt;<i> that of the first image. Curtis and I have filed a ticket to correct for
+</I>&gt;<i> this in the future, but is there a way to get the dimensions of an
+</I>&gt;<i> individual image in a tiff stack? (The first image in my stack is
+</I>&gt;<i> 1008x3008, and the last one is supposed to be like 40000x70000. I need
+</I>&gt;<i> the exact dimensions of the last image.)
+</I>
+For others' reference: <A HREF="https://github.com/scifio/scifio/issues/159">https://github.com/scifio/scifio/issues/159</A>
+
+Ajeet: SCIFIO has a low-level TIFF API you can use to do it:
+<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/formats/tiff/TiffParser.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/formats/tiff/TiffParser.java</A>
+<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/formats/tiff/IFD.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/formats/tiff/IFD.java</A>
+
+See in particular IFD#getImageWidth() and IFD#getImageHeight().
+
+Better would be to fix the bug in SCIFIO's TiffFormat, such that it reports
+a different Image per plane size. Want to try your hand at it? Mark and I
+would be happy to answer any technical questions.
+
+-Curtis
+
+
+On Sun, May 11, 2014 at 12:58 PM, Johannes Schindelin
+&lt;<A HREF="http://scif.io/mailman/listinfo/scifio">schindelin at wisc.edu</A>&gt;wrote:
+
+&gt;<i> Hi Ajeet,
+</I>&gt;<i>
+</I>&gt;<i> On Sun, 11 May 2014, Ajeet Vivekanandan wrote:
+</I>&gt;<i>
+</I>&gt;<i> &gt; I finished the Ventana ROI to WiscScan converter (FIJI/ImageJ plugin).
+</I>&gt;<i> &gt; There is only one issue that I would need Johannes's help for, but I'm
+</I>&gt;<i> &gt; ready to test/use this as soon as that's done.
+</I>&gt;<i> &gt;
+</I>&gt;<i> &gt; Johannes, I have a tiff image stack of images all of different width and
+</I>&gt;<i> &gt; height. When reading with the bioformats importer, it assumes that all
+</I>&gt;<i> &gt; images are the same size and sets the width/height for all images to
+</I>&gt;<i> &gt; that of the first image. Curtis and I have filed a ticket to correct for
+</I>&gt;<i> &gt; this in the future, but is there a way to get the dimensions of an
+</I>&gt;<i> &gt; individual image in a tiff stack? (The first image in my stack is
+</I>&gt;<i> &gt; 1008x3008, and the last one is supposed to be like 40000x70000. I need
+</I>&gt;<i> &gt; the exact dimensions of the last image.)
+</I>&gt;<i>
+</I>&gt;<i> If you are talking about an ImageJ 1.x style ImageStack data structure:
+</I>&gt;<i> this data structure can only contain images of identical X/Y dimension.
+</I>&gt;<i> There is simply no way to represent a collection of images with different
+</I>&gt;<i> dimensions as a single ImageStack.
+</I>&gt;<i>
+</I>&gt;<i> Ciao,
+</I>&gt;<i> Johannes
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20140512/76552d68/attachment.html">http://scif.io/pipermail/scifio/attachments/20140512/76552d68/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#70">[ date ]</a>
+              <a href="thread.html#70">[ thread ]</a>
+              <a href="subject.html#70">[ subject ]</a>
+              <a href="author.html#70">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

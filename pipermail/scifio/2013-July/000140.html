@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [ImageJ-devel] Scifion Img Opener some question
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BImageJ-devel%5D%20Scifion%20Img%20Opener%20some%20question&In-Reply-To=%3CCA%2BB%3DmGp-aK3oVC_NxCLO3sJWtYgAT%2B3HAqkcuFBjQwMbd87AYw%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000139.html">
+   <LINK REL="Next"  HREF="000141.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[ImageJ-devel] Scifion Img Opener some question</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BImageJ-devel%5D%20Scifion%20Img%20Opener%20some%20question&In-Reply-To=%3CCA%2BB%3DmGp-aK3oVC_NxCLO3sJWtYgAT%2B3HAqkcuFBjQwMbd87AYw%40mail.gmail.com%3E"
+       TITLE="[ImageJ-devel] Scifion Img Opener some question">hiner at wisc.edu
+       </A><BR>
+    <I>Mon Jul  8 09:22:57 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000139.html">[ImageJ-devel] Scifion Img Opener some question
+</A></li>
+        <LI>Next message: <A HREF="000141.html">SCIFIO Bio-Formats compatibility layer, 1.0.0
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#140">[ date ]</a>
+              <a href="thread.html#140">[ thread ]</a>
+              <a href="subject.html#140">[ subject ]</a>
+              <a href="author.html#140">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Michael,
+
+-  the scifio ImgOpener's openImg method has the parameters Reader, type,
+&gt;<i> factory and options
+</I>&gt;<i>         - What is the relationship between Reader and IFormatReader (we
+</I>&gt;<i> used previously the openImg(IFormatReader ...) method)
+</I>&gt;<i>         - can we retriev the type from a Reader (IFormatReader x;
+</I>&gt;<i> ImgIOUtils.makeType(x.getPixelType())
+</I>&gt;<i>
+</I>
+ An IFormatReader&lt;<A HREF="https://github.com/openmicroscopy/bioformats/blob/develop/components/scifio/src/loci/formats/IFormatReader.java">https://github.com/openmicroscopy/bioformats/blob/develop/components/scifio/src/loci/formats/IFormatReader.java</A>&gt;is
+the loci.formats base reader interface that performs all the metadata
+parsing and pixel reading in Bio-Formats. In SCIFIO, the process is split
+into components such as a
+Parser&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Parser.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Parser.java</A>&gt;or
+Reader&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Reader.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Reader.java</A>&gt;.
+So the io.scif Reader API is a subset of the IFormatReader, specifically
+for opening pixels.
+
+The pixel type (and all other metadata) is now stored in the i
+o.scif.Metadata&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Metadata.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Metadata.java</A>&gt;class,
+which gets attached to the Reader.
+Reader#getMetadata()&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Reader.java#L171">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Reader.java#L171</A>&gt;will
+get the current Metadata object, and
+Metadata#getPixelType(int)&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Metadata.java#L154">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Metadata.java#L154</A>&gt;gets
+the pixel type for a specified image index (the Metadata class is at
+the dataset level; if you have a single image in your dataset, you can just
+get getPixelType(0) ).
+
+Note that the entry point for all these classes is the
+Format&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Format.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Format.java</A>&gt;.
+Also, there is a series of
+tutorials&lt;<A HREF="https://github.com/scifio/scifio/tree/master/tutorials">https://github.com/scifio/scifio/tree/master/tutorials</A>&gt;introducing
+the SCIFIO API, with a specific focus on transitioning from the
+loci.formats API.
+
+- the imglib2.io ImgOpener has some static methods like
+&gt;<i>         - public static AxisType[] getDimTypes(final IFormatReader r)
+</I>&gt;<i>         - public static double[] getCalibration(final IFormatReader r)
+</I>&gt;<i>
+</I>    how can I retriev such data using the scifio ImgOpener?
+&gt;<i>
+</I>
+ The io.scif.Metadata class uses the imglib AxisTypes natively to manage
+dimensions. So if you have an io.scif.Reader, you can get its Metadata (as
+above) and call
+Metadata#getAxes(int)&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Metadata.java#L268">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/Metadata.java#L268</A>&gt;for
+the desired image index within the dataset.
+
+Unfortunately the calibration data is more complicated right now. In the
+loci.formats API, all the calibration information was tracked as physical
+pixel sizes in the MetadataStore. So in the io.scif API, that metadata only
+exists in the OMEMetadata&lt;<A HREF="https://github.com/scifio/bioformats/blob/scifio/components/ome-xml/src/ome/xml/meta/OMEMetadata.java">https://github.com/scifio/bioformats/blob/scifio/components/ome-xml/src/ome/xml/meta/OMEMetadata.java</A>&gt;class,
+which requires our fork of Bio-Formats on the classpath, and then
+requires Translation&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/services/TranslatorService.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/services/TranslatorService.java</A>&gt;.
+Our intention is to make calibration information a fundamental part of the
+axes representation, but I'm not sure if this will be at the ImgLib or
+SCIFIO level.
+
+One way or another, it will eventually be part of the io.scif.Metadata API.
+
+- ImgOptions supports the selection of an interval (thanks for that). But
+&gt;<i> for our implementation we would need a multiple interval selection (e.g.
+</I>&gt;<i> the first 10 frames of a video and the last 10). Is it possible to change
+</I>&gt;<i> the implementation such that ImgOption accepts an array of intervals?
+</I>&gt;<i>
+</I>
+Yes, this is a very good idea and I'm sorry it wasn't available from the
+beginning. I've added an issue to track
+it&lt;<A HREF="https://github.com/scifio/scifio/issues/14">https://github.com/scifio/scifio/issues/14</A>&gt;and will get it into the
+next SCIFIO release.
+
+Thanks for the feedback and let me know if you have any more questions.
+
+- Mark
+
+P.S. there is now a SCIFIO mailing list (<A HREF="http://scif.io/mailman/listinfo/scifio">scifio at scif.io</A>, copied) for
+scifio-specific issues
+
+
+On Fri, Jul 5, 2013 at 5:35 AM, Michael Zinsmaier
+&lt;<A HREF="http://scif.io/mailman/listinfo/scifio">michael.zinsmaier at gmx.de</A>&gt;wrote:
+
+&gt;<i> Hi together, hi Mark,
+</I>&gt;<i>
+</I>&gt;<i> I just started to convert the Knime Image Processing &quot;Image Reader&quot; code
+</I>&gt;<i> to the new implementation of ImgOpener (scifio). However I am a bit stuck
+</I>&gt;<i> could you help me with a few questions regarding the code changes?
+</I>&gt;<i>
+</I>&gt;<i> - the imglib2.io ImgOpener has some static methods like
+</I>&gt;<i>         - public static AxisType[] getDimTypes(final IFormatReader r)
+</I>&gt;<i>         - public static double[] getCalibration(final IFormatReader r)
+</I>&gt;<i>
+</I>&gt;<i>     how can I retriev such data using the scifio ImgOpener?
+</I>&gt;<i>
+</I>&gt;<i> -  the scifio ImgOpener's openImg method has the parameters Reader, type,
+</I>&gt;<i> factory and options
+</I>&gt;<i>         - What is the relationship between Reader and IFormatReader (we
+</I>&gt;<i> used previously the openImg(IFormatReader ...) method)
+</I>&gt;<i>         - can we retriev the type from a Reader (IFormatReader x;
+</I>&gt;<i> ImgIOUtils.makeType(x.**getPixelType())
+</I>&gt;<i>
+</I>&gt;<i> - ImgOptions supports the selection of an interval (thanks for that). But
+</I>&gt;<i> for our implementation we would need a multiple interval selection (e.g.
+</I>&gt;<i> the first 10 frames of a video and the last 10). Is it possible to change
+</I>&gt;<i> the implementation such that ImgOption accepts an array of intervals?
+</I>&gt;<i>
+</I>&gt;<i> Thanks in advance
+</I>&gt;<i> best regards,
+</I>&gt;<i> Michael
+</I>&gt;<i>
+</I>&gt;<i> ______________________________**_________________
+</I>&gt;<i> ImageJ-devel mailing list
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">ImageJ-devel at imagej.net</A>
+</I>&gt;<i> <A HREF="http://imagej.net/mailman/**listinfo/imagej-devel&lt;http://imagej.net/mailman/listinfo/imagej-devel">http://imagej.net/mailman/**listinfo/imagej-devel&lt;http://imagej.net/mailman/listinfo/imagej-devel</A>&gt;
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130708/7b2182cc/attachment-0001.html">http://scif.io/pipermail/scifio/attachments/20130708/7b2182cc/attachment-0001.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000139.html">[ImageJ-devel] Scifion Img Opener some question
+</A></li>
+	<LI>Next message: <A HREF="000141.html">SCIFIO Bio-Formats compatibility layer, 1.0.0
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#140">[ date ]</a>
+              <a href="thread.html#140">[ thread ]</a>
+              <a href="subject.html#140">[ subject ]</a>
+              <a href="author.html#140">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

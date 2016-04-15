@@ -1,0 +1,39 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;Should&nbsp;be&nbsp;fixed&nbsp;on&nbsp;master.&nbsp;Let&nbsp;me&nbsp;know&nbsp;if&nbsp;you&nbsp;run&nbsp;into&nbsp;any&nbsp;more&nbsp;issues&nbsp;reusing&nbsp;readers&nbsp;though.&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Mon,&nbsp;Aug&nbsp;26,&nbsp;2013&nbsp;at&nbsp;8:02&nbsp;AM,&nbsp;Mark&nbsp;Hiner&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:hinerm@gmail.com&quot;&nbsp;target=&quot;_blank&quot;&gt;hinerm@gmail.com&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;&lt;div&nbsp;dir=&quot;ltr&quot;&gt;See&nbsp;&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio/issues/57&quot;&nbsp;target=&quot;_blank&quot;&gt;Issue&nbsp;57&lt;/a&gt;&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;HOEnZb&quot;&gt;<br>
+<br>
+&lt;div&nbsp;class=&quot;h5&quot;&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Mon,&nbsp;Aug&nbsp;26,&nbsp;2013&nbsp;at&nbsp;7:53&nbsp;AM,&nbsp;Mark&nbsp;Hiner&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:hinerm@gmail.com&quot;&nbsp;target=&quot;_blank&quot;&gt;hinerm@gmail.com&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+<br>
+<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;Hi&nbsp;Michael,&lt;br&gt;&lt;br&gt;&lt;/div&gt; &nbsp;This&nbsp;definitely&nbsp;should&nbsp;work.&nbsp;The&nbsp;Metadata&nbsp;attached&nbsp;to&nbsp;a&nbsp;Reader&nbsp;should&nbsp;determine&nbsp;the&nbsp;image&nbsp;dimensionality,&nbsp;and&nbsp;the&nbsp;Metadata&nbsp;should&nbsp;be&nbsp;re-parsed&nbsp;automatically&nbsp;when&nbsp;setting&nbsp;the&nbsp;source.&lt;br&gt;<br>
+<br>
+<br>
+<br>
+&lt;br&gt;&lt;/div&gt; Oh..&nbsp;but&nbsp;looking&nbsp;at&nbsp;the&nbsp;source,&nbsp;the&nbsp;PNG&nbsp;reader&nbsp;has&nbsp;state&nbsp;(it&nbsp;remembers&nbsp;the&nbsp;last&nbsp;plane&nbsp;it&nbsp;read.&nbsp;So&nbsp;if&nbsp;the&nbsp;reader&nbsp;was&nbsp;stateless&nbsp;(which&nbsp;it&#39;s&nbsp;supposed&nbsp;to&nbsp;be)&nbsp;it&nbsp;should&nbsp;work.&nbsp;I&#39;ll&nbsp;just&nbsp;have&nbsp;to&nbsp;make&nbsp;a&nbsp;pass&nbsp;through&nbsp;the&nbsp;formats&nbsp;and&nbsp;remove&nbsp;any&nbsp;state&nbsp;from&nbsp;the&nbsp;readers,&nbsp;or&nbsp;if&nbsp;that&#39;s&nbsp;not&nbsp;possible&nbsp;I&#39;ll&nbsp;make&nbsp;sure&nbsp;they&nbsp;reset&nbsp;properly&nbsp;when&nbsp;calling&nbsp;setSource.&lt;br&gt;<br>
+<br>
+<br>
+<br>
+&lt;br&gt;Thanks&nbsp;for&nbsp;pointing&nbsp;this&nbsp;out,&lt;br&gt;Mark&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Mon,&nbsp;Aug&nbsp;26,&nbsp;2013&nbsp;at&nbsp;7:13&nbsp;AM,&nbsp;Michael&nbsp;Zinsmaier&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:michael.zinsmaier@gmx.de&quot;&nbsp;target=&quot;_blank&quot;&gt;michael.zinsmaier@gmx.de&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+<br>
+<br>
+<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;Hi&nbsp;together,&lt;br&gt;<br>
+&lt;br&gt;<br>
+is&nbsp;it&nbsp;possible&nbsp;to&nbsp;use&nbsp;the&nbsp;same&nbsp;reader&nbsp;for&nbsp;multiple&nbsp;files&nbsp;of&nbsp;the&nbsp;same&nbsp;format?&lt;br&gt;<br>
+I&nbsp;want&nbsp;to&nbsp;read&nbsp;e.g.&nbsp;10&nbsp; .png&nbsp;files&nbsp;that&nbsp;may&nbsp;differ&nbsp;in&nbsp;their&nbsp;dimensionality&nbsp;but&nbsp;use&nbsp;all&nbsp;the&nbsp;same&nbsp;format&nbsp;and&nbsp;encoding&nbsp;can&nbsp;I&nbsp;reuse&nbsp;a&nbsp;reader&nbsp;instead&nbsp;of&nbsp;doing&nbsp;the&nbsp;potentially&nbsp;expensive&nbsp;format&nbsp;tests&nbsp;for&nbsp;each&nbsp;file.&nbsp;We&nbsp;tried&nbsp;it&nbsp;naively&nbsp;with&nbsp;reader.setSource&nbsp;which&nbsp;somehow&nbsp;works&nbsp;but&lt;br&gt;<br>
+<br>
+<br>
+<br>
+<br>
+dimensionality&nbsp;and&nbsp;size&nbsp;data&nbsp;is&nbsp;not&nbsp;rediscovered&nbsp;=&gt;&nbsp;the&nbsp;reader&nbsp;tries&nbsp;to&nbsp;load&nbsp;all&nbsp;images&nbsp;with&nbsp;the&nbsp;same&nbsp;size.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Is&nbsp;their&nbsp;a&nbsp;better&nbsp;way&nbsp;to&nbsp;do&nbsp;this?&lt;br&gt;<br>
+(We&nbsp;still&nbsp;want&nbsp;to&nbsp;use&nbsp;the&nbsp;format&nbsp;discovery&nbsp;for&nbsp;the&nbsp;first&nbsp;image&nbsp;but&nbsp;assume&nbsp;for&nbsp;all&nbsp;others&nbsp;that&nbsp;they&nbsp;have&nbsp;the&nbsp;same&nbsp;format.)&lt;br&gt;<br>
+&lt;br&gt;<br>
+Best&nbsp;Regards&nbsp;Michael&lt;br&gt;<br>
+&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+&lt;/div&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+&lt;/div&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+
+</tt>

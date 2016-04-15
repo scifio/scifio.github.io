@@ -1,0 +1,412 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] SCIFIO does not seem to release memory of closed images
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%20does%20not%20seem%20to%20release%20memory%20of%20closed%20images&In-Reply-To=%3C53D001E9.8070704%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000217.html">
+   <LINK REL="Next"  HREF="000218.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] SCIFIO does not seem to release memory of closed images</H1>
+    <B>Burkhard H&#246;ckendorf</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%20does%20not%20seem%20to%20release%20memory%20of%20closed%20images&In-Reply-To=%3C53D001E9.8070704%40web.de%3E"
+       TITLE="[SCIFIO] SCIFIO does not seem to release memory of closed images">burkhard.hoeckendorf at web.de
+       </A><BR>
+    <I>Wed Jul 23 13:41:45 CDT 2014</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000217.html">[SCIFIO] SCIFIO does not seem to release memory of closed,	images
+</A></li>
+        <LI>Next message: <A HREF="000218.html">[SCIFIO] Bio-Formats Imaris writer
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#221">[ date ]</a>
+              <a href="thread.html#221">[ thread ]</a>
+              <a href="subject.html#221">[ subject ]</a>
+              <a href="author.html#221">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Dear Mark,
+
+Thanks for looking into this. The bug report seems involved indeed, 
+which also means that I can be of little help. I hope you'll find a good 
+(and relatively pain-free) solution and that the grant work is going well.
+
+Best,
+Burkhard
+
+
+On 7/15/2014 12:18 PM, Mark Hiner wrote:
+&gt;<i> Hello again Burkhard,
+</I>&gt;<i>
+</I>&gt;<i> Thank you for your persistence in this issue. After looking at it again
+</I>&gt;<i> today, I realized that there must be a memory leak in how we try to map
+</I>&gt;<i> and synchronize ImageJ 1.x ImagePluses with ImageJ2 data structures.
+</I>&gt;<i>
+</I>&gt;<i> Indeed, that was exactly what I found... however, the solution is
+</I>&gt;<i> non-trivial.
+</I>&gt;<i>
+</I>&gt;<i> I have filed a new issue for this here:
+</I>&gt;<i> <A HREF="https://github.com/imagej/imagej-legacy/issues/67.">https://github.com/imagej/imagej-legacy/issues/67.</A> It is something I
+</I>&gt;<i> would like to resolve quickly, but because it is an involved issue that
+</I>&gt;<i> requires additional investigation and discussion, it's at a lower
+</I>&gt;<i> priority than some necessary grant work this week.
+</I>&gt;<i>
+</I>&gt;<i> Thanks again for the report - it is, at least, good to know where the
+</I>&gt;<i> problem is now.
+</I>&gt;<i> - Mark
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> On Mon, Jul 14, 2014 at 1:39 PM, Burkhard H&#246;ckendorf
+</I>&gt;<i> &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">burkhard.hoeckendorf at web.de</A> &lt;mailto:<A HREF="http://scif.io/mailman/listinfo/scifio">burkhard.hoeckendorf at web.de</A>&gt;&gt; wrote:
+</I>&gt;<i>
+</I>&gt;<i>     Hi Mark,
+</I>&gt;<i>
+</I>&gt;<i>     Thanks for the speedy response. I've rewritten my macro to perhaps
+</I>&gt;<i>     illustrate my point more clearly. It now opens the file and
+</I>&gt;<i>     immediately closes it again, for 50 iterations.
+</I>&gt;<i>
+</I>&gt;<i>     With scifio enabled I do not get an out of memory error, but it
+</I>&gt;<i>     still accumulates memory to the point that it can not open the
+</I>&gt;<i>     entire image anymore but instead opens virtual stacks. Without
+</I>&gt;<i>     scifio this does not occur.
+</I>&gt;<i>
+</I>&gt;<i>     Also note that reading the full image into memory without scifio is
+</I>&gt;<i>     performance-wise much closer to opening a scifio virtual image than
+</I>&gt;<i>     reading the full image with scifio.
+</I>&gt;<i>
+</I>&gt;<i>     Below is the macro and its output.
+</I>&gt;<i>     Best,
+</I>&gt;<i>     Burkhard
+</I>&gt;<i>
+</I>&gt;<i>     nOpenTimes = 50;
+</I>&gt;<i>     file = &quot;/path/to/image&quot;;
+</I>&gt;<i>
+</I>&gt;<i>     for (i=1; i&lt;=nOpenTimes; i+=1) {
+</I>&gt;<i>              msToOpen = getTime();
+</I>&gt;<i>              open(file);
+</I>&gt;<i>              msToOpen = getTime() - msToOpen;
+</I>&gt;<i>
+</I>&gt;<i>              msg = &quot;&quot;+ i +&quot;: &quot;+ IJ.currentMemory() +&quot; mem, &quot;+ msToOpen
+</I>&gt;<i>     +&quot; ms&quot;;
+</I>&gt;<i>              if (is(&quot;Virtual Stack&quot;))
+</I>&gt;<i>                      msg += &quot; (virtual)&quot;;
+</I>&gt;<i>              print(msg);
+</I>&gt;<i>
+</I>&gt;<i>              close();
+</I>&gt;<i>     }
+</I>&gt;<i>
+</I>&gt;<i>     Using SCIFIO:
+</I>&gt;<i>       1:  3822648536 mem, 15984 ms
+</I>&gt;<i>       2: 7572956280 &lt;tel:7572956280&gt; mem, 14986 ms
+</I>&gt;<i>       3:  9998931400 mem, 14821 ms
+</I>&gt;<i>       4: 13784264296 mem, 14895 ms
+</I>&gt;<i>       5: 16885256128 mem, 15019 ms
+</I>&gt;<i>       6: 19656427040 mem, 15036 ms
+</I>&gt;<i>       7: 24079096808 mem, 15212 ms
+</I>&gt;<i>       8: 27510832552 mem, 15179 ms
+</I>&gt;<i>       9: 32077394688 mem, 15427 ms
+</I>&gt;<i>     10: 34409304040 mem, 15482 ms
+</I>&gt;<i>     11: 36859610432 mem, 15227 ms
+</I>&gt;<i>     12: 43061552320 mem, 15607 ms
+</I>&gt;<i>     13: 42104714576 mem, 15359 ms
+</I>&gt;<i>     14: 47910156296 mem, 15073 ms
+</I>&gt;<i>     15: 48044651592 mem, 3053 ms (virtual)
+</I>&gt;<i>     16: 48170004824 mem, 2502 ms (virtual)
+</I>&gt;<i>     17: 48295208256 mem, 2522 ms (virtual)
+</I>&gt;<i>     18: 48422832064 mem, 2495 ms (virtual)
+</I>&gt;<i>     19: 48550863920 mem, 2504 ms (virtual)
+</I>&gt;<i>     20: 48228290696 mem, 2615 ms (virtual)
+</I>&gt;<i>     21: 48343976264 mem, 2482 ms (virtual)
+</I>&gt;<i>     22: 48461224352 mem, 2495 ms (virtual)
+</I>&gt;<i>     23: 48577275224 mem, 2482 ms (virtual)
+</I>&gt;<i>     24: 48696021320 mem, 2493 ms (virtual)
+</I>&gt;<i>     25: 48815302152 mem, 2513 ms (virtual)
+</I>&gt;<i>     26: 48512671680 mem, 2682 ms (virtual)
+</I>&gt;<i>     27: 48624380048 mem, 2493 ms (virtual)
+</I>&gt;<i>     28: 48734321624 mem, 2487 ms (virtual)
+</I>&gt;<i>     29: 48847280096 mem, 2504 ms (virtual)
+</I>&gt;<i>     30: 48958189928 mem, 2491 ms (virtual)
+</I>&gt;<i>     31: 49069385672 mem, 2499 ms (virtual)
+</I>&gt;<i>     32: 48787137328 mem, 2614 ms (virtual)
+</I>&gt;<i>     33: 48896061816 mem, 2500 ms (virtual)
+</I>&gt;<i>     34: 49004784912 mem, 2488 ms (virtual)
+</I>&gt;<i>     35: 49116572664 mem, 2516 ms (virtual)
+</I>&gt;<i>     36: 49226035440 mem, 2497 ms (virtual)
+</I>&gt;<i>     37: 49334418896 mem, 2500 ms (virtual)
+</I>&gt;<i>     38: 49074728512 mem, 2660 ms (virtual)
+</I>&gt;<i>     39: 49183254768 mem, 2506 ms (virtual)
+</I>&gt;<i>     40: 49290891152 mem, 2491 ms (virtual)
+</I>&gt;<i>     41: 49399382336 mem, 2499 ms (virtual)
+</I>&gt;<i>     42: 49505843008 mem, 2487 ms (virtual)
+</I>&gt;<i>     43: 49613438808 mem, 2487 ms (virtual)
+</I>&gt;<i>     44: 49721198184 mem, 2481 ms (virtual)
+</I>&gt;<i>     45: 49441266864 mem, 2709 ms (virtual)
+</I>&gt;<i>     46: 49548934656 mem, 2485 ms (virtual)
+</I>&gt;<i>     47: 49656785920 mem, 2501 ms (virtual)
+</I>&gt;<i>     48: 49764127512 mem, 2480 ms (virtual)
+</I>&gt;<i>     49: 49872069552 mem, 2495 ms (virtual)
+</I>&gt;<i>     50: 49979814216 mem, 2482 ms (virtual)
+</I>&gt;<i>
+</I>&gt;<i>     Not using SCIFIO:
+</I>&gt;<i>       1: 3107094592 &lt;tel:3107094592&gt; mem, 3921 ms
+</I>&gt;<i>       2: 3109153032 &lt;tel:3109153032&gt; mem, 3837 ms
+</I>&gt;<i>       3: 3109836568 &lt;tel:3109836568&gt; mem, 3631 ms
+</I>&gt;<i>       4: 3109512264 &lt;tel:3109512264&gt; mem, 3581 ms
+</I>&gt;<i>       5: 3109478728 &lt;tel:3109478728&gt; mem, 3633 ms
+</I>&gt;<i>       6: 3123692656 &lt;tel:3123692656&gt; mem, 4145 ms
+</I>&gt;<i>       7: 3112714624 mem, 3301 ms
+</I>&gt;<i>       8: 3128373632 &lt;tel:3128373632&gt; mem, 3202 ms
+</I>&gt;<i>       9: 3117798216 mem, 3235 ms
+</I>&gt;<i>     10: 3133595872 &lt;tel:3133595872&gt; mem, 3190 ms
+</I>&gt;<i>     11: 3123048664 &lt;tel:3123048664&gt; mem, 3229 ms
+</I>&gt;<i>     12: 5754899128 &lt;tel:5754899128&gt; mem, 3404 ms
+</I>&gt;<i>     13: 3128308704 &lt;tel:3128308704&gt; mem, 3307 ms
+</I>&gt;<i>     14: 3117759024 mem, 3219 ms
+</I>&gt;<i>     15: 5910573440 mem, 3112 ms
+</I>&gt;<i>     16: 5488969832 mem, 3222 ms
+</I>&gt;<i>     17: 3112824736 mem, 3273 ms
+</I>&gt;<i>     18: 3128647888 &lt;tel:3128647888&gt; mem, 3147 ms
+</I>&gt;<i>     19: 3118094280 mem, 3208 ms
+</I>&gt;<i>     20: 5902184440 mem, 3281 ms
+</I>&gt;<i>     21: 3123372736 &lt;tel:3123372736&gt; mem, 3224 ms
+</I>&gt;<i>     22: 3112825408 mem, 3259 ms
+</I>&gt;<i>     23: 3128648960 &lt;tel:3128648960&gt; mem, 3146 ms
+</I>&gt;<i>     24: 3118100760 mem, 3230 ms
+</I>&gt;<i>     25: 3133941888 &lt;tel:3133941888&gt; mem, 3119 ms
+</I>&gt;<i>     26: 5488982136 mem, 3225 ms
+</I>&gt;<i>     27: 3112820248 mem, 3249 ms
+</I>&gt;<i>     28: 3128655064 &lt;tel:3128655064&gt; mem, 3154 ms
+</I>&gt;<i>     29: 3118110296 mem, 3241 ms
+</I>&gt;<i>     30: 3133956392 &lt;tel:3133956392&gt; mem, 3176 ms
+</I>&gt;<i>     31: 3123381976 &lt;tel:3123381976&gt; mem, 3220 ms
+</I>&gt;<i>     32: 3112831584 mem, 3264 ms
+</I>&gt;<i>     33: 3128664576 &lt;tel:3128664576&gt; mem, 3170 ms
+</I>&gt;<i>     34: 3118103400 mem, 3209 ms
+</I>&gt;<i>     35: 3133956744 &lt;tel:3133956744&gt; mem, 3163 ms
+</I>&gt;<i>     36: 3123387312 &lt;tel:3123387312&gt; mem, 3233 ms
+</I>&gt;<i>     37: 3112827304 mem, 3279 ms
+</I>&gt;<i>     38: 3128664688 &lt;tel:3128664688&gt; mem, 3158 ms
+</I>&gt;<i>     39: 3118115152 mem, 3256 ms
+</I>&gt;<i>     40: 3133956432 &lt;tel:3133956432&gt; mem, 3128 ms
+</I>&gt;<i>     41: 5488994224 mem, 3214 ms
+</I>&gt;<i>     42: 5746873888 &lt;tel:5746873888&gt; mem, 3266 ms
+</I>&gt;<i>     43: 3128666592 &lt;tel:3128666592&gt; mem, 3174 ms
+</I>&gt;<i>     44: 3118109984 mem, 3215 ms
+</I>&gt;<i>     45: 3133949360 &lt;tel:3133949360&gt; mem, 3131 ms
+</I>&gt;<i>     46: 3123388320 &lt;tel:3123388320&gt; mem, 3207 ms
+</I>&gt;<i>     47: 3112843792 mem, 3269 ms
+</I>&gt;<i>     48: 3128683960 &lt;tel:3128683960&gt; mem, 3144 ms
+</I>&gt;<i>     49: 5617941896 &lt;tel:5617941896&gt; mem, 3201 ms
+</I>&gt;<i>     50: 5902216016 mem, 3131 ms
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>         Date: Mon, 14 Jul 2014 08:34:45 -0500
+</I>&gt;<i>         From: Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hinerm at gmail.com</A> &lt;mailto:<A HREF="http://scif.io/mailman/listinfo/scifio">hinerm at gmail.com</A>&gt;&gt;
+</I>&gt;<i>         To: Burkhard H?ckendorf &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">burkhard.hoeckendorf at web.de</A>
+</I>&gt;<i>         &lt;mailto:<A HREF="http://scif.io/mailman/listinfo/scifio">burkhard.hoeckendorf at web.de</A>&gt;&gt;
+</I>&gt;<i>         Cc: &quot;<A HREF="http://scif.io/mailman/listinfo/scifio">scifio at scif.io</A> &lt;mailto:<A HREF="http://scif.io/mailman/listinfo/scifio">scifio at scif.io</A>&gt;&quot; &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">scifio at scif.io</A>
+</I>&gt;<i>         &lt;mailto:<A HREF="http://scif.io/mailman/listinfo/scifio">scifio at scif.io</A>&gt;&gt;
+</I>&gt;<i>         Subject: Re: [SCIFIO] SCIFIO does not seem to release memory of
+</I>&gt;<i>         closed
+</I>&gt;<i>                  images
+</I>&gt;<i>         Message-ID:
+</I>&gt;<i>
+</I>&gt;<i>         &lt;CA+B=<A HREF="http://scif.io/mailman/listinfo/scifio">mGqx47SkUzM___FHGkoyAy3vbpf8+__NMMbURUOSJ65UfeCf3w at mail.__gmail.com</A>
+</I>&gt;<i>         &lt;mailto:mGqx47SkUzM_FHGkoyAy3vbpf8%<A HREF="http://scif.io/mailman/listinfo/scifio">2BNMMbURUOSJ65UfeCf3w at mail.gmail.com</A>&gt;&gt;
+</I>&gt;<i>         Content-Type: text/plain; charset=&quot;utf-8&quot;
+</I>&gt;<i>
+</I>&gt;<i>         Hi Burkhard,
+</I>&gt;<i>
+</I>&gt;<i>            &gt; run(&quot;Collect Garbage&quot;);
+</I>&gt;<i>
+</I>&gt;<i>            This just calls System.gc().. twice, actually. There are many
+</I>&gt;<i>         articles and
+</I>&gt;<i>         StackOverflow posts about why System.gc() is unreliable
+</I>&gt;<i>         &lt;<A HREF="http://stackoverflow.com/__questions/2414105/why-is-it-a-__bad-practice-to-call-system-gc">http://stackoverflow.com/__questions/2414105/why-is-it-a-__bad-practice-to-call-system-gc</A>
+</I>&gt;<i>         &lt;<A HREF="http://stackoverflow.com/questions/2414105/why-is-it-a-bad-practice-to-call-system-gc">http://stackoverflow.com/questions/2414105/why-is-it-a-bad-practice-to-call-system-gc</A>&gt;__&gt;.
+</I>&gt;<i>         I personally have seen endlessly repeated System.gc() calls
+</I>&gt;<i>         effectively do
+</I>&gt;<i>         nothing, necessitating the creation of large objects to force
+</I>&gt;<i>         memory to be
+</I>&gt;<i>         released.
+</I>&gt;<i>
+</I>&gt;<i>            Also, the JVM should automatically attempt to run the garbage
+</I>&gt;<i>         collector
+</I>&gt;<i>         when memory is requested for allocation in excess of the JVM's
+</I>&gt;<i>         memory
+</I>&gt;<i>         limits. So the best way to test if SCIFIO has a memory leak
+</I>&gt;<i>         would be:
+</I>&gt;<i>
+</I>&gt;<i>         1) Open datasets that occupy slightly less than the max memory
+</I>&gt;<i>         allocated to
+</I>&gt;<i>         your Fiji
+</I>&gt;<i>         2) Close these datasets
+</I>&gt;<i>         3) Try opening more datasets (of a size such that, if the
+</I>&gt;<i>         original datasets
+</I>&gt;<i>         not released, the total memory used would exceed the max allocation)
+</I>&gt;<i>
+</I>&gt;<i>         If you see OutOfMemory errors then there could quite possibly be
+</I>&gt;<i>         a leak.
+</I>&gt;<i>
+</I>&gt;<i>         Note also that we have unit tests in place designed to catch
+</I>&gt;<i>         these leaks:
+</I>&gt;<i>         <A HREF="https://github.com/scifio/__scifio/blob/master/src/test/__java/io/scif/img/cell/cache/__utests/CacheServiceTest.java">https://github.com/scifio/__scifio/blob/master/src/test/__java/io/scif/img/cell/cache/__utests/CacheServiceTest.java</A>
+</I>&gt;<i>         &lt;<A HREF="https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java">https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java</A>&gt;.
+</I>&gt;<i>         An excellent way to demonstrate the memory error would be to
+</I>&gt;<i>         come up with
+</I>&gt;<i>         another test in this class that fails.
+</I>&gt;<i>
+</I>&gt;<i>         Thanks,
+</I>&gt;<i>         Mark
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>         On Sat, Jul 12, 2014 at 1:54 PM, Burkhard H?ckendorf &lt;
+</I>&gt;<i>         <A HREF="http://scif.io/mailman/listinfo/scifio">burkhard.hoeckendorf at web.de</A>
+</I>&gt;<i>         &lt;mailto:<A HREF="http://scif.io/mailman/listinfo/scifio">burkhard.hoeckendorf at web.de</A>&gt;&gt; wrote:
+</I>&gt;<i>
+</I>&gt;<i>             Dear List,
+</I>&gt;<i>
+</I>&gt;<i>             First of all thanks for developing scifio and doing that
+</I>&gt;<i>             open source. I
+</I>&gt;<i>             have started to use it with ImageJ, since Fiji now offers
+</I>&gt;<i>             the option to use
+</I>&gt;<i>             it. Having said that, I may also have stumbled upon an
+</I>&gt;<i>             issue. I'm unsure
+</I>&gt;<i>             when (or whether) scifio releases the corresponding memory
+</I>&gt;<i>             after images are
+</I>&gt;<i>             closed. To look at this in a somewhat systematic way, I ran
+</I>&gt;<i>             a macro (see
+</I>&gt;<i>             below) to repeatedly open and close a 3GB single file
+</I>&gt;<i>             uncompressed TIFF
+</I>&gt;<i>             stack (2048x2048x367x16bits) and record some performance
+</I>&gt;<i>             stats along the
+</I>&gt;<i>             way. I ran this using a new download of Fiji.
+</I>&gt;<i>
+</I>&gt;<i>             Here are the results with scifio disabled:
+</I>&gt;<i>                    11450 ms to open files
+</I>&gt;<i>                 28578184 mem before opening files
+</I>&gt;<i>             9282667288 &lt;tel:9282667288&gt; mem after opening files
+</I>&gt;<i>             9272732560 mem after opening files &amp; GC
+</I>&gt;<i>             9272780080 mem after closing files
+</I>&gt;<i>                 24220936 mem after closing files &amp; GC
+</I>&gt;<i>
+</I>&gt;<i>             And here with scifio enabled:
+</I>&gt;<i>                     43715 ms to open files
+</I>&gt;<i>                  26765224 mem before opening files
+</I>&gt;<i>             10517954400 mem after opening files
+</I>&gt;<i>                9327459480 mem after opening files &amp; GC
+</I>&gt;<i>                9327506440 mem after closing files
+</I>&gt;<i>             9314822896 &lt;tel:9314822896&gt; mem after closing files &amp; GC
+</I>&gt;<i>
+</I>&gt;<i>             I have also checked, whether memory is freed a couple of
+</I>&gt;<i>             minutes after
+</I>&gt;<i>             closing the images, which does not appear to be the case.
+</I>&gt;<i>
+</I>&gt;<i>             Note that scifio is also somewhat slower, although I'm a bit
+</I>&gt;<i>             hesitant to
+</I>&gt;<i>             bring this up, because it is still relatively young and I
+</I>&gt;<i>             can see a few
+</I>&gt;<i>             &quot;improve ... performance&quot; tickets in the issue tracker.
+</I>&gt;<i>
+</I>&gt;<i>             Below is the macro.
+</I>&gt;<i>             Kind regards,
+</I>&gt;<i>             Burkhard
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>             nOpenTimes = 3;
+</I>&gt;<i>             file = &quot;/path/to/stack&quot;;
+</I>&gt;<i>
+</I>&gt;<i>             run(&quot;Collect Garbage&quot;);
+</I>&gt;<i>             memBefore = IJ.currentMemory();
+</I>&gt;<i>
+</I>&gt;<i>             msToOpen = getTime();
+</I>&gt;<i>             for (i=0; i&lt;nOpenTimes; i+=1) {
+</I>&gt;<i>                       open(file);
+</I>&gt;<i>             }
+</I>&gt;<i>             msToOpen = getTime() - msToOpen;
+</I>&gt;<i>
+</I>&gt;<i>             memFilesOpen = IJ.currentMemory();
+</I>&gt;<i>             run(&quot;Collect Garbage&quot;);
+</I>&gt;<i>             memFilesOpenGC = IJ.currentMemory();
+</I>&gt;<i>
+</I>&gt;<i>             for (i=0; i&lt;nOpenTimes; i+=1) {
+</I>&gt;<i>                       close();
+</I>&gt;<i>             }
+</I>&gt;<i>             memFilesClosed = IJ.currentMemory();
+</I>&gt;<i>             run(&quot;Collect Garbage&quot;);
+</I>&gt;<i>             memFilesClosedGC = IJ.currentMemory();
+</I>&gt;<i>
+</I>&gt;<i>             print(&quot;&quot;+ msToOpen + &quot; ms to open files&quot;);
+</I>&gt;<i>             print(&quot;&quot;+ memBefore + &quot; mem before opening files&quot;);
+</I>&gt;<i>             print(&quot;&quot;+ memFilesOpen + &quot; mem after opening files&quot;);
+</I>&gt;<i>             print(&quot;&quot;+ memFilesOpenGC + &quot; mem after opening files &amp; GC&quot;);
+</I>&gt;<i>             print(&quot;&quot;+ memFilesClosed + &quot; mem after closing files&quot;);
+</I>&gt;<i>             print(&quot;&quot;+ memFilesClosedGC + &quot; mem after closing files &amp; GC&quot;);
+</I>&gt;<i>
+</I>&gt;<i>             _________________________________________________
+</I>&gt;<i>             SCIFIO mailing list
+</I>&gt;<i>             <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A> &lt;mailto:<A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>&gt;
+</I>&gt;<i>             <A HREF="http://scif.io/mailman/__listinfo/scifio">http://scif.io/mailman/__listinfo/scifio</A>
+</I>&gt;<i>             &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>&gt;
+</I>&gt;<i>
+</I>&gt;<i>         -------------- next part --------------
+</I>&gt;<i>         An HTML attachment was scrubbed...
+</I>&gt;<i>         URL:
+</I>&gt;<i>         &lt;<A HREF="http://scif.io/pipermail/__scifio/attachments/20140714/__0e7f8b63/attachment-0001.html">http://scif.io/pipermail/__scifio/attachments/20140714/__0e7f8b63/attachment-0001.html</A>
+</I>&gt;<i>         &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20140714/0e7f8b63/attachment-0001.html">http://scif.io/pipermail/scifio/attachments/20140714/0e7f8b63/attachment-0001.html</A>&gt;&gt;
+</I>&gt;<i>
+</I>&gt;<i>         ------------------------------
+</I>&gt;<i>
+</I>&gt;<i>         _________________________________________________
+</I>&gt;<i>         SCIFIO mailing list
+</I>&gt;<i>         <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A> &lt;mailto:<A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>&gt;
+</I>&gt;<i>         <A HREF="http://scif.io/mailman/__listinfo/scifio">http://scif.io/mailman/__listinfo/scifio</A>
+</I>&gt;<i>         &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>&gt;
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>         End of SCIFIO Digest, Vol 11, Issue 5
+</I>&gt;<i>         ******************************__*******
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>     _________________________________________________
+</I>&gt;<i>     SCIFIO mailing list
+</I>&gt;<i>     <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A> &lt;mailto:<A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>&gt;
+</I>&gt;<i>     <A HREF="http://scif.io/mailman/__listinfo/scifio">http://scif.io/mailman/__listinfo/scifio</A>
+</I>&gt;<i>     &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>&gt;
+</I>&gt;<i>
+</I>&gt;<i>
+</I>
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000217.html">[SCIFIO] SCIFIO does not seem to release memory of closed,	images
+</A></li>
+	<LI>Next message: <A HREF="000218.html">[SCIFIO] Bio-Formats Imaris writer
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#221">[ date ]</a>
+              <a href="thread.html#221">[ thread ]</a>
+              <a href="subject.html#221">[ subject ]</a>
+              <a href="author.html#221">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

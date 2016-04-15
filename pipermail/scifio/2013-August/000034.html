@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] reuse reader for files of same format
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20reuse%20reader%20for%20files%20of%20same%20format&In-Reply-To=%3CCA%2BB%3DmGq97ZS8K_%2BQ4VndTrK-xds%3D5Rf7PeiGAy%2BjZfWsoO%3DV3Q%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000032.html">
+   <LINK REL="Next"  HREF="000035.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] reuse reader for files of same format</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20reuse%20reader%20for%20files%20of%20same%20format&In-Reply-To=%3CCA%2BB%3DmGq97ZS8K_%2BQ4VndTrK-xds%3D5Rf7PeiGAy%2BjZfWsoO%3DV3Q%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] reuse reader for files of same format">hinerm at gmail.com
+       </A><BR>
+    <I>Mon Aug 26 13:14:57 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000032.html">[SCIFIO] reuse reader for files of same format
+</A></li>
+        <LI>Next message: <A HREF="000035.html">[SCIFIO] reuse reader for files of same format
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#34">[ date ]</a>
+              <a href="thread.html#34">[ thread ]</a>
+              <a href="subject.html#34">[ subject ]</a>
+              <a href="author.html#34">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Should be fixed on master. Let me know if you run into any more issues
+reusing readers though.
+
+
+On Mon, Aug 26, 2013 at 8:02 AM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hinerm at gmail.com</A>&gt; wrote:
+
+&gt;<i> See Issue 57 &lt;<A HREF="https://github.com/scifio/scifio/issues/57">https://github.com/scifio/scifio/issues/57</A>&gt;
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> On Mon, Aug 26, 2013 at 7:53 AM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hinerm at gmail.com</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> Hi Michael,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>   This definitely should work. The Metadata attached to a Reader should
+</I>&gt;&gt;<i> determine the image dimensionality, and the Metadata should be re-parsed
+</I>&gt;&gt;<i> automatically when setting the source.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  Oh.. but looking at the source, the PNG reader has state (it remembers
+</I>&gt;&gt;<i> the last plane it read. So if the reader was stateless (which it's supposed
+</I>&gt;&gt;<i> to be) it should work. I'll just have to make a pass through the formats
+</I>&gt;&gt;<i> and remove any state from the readers, or if that's not possible I'll make
+</I>&gt;&gt;<i> sure they reset properly when calling setSource.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Thanks for pointing this out,
+</I>&gt;&gt;<i> Mark
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> On Mon, Aug 26, 2013 at 7:13 AM, Michael Zinsmaier &lt;
+</I>&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">michael.zinsmaier at gmx.de</A>&gt; wrote:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Hi together,
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> is it possible to use the same reader for multiple files of the same
+</I>&gt;&gt;&gt;<i> format?
+</I>&gt;&gt;&gt;<i> I want to read e.g. 10  .png files that may differ in their
+</I>&gt;&gt;&gt;<i> dimensionality but use all the same format and encoding can I reuse a
+</I>&gt;&gt;&gt;<i> reader instead of doing the potentially expensive format tests for each
+</I>&gt;&gt;&gt;<i> file. We tried it naively with reader.setSource which somehow works but
+</I>&gt;&gt;&gt;<i> dimensionality and size data is not rediscovered =&gt; the reader tries to
+</I>&gt;&gt;&gt;<i> load all images with the same size.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Is their a better way to do this?
+</I>&gt;&gt;&gt;<i> (We still want to use the format discovery for the first image but
+</I>&gt;&gt;&gt;<i> assume for all others that they have the same format.)
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Best Regards Michael
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130826/8bcccd24/attachment.html">http://scif.io/pipermail/scifio/attachments/20130826/8bcccd24/attachment.html</A>&gt;
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000032.html">[SCIFIO] reuse reader for files of same format
+</A></li>
+	<LI>Next message: <A HREF="000035.html">[SCIFIO] reuse reader for files of same format
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#34">[ date ]</a>
+              <a href="thread.html#34">[ thread ]</a>
+              <a href="subject.html#34">[ subject ]</a>
+              <a href="author.html#34">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

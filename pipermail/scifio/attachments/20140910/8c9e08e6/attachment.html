@@ -1,0 +1,67 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Hi&nbsp;Michael,&lt;br&gt;&lt;br&gt;&lt;/div&gt;I&nbsp;opened&nbsp;&lt;a&nbsp;href=&quot;http://review.source.kitware.com/#/c/16967/&quot;&gt;a&nbsp;pull&nbsp;request&lt;/a&gt;&nbsp;to&nbsp;get&nbsp;the&nbsp;latest&nbsp;SCIFIO-ITK&nbsp;imageIO&nbsp;incorporated&nbsp;into&nbsp;the&nbsp;master&nbsp;ITK&nbsp;branch.&lt;br&gt;&lt;br&gt;&lt;/div&gt;This&nbsp;fixes&nbsp;the&nbsp;metadata&nbsp;bug&nbsp;suspected&nbsp;by&nbsp;Roger&nbsp;(the&nbsp;dimensions&nbsp;of&nbsp;the&nbsp;first&nbsp;series&nbsp;were&nbsp;always&nbsp;being&nbsp;used,&nbsp;which&nbsp;would&nbsp;crash&nbsp;on&nbsp;encountering&nbsp;a&nbsp;dataset&nbsp;with&nbsp;smaller&nbsp;dimensions).&nbsp;It&nbsp;also&nbsp;upgrades&nbsp;the&nbsp;ImageIO&nbsp;to&nbsp;use&nbsp;Bio-Formats&nbsp;5.0.4,&nbsp;and&nbsp;has&nbsp;some&nbsp;other&nbsp;minor&nbsp;fixes&nbsp;and&nbsp;improvements.&lt;br&gt;&lt;br&gt;&lt;/div&gt;With&nbsp;these&nbsp;updates&nbsp;I&nbsp;was&nbsp;able&nbsp;to&nbsp;fully&nbsp;convert&nbsp;your&nbsp;image&nbsp;as&nbsp;a&nbsp;multi-series&nbsp;image,&nbsp;using&nbsp;the&nbsp;command:&nbsp;&lt;br&gt;SCIFIOTestDriver&nbsp;ko-A.ome.tiff&nbsp;out.ome.tif&nbsp;-w&nbsp;-a&nbsp;-d&nbsp;5&lt;br&gt;&lt;br&gt;&lt;/div&gt;Thanks&nbsp;for&nbsp;the&nbsp;report,&nbsp;it&nbsp;was&nbsp;very&nbsp;helpful.&nbsp;Please&nbsp;let&nbsp;us&nbsp;know&nbsp;if&nbsp;you&nbsp;run&nbsp;into&nbsp;any&nbsp;more&nbsp;problems.&lt;br&gt;&lt;br&gt;&lt;/div&gt;Regards,&lt;br&gt;Mark&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Wed,&nbsp;Aug&nbsp;20,&nbsp;2014&nbsp;at&nbsp;12:05&nbsp;PM,&nbsp;Mark&nbsp;Hiner&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:hinerm@gmail.com&quot;&nbsp;target=&quot;_blank&quot;&gt;hinerm@gmail.com&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;Hi&nbsp;all,&lt;span&nbsp;class=&quot;&quot;&gt;&lt;br&gt;&lt;br&gt;&gt;While&nbsp;I&#39;m&nbsp;not&nbsp;entirely&nbsp;sure&nbsp;of&nbsp;the&nbsp;separation&nbsp;of&nbsp;responsibilities&nbsp;between&nbsp;ITK,&nbsp;SCIFIO&nbsp;and&nbsp;Bio-Formats&nbsp;for&nbsp;this&nbsp;&lt;br&gt;&gt;particular&nbsp;task&lt;br&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;The&nbsp;readme&nbsp;for&nbsp;the&nbsp;SCIFIO-ITK&nbsp;ImageIO&nbsp;(&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio-imageio&quot;&nbsp;target=&quot;_blank&quot;&gt;https://github.com/scifio/scifio-imageio&lt;/a&gt;)&nbsp;was&nbsp;out&nbsp;of&nbsp;date.&nbsp;It&nbsp;should&nbsp;now&nbsp;correctly&nbsp;instruct&nbsp;users&nbsp;to&nbsp;e-mail&nbsp;&lt;a&nbsp;href=&quot;mailto:scifio@scif.io&quot;&nbsp;target=&quot;_blank&quot;&gt;scifio@scif.io&lt;/a&gt;&nbsp;(copied)&nbsp;for&nbsp;ITK&nbsp;imageIO&nbsp;troubleshooting.&lt;br&gt;<br>
+&lt;/div&gt;&lt;span&nbsp;class=&quot;&quot;&gt;&lt;div&gt;&lt;br&gt;&gt;&nbsp;I&nbsp;found&nbsp;this&nbsp;only&nbsp;occurs&nbsp;when&nbsp;you&nbsp;enable&nbsp;&quot;-w&quot;&nbsp;to&nbsp;use&nbsp;SCIFIO&nbsp;for&nbsp;output.&lt;br&gt;&lt;br&gt;&lt;/div&gt;&lt;/span&gt;Note&nbsp;that&nbsp;without&nbsp;the&nbsp;-w&nbsp;flag,&nbsp;the&nbsp;default&nbsp;ITK&nbsp;TIFF&nbsp;writer&nbsp;will&nbsp;be&nbsp;used,&nbsp;which&nbsp;I&nbsp;thought&nbsp;was&nbsp;limited&nbsp;to&nbsp;3&nbsp;dimensions&nbsp;(or&nbsp;at&nbsp;least&nbsp;it&nbsp;was&nbsp;at&nbsp;one&nbsp;time).&nbsp;If&nbsp;you&nbsp;want&nbsp;to&nbsp;write&nbsp;an&nbsp;.ome.tiff&nbsp;it&nbsp;has&nbsp;to&nbsp;be&nbsp;written&nbsp;with&nbsp;Bio-Formats,&nbsp;anyway.&lt;span&nbsp;class=&quot;&quot;&gt;&lt;br&gt;<br>
+&lt;br&gt;&gt;&nbsp;Looks&nbsp;like&nbsp;it&#39;s&nbsp;trying&nbsp;to&nbsp;read&nbsp;z&nbsp;plane&nbsp;60&nbsp;when&nbsp;there&nbsp;are&nbsp;only&nbsp;60&nbsp;planes&lt;br&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;I&#39;m&nbsp;assuming&nbsp;the&nbsp;#&nbsp;of&nbsp;planes&nbsp;to&nbsp;read&nbsp;isn&#39;t&nbsp;being&nbsp;updated&nbsp;for&nbsp;each&nbsp;series..&nbsp;I&#39;ll&nbsp;look&nbsp;into&nbsp;it&nbsp;when&nbsp;I&nbsp;get&nbsp;a&nbsp;chance.&lt;br&gt;<br>
+&lt;br&gt;Thanks&nbsp;for&nbsp;the&nbsp;report,&lt;br&gt;Mark&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;HOEnZb&quot;&gt;&lt;div&nbsp;class=&quot;h5&quot;&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Wed,&nbsp;Aug&nbsp;20,&nbsp;2014&nbsp;at&nbsp;9:53&nbsp;AM,&nbsp;Roger&nbsp;Leigh&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:rleigh@dundee.ac.uk&quot;&nbsp;target=&quot;_blank&quot;&gt;rleigh@dundee.ac.uk&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;On&nbsp;19/08/14&nbsp;19:52,&nbsp;Michael&nbsp;Meuli&nbsp;wrote:&lt;br&gt;<br>
+&lt;br&gt;<br>
+Dear&nbsp;Michael,&lt;div&gt;&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;<br>
+I&nbsp;have&nbsp;some&nbsp;problems&nbsp;converting&nbsp;my&nbsp;.lif&nbsp;files&nbsp;to&nbsp;ome-tiff.&lt;br&gt;<br>
+I&nbsp;have&nbsp;converted&nbsp;my&nbsp;.lif&nbsp;files&nbsp;originating&nbsp;from&nbsp;a&nbsp;&quot;CLSM&nbsp;Leica&nbsp;SP&nbsp;8&quot;&lt;br&gt;<br>
+with&nbsp;bfconvert&nbsp;of&nbsp;Bio-Formats&nbsp;5.0.3.&lt;br&gt;<br>
+Trying&nbsp;to&nbsp;make&nbsp;it&nbsp;reproducible&nbsp;I&nbsp;took&nbsp;the&nbsp;file&nbsp;&quot;ko-A.ome.tiff&quot;&nbsp;which&lt;br&gt;<br>
+can&nbsp;be&nbsp;found&nbsp;here:&lt;br&gt;<br>
+&quot;&lt;a&nbsp;href=&quot;https://www.dropbox.com/sh/t2z0f4jttcnfh8s/AADq21HNR7EwH1JFxskhXXhea&quot;&nbsp;target=&quot;_blank&quot;&gt;https://www.dropbox.com/sh/&lt;u&gt;&lt;/u&gt;t2z0f4jttcnfh8s/&lt;u&gt;&lt;/u&gt;AADq21HNR7EwH1JFxskhXXhea&lt;/a&gt;&quot;&lt;br&gt;<br>
+ &nbsp; in&nbsp;the&nbsp;ome-tiff-files&nbsp;folder.&lt;br&gt;<br>
+&lt;/blockquote&gt;<br>
+&lt;br&gt;&lt;/div&gt;<br>
+Thanks. &nbsp;I&#39;ve&nbsp;been&nbsp;able&nbsp;to&nbsp;reproduce&nbsp;the&nbsp;validation&nbsp;problems. &nbsp;I&nbsp;have&lt;br&gt;<br>
+opened&nbsp;a&nbsp;ticket&nbsp;for&nbsp;this&nbsp;and&nbsp;CC&#39;d&nbsp;you&nbsp;on&nbsp;it;&nbsp;please&nbsp;see&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;https://trac.openmicroscopy.org.uk/ome/ticket/12532&quot;&nbsp;target=&quot;_blank&quot;&gt;https://trac.openmicroscopy.&lt;u&gt;&lt;/u&gt;org.uk/ome/ticket/12532&lt;/a&gt;&lt;br&gt;<br>
+&lt;br&gt;<br>
+Note&nbsp;however&nbsp;that&nbsp;the&nbsp;above&nbsp;validation&nbsp;error&nbsp;is&nbsp;harmless;&nbsp;it&nbsp;does&nbsp;not&lt;br&gt;<br>
+affect&nbsp;bioformats&#39;&nbsp;correct&nbsp;reading&nbsp;of&nbsp;the&nbsp;OME-TIFF&nbsp;and&nbsp;I&nbsp;was&nbsp;able&nbsp;to&lt;br&gt;<br>
+read&nbsp;all&nbsp;planes&nbsp;of&nbsp;every&nbsp;series&nbsp;without&nbsp;trouble,&nbsp;and&nbsp;also&nbsp;convert&nbsp;the&lt;br&gt;<br>
+file&nbsp;to&nbsp;a&nbsp;new&nbsp;OME-TIFF&nbsp;which&nbsp;strips&nbsp;out&nbsp;the&nbsp;MetadataOnly&nbsp;elements. &nbsp;I&lt;br&gt;<br>
+don&#39;t&nbsp;think&nbsp;this&nbsp;is&nbsp;in&nbsp;any&nbsp;way&nbsp;related&nbsp;to&nbsp;your&nbsp;other&nbsp;problem,&nbsp;below.&lt;div&gt;&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;<br>
+Below&nbsp;you&nbsp;can&nbsp;find&nbsp;the&nbsp;output&nbsp;of&nbsp;bfconvert,&nbsp;xmlvalid&nbsp;and&lt;br&gt;<br>
+SCIFIOTestDriver&nbsp;itkSCIFIOImageIOTest&nbsp;with&nbsp;the&nbsp;-a&nbsp;flag.&lt;br&gt;<br>
+The&nbsp;output&nbsp;of&nbsp;tiffcomment&nbsp;you&nbsp;can&nbsp;find&nbsp;as&nbsp;attachment.&lt;br&gt;<br>
+itkSCIFIOImageIOTest&nbsp;in&nbsp;this&nbsp;example&nbsp;crashes&nbsp;trying&nbsp;to&nbsp;read&nbsp;the&nbsp;third&nbsp;series.&lt;br&gt;<br>
+&lt;/blockquote&gt;<br>
+&lt;br&gt;&lt;/div&gt;<br>
+I&nbsp;built&nbsp;ITK&nbsp;with&nbsp;itkscifio&nbsp;to&nbsp;test&nbsp;this. &nbsp;I&nbsp;found&nbsp;this&nbsp;only&nbsp;occurs&nbsp;when&lt;br&gt;<br>
+you&nbsp;enable&nbsp;&quot;-w&quot;&nbsp;to&nbsp;use&nbsp;SCIFIO&nbsp;for&nbsp;output.&lt;br&gt;<br>
+&lt;br&gt;<br>
+While&nbsp;I&#39;m&nbsp;not&nbsp;entirely&nbsp;sure&nbsp;of&nbsp;the&nbsp;separation&nbsp;of&nbsp;responsibilities&lt;br&gt;<br>
+between&nbsp;ITK,&nbsp;SCIFIO&nbsp;and&nbsp;Bio-Formats&nbsp;for&nbsp;this&nbsp;particular&nbsp;task,&nbsp;I&nbsp;don&#39;t&lt;br&gt;<br>
+think&nbsp;the&nbsp;problem&nbsp;is&nbsp;in&nbsp;Bio-Formats,&nbsp;but&nbsp;in&nbsp;SCIFIO&nbsp;setting&nbsp;the&nbsp;wrong&lt;br&gt;<br>
+plane&nbsp;index&nbsp;when&nbsp;reading&nbsp;the&nbsp;image&nbsp;data,&nbsp;as&nbsp;shown&nbsp;by&nbsp;your&nbsp;stacktrace.&lt;br&gt;<br>
+Looks&nbsp;like&nbsp;it&#39;s&nbsp;trying&nbsp;to&nbsp;read&nbsp;z&nbsp;plane&nbsp;60&nbsp;when&nbsp;there&nbsp;are&nbsp;only&nbsp;60&nbsp;planes&lt;br&gt;<br>
+(0-59),&nbsp;assuming&nbsp;it&#39;s&nbsp;series&nbsp;2;&nbsp;the&nbsp;others&nbsp;all&nbsp;have&nbsp;too&nbsp;different&nbsp;z&lt;br&gt;<br>
+sizes. &nbsp;I&nbsp;would&nbsp;suggest&nbsp;reporting&nbsp;this&nbsp;to&nbsp;the&nbsp;SCIFIO&nbsp;developers&nbsp;at&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio&quot;&nbsp;target=&quot;_blank&quot;&gt;https://github.com/scifio/&lt;u&gt;&lt;/u&gt;scifio&lt;/a&gt;&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+Regards,&lt;br&gt;<br>
+Roger&nbsp;Leigh&lt;br&gt;<br>
+&lt;br&gt;<br>
+--&lt;br&gt;<br>
+Dr&nbsp;Roger&nbsp;Leigh&nbsp;--&nbsp;Open&nbsp;Microscopy&nbsp;Environment&lt;br&gt;<br>
+Wellcome&nbsp;Trust&nbsp;Centre&nbsp;for&nbsp;Gene&nbsp;Regulation&nbsp;and&nbsp;Expression,&lt;br&gt;<br>
+College&nbsp;of&nbsp;Life&nbsp;Sciences,&nbsp;University&nbsp;of&nbsp;Dundee,&nbsp;Dow&nbsp;Street,&lt;br&gt;<br>
+Dundee&nbsp;DD1&nbsp;5EH&nbsp;Scotland&nbsp;UK &nbsp; Tel:&nbsp;(01382)&nbsp;386364&lt;br&gt;<br>
+&lt;br&gt;<br>
+The&nbsp;University&nbsp;of&nbsp;Dundee&nbsp;is&nbsp;a&nbsp;registered&nbsp;Scottish&nbsp;Charity,&nbsp;No:&nbsp;SC015096&lt;br&gt;<br>
+______________________________&lt;u&gt;&lt;/u&gt;_________________&lt;br&gt;<br>
+ome-users&nbsp;mailing&nbsp;list&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;mailto:ome-users@lists.openmicroscopy.org.uk&quot;&nbsp;target=&quot;_blank&quot;&gt;ome-users@lists.&lt;u&gt;&lt;/u&gt;openmicroscopy.org.uk&lt;/a&gt;&lt;br&gt;<br>
+&lt;a&nbsp;href=&quot;http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users&quot;&nbsp;target=&quot;_blank&quot;&gt;http://lists.openmicroscopy.&lt;u&gt;&lt;/u&gt;org.uk/mailman/listinfo/ome-&lt;u&gt;&lt;/u&gt;users&lt;/a&gt;&lt;br&gt;<br>
+&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+&lt;/div&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+
+</tt>

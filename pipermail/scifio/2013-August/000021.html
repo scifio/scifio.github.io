@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> SCIFIO 0.5.0
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20SCIFIO%200.5.0&In-Reply-To=%3CCA%2BB%3DmGqXuTbLaCPxFKYs_dtCDRrhq-9ME0KwNqNTB__N0%2B9NHA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000020.html">
+   <LINK REL="Next"  HREF="000022.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>SCIFIO 0.5.0</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20SCIFIO%200.5.0&In-Reply-To=%3CCA%2BB%3DmGqXuTbLaCPxFKYs_dtCDRrhq-9ME0KwNqNTB__N0%2B9NHA%40mail.gmail.com%3E"
+       TITLE="SCIFIO 0.5.0">hiner at wisc.edu
+       </A><BR>
+    <I>Wed Aug 14 08:18:16 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000020.html">Minimal Service Setup for ImgOpener
+</A></li>
+        <LI>Next message: <A HREF="000022.html">[SCIFIO] SCIFIO mailing list
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#21">[ date ]</a>
+              <a href="thread.html#21">[ thread ]</a>
+              <a href="subject.html#21">[ subject ]</a>
+              <a href="author.html#21">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi all,
+
+ Yesterday I released SCIFIO beta
+0.5.0&lt;<A HREF="https://github.com/scifio/scifio/releases/tag/scifio-0.5.0">https://github.com/scifio/scifio/releases/tag/scifio-0.5.0</A>&gt;.
+There are a number of new features and significant bug fixes, including:
+
+   - Use of CalibratedAxis&lt;<A HREF="https://github.com/imagej/imglib/blob/master/meta/src/main/java/net/imglib2/meta/CalibratedAxis.java">https://github.com/imagej/imglib/blob/master/meta/src/main/java/net/imglib2/meta/CalibratedAxis.java</A>&gt;in
+SCIFIO Metadata. This allows for calibration/physical pixel size
+support
+   without requiring OME-XML.
+   - Updates to use the latest
+Scijava-common&lt;<A HREF="https://github.com/scijava/scijava-common">https://github.com/scijava/scijava-common</A>&gt;(improved
+logging, Service support, etc..)
+   - Enhanced ImgOptions&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/ImgOptions.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/ImgOptions.java</A>&gt;to
+allow discontinuous
+   sub-region&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/SubRegion.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/SubRegion.java</A>&gt;specification
+   - Improved CacheService&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/cell/cache/CacheService.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/img/cell/cache/CacheService.java</A>&gt;performance/stability
+   - Fixed memory leaks
+   - Improved Filter&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/filters/Filter.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/filters/Filter.java</A>&gt;functionality
+
+ My current goal is to release a
+SCIFIO-BF-compat&lt;<A HREF="https://github.com/scifio/scifio-bf-compat">https://github.com/scifio/scifio-bf-compat</A>&gt;update,
+using SCIFIO 0.5.0 and introducing OME-XML Formats, Metadata and
+Translators.
+
+ The next SCIFIO release is 0.6.0, which will be a complete refactoring to
+true N-dimensionality.
+
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130814/49223d6f/attachment.html">http://scif.io/pipermail/scifio/attachments/20130814/49223d6f/attachment.html</A>&gt;
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000020.html">Minimal Service Setup for ImgOpener
+</A></li>
+	<LI>Next message: <A HREF="000022.html">[SCIFIO] SCIFIO mailing list
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#21">[ date ]</a>
+              <a href="thread.html#21">[ thread ]</a>
+              <a href="subject.html#21">[ subject ]</a>
+              <a href="author.html#21">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

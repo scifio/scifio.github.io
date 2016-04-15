@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to TIFF
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20T1dSavingImagePlanes%20breaks%20when%20changing%20from%20PNG%20to%20TIFF&In-Reply-To=%3CE5BED793-1F40-4F81-ADAA-0B534DDECAF4%40dsuk.biz%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to TIFF</H1>
+    <B>Michael Ellis</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20T1dSavingImagePlanes%20breaks%20when%20changing%20from%20PNG%20to%20TIFF&In-Reply-To=%3CE5BED793-1F40-4F81-ADAA-0B534DDECAF4%40dsuk.biz%3E"
+       TITLE="[SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to TIFF">michael.ellis at dsuk.biz
+       </A><BR>
+    <I>Wed Dec  3 05:20:44 CST 2014</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#229">[ date ]</a>
+              <a href="thread.html#229">[ thread ]</a>
+              <a href="subject.html#229">[ subject ]</a>
+              <a href="author.html#229">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>T1dSavingImagePlanes saves a fake image &#8220;8bit-signed&amp;pixelType=int8&amp;lengths=50,50,3,5,7&amp;axes=X,Y,Z,Channel,Time.fake&#8221; as a png file.
+
+I run the program and it completes without errors.
+
+I&#8217;m curious though because I didn&#8217;t think PNG files could handle anything other than 2D images. So I try to open the SCIFIOTutorial.png
+in ImageJ and I see only a single plane image. There are no warnings or errors when saving the file to suggest that there is any loss of fidelity. Is
+that the intention?
+
+Anyway, I know TIFF files can support multiple channels, so I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program. I get the following exception:
+
+Exception in thread &quot;main&quot; io.scif.FormatException: Buffer too small (got 2500, expected 12500).
+	at io.scif.util.FormatTools.checkBufferSize(FormatTools.java:665)
+	at io.scif.util.FormatTools.checkPlaneForWriting(FormatTools.java:610)
+	at io.scif.AbstractWriter.checkParams(AbstractWriter.java:121)
+	at io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1291)
+	at io.scif.formats.TIFFFormat$Writer.writePlane(TIFFFormat.java:1399)
+	at io.scif.AbstractWriter.savePlane(AbstractWriter.java:168)
+	at io.scif.AbstractWriter.savePlane(AbstractWriter.java:159)
+	at io.scif.tutorials.core.T1dSavingImagePlanes.main(T1dSavingImagePlanes.java:75)
+
+Now this is most unexpected, because I would have assumed the TIFF format was able to store the images with at least the same fidelity as PNG.
+
+OK I know TIFF can save files of 3 dimensions, so I change the fake images to &#8220;8bit-signed&amp;pixelType=int8&amp;lengths=50,50,7&amp;axes=X,Y,Channel.fake&#8221;
+
+Again I get and exception.
+
+OK, how about a 2D image, &#8220;8bit-signed&amp;pixelType=int8&amp;lengths=50,50&amp;axes=X,Y.fake&#8221;?
+
+And that finally works.
+
+So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+
+Thanks for any help.
+
+&#8212; Michael Ellis
+Digital Scientific UK Ltd.
+
+
+
+
+
+</PRE>
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#229">[ date ]</a>
+              <a href="thread.html#229">[ thread ]</a>
+              <a href="subject.html#229">[ subject ]</a>
+              <a href="author.html#229">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] [ome-users] converting lif files to ome-tiff
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20%5Bome-users%5D%20converting%20lif%20files%20to%20ome-tiff&In-Reply-To=%3CCA%2BB%3DmGqGg99i1JxxJL1uiMr-hpxR6GRyPb08x_Tg9cVOAVaTmg%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000096.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] [ome-users] converting lif files to ome-tiff</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20%5Bome-users%5D%20converting%20lif%20files%20to%20ome-tiff&In-Reply-To=%3CCA%2BB%3DmGqGg99i1JxxJL1uiMr-hpxR6GRyPb08x_Tg9cVOAVaTmg%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] [ome-users] converting lif files to ome-tiff">hiner at wisc.edu
+       </A><BR>
+    <I>Wed Sep 10 15:11:56 CDT 2014</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000096.html">[SCIFIO] New file format for SCIFIO
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#95">[ date ]</a>
+              <a href="thread.html#95">[ thread ]</a>
+              <a href="subject.html#95">[ subject ]</a>
+              <a href="author.html#95">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Michael,
+
+I opened a pull request &lt;<A HREF="http://review.source.kitware.com/#/c/16967/">http://review.source.kitware.com/#/c/16967/</A>&gt; to
+get the latest SCIFIO-ITK imageIO incorporated into the master ITK branch.
+
+This fixes the metadata bug suspected by Roger (the dimensions of the first
+series were always being used, which would crash on encountering a dataset
+with smaller dimensions). It also upgrades the ImageIO to use Bio-Formats
+5.0.4, and has some other minor fixes and improvements.
+
+With these updates I was able to fully convert your image as a multi-series
+image, using the command:
+SCIFIOTestDriver ko-A.ome.tiff out.ome.tif -w -a -d 5
+
+Thanks for the report, it was very helpful. Please let us know if you run
+into any more problems.
+
+Regards,
+Mark
+
+On Wed, Aug 20, 2014 at 12:05 PM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hinerm at gmail.com</A>&gt; wrote:
+
+&gt;<i> Hi all,
+</I>&gt;<i>
+</I>&gt;<i> &gt;While I'm not entirely sure of the separation of responsibilities between
+</I>&gt;<i> ITK, SCIFIO and Bio-Formats for this
+</I>&gt;<i> &gt;particular task
+</I>&gt;<i>
+</I>&gt;<i> The readme for the SCIFIO-ITK ImageIO (
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio-imageio">https://github.com/scifio/scifio-imageio</A>) was out of date. It should now
+</I>&gt;<i> correctly instruct users to e-mail <A HREF="http://scif.io/mailman/listinfo/scifio">scifio at scif.io</A> (copied) for ITK
+</I>&gt;<i> imageIO troubleshooting.
+</I>&gt;<i>
+</I>&gt;<i> &gt; I found this only occurs when you enable &quot;-w&quot; to use SCIFIO for output.
+</I>&gt;<i>
+</I>&gt;<i> Note that without the -w flag, the default ITK TIFF writer will be used,
+</I>&gt;<i> which I thought was limited to 3 dimensions (or at least it was at one
+</I>&gt;<i> time). If you want to write an .ome.tiff it has to be written with
+</I>&gt;<i> Bio-Formats, anyway.
+</I>&gt;<i>
+</I>&gt;<i> &gt; Looks like it's trying to read z plane 60 when there are only 60 planes
+</I>&gt;<i>
+</I>&gt;<i> I'm assuming the # of planes to read isn't being updated for each series..
+</I>&gt;<i> I'll look into it when I get a chance.
+</I>&gt;<i>
+</I>&gt;<i> Thanks for the report,
+</I>&gt;<i> Mark
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> On Wed, Aug 20, 2014 at 9:53 AM, Roger Leigh &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">rleigh at dundee.ac.uk</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> On 19/08/14 19:52, Michael Meuli wrote:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Dear Michael,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  I have some problems converting my .lif files to ome-tiff.
+</I>&gt;&gt;&gt;<i> I have converted my .lif files originating from a &quot;CLSM Leica SP 8&quot;
+</I>&gt;&gt;&gt;<i> with bfconvert of Bio-Formats 5.0.3.
+</I>&gt;&gt;&gt;<i> Trying to make it reproducible I took the file &quot;ko-A.ome.tiff&quot; which
+</I>&gt;&gt;&gt;<i> can be found here:
+</I>&gt;&gt;&gt;<i> &quot;<A HREF="https://www.dropbox.com/sh/t2z0f4jttcnfh8s/AADq21HNR7EwH1JFxskhXXhea">https://www.dropbox.com/sh/t2z0f4jttcnfh8s/AADq21HNR7EwH1JFxskhXXhea</A>&quot;
+</I>&gt;&gt;&gt;<i>    in the ome-tiff-files folder.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Thanks.  I've been able to reproduce the validation problems.  I have
+</I>&gt;&gt;<i> opened a ticket for this and CC'd you on it; please see
+</I>&gt;&gt;<i> <A HREF="https://trac.openmicroscopy.org.uk/ome/ticket/12532">https://trac.openmicroscopy.org.uk/ome/ticket/12532</A>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Note however that the above validation error is harmless; it does not
+</I>&gt;&gt;<i> affect bioformats' correct reading of the OME-TIFF and I was able to
+</I>&gt;&gt;<i> read all planes of every series without trouble, and also convert the
+</I>&gt;&gt;<i> file to a new OME-TIFF which strips out the MetadataOnly elements.  I
+</I>&gt;&gt;<i> don't think this is in any way related to your other problem, below.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  Below you can find the output of bfconvert, xmlvalid and
+</I>&gt;&gt;&gt;<i> SCIFIOTestDriver itkSCIFIOImageIOTest with the -a flag.
+</I>&gt;&gt;&gt;<i> The output of tiffcomment you can find as attachment.
+</I>&gt;&gt;&gt;<i> itkSCIFIOImageIOTest in this example crashes trying to read the third
+</I>&gt;&gt;&gt;<i> series.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> I built ITK with itkscifio to test this.  I found this only occurs when
+</I>&gt;&gt;<i> you enable &quot;-w&quot; to use SCIFIO for output.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> While I'm not entirely sure of the separation of responsibilities
+</I>&gt;&gt;<i> between ITK, SCIFIO and Bio-Formats for this particular task, I don't
+</I>&gt;&gt;<i> think the problem is in Bio-Formats, but in SCIFIO setting the wrong
+</I>&gt;&gt;<i> plane index when reading the image data, as shown by your stacktrace.
+</I>&gt;&gt;<i> Looks like it's trying to read z plane 60 when there are only 60 planes
+</I>&gt;&gt;<i> (0-59), assuming it's series 2; the others all have too different z
+</I>&gt;&gt;<i> sizes.  I would suggest reporting this to the SCIFIO developers at
+</I>&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio">https://github.com/scifio/scifio</A>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Regards,
+</I>&gt;&gt;<i> Roger Leigh
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> --
+</I>&gt;&gt;<i> Dr Roger Leigh -- Open Microscopy Environment
+</I>&gt;&gt;<i> Wellcome Trust Centre for Gene Regulation and Expression,
+</I>&gt;&gt;<i> College of Life Sciences, University of Dundee, Dow Street,
+</I>&gt;&gt;<i> Dundee DD1 5EH Scotland UK   Tel: (01382) 386364
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> The University of Dundee is a registered Scottish Charity, No: SC015096
+</I>&gt;&gt;<i> _______________________________________________
+</I>&gt;&gt;<i> ome-users mailing list
+</I>&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">ome-users at lists.openmicroscopy.org.uk</A>
+</I>&gt;&gt;<i> <A HREF="http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users">http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users</A>
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20140910/8c9e08e6/attachment.html">http://scif.io/pipermail/scifio/attachments/20140910/8c9e08e6/attachment.html</A>&gt;
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000096.html">[SCIFIO] New file format for SCIFIO
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#95">[ date ]</a>
+              <a href="thread.html#95">[ thread ]</a>
+              <a href="subject.html#95">[ subject ]</a>
+              <a href="author.html#95">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

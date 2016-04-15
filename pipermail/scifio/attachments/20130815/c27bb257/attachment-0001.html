@@ -1,0 +1,67 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Hi&nbsp;Michael,&lt;br&gt;&lt;br&gt;&lt;/div&gt; You&#39;re&nbsp;using&nbsp;the&nbsp;scifio-bf-compat&nbsp;snapshot&nbsp;right?&lt;br&gt;&lt;br&gt;&lt;blockquote&nbsp;style=&quot;margin:0px&nbsp;0px&nbsp;0px&nbsp;0.8ex;border-left:1px&nbsp;solid&nbsp;rgb(204,204,204);padding-left:1ex&quot;&nbsp;class=&quot;gmail_quote&quot;&gt;<br>
+<br>
+ &nbsp; &nbsp;-&nbsp;we&nbsp;had&nbsp;to&nbsp;add&nbsp;two&nbsp;services&nbsp;to&nbsp;our&nbsp;Scifio&nbsp;Context&nbsp;OMEXMLMetadataService.class,&nbsp;OMEXMLService.class&lt;br&gt;&lt;/blockquote&gt;&lt;br&gt;&lt;/div&gt; Curtis&nbsp;and&nbsp;I&nbsp;talked&nbsp;about&nbsp;a&nbsp;Service&nbsp;solution..&nbsp;it&nbsp;should&nbsp;be&nbsp;fairly&nbsp;straightforward,&nbsp;just&nbsp;have&nbsp;to&nbsp;do&nbsp;it!&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;br&gt;&lt;blockquote&nbsp;style=&quot;margin:0px&nbsp;0px&nbsp;0px&nbsp;0.8ex;border-left:1px&nbsp;solid&nbsp;rgb(204,204,204);padding-left:1ex&quot;&nbsp;class=&quot;gmail_quote&quot;&gt;<br>
+One&nbsp;other&nbsp;small&nbsp;bug:&nbsp;the&nbsp;OMEMetadata&nbsp;empty&nbsp;constructor&nbsp;is&nbsp;broken&lt;br&gt; &lt;br&gt;&lt;/blockquote&gt;&lt;br&gt;&lt;/div&gt; Yeah,&nbsp;Curtis&nbsp;made&nbsp;the&nbsp;@Parameter&nbsp;injection&nbsp;smarter&nbsp;for&nbsp;Scijava-common,&nbsp;but&nbsp;it&nbsp;means&nbsp;no&nbsp;more&nbsp;null&nbsp;contexts&nbsp;allowed.&nbsp;I&nbsp;will&nbsp;fix&nbsp;that,&nbsp;thanks&nbsp;for&nbsp;pointing&nbsp;it&nbsp;out!&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;blockquote&nbsp;style=&quot;margin:0px&nbsp;0px&nbsp;0px&nbsp;0.8ex;border-left:1px&nbsp;solid&nbsp;rgb(204,204,204);padding-left:1ex&quot;&nbsp;class=&quot;gmail_quote&quot;&gt;-&nbsp;but&nbsp;this&nbsp;does&nbsp;not&nbsp;work&nbsp;for&nbsp;jpg&nbsp;images&nbsp;(index&nbsp;out&nbsp;of&nbsp;bounds)&lt;br&gt;&lt;/blockquote&gt;&lt;br&gt;&lt;/div&gt;where&nbsp;do&nbsp;you&nbsp;get&nbsp;this&nbsp;exception?&nbsp;I&#39;ll&nbsp;write&nbsp;some&nbsp;calibration&nbsp;unit&nbsp;tests&nbsp;today&nbsp;to&nbsp;try&nbsp;and&nbsp;cover&nbsp;these&nbsp;scenarios.&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt;Also,&nbsp;where&nbsp;is&nbsp;your&nbsp;calibration&nbsp;data&nbsp;coming&nbsp;from&nbsp;exactly?&nbsp;I&nbsp;don&#39;t&nbsp;believe&nbsp;there&#39;s&nbsp;any&nbsp;metadata&nbsp;in&nbsp;JPEG&nbsp;that&#39;s&nbsp;explicitly&nbsp;being&nbsp;translated&nbsp;to&nbsp;calibration&nbsp;values.&nbsp;So&nbsp;currently&nbsp;the&nbsp;expected&nbsp;behavior&nbsp;would&nbsp;be&nbsp;to&nbsp;see&nbsp;default&nbsp;calibration&nbsp;(1.0um)&nbsp;for&nbsp;each&nbsp;axis.&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt;Still,&nbsp;setting&nbsp;the&nbsp;calibration&nbsp;after&nbsp;initializing&nbsp;Metadata&nbsp;should&nbsp;work..&nbsp;can&nbsp;you&nbsp;share&nbsp;the&nbsp;code&nbsp;snippet&nbsp;that&#39;s&nbsp;doing&nbsp;the&nbsp;setting?&lt;br&gt;&lt;br&gt;&lt;blockquote&nbsp;style=&quot;margin:0px&nbsp;0px&nbsp;0px&nbsp;0.8ex;border-left:1px&nbsp;solid&nbsp;rgb(204,204,204);padding-left:1ex&quot;&nbsp;class=&quot;gmail_quote&quot;&gt;<br>
+<br>
+ &nbsp; &nbsp;-&nbsp;and&nbsp;I&nbsp;have&nbsp;at&nbsp;least&nbsp;one&nbsp;.lsm&nbsp;image&nbsp;that&nbsp;fails&nbsp;with&nbsp;a&nbsp;null&nbsp;pointer&nbsp;if&nbsp;I&nbsp;load&nbsp;it&nbsp;with&nbsp;.openImg.&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp;This&nbsp;error&nbsp;is&nbsp;not&nbsp;related&nbsp;to&nbsp;our&nbsp;attemps&nbsp;to&nbsp;get&nbsp;callibration&nbsp;working&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp;(img&nbsp;in&nbsp;the&nbsp;appendix)&lt;br&gt;&lt;/blockquote&gt;&lt;br&gt;&lt;/div&gt;Thanks&nbsp;for&nbsp;providing&nbsp;the&nbsp;failing&nbsp;image.&nbsp;I&#39;ll&nbsp;test&nbsp;that&nbsp;today.&lt;br&gt;&lt;br&gt;&lt;blockquote&nbsp;style=&quot;margin:0px&nbsp;0px&nbsp;0px&nbsp;0.8ex;border-left:1px&nbsp;solid&nbsp;rgb(204,204,204);padding-left:1ex&quot;&nbsp;class=&quot;gmail_quote&quot;&gt;<br>
+<br>
+I&nbsp;looked&nbsp;today&nbsp;at&nbsp;the&nbsp;interval&nbsp;selection&nbsp;code.&nbsp;Could&nbsp;you&nbsp;add&nbsp;a&nbsp;long[]&nbsp;<br>
+constructor&nbsp;for&nbsp;DimRange?&nbsp;I&nbsp;think&nbsp;a&nbsp;simple&nbsp;one&nbsp;that&nbsp;just&nbsp;lists&nbsp;all&nbsp;<br>
+included&nbsp;indices&nbsp;should&nbsp;be&nbsp;enough&nbsp;(equivalent&nbsp;to&nbsp;the&nbsp;string&nbsp;constructor&nbsp;<br>
+with&nbsp;&quot;a,b,c,d&quot;&nbsp; &nbsp;long[]&nbsp;{a,b,c,d})&lt;br&gt;&lt;/blockquote&gt;&lt;br&gt;&lt;/div&gt;Yep,&nbsp;that&nbsp;sounds&nbsp;reasonable&nbsp;:)&nbsp;I&nbsp;may&nbsp;release&nbsp;a&nbsp;0.5.2&nbsp;today&nbsp;because&nbsp;of&nbsp;some&nbsp;ImgSaver&nbsp;bug&nbsp;fixes&nbsp;I&nbsp;made&nbsp;yesterday..&nbsp;so&nbsp;if&nbsp;so,&nbsp;this&nbsp;will&nbsp;be&nbsp;included&nbsp;as&nbsp;well.&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt;Thanks&nbsp;for&nbsp;the&nbsp;feedback,&lt;br&gt;&lt;/div&gt;Mark&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Thu,&nbsp;Aug&nbsp;15,&nbsp;2013&nbsp;at&nbsp;7:48&nbsp;AM,&nbsp;Michael&nbsp;Zinsmaier&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:michael.zinsmaier@gmx.de&quot;&nbsp;target=&quot;_blank&quot;&gt;michael.zinsmaier@gmx.de&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;Hi&nbsp;Mark,&lt;br&gt;<br>
+&lt;br&gt;<br>
+yay&nbsp;the&nbsp;new&nbsp;libs&nbsp;(currently&nbsp;scifio-bf-compat&nbsp;1.0.1&nbsp;/&nbsp;scifio-0.5.1&nbsp;/&nbsp;scijava-common-2.0.2)&nbsp;are&nbsp;working&nbsp;(-:&lt;br&gt;<br>
+&lt;br&gt;<br>
+Callibration&nbsp;still&nbsp;makes&nbsp;some&nbsp;trouble&nbsp;(I&nbsp;know&nbsp;that&nbsp;is&nbsp;super&nbsp;early&nbsp;implementation&nbsp;stage&nbsp;but&nbsp;anyways)&lt;br&gt;<br>
+ &nbsp; &nbsp;-&nbsp;we&nbsp;had&nbsp;to&nbsp;add&nbsp;two&nbsp;services&nbsp;to&nbsp;our&nbsp;Scifio&nbsp;Context&nbsp;OMEXMLMetadataService.class,&nbsp;OMEXMLService.class&lt;br&gt;<br>
+ &nbsp; &nbsp;-&nbsp;the&nbsp;ImgPlus&nbsp;returned&nbsp;by&nbsp;ImgOpener.openImg&nbsp;does&nbsp;not&nbsp;contain&nbsp;callibration&nbsp;values&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;because&nbsp;of&nbsp;the&nbsp;2nd&nbsp;point&nbsp;we&nbsp;added&nbsp;a&nbsp;small&nbsp;hack:&nbsp;we&nbsp;currently&nbsp;add&nbsp;the&nbsp;calibration&nbsp;values&nbsp;after&nbsp;loading&nbsp;of&nbsp;the&nbsp;image&nbsp;(calibration&nbsp;values&lt;br&gt;<br>
+ &nbsp; &nbsp;come&nbsp;from&nbsp;metadata&nbsp;-&gt;&nbsp;ome&nbsp;metadata)&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;-&nbsp;but&nbsp;this&nbsp;does&nbsp;not&nbsp;work&nbsp;for&nbsp;jpg&nbsp;images&nbsp;(index&nbsp;out&nbsp;of&nbsp;bounds)&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;-&nbsp;and&nbsp;I&nbsp;have&nbsp;at&nbsp;least&nbsp;one&nbsp;.lsm&nbsp;image&nbsp;that&nbsp;fails&nbsp;with&nbsp;a&nbsp;null&nbsp;pointer&nbsp;if&nbsp;I&nbsp;load&nbsp;it&nbsp;with&nbsp;.openImg.&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp;This&nbsp;error&nbsp;is&nbsp;not&nbsp;related&nbsp;to&nbsp;our&nbsp;attemps&nbsp;to&nbsp;get&nbsp;callibration&nbsp;working&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp;(img&nbsp;in&nbsp;the&nbsp;appendix)&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+One&nbsp;other&nbsp;small&nbsp;bug:&nbsp;the&nbsp;OMEMetadata&nbsp;empty&nbsp;constructor&nbsp;is&nbsp;broken&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp;OMEMEtadata()&nbsp; &nbsp; &nbsp;-&gt;&nbsp; &nbsp; &nbsp;this(null)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;OMEMetadata(final&nbsp;Context&nbsp;context)&nbsp; &nbsp; &nbsp; &nbsp;-&gt;&nbsp;this(context,&nbsp;null);&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;OMEMetadata(final&nbsp;Context&nbsp;context,&nbsp;final&nbsp;OMEXMLMetadata&nbsp;root)&nbsp; &nbsp; &nbsp; -&gt;&nbsp; &nbsp; setContext(context)&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;context.inject(this);&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;=&gt;&nbsp;NullPointer&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+And&nbsp;finally&nbsp;a&nbsp;feature&nbsp;request:&lt;br&gt;<br>
+I&nbsp;looked&nbsp;today&nbsp;at&nbsp;the&nbsp;interval&nbsp;selection&nbsp;code.&nbsp;Could&nbsp;you&nbsp;add&nbsp;a&nbsp;long[]&nbsp;constructor&nbsp;for&nbsp;DimRange?&nbsp;I&nbsp;think&nbsp;a&nbsp;simple&nbsp;one&nbsp;that&nbsp;just&nbsp;lists&nbsp;all&nbsp;included&nbsp;indices&nbsp;should&nbsp;be&nbsp;enough&nbsp;(equivalent&nbsp;to&nbsp;the&nbsp;string&nbsp;constructor&nbsp;with&nbsp;&quot;a,b,c,d&quot;&nbsp; &nbsp;long[]&nbsp;{a,b,c,d})&lt;br&gt;<br>
+<br>
+<br>
+&lt;br&gt;<br>
+Best&nbsp;regards&lt;span&nbsp;class=&quot;HOEnZb&quot;&gt;&lt;font&nbsp;color=&quot;#888888&quot;&gt;&lt;br&gt;<br>
+Michael&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;/font&gt;&lt;/span&gt;&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+
+</tt>

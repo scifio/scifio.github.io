@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Block-wise writer
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Block-wise%20writer&In-Reply-To=%3CCA%2BB%3DmGrPp1xSB2Q6t73v70%3Do%2BYrn%3DuTegKyUinOPMTDQ%2B2aLcA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Block-wise writer</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Block-wise%20writer&In-Reply-To=%3CCA%2BB%3DmGrPp1xSB2Q6t73v70%3Do%2BYrn%3DuTegKyUinOPMTDQ%2B2aLcA%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Block-wise writer">hiner at wisc.edu
+       </A><BR>
+    <I>Mon Feb  2 09:42:29 CST 2015</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#254">[ date ]</a>
+              <a href="thread.html#254">[ thread ]</a>
+              <a href="subject.html#254">[ subject ]</a>
+              <a href="author.html#254">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Burkhard,
+
+&gt;<i>This is exactly what I want, because my writer can not write a series of
+</I>2D planes.
+&gt;<i>Please advise if I am still missing something, or if this is not the right
+</I>way of doing this for now.
+
+In that case it sounds like what you're doing is perfectly correct.
+
+&gt;<i>Instead, it complains about the image having n planes, while it really
+</I>should have only 1
+
+After looking at the source again, this message should just be coming up as
+a warning[1]. You should be able to continue writing. Is there an error
+message that comes up later? If you launch Fiji from the command line, or
+turn Edit &gt; Options &gt; Misc... &gt; Debug mode on you should be able to fully
+capture any exceptions.
+
+Thank you!
+- Mark
+
+[1]
+<A HREF="https://github.com/scifio/scifio/blob/df3ab80b052055b8241cda3798a246ba6a9dbb8f/src/main/java/io/scif/img/ImgSaver.java#L599-605">https://github.com/scifio/scifio/blob/df3ab80b052055b8241cda3798a246ba6a9dbb8f/src/main/java/io/scif/img/ImgSaver.java#L599-605</A>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20150202/f1e848e5/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20150202/f1e848e5/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#254">[ date ]</a>
+              <a href="thread.html#254">[ thread ]</a>
+              <a href="subject.html#254">[ subject ]</a>
+              <a href="author.html#254">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

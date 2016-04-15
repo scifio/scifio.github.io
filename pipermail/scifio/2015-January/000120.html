@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Block-wise reader
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Block-wise%20reader&In-Reply-To=%3CCA%2BB%3DmGpHu5nAPzjPkJ734QmEZjFiz8TNRODu7AOg2GaZdb%3DxSw%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000119.html">
+   <LINK REL="Next"  HREF="000121.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Block-wise reader</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Block-wise%20reader&In-Reply-To=%3CCA%2BB%3DmGpHu5nAPzjPkJ734QmEZjFiz8TNRODu7AOg2GaZdb%3DxSw%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Block-wise reader">hiner at wisc.edu
+       </A><BR>
+    <I>Tue Jan 27 10:25:55 CST 2015</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000119.html">[SCIFIO] Block-wise reader
+</A></li>
+        <LI>Next message: <A HREF="000121.html">[SCIFIO] Block-wise reader
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#120">[ date ]</a>
+              <a href="thread.html#120">[ thread ]</a>
+              <a href="subject.html#120">[ subject ]</a>
+              <a href="author.html#120">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Burkhard,
+
+&gt;<i>I implemented a SCIFIO plugin
+</I>
+Awesome! :)
+
+&gt;<i>I am aware of the CellImg data structure, which seems to be just what I
+</I>need, but I am unsure how to make use of it through a SCIFIO Reader
+
+When consuming software (e.g. ImageJ) calls into SCIFIO (e.g. via the
+DatasetIOService[1] or ImgOpener[2]) it passes a configuration object which
+can tell SCIFIO to use a CellImg[3]. So the Reader itself doesn't really
+need to know about the CellImg. The CellImg will use the select an
+appropriate Reader to open bytes on demand. However, right now you are
+still likely going to get bit by the default AbstractReader[4] or
+DataTools[5].
+
+If you worked around these hard-coded limitations, I don't think it will be
+possible to actually display your planes - at least in Fiji/ImageJ right
+now.
+
+Basically, the short answer is: there is no recommended way to do this at
+the moment.
+
+That said, along with improving performance, expanding the SCIFIOCellImg
+class to support sub-region caching[6] to facilitate &gt;2GB planes is
+extremely high on my priorities list right now. It is functionality I would
+like to have in SCIFIO in the very near future.
+
+Hope that helps a bit. Let us know if there's any more information that
+would be helpful in the mean time.
+
+Best,
+Mark
+
+[1]
+<A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/services/DatasetIOService.java#L69">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/services/DatasetIOService.java#L69</A>
+[2]
+<A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/ImgOpener.java#L139-147">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/ImgOpener.java#L139-147</A>
+[3]
+<A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/config/SCIFIOConfig.java#L370-373">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/config/SCIFIOConfig.java#L370-373</A>
+[4]
+<A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/AbstractReader.java#L134-147">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/AbstractReader.java#L134-147</A>
+[5]
+<A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/common/DataTools.java#L881-888">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/common/DataTools.java#L881-888</A>
+[6] <A HREF="https://github.com/scifio/scifio/issues/125">https://github.com/scifio/scifio/issues/125</A>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20150127/de20b71a/attachment.html">http://scif.io/pipermail/scifio/attachments/20150127/de20b71a/attachment.html</A>&gt;
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000119.html">[SCIFIO] Block-wise reader
+</A></li>
+	<LI>Next message: <A HREF="000121.html">[SCIFIO] Block-wise reader
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#120">[ date ]</a>
+              <a href="thread.html#120">[ thread ]</a>
+              <a href="subject.html#120">[ subject ]</a>
+              <a href="author.html#120">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

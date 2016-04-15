@@ -1,0 +1,119 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Hi&nbsp;Michael,&lt;br&gt;&lt;br&gt; Just&nbsp;wanted&nbsp;to&nbsp;let&nbsp;you&nbsp;know&nbsp;that&nbsp;in&nbsp;the&nbsp;&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio/commit/9a0cd564ae4665697989cf184af7e306cf096fdb&quot;&gt;latest&nbsp;commit&lt;/a&gt;,&nbsp;I&nbsp;updated&nbsp;ImgOptions&nbsp;to&nbsp;allow&nbsp;discontinuous&nbsp;sub-regions&nbsp;to&nbsp;be&nbsp;specified.&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt; I&nbsp;don&#39;t&nbsp;love&nbsp;the&nbsp;API&nbsp;right&nbsp;now,&nbsp;especially&nbsp;since&nbsp;it&#39;s&nbsp;still&nbsp;tied&nbsp;to&nbsp;being&nbsp;5-D..&nbsp;so&nbsp;I&nbsp;hope&nbsp;to&nbsp;refine&nbsp;it&nbsp;soon&nbsp;when&nbsp;we&nbsp;switch&nbsp;to&nbsp;an&nbsp;N-D&nbsp;model.&nbsp;But&nbsp;it&nbsp;does&nbsp;seem&nbsp;to&nbsp;be&nbsp;functional&nbsp;at&nbsp;least!&lt;br&gt;&lt;br&gt;&lt;/div&gt; I&nbsp;have&nbsp;OME-XML&nbsp;changes&nbsp;ready&nbsp;for&nbsp;SCIFIO-BF-compat,&nbsp;so&nbsp;we&nbsp;just&nbsp;need&nbsp;to&nbsp;fix&nbsp;the&nbsp;dimension&nbsp;order&nbsp;error.&nbsp;Then&nbsp;we&nbsp;can&nbsp;start&nbsp;testing&nbsp;scifio&nbsp;+&nbsp;the&nbsp;compatibility&nbsp;layer&nbsp;together&nbsp;and&nbsp;move&nbsp;towards&nbsp;a&nbsp;release.&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt; &nbsp;I&#39;m&nbsp;out&nbsp;tomorrow&nbsp;so&nbsp;it&nbsp;may&nbsp;not&nbsp;be&nbsp;until&nbsp;early&nbsp;next&nbsp;week.&lt;br&gt;&lt;br&gt;&lt;/div&gt;-&nbsp;Mark&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Wed,&nbsp;Aug&nbsp;7,&nbsp;2013&nbsp;at&nbsp;10:28&nbsp;AM,&nbsp;Michael&nbsp;Zinsmaier&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:michael.zinsmaier@gmx.de&quot;&nbsp;target=&quot;_blank&quot;&gt;michael.zinsmaier@gmx.de&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;Hi&nbsp;Mark,&lt;br&gt;<br>
+&lt;br&gt;<br>
+that&nbsp;sound&nbsp;great.&nbsp;We&nbsp;used&nbsp;Snapshot&nbsp;versions&nbsp;because&nbsp;we&nbsp;want&nbsp;to&nbsp;actively&nbsp;test&nbsp;the&nbsp;ImgOpener&nbsp;however&nbsp;given&nbsp;your&nbsp;fast&nbsp;release&nbsp;cycle&nbsp;the&nbsp;latest&nbsp;stable&nbsp;version&nbsp;should&nbsp;be&nbsp;recent&nbsp;enough.&lt;br&gt;<br>
+Removing&nbsp;the&nbsp;need&nbsp;to&nbsp;depend&nbsp;on&nbsp;OME-XML&nbsp;4.5&nbsp;would&nbsp;be&nbsp;great.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Regards&nbsp;Michael&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;&lt;div&gt;&lt;div&nbsp;class=&quot;h5&quot;&gt;<br>
+Hi&nbsp;Michael,&lt;br&gt;<br>
+&lt;br&gt;<br>
+ I&#39;m&nbsp;copying&nbsp;the&nbsp;scifio&nbsp;mailing&nbsp;list,&nbsp;as&nbsp;this&nbsp;could&nbsp;be&nbsp;of&nbsp;general&lt;br&gt;<br>
+interest.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;bioformats,&nbsp;scifio&nbsp;and&nbsp;scifio-bf-compat&nbsp;are&nbsp;the&nbsp;latest&nbsp;snapshot&lt;br&gt;<br>
+ &nbsp; &nbsp;versions&nbsp;from&nbsp;the&nbsp;maven&nbsp;repository&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+First&nbsp;of&nbsp;all,&nbsp;I&nbsp;would&nbsp;recommend&nbsp;trying&nbsp;to&nbsp;use&nbsp;the&nbsp;release&nbsp;versions&lt;br&gt;<br>
+first&nbsp;(scifio&nbsp;0.4.1,&nbsp;scifio-bf-compat&nbsp;1.0.1).&nbsp;Is&nbsp;there&nbsp;some&nbsp;API&nbsp;in&nbsp;the&lt;br&gt;<br>
+snapshot&nbsp;versions&nbsp;you&nbsp;need&nbsp;specifically?&nbsp;If&nbsp;so,&nbsp;you&nbsp;could&nbsp;then&lt;br&gt;<br>
+transition&nbsp;from&nbsp;the&nbsp;release&nbsp;to&nbsp;snapshots,&nbsp;once&nbsp;you&#39;re&nbsp;updated&nbsp;to&nbsp;the&lt;br&gt;<br>
+SCIFIO&nbsp;0.4.X&nbsp;API.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Of&nbsp;course,&nbsp;SCIFIO-BF-compat&nbsp;1.0.0&nbsp;includes&nbsp;a&nbsp;scifio&nbsp;0.3.X&nbsp;dependency&lt;br&gt;<br>
+so&nbsp;it&#39;s&nbsp;not&nbsp;compatible&nbsp;with&nbsp;0.4.X...&nbsp;so&nbsp;I&nbsp;understand&nbsp;why&nbsp;you&nbsp;had&nbsp;to&lt;br&gt;<br>
+use&nbsp;snapshots.&nbsp;:(&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; *&nbsp;bioformats&nbsp;4.4.8&lt;br&gt;<br>
+ &nbsp; &nbsp; *&nbsp;ome-xml&nbsp;4.5&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+This&nbsp;looks&nbsp;like&nbsp;a&nbsp;limitation&nbsp;of&nbsp;the&nbsp;current&nbsp;SCIFIO-BF-compat&nbsp;project.&lt;br&gt;<br>
+First&nbsp;of&nbsp;all,&nbsp;it&nbsp;includes&nbsp;bio-formats&nbsp;and&nbsp;ome-xml&nbsp;4.4.8&nbsp;dependencies,&lt;br&gt;<br>
+so&nbsp;you&nbsp;shouldn&#39;t&nbsp;need&nbsp;to&nbsp;explicitly&nbsp;declare&nbsp;them.&lt;br&gt;<br>
+&lt;br&gt;<br>
+The&nbsp;OME-XML&nbsp;4.5&nbsp;with&nbsp;OMEMetadata&nbsp;class&nbsp;isn&#39;t&nbsp;really&nbsp;ready&nbsp;for&lt;br&gt;<br>
+consumption&nbsp;yet.&nbsp;Having&nbsp;an&nbsp;OME-XML&nbsp;4.5&nbsp;on&nbsp;the&nbsp;classpath&nbsp;with&nbsp;the&lt;br&gt;<br>
+inherited&nbsp;4.4.8&nbsp;dependency&nbsp;seems&nbsp;like&nbsp;a&nbsp;bad&nbsp;idea.&nbsp;So&nbsp;I&nbsp;think&lt;br&gt;<br>
+SCIFIO-BF-compat&nbsp;should&nbsp;have&nbsp;its&nbsp;own&nbsp;copy&nbsp;of&nbsp;the&nbsp;OMEMetadata&nbsp;class&nbsp;+&lt;br&gt;<br>
+translators&nbsp;for&nbsp;now,&nbsp;so&nbsp;you&nbsp;can&nbsp;translate&nbsp;to&nbsp;it&nbsp;to&nbsp;extract&nbsp;the&nbsp;OME-XML.&lt;br&gt;<br>
+&lt;br&gt;<br>
+This&nbsp;would&nbsp;be&nbsp;a&nbsp;temporary&nbsp;solution&nbsp;until&nbsp;our&nbsp;Bio-Formats&nbsp;fork&nbsp;is&lt;br&gt;<br>
+actually&nbsp;released&nbsp;(which&nbsp;could&nbsp;be&nbsp;a&nbsp;while,&nbsp;and&nbsp;would&nbsp;still&nbsp;have&nbsp;to&lt;br&gt;<br>
+resolve&nbsp;the&nbsp;4.5.X&nbsp;and&nbsp;4.4.X&nbsp;dependency&nbsp;issues).&lt;br&gt;<br>
+&lt;br&gt;<br>
+Unless&nbsp;anyone&nbsp;has&nbsp;other&nbsp;suggestions&nbsp;I&#39;ll&nbsp;do&nbsp;migrate&nbsp;over&nbsp;the&lt;br&gt;<br>
+OMEMetadata&nbsp;+&nbsp;translators&nbsp;this&nbsp;afternoon&nbsp;and&nbsp;release&nbsp;a&lt;br&gt;<br>
+SCIFIO-BF-compat&nbsp;1.1.0.&nbsp;That&nbsp;should&nbsp;resolve&nbsp;your&nbsp;dependency&nbsp;issues,&nbsp;at&lt;br&gt;<br>
+least,&nbsp;by&nbsp;also&nbsp;updating&nbsp;the&nbsp;SCIFIO&nbsp;version&nbsp;to&nbsp;0.4.X,&nbsp;so&nbsp;you&nbsp;can&nbsp;use&lt;br&gt;<br>
+actual&nbsp;release&nbsp;artifacts.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;The&nbsp;error&nbsp;message&nbsp;is&nbsp;&quot;IllegalArgumentException:&nbsp;Invalid&nbsp;dimension&lt;br&gt;<br>
+ &nbsp; &nbsp;order:&nbsp;XYC&quot;&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+This&nbsp;is&nbsp;a&nbsp;bug&nbsp;introduced&nbsp;in&nbsp;this&nbsp;commit&lt;br&gt;&lt;/div&gt;&lt;/div&gt;<br>
+&lt;&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio-bf-compat/commit/677fe7645e26e9e692f0ca823698f50349b69ef7&quot;&nbsp;target=&quot;_blank&quot;&gt;https://github.com/scifio/&lt;u&gt;&lt;/u&gt;scifio-bf-compat/commit/&lt;u&gt;&lt;/u&gt;677fe7645e26e9e692f0ca823698f5&lt;u&gt;&lt;/u&gt;0349b69ef7&lt;/a&gt;&gt;.&lt;div&nbsp;class=&quot;im&quot;&gt;<br>
+<br>
+&lt;br&gt;<br>
+I&nbsp;will&nbsp;resolve&nbsp;it&nbsp;and&nbsp;make&nbsp;sure&nbsp;you&nbsp;can&nbsp;extract&nbsp;OME-XML&nbsp;with&lt;br&gt;<br>
+scifio-bf-compat&nbsp;+&nbsp;scifio&nbsp;0.4.1&nbsp;before&nbsp;releasing.&lt;br&gt;<br>
+&lt;br&gt;<br>
+Hope&nbsp;that&nbsp;helps!&nbsp;Thanks&nbsp;for&nbsp;testing&nbsp;:)&lt;br&gt;<br>
+&lt;br&gt;<br>
+-&nbsp;Mark&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+On&nbsp;Tue,&nbsp;Aug&nbsp;6,&nbsp;2013&nbsp;at&nbsp;4:46&nbsp;PM,&nbsp;Michael&nbsp;Zinsmaier&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&nbsp;class=&quot;h5&quot;&gt;<br>
+&lt;&lt;a&nbsp;href=&quot;mailto:michael.zinsmaier@gmx.de&quot;&nbsp;target=&quot;_blank&quot;&gt;michael.zinsmaier@gmx.de&lt;/a&gt;&nbsp;&lt;mailto:&lt;a&nbsp;href=&quot;mailto:michael.zinsmaier@gmx.de&quot;&nbsp;target=&quot;_blank&quot;&gt;michael.zinsmaier@gmx.&lt;u&gt;&lt;/u&gt;de&lt;/a&gt;&gt;&gt;&nbsp;wrote:&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;Hi&nbsp;Mark,&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;we&nbsp;just&nbsp;started&nbsp;to&nbsp;use&nbsp;the&nbsp;ImgOpener.&nbsp;Unfortunately&nbsp;I&nbsp;can&#39;t&nbsp;open&lt;br&gt;<br>
+ &nbsp; &nbsp;.jpg&nbsp;images.&lt;br&gt;<br>
+ &nbsp; &nbsp;The&nbsp;error&nbsp;message&nbsp;is&nbsp;&quot;IllegalArgumentException:&nbsp;Invalid&nbsp;dimension&lt;br&gt;<br>
+ &nbsp; &nbsp;order:&nbsp;XYC&quot;&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;My&nbsp;last&nbsp;working&nbsp;testversion&nbsp;used&lt;br&gt;<br>
+ &nbsp; &nbsp; *&nbsp;scifio3.1&lt;br&gt;<br>
+ &nbsp; &nbsp; *&nbsp;bioformats&nbsp;4.4.8&lt;br&gt;<br>
+ &nbsp; &nbsp; *&nbsp;ome-xml&nbsp;4.5&lt;br&gt;<br>
+ &nbsp; &nbsp; *&nbsp;scifio-bf-compat&nbsp;1.0.1&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;and&nbsp;builds&nbsp;from&nbsp;roughly&nbsp;3&nbsp;weeks&nbsp;ago&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;the&nbsp;new&nbsp;setup&nbsp;uses&lt;br&gt;<br>
+ &nbsp; &nbsp;*&nbsp;scifio4.2&lt;br&gt;<br>
+ &nbsp; &nbsp; *&nbsp;bioformats&nbsp;4.4.8&lt;br&gt;<br>
+ &nbsp; &nbsp; *&nbsp;ome-xml&nbsp;4.5&lt;br&gt;<br>
+ &nbsp; &nbsp; *&nbsp;scifio-bf-compat&nbsp;1.0.1&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;bioformats,&nbsp;scifio&nbsp;and&nbsp;scifio-bf-compat&nbsp;are&nbsp;the&nbsp;latest&nbsp;snapshot&lt;br&gt;<br>
+ &nbsp; &nbsp;versions&nbsp;from&nbsp;the&nbsp;maven&nbsp;repository,&nbsp;ome-xml&lt;br&gt;<br>
+ &nbsp; &nbsp;is&nbsp;self&nbsp;build&nbsp;updated&nbsp;to&nbsp;the&nbsp;scifio&nbsp;branch&nbsp;from&nbsp;bioformats&nbsp;(last&lt;br&gt;<br>
+ &nbsp; &nbsp;commit&nbsp;12.07)&lt;br&gt;<br>
+ &nbsp; &nbsp;(By&nbsp;the&nbsp;way&nbsp;can&nbsp;I&nbsp;add&nbsp;the&nbsp;scifio&nbsp;ome-xml&nbsp;with&nbsp;OMEMetadata&nbsp;as&nbsp;maven&lt;br&gt;<br>
+ &nbsp; &nbsp;dependency?&nbsp;If&nbsp;yes&nbsp;how&nbsp;do&nbsp;I&nbsp;do&nbsp;it?)&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;Any&nbsp;ideas?&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;Best&nbsp;regards&lt;br&gt;<br>
+ &nbsp; &nbsp;Michael&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;/div&gt;&lt;/div&gt;&lt;/blockquote&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+
+</tt>

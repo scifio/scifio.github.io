@@ -1,0 +1,144 @@
+From hiner at wisc.edu  Thu Feb 27 08:15:18 2014
+From: hiner at wisc.edu (Mark Hiner)
+Date: Thu, 27 Feb 2014 08:15:18 -0600
+Subject: [SCIFIO] Contributing a new writer plugin
+In-Reply-To: <7780f8c98ce68.530b3e6d@wiscmail.wisc.edu>
+References: <CF30C90C.627%brianl@alleninstitute.org>
+	<CF30CCBA.62A%brianl@alleninstitute.org>
+	<7780f8c98ce68.530b3e6d@wiscmail.wisc.edu>
+Message-ID: <CA+B=mGp6aeVUKMaXTuc1ipk72nN7K2oiOOCNKqEjBFw1WMtPZg@mail.gmail.com>
+
+Hi Brian,
+
+I'm also working on incorporating this into the Bio-Formats writer, so if
+> anyone here has advice along those lines, I'd appreciate that too!  I'll be
+> cross-posting to their list as well when I have something working for the
+> BioFormats/Scifio/?  Convert tool.
+>
+
+This is fantastic. I am selfishly quite excited for someone else to create
+a new SCIFIO format. :)
+
+To get you (and other developers) started, I put together a wiki
+page<https://github.com/scifio/scifio/wiki/Adding-support-for-an-image-format>that
+discusses various aspects of format implementation, and provides a
+number of links to resources & tutorials for both Bio-Formats and SCIFIO.
+
+The referenced tutorials are intended to take you through the format
+implementation process, but if you have any questions or run into problems,
+please feel welcome to reach out to the SCIFIO (scifio at scif.io) or
+Bio-Formats (ome-devel at lists.openmicroscopy.org.uk) mailing lists.
+
+Let me know if anything is unclear on the wiki page.
+
+Thanks, we look forward to your contribution!
+- Mark
+
+---------- Forwarded message ----------
+> From: Brian Long <brianl at ALLENINSTITUTE.ORG>
+> To: IMAGEJ at LIST.NIH.GOV
+> Cc:
+> Date: Mon, 24 Feb 2014 18:18:07 +0000
+> Subject: Contributing a new writer plugin
+> Greetings-
+>
+> I've written a new writer plugin for saving images in .v3draw format for
+> opening in the 3D visualization program Vaa3D.  I'm new to the world of
+> java development,  maven and git:  how do I contribute the plugin to the
+> main ImageJ 1 repo?
+>
+> My plugin is built off the minimal-ij-1-plugin maven project and currently
+> configured to place another entry in the 'Save As >' menu.
+> General Info:  Vaa3D is an open-source platform for 3D visualization and
+> analysis of bio-images developed by Hanchuan Peng and his team (formerly
+> Janelia Farm HHMI, currently at the Allen Institute for Brain Science).
+>  Unlike the previous Vaa3d writer plugin that stored the whole image as a
+> variable before writing, this update writes plane-by-plane, meaning that
+> large files can be loaded as virtual stacks and written to .v3draw.
+>
+> I'm also working on incorporating this into the Bio-Formats writer, so if
+> anyone here has advice along those lines, I'd appreciate that too!  I'll be
+> cross-posting to their list as well when I have something working for the
+> BioFormats/Scifio/?  Convert tool.
+>
+>
+> --
+> ImageJ mailing list: http://imagej.nih.gov/ij/list.html
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140227/5dac03e0/attachment.html>
+
+From hiner at wisc.edu  Thu Feb 27 08:15:18 2014
+From: hiner at wisc.edu (Mark Hiner)
+Date: Thu, 27 Feb 2014 08:15:18 -0600
+Subject: [SCIFIO] Contributing a new writer plugin
+In-Reply-To: <7780f8c98ce68.530b3e6d@wiscmail.wisc.edu>
+References: <CF30C90C.627%brianl@alleninstitute.org>
+	<CF30CCBA.62A%brianl@alleninstitute.org>
+	<7780f8c98ce68.530b3e6d@wiscmail.wisc.edu>
+Message-ID: <CA+B=mGp6aeVUKMaXTuc1ipk72nN7K2oiOOCNKqEjBFw1WMtPZg@mail.gmail.com>
+
+Hi Brian,
+
+I'm also working on incorporating this into the Bio-Formats writer, so if
+> anyone here has advice along those lines, I'd appreciate that too!  I'll be
+> cross-posting to their list as well when I have something working for the
+> BioFormats/Scifio/?  Convert tool.
+>
+
+This is fantastic. I am selfishly quite excited for someone else to create
+a new SCIFIO format. :)
+
+To get you (and other developers) started, I put together a wiki
+page<https://github.com/scifio/scifio/wiki/Adding-support-for-an-image-format>that
+discusses various aspects of format implementation, and provides a
+number of links to resources & tutorials for both Bio-Formats and SCIFIO.
+
+The referenced tutorials are intended to take you through the format
+implementation process, but if you have any questions or run into problems,
+please feel welcome to reach out to the SCIFIO (scifio at scif.io) or
+Bio-Formats (ome-devel at lists.openmicroscopy.org.uk) mailing lists.
+
+Let me know if anything is unclear on the wiki page.
+
+Thanks, we look forward to your contribution!
+- Mark
+
+---------- Forwarded message ----------
+> From: Brian Long <brianl at ALLENINSTITUTE.ORG>
+> To: IMAGEJ at LIST.NIH.GOV
+> Cc:
+> Date: Mon, 24 Feb 2014 18:18:07 +0000
+> Subject: Contributing a new writer plugin
+> Greetings-
+>
+> I've written a new writer plugin for saving images in .v3draw format for
+> opening in the 3D visualization program Vaa3D.  I'm new to the world of
+> java development,  maven and git:  how do I contribute the plugin to the
+> main ImageJ 1 repo?
+>
+> My plugin is built off the minimal-ij-1-plugin maven project and currently
+> configured to place another entry in the 'Save As >' menu.
+> General Info:  Vaa3D is an open-source platform for 3D visualization and
+> analysis of bio-images developed by Hanchuan Peng and his team (formerly
+> Janelia Farm HHMI, currently at the Allen Institute for Brain Science).
+>  Unlike the previous Vaa3d writer plugin that stored the whole image as a
+> variable before writing, this update writes plane-by-plane, meaning that
+> large files can be loaded as virtual stacks and written to .v3draw.
+>
+> I'm also working on incorporating this into the Bio-Formats writer, so if
+> anyone here has advice along those lines, I'd appreciate that too!  I'll be
+> cross-posting to their list as well when I have something working for the
+> BioFormats/Scifio/?  Convert tool.
+>
+>
+> --
+> ImageJ mailing list: http://imagej.nih.gov/ij/list.html
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140227/5dac03e0/attachment-0002.html>
+

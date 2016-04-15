@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> ImgOpener
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20ImgOpener&In-Reply-To=%3CCA%2BB%3DmGq3Dp2sxBpHq1mRi6DQBuLYLbKmZuA93Jgz25jyZJMq7w%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000145.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>ImgOpener</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20ImgOpener&In-Reply-To=%3CCA%2BB%3DmGq3Dp2sxBpHq1mRi6DQBuLYLbKmZuA93Jgz25jyZJMq7w%40mail.gmail.com%3E"
+       TITLE="ImgOpener">hiner at wisc.edu
+       </A><BR>
+    <I>Wed Aug  7 09:42:39 CDT 2013</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000145.html">ImgOpener
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#144">[ date ]</a>
+              <a href="thread.html#144">[ thread ]</a>
+              <a href="subject.html#144">[ subject ]</a>
+              <a href="author.html#144">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Michael,
+
+ I'm copying the scifio mailing list, as this could be of general interest.
+
+bioformats, scifio and scifio-bf-compat are the latest snapshot versions
+&gt;<i> from the maven repository
+</I>&gt;<i>
+</I>
+First of all, I would recommend trying to use the release versions first
+(scifio 0.4.1, scifio-bf-compat 1.0.1). Is there some API in the snapshot
+versions you need specifically? If so, you could then transition from the
+release to snapshots, once you're updated to the SCIFIO 0.4.X API.
+
+Of course, SCIFIO-BF-compat 1.0.0 includes a scifio 0.3.X dependency so
+it's not compatible with 0.4.X... so I understand why you had to use
+snapshots. :(
+
+ * bioformats 4.4.8
+&gt;<i>  * ome-xml 4.5
+</I>&gt;<i>
+</I>
+This looks like a limitation of the current SCIFIO-BF-compat project. First
+of all, it includes bio-formats and ome-xml 4.4.8 dependencies, so you
+shouldn't need to explicitly declare them.
+
+The OME-XML 4.5 with OMEMetadata class isn't really ready for consumption
+yet. Having an OME-XML 4.5 on the classpath with the inherited 4.4.8
+dependency seems like a bad idea. So I think SCIFIO-BF-compat should have
+its own copy of the OMEMetadata class + translators for now, so you can
+translate to it to extract the OME-XML.
+
+This would be a temporary solution until our Bio-Formats fork is actually
+released (which could be a while, and would still have to resolve the 4.5.X
+and 4.4.X dependency issues).
+
+Unless anyone has other suggestions I'll do migrate over the OMEMetadata +
+translators this afternoon and release a SCIFIO-BF-compat 1.1.0. That
+should resolve your dependency issues, at least, by also updating the
+SCIFIO version to 0.4.X, so you can use actual release artifacts.
+
+The error message is &quot;IllegalArgumentException: Invalid dimension order:
+&gt;<i> XYC&quot;
+</I>&gt;<i>
+</I>
+This is a bug introduced in this
+commit&lt;<A HREF="https://github.com/scifio/scifio-bf-compat/commit/677fe7645e26e9e692f0ca823698f50349b69ef7">https://github.com/scifio/scifio-bf-compat/commit/677fe7645e26e9e692f0ca823698f50349b69ef7</A>&gt;.
+I will resolve it and make sure you can extract OME-XML with
+scifio-bf-compat + scifio 0.4.1 before releasing.
+
+Hope that helps! Thanks for testing :)
+
+- Mark
+
+
+On Tue, Aug 6, 2013 at 4:46 PM, Michael Zinsmaier
+&lt;<A HREF="http://scif.io/mailman/listinfo/scifio">michael.zinsmaier at gmx.de</A>&gt;wrote:
+
+&gt;<i> Hi Mark,
+</I>&gt;<i>
+</I>&gt;<i> we just started to use the ImgOpener. Unfortunately I can't open .jpg
+</I>&gt;<i> images.
+</I>&gt;<i> The error message is &quot;IllegalArgumentException: Invalid dimension order:
+</I>&gt;<i> XYC&quot;
+</I>&gt;<i>
+</I>&gt;<i> My last working testversion used
+</I>&gt;<i>  * scifio3.1
+</I>&gt;<i>  * bioformats 4.4.8
+</I>&gt;<i>  * ome-xml 4.5
+</I>&gt;<i>  * scifio-bf-compat 1.0.1
+</I>&gt;<i>
+</I>&gt;<i> and builds from roughly 3 weeks ago
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> the new setup uses
+</I>&gt;<i> * scifio4.2
+</I>&gt;<i>  * bioformats 4.4.8
+</I>&gt;<i>  * ome-xml 4.5
+</I>&gt;<i>  * scifio-bf-compat 1.0.1
+</I>&gt;<i>
+</I>&gt;<i> bioformats, scifio and scifio-bf-compat are the latest snapshot versions
+</I>&gt;<i> from the maven repository, ome-xml
+</I>&gt;<i> is self build updated to the scifio branch from bioformats (last commit
+</I>&gt;<i> 12.07)
+</I>&gt;<i> (By the way can I add the scifio ome-xml with OMEMetadata as maven
+</I>&gt;<i> dependency? If yes how do I do it?)
+</I>&gt;<i>
+</I>&gt;<i> Any ideas?
+</I>&gt;<i>
+</I>&gt;<i> Best regards
+</I>&gt;<i> Michael
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130807/b39fee50/attachment-0001.html">http://scif.io/pipermail/scifio/attachments/20130807/b39fee50/attachment-0001.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000145.html">ImgOpener
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#144">[ date ]</a>
+              <a href="thread.html#144">[ thread ]</a>
+              <a href="subject.html#144">[ subject ]</a>
+              <a href="author.html#144">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,25 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Hi&nbsp;Joe,&lt;br&gt;&lt;br&gt;&lt;/div&gt; Thanks&nbsp;for&nbsp;reporting&nbsp;this&nbsp;issue.&lt;br&gt;&lt;br&gt;&lt;blockquote&nbsp;style=&quot;margin:0px&nbsp;0px&nbsp;0px&nbsp;0.8ex;border-left:1px&nbsp;solid&nbsp;rgb(204,204,204);padding-left:1ex&quot;&nbsp;class=&quot;gmail_quote&quot;&gt;<br>
+<br>
+reader-&gt;SetImageIO(&nbsp;io&nbsp;);&lt;br&gt;<br>
+&lt;/blockquote&gt;&lt;div&gt; &lt;/div&gt;&lt;/div&gt; Just&nbsp;so&nbsp;you&nbsp;know,&nbsp;this&nbsp;is&nbsp;just&nbsp;disabling&nbsp;SCIFIO&nbsp;I&nbsp;believe,&nbsp;and&nbsp;defaulting&nbsp;to&nbsp;the&nbsp;ITK&nbsp;DICOM&nbsp;ImageIO.&lt;br&gt;&lt;br&gt;&lt;/div&gt; Does&nbsp;the&nbsp;output&nbsp;file&nbsp;have&nbsp;the&nbsp;correct&nbsp;number&nbsp;of&nbsp;total&nbsp;planes?&nbsp;If&nbsp;not,&nbsp;you&nbsp;might&nbsp;try&nbsp;&quot;-d&nbsp;5&quot;&nbsp;just&nbsp;to&nbsp;test.&nbsp;The&nbsp;dimension&nbsp;order&nbsp;is&nbsp;XYCZT&nbsp;but&nbsp;XYZ&nbsp;are&nbsp;the&nbsp;dimensions&nbsp;with&nbsp;length&nbsp;more&nbsp;than&nbsp;1.&nbsp;The&nbsp;SCIFIO&nbsp;plugin&nbsp;is&nbsp;supposed&nbsp;to&nbsp;account&nbsp;for&nbsp;that&nbsp;but&nbsp;it&nbsp;could&nbsp;be&nbsp;a&nbsp;bug.&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt; Otherwise&nbsp;if&nbsp;the&nbsp;dimensions&nbsp;are&nbsp;correct&nbsp;it&nbsp;could&nbsp;be&nbsp;an&nbsp;issue&nbsp;with&nbsp;the&nbsp;dataset&nbsp;being&nbsp;interleaved.&lt;br&gt;&lt;br&gt;&lt;/div&gt; I&#39;ll&nbsp;try&nbsp;to&nbsp;look&nbsp;at&nbsp;it&nbsp;soon.&lt;br&gt;&lt;br&gt;Thanks,&lt;br&gt;Mark&lt;br&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;<br>
+<br>
+&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0px&nbsp;0px&nbsp;0px&nbsp;0.8ex;border-left:1px&nbsp;solid&nbsp;rgb(204,204,204);padding-left:1ex&quot;&gt;<br>
+From: Joe&nbsp;Ping-Lin&nbsp;Hsiao&nbsp;&lt;&lt;a&nbsp;href=&quot;mailto:phsiao@cs.unc.edu&quot;&nbsp;target=&quot;_blank&quot;&gt;phsiao@cs.unc.edu&lt;/a&gt;&gt;&lt;br&gt;To: &lt;a&nbsp;href=&quot;mailto:scifio@scif.io&quot;&nbsp;target=&quot;_blank&quot;&gt;scifio@scif.io&lt;/a&gt;&lt;br&gt;Cc: &lt;br&gt;Date: Tue,&nbsp;15&nbsp;Oct&nbsp;2013&nbsp;14:29:23&nbsp;-0400&lt;br&gt;<br>
+<br>
+Subject: Error&nbsp;reading&nbsp;a&nbsp;32-bit&nbsp;nrrd&nbsp;image&nbsp;via&nbsp;ITK&lt;br&gt;<br>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;I&nbsp;am&nbsp;having&nbsp;trouble&nbsp;using&nbsp;SCIFIO&nbsp;in&nbsp;ITK&nbsp;to&nbsp;read&nbsp;a&nbsp;32-bit&nbsp;.nrrd&nbsp;image&nbsp;in&nbsp;<br>
+my&nbsp;own&nbsp;program.&nbsp;The&nbsp;attached&nbsp;is&nbsp;a&nbsp;32-bit 3-dimensional&nbsp;test&nbsp;image.&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Then&nbsp;I&nbsp;used&nbsp;the&nbsp;following&nbsp;command&nbsp;to&nbsp;test&nbsp;with&nbsp;the&nbsp;SCIFIO&nbsp;test&nbsp;program:&lt;/div&gt;<br>
+&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;SCIFIOTestDriver.exe&nbsp;itkSCIFIOImageIOTest&nbsp;sample_5.nrrd&nbsp;123.ome.tiff&nbsp;-w&nbsp;-d&nbsp;3&nbsp;-t&nbsp;float&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;The&nbsp;output&nbsp;&#39;123.ome.tiff&#39;&nbsp;has&nbsp;wrong&nbsp;pixel&nbsp;values&nbsp;and&nbsp;looks&nbsp;wrong&nbsp;in&nbsp;ImageJ.&lt;/div&gt;<br>
+<br>
+<br>
+<br>
+<br>
+&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;After&nbsp;I&nbsp;dig&nbsp;deeper,&nbsp;I&nbsp;found&nbsp;that&nbsp;in&nbsp;in&nbsp;&#39;itkSCIFIOImageIOTest.cxx&#39;,&nbsp;if&nbsp;I&nbsp;comment&nbsp;out&nbsp;this&nbsp;line&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt; &nbsp; reader-&gt;SetImageIO(&nbsp;io&nbsp;);&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;to<br>
+&nbsp;use&nbsp;ITK&#39;s&nbsp;default&nbsp;ImageIO,&nbsp;the&nbsp;output&nbsp;image&nbsp;becomes&nbsp;normal.&lt;br&gt;&lt;/div&gt;<br>
+&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Thanks,&lt;/div&gt;&lt;div&gt;Joe&lt;/div&gt;&lt;/div&gt;<br>
+&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;<br>
+
+</tt>

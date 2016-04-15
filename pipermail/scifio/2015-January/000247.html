@@ -1,0 +1,1071 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Bio-Formats Imaris writer
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Bio-Formats%20Imaris%20writer&In-Reply-To=%3CCAHQgS38YB4HMeW_u4DrgBMKfY1UKZ63L2DjV77yKut0-jQ9EZA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000246.html">
+   <LINK REL="Next"  HREF="000243.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Bio-Formats Imaris writer</H1>
+    <B>Henry Pinkard</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Bio-Formats%20Imaris%20writer&In-Reply-To=%3CCAHQgS38YB4HMeW_u4DrgBMKfY1UKZ63L2DjV77yKut0-jQ9EZA%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Bio-Formats Imaris writer">henry.pinkard at gmail.com
+       </A><BR>
+    <I>Mon Jan 26 16:06:26 CST 2015</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000246.html">[SCIFIO] Bio-Formats Imaris writer
+</A></li>
+        <LI>Next message: <A HREF="000243.html">[SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to	TIFF
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#247">[ date ]</a>
+              <a href="thread.html#247">[ thread ]</a>
+              <a href="subject.html#247">[ subject ]</a>
+              <a href="author.html#247">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Mark,
+
+I tried out the ETH-Zurich distribution and it worked! I don't have the
+slightest idea *how* it worked though, so I am quite curious if you could
+shed some light on this.
+
+In any case, I made a pull request to add the writer to SCIFIO. There's
+still some improvements to be made with time stamps, etc., but I think the
+writer will already be quite useful to many people as is.
+
+Thanks for all your help!
+
+Henry
+
+On Sun, Jan 25, 2015 at 5:30 AM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+
+&gt;<i> Hi Henry,
+</I>&gt;<i>
+</I>&gt;<i>  One last note on this topic - Tobias Pietzsch pointed out that ETH-Zurich
+</I>&gt;<i> has an HDF5 Java distribution currently in use in the BigDataViewer[1].
+</I>&gt;<i> There's a wiki[2] and artifacts on the ImageJ repository[3] if you'd like
+</I>&gt;<i> to try it.
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> [1] <A HREF="http://fiji.sc/BigDataViewer">http://fiji.sc/BigDataViewer</A>
+</I>&gt;<i> [2] <A HREF="https://wiki-bsse.ethz.ch/pages/viewpage.action?pageId=26609113">https://wiki-bsse.ethz.ch/pages/viewpage.action?pageId=26609113</A>
+</I>&gt;<i> [3] <A HREF="http://maven.imagej.net/index.html#nexus-search;quick~cisd">http://maven.imagej.net/index.html#nexus-search;quick~cisd</A>
+</I>&gt;<i>
+</I>&gt;<i> On Sat, Jan 24, 2015 at 5:20 AM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> Hi all,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  I was able to finish the (now renamed) nar-hdf5[1] for Windows. A 0.1.0
+</I>&gt;&gt;<i> release is now available from:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> &lt;repository&gt;
+</I>&gt;&gt;<i>   &lt;id&gt;imagej.public&lt;/id&gt;
+</I>&gt;&gt;<i>   &lt;url&gt;<A HREF="http://maven.imagej.net/content/groups/public&lt;/url">http://maven.imagej.net/content/groups/public&lt;/url</A>&gt;
+</I>&gt;&gt;<i> &lt;/repository&gt;
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> The dependency GAVs are:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> &lt;dependency&gt;
+</I>&gt;&gt;<i>   &lt;groupId&gt;ncsa.hdf&lt;/groupId&gt;
+</I>&gt;&gt;<i>   &lt;artifactId&gt;nar-hdf5&lt;/artifactId&gt;
+</I>&gt;&gt;<i>   &lt;version&gt;0.1.0&lt;/version&gt;
+</I>&gt;&gt;<i> &lt;/dependency&gt;
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> &lt;dependency&gt;
+</I>&gt;&gt;<i>   &lt;groupId&gt;ncsa.hdf&lt;/groupId&gt;
+</I>&gt;&gt;<i>   &lt;artifactId&gt;nar-hdf5-jni&lt;/artifactId&gt;
+</I>&gt;&gt;<i>   &lt;version&gt;0.1.0&lt;/version&gt;
+</I>&gt;&gt;<i>   &lt;classifier&gt;amd64-windows-msvc&lt;/classifier&gt;
+</I>&gt;&gt;<i>   &lt;type&gt;nar&lt;/type&gt;
+</I>&gt;&gt;<i> &lt;/dependency&gt;
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> &lt;dependency&gt;
+</I>&gt;&gt;<i>   &lt;groupId&gt;ncsa.hdf&lt;/groupId&gt;
+</I>&gt;&gt;<i>   &lt;artifactId&gt;nar-hdf5-noarch&lt;/artifactId&gt;
+</I>&gt;&gt;<i>   &lt;version&gt;0.1.0&lt;/version&gt;
+</I>&gt;&gt;<i>   &lt;type&gt;nar&lt;/type&gt;
+</I>&gt;&gt;<i> &lt;/dependency&gt;
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Hope that helps.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Best,
+</I>&gt;&gt;<i> Mark
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> [1] <A HREF="https://github.com/scijava/nar-hdf5">https://github.com/scijava/nar-hdf5</A>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> On Fri, Jan 23, 2015 at 10:25 AM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Hi Henry,
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> &gt;
+</I>&gt;&gt;&gt;<i> <A HREF="http://web.archive.org/web/20120627025240/http://www.buildanddeploy.com/node/14">http://web.archive.org/web/20120627025240/http://www.buildanddeploy.com/node/14</A>
+</I>&gt;&gt;&gt;<i> &gt;
+</I>&gt;&gt;&gt;<i> <A HREF="http://web.archive.org/web/20120308042202/http://www.buildanddeploy.com/node/17">http://web.archive.org/web/20120308042202/http://www.buildanddeploy.com/node/17</A>
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Thanks for sharing these links, they were helpful. Since you already
+</I>&gt;&gt;&gt;<i> have .jars with the native code and jni code, I would be happy to upload
+</I>&gt;&gt;&gt;<i> them to our Maven repository so they can be consumed. This would at least
+</I>&gt;&gt;&gt;<i> allow others to build and test your format.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> The major limitation of this method is that requiring Maven
+</I>&gt;&gt;&gt;<i> configuration to extract the HDF5 code and get it on the java.library.path
+</I>&gt;&gt;&gt;<i> is not extensible. I believe it would prevent your format from being used
+</I>&gt;&gt;&gt;<i> dynamically, and it's not really a technique other 3rd party developers can
+</I>&gt;&gt;&gt;<i> use, because it requires updating pom configuration.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> The reason I was advocating for using the nar-maven-plugin is that,
+</I>&gt;&gt;&gt;<i> ideally, the resulting archive created would not need to be unpacked and
+</I>&gt;&gt;&gt;<i> would automatically add the native code to the java.library.path[1]. So
+</I>&gt;&gt;&gt;<i> using your format as a flagship nar-maven-plugin would a) make it more
+</I>&gt;&gt;&gt;<i> awesome and b) serve as a guide for future format developers.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> It is, however, certainly more work to use the nar-maven-plugin right
+</I>&gt;&gt;&gt;<i> now. So, if you can send me your .jars with native and JNI code, I'll try
+</I>&gt;&gt;&gt;<i> to get them on our Maven shortly.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;<i> Mark
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> P.S. I did start a project to NAR HDF5[2] but it's not functional yet.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> [1]
+</I>&gt;&gt;&gt;<i> <A HREF="http://maven-nar.github.io/usage.html#Create_a_JNI_library_that_is_automatically_unpacked_from_the_.nar_file_using_the_native-lib-loader_project">http://maven-nar.github.io/usage.html#Create_a_JNI_library_that_is_automatically_unpacked_from_the_.nar_file_using_the_native-lib-loader_project</A>
+</I>&gt;&gt;&gt;<i> [2] <A HREF="https://github.com/scijava/hdf-jni/tree/create-nar">https://github.com/scijava/hdf-jni/tree/create-nar</A>
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> On Fri, Jan 16, 2015 at 1:53 PM, Henry Pinkard &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">henry.pinkard at gmail.com</A>&gt;
+</I>&gt;&gt;&gt;<i> wrote:
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> Hi Mark,
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> Okay, I'm following four tickets for LUTs and timestamps and I can
+</I>&gt;&gt;&gt;&gt;<i> update the writer accordingly once those are settled. Thanks for that.
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> In the meantime, I looked into the native libraries issue a bit more.
+</I>&gt;&gt;&gt;&gt;<i> The purpose of the NAR plugin seems to be compiling native code and adding
+</I>&gt;&gt;&gt;&gt;<i> them to archives, but since I already have the platform specific binaries,
+</I>&gt;&gt;&gt;&gt;<i> I think there is a simpler way of doing this that doesn't rely on having to
+</I>&gt;&gt;&gt;&gt;<i> compile the native code, which you can read more about here:
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> <A HREF="http://web.archive.org/web/20120627025240/http://www.buildanddeploy.com/node/14">http://web.archive.org/web/20120627025240/http://www.buildanddeploy.com/node/14</A>
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> <A HREF="http://web.archive.org/web/20120308042202/http://www.buildanddeploy.com/node/17">http://web.archive.org/web/20120308042202/http://www.buildanddeploy.com/node/17</A>
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> Basically, the idea is:
+</I>&gt;&gt;&gt;&gt;<i> 1) Add the third party .jar with JNI code that calls native binaries as
+</I>&gt;&gt;&gt;&gt;<i> a dependency
+</I>&gt;&gt;&gt;&gt;<i> 2) Package native binaries (.dll, .so, or .jnilib) into separate .jar
+</I>&gt;&gt;&gt;&gt;<i> files specific to each OS/architecture.
+</I>&gt;&gt;&gt;&gt;<i> 3) Add these .jar's to the SCIFIO maven repository with a classifier
+</I>&gt;&gt;&gt;&gt;<i> flag indicating OS/arch.
+</I>&gt;&gt;&gt;&gt;<i> 4) Add dependencies that get the correct jar based on OS/arch.
+</I>&gt;&gt;&gt;&gt;<i> 5) Use maven dependency plugin to unpack these libraries at build time.
+</I>&gt;&gt;&gt;&gt;<i> 6) Use maven surefire plugin to set java.library.path so that native
+</I>&gt;&gt;&gt;&gt;<i> libraries can be found at run time.
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> I think much of this needs to happen from your end (but this is my
+</I>&gt;&gt;&gt;&gt;<i> first time using maven, so correct me if I'm wrong). I've created the
+</I>&gt;&gt;&gt;&gt;<i> .jar's holding the native code, and I have the .jar with JNI code as well
+</I>&gt;&gt;&gt;&gt;<i> that I can pass along.
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> What do you think?
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;&gt;<i> Henry
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> On Fri, Jan 16, 2015 at 9:20 AM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> Hi Henry,
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> &gt;Can you offer up any examples of how to extract date/time metadata
+</I>&gt;&gt;&gt;&gt;&gt;<i> from image planes?
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> Of course, sorry I forgot these in my last e-mail.
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> Basically time stamps can be incorporated into Metadata by using the
+</I>&gt;&gt;&gt;&gt;&gt;<i> net.imagej.axis.LinearAxis API to set the origin and scale[1], and
+</I>&gt;&gt;&gt;&gt;&gt;<i> CalibratedAxis to set the units[2] on the time axis (Axes.TIME) of the
+</I>&gt;&gt;&gt;&gt;&gt;<i> ImageMetadata.
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> However, this process is not automated yet so only Formats which
+</I>&gt;&gt;&gt;&gt;&gt;<i> explicitly set this information would have time stamp information, and
+</I>&gt;&gt;&gt;&gt;&gt;<i> there is no API in the Plane to convert its plane index to a time stamp.
+</I>&gt;&gt;&gt;&gt;&gt;<i> So, I opened another issue to get these populated automatically[3] - at
+</I>&gt;&gt;&gt;&gt;&gt;<i> which point a Plane object should just be able to tell you its time/date
+</I>&gt;&gt;&gt;&gt;&gt;<i> stamp, for any core SCIFIO format that records this information.
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> &gt;My TIFF dataset was simply one of the ImageJ samples. I made it using
+</I>&gt;&gt;&gt;&gt;&gt;<i> a pre-IJ2 version of FIJI by selecting File--Open samples--Mitosis and
+</I>&gt;&gt;&gt;&gt;&gt;<i> saving as a TIFF.
+</I>&gt;&gt;&gt;&gt;&gt;<i> &gt;I then reopened it using SCIFIO.
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> Great, thanks. I'll do this and look into why the LUTs aren't
+</I>&gt;&gt;&gt;&gt;&gt;<i> populated.
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;&gt;&gt;<i> Mark
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> [1]
+</I>&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/imagej/imagej-common/blob/1c96184fda188eba9d56d87364e141dbf07a286d/src/main/java/net/imagej/axis/LinearAxis.java#L44-50">https://github.com/imagej/imagej-common/blob/1c96184fda188eba9d56d87364e141dbf07a286d/src/main/java/net/imagej/axis/LinearAxis.java#L44-50</A>
+</I>&gt;&gt;&gt;&gt;&gt;<i> [2]
+</I>&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/imagej/imagej-common/blob/master/src/main/java/net/imagej/axis/CalibratedAxis.java#L47">https://github.com/imagej/imagej-common/blob/master/src/main/java/net/imagej/axis/CalibratedAxis.java#L47</A>
+</I>&gt;&gt;&gt;&gt;&gt;<i> [3] <A HREF="https://github.com/scifio/scifio/issues/240">https://github.com/scifio/scifio/issues/240</A>
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> On Thu, Jan 15, 2015 at 5:27 PM, Henry Pinkard &lt;
+</I>&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">henry.pinkard at gmail.com</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Mark,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> Can you offer up any examples of how to extract date/time metadata
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> from image planes?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> On Thu, Jan 15, 2015 at 4:21 PM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Henry,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; Is it possible to include these binaries directly in the maven
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> repository?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Not directly. But since their license allows them to be
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> redistributed, I think what we want is to make NARs out of them[1] and put
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> the NAR in the maven repository.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> However, there are almost certainly limitations right now. I
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> personally do not have experience with the nar-maven-plugin, but I would go
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> into it expecting some hurdles.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On the other hand, I think your ImarisFormat is an awesome use case
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> for the nar-maven-plugin and this is a great opportunity to work out
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> problems and document NAR usage in SCIFIO/ImageJ2/Fiji! So I'd be happy to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> help investigate further.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> Okay, I'll play around with the NAR library and see what I come up
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> with.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Sort of. I think the SCIFIOConfig and Writer.getColorModel API are
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> incorrect to use java.awt.image.ColorModels. I opened a ticket[4] to update
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> them to the ImgLib2 ColorTable class. When that ticket is complete, this is
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> how everything should work:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> * You should make an ImarisFormat.Metadata that is a trivial
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> extension of DefaultMetadata, but implements the HasColorTable interface
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> * When your Writer is passed a SCIFIOConfig with an attached
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ColorTable, the framework will pass the ColorTable to the Writer's
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ImarisFormat.Metadata
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> * In your Writer's writePlane implementation, you would check for a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ColorTable on a) the provided Plane and b) the attached Metadata and write
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> it out as appropriate.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> So asking the Plane for its ColorTable was the right thing to do.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> Okay, I'm watching the ticket, so once everything works as it should
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> I'll update this.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> The fact that the ColorTable isn't being transferred from your
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> original TIFF dataset is likely a bug. I'm not sure if it wasn't read
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> properly on the TIFF side, or if it was read but didn't get passed to your
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ImarisFormat.Writer. Could you share your failing TIFF dataset so I can
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> debug a bit more and figure out where it's going wrong? (note that you can
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> use Fiji to upload a dataset[5] so that it won't be shared publicly)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> My TIFF dataset was simply one of the ImageJ samples. I made it using
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> a pre-IJ2 version of FIJI by selecting File--Open samples--Mitosis and
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> saving as a TIFF. I then reopened it using SCIFIO.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> Henry
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Thu, Jan 15, 2015 at 11:07 AM, Henry Pinkard &lt;
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">henry.pinkard at gmail.com</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Mark,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Thanks for the quick reply!
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 1) Curtis knows this topic better than me, but I believe you can
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> use the Maven NAR plugin[1] to build native code archives (.nar) which then
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> can be distributed via a maven repository, such as our
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://maven.imagej.net,">http://maven.imagej.net,</A> and consumed as a normal Maven
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> dependency by your writer. How is the native code you're using licensed?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> I don't actually need to build the native archives. They are
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> distributed as pre built binaries on the HDF website. Is it possible to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> include these binaries directly in the maven repository? The license is a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &quot;BSD style open-source license.&quot; More info can be found at:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://www.hdfgroup.org/products/licenses.html">http://www.hdfgroup.org/products/licenses.html</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 2) You're absolutely right, AbstractWriter is provided to take care
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> of as much boilerplate as possible, to try and keep what developers like
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> you have to implement to a minimum. We avoid using public/protected fields
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> in our libraries because of the problems they create, given that there is
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> no way to respond when such fields are directly modified. The way to access
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> these fields should be accessor/mutator methods (e.g. getMetadata(),
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> isInitialized(...), etc...), with the expectation that they can be
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> overridden if necessary. Since it feels like you're overriding too many of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> these, though, could you provide some more information about what
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> functionality you needed to add/modify? If the API is lacking, my first
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> choice would be to improve AbstractWriter so that it better meets your
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> needs (and those of future developers!).
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> As I look over this again, I think that this writer is probably an
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> exception that operates by different mechanisms than most Formats, and
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> probably doesn't warrant a change in the API. more on this below.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 3) So, what you most likely want to do here is implement your own
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Metadata class for the ImarisFormat. DefaultMetadata was created as a dummy
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> class to provide some minimal default implementation for formats that
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> simply don't have any metadata to store (e.g. the JavaFormat, which only
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writes images). If you use DefaultMetadata, your Format should still work -
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> but if you want to convert an ImarisFormat image to something else (such as
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> an .ome.tif) you may be missing the opportunity to preserve any
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Imaris-specific metadata.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> I think this flow was not properly described in SCIFIO. To take a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> step towards improvement, I updated the custom format tutorial[2] to better
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> explain the role of format-specific metadata.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> As to the actual LUT question, I suggest modeling the ImarisFormat
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> after a simple format that has a LUT - such as BMPFormat[3]. You can see
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> that the BMPFormat's metadata implements a HasColorTable interface[4]. It
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> is then the role of the Parser to populate the metadata's color table[5].
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Then it is the role of the Reader to attach the color table to a plane[6].
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> The SCIFIOConfig method you mentioned[7] is for external software
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> to set a custom LUT when saving an image.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Actually, I think the SCIFIO tutorials described the flow quite
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> well. The library that I'm adding in to the ImarisFormat is only for
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writing IMS files and doesn't support reading them, so I opted to model
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> this off of JavaFormat. There are a few basic metadata fields needed for
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writing, but I didn't think it necessary to create a format-specific
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> metadata class to hold them. Since Imaris is a software for only analysis,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> no acquisition softwares save directly into IMS format. So the most
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> complete set of metadata will always reside in whatever format was used to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> create the IMS file. If you think it would be better to create an
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ImarisFormat.Metadata class, I'm happy to do so, but I don't think it would
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> affect the functionality of the format.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> I took a look at BMPFormat, and I think the color table here is
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> being read from a BMP file and then stored in the BMP specific metadata,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> right? I'm actually looking to do the opposite--write an LUT into an IMS.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> So then I should use the one provided by the SCIFIO config method, right?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> How about date/time stamps? Is there any way to extract this from
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> default metadata classes or does it need to be done in a metadata
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> format-specific manner?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Henry
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [1] <A HREF="https://github.com/maven-nar/nar-maven-plugin">https://github.com/maven-nar/nar-maven-plugin</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [2]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio-tutorials/blob/5f9212a685c18ddc0cb4500e7ac4a3f1aad1940b/core/src/main/java/io/scif/tutorials/core/T3aCustomFormats.java#L123-133">https://github.com/scifio/scifio-tutorials/blob/5f9212a685c18ddc0cb4500e7ac4a3f1aad1940b/core/src/main/java/io/scif/tutorials/core/T3aCustomFormats.java#L123-133</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [3]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java">https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [4]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java#L90-91">https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java#L90-91</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [5]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java#L283-292">https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java#L283-292</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [6]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java#L399-400">https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java#L399-400</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [7]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/config/SCIFIOConfig.java#L264-271">https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/config/SCIFIOConfig.java#L264-271</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Wed, Jan 14, 2015 at 3:28 PM, Henry Pinkard &lt;
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">henry.pinkard at gmail.com</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Curtis and Mark,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Finally back to work on this project. I've created an
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ImarisFormat class in my local copy of SCIFIO and have gotten a basic
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> version of ImarisFormat.Writer working. Several questions regarding this:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 1) Since .ims files are a specific type of HDF5 file, I'm
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> utilizing the HDF Java library to do the writing. Maven is able to record a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> dependency for the .jar file needed by this library, but I'm not sure how
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> to indicate a dependency on the the native files that the library uses
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> through the JNI. For testing purposes I just copied these libraries into
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> the SCIFIO root directory, but this is obviously not a solution. I assume
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> that there is an elegant way of doing this, since the BioFormats Imaris
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> reader is able to read these files. Any thoughts?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 2) I'm unsure whether to have the writer extend AbstractWriter or
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> simply implement TypedWrtier. I would think that AbstractWriter is provided
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> as a stub to easily extend when making writer classes, but the private
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> access to all of this classes field's (metadata, initialized, etc.) mean
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> that I have to extend many more methods than I would like. Could these
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> fields be made protected, or should I switch to TypedWriter and have a lot
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> of empty, irrelevant methods?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 3) I'm able to pull all the metadata required for writing these
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> files from DefaultMetadata and DefaultImageMetadata, with the exception of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> two things. First, is there a way to get the acquisition date and
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> timestamps form individual planes? Second, the config.writerGetColorModel()
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> call that I copied from AbstractWriter returns null, as does
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> plane.getColorTable(). Is there some other way to get image lookup tables?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> My test code opens a Tiff stack saved by FIJI that has LUTs applied, so I
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> would think they would be there. Is there another mechanism for getting
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> image LUTs?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Excited to see this writer become part of SCIFIO in the near
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> future.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Henry
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Wed, Jul 16, 2014 at 4:32 PM, Curtis Rueden &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">ctrueden at wisc.edu</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Henry,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; I've created a class in the io.scif.formats package for my
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writer.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; Since I only have the writer components, but not the reader,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> how
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; should I go about implementing all of the component classes of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Format
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; (Metadata, Parser, Checker, Reader, Writer, Translator). The
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> first 4
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; are listed as mandatory in the tutorial, but it seems like I
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> shouldn't
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; need all of them for writing functionality alone.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Agreed, it should not be necessary to create Reader or Parser
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> components. However, writer-only components are still a little rough around
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> the edges. The relevant issue is:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/issues/211">https://github.com/scifio/scifio/issues/211</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Feel free to comment on that so that GitHub sends you updates if
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> you care about progress on it.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> But in the meantime, it should still be possible to create a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writer-only component. For an example, see the JavaFormat:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/scifio-0.15.4/scifio/src/main/java/io/scif/formats/JavaFormat.java">https://github.com/scifio/scifio/blob/scifio-0.15.4/scifio/src/main/java/io/scif/formats/JavaFormat.java</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Regards,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Curtis
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Wed, Jun 25, 2014 at 1:21 PM, Henry Pinkard &lt;
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">henry.pinkard at gmail.com</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Curtis,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> This all sounds great. I've cloned the SCIFIO core as well as
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> the tutorials, which have been quite helpful in getting things set up.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> I've created a class in the io.scif.formats package for my
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writer. Since I only have the writer components, but not the reader, how
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> should I go about implementing all of the component classes of Format
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> (Metadata, Parser, Checker, Reader, Writer, Translator). The first 4 are
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> listed as mandatory in the tutorial, but it seems like I shouldn't need all
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> of them for writing functionality alone.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Henry
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Sun, Jun 1, 2014 at 7:27 AM, Curtis Rueden &lt;
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">ctrueden at wisc.edu</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Henry,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; Over the past couple years, I've been developing and testing
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> a java
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; library that is capable of writing Imaris .ims files. This
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> library has
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; allowed me to build an ImageJ plugin that automatically
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> stitches,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; processes, and converts OME-TIFFs from Micro-Manager into
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Imaris
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; files, which in turn allows a significantly greater
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> throughput of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; imaging data with much less effort from users.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Sounds great!
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; This library has been instrumental to the workflow of users
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> in the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; imaging center in which I work, and I want to find a way to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> share its
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; utility with researchers everywhere. Incorporating it into
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; Bio-Formats exporter would both increase its visibility and
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> leverage
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; the multitude of formats on Bio-Formats' front end to make
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> it usable
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; with all types of microscopy data.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Rather than implementing a Bio-Formats writer, I encourage you
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> to check out SCIFIO [1, 2, 3]. Though still in beta, SCIFIO is the core I/O
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> mechanism of ImageJ2, which is finally due for release later this week.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> SCIFIO uses the SciJava plugin framework, meaning your writer would be
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> automatically discovered and used as appropriate with no additional work
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> from you. And we have recently integrated SCIFIO directly into ImageJ at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> the core level, so things like File &gt; Open now use it, including whatever
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> format plugins are available. (SCIFIO also has a Bio-Formats format plugin,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> so that all of the BF formats work in ImageJ that way, too!)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> You could then serve your Imaris writer from its own ImageJ
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> update site [4, 5], to make it available to all ImageJ users.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; In addition, I've convinced Bitplane to make their format
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> open source,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; and I believe this may allow .ims files to grow beyond a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> proprietary
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; file format into a generalized multi-resolution format
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> useful for a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; variety of applications that deal with the visualization of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> extremely
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; large stitched images.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Glad to hear that Bitplane is willing to do this. In that
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> case, if you do complete a SCIFIO Imaris writer and want to donate the code
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> upstream, you could file a pull request against the SCIFIO LifeSci project
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [6] to contribute it there, since that project houses readers &amp; writers for
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> _open_ life sciences formats. So if Bitplane publishes an open
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> specification, we would be willing to add it to the project.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> If you have any questions about SCIFIO, please feel free to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> use the SCIFIO mailing list [7]. Or if you go the Bio-Formats route, you
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> can use ome-devel [8].
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Regards,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Curtis
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [1] <A HREF="http://loci.wisc.edu/software/scifio">http://loci.wisc.edu/software/scifio</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [2] <A HREF="https://github.com/scifio/scifio">https://github.com/scifio/scifio</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [3] <A HREF="https://github.com/scifio/scifio-tutorials">https://github.com/scifio/scifio-tutorials</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [4] <A HREF="http://wiki.imagej.net/Update_Sites">http://wiki.imagej.net/Update_Sites</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [5] <A HREF="http://wiki.imagej.net/List_of_update_sites">http://wiki.imagej.net/List_of_update_sites</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>  [6] <A HREF="https://github.com/scifio/scifio-lifesci">https://github.com/scifio/scifio-lifesci</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [7] <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [8]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/">http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Thu, May 29, 2014 at 6:55 PM, Henry Pinkard &lt;
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">henry.pinkard at gmail.com</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Melissa and Curtis,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Over the past couple years, I've been developing and testing
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> a java library that is capable of writing Imaris .ims files. This library
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> has allowed me to build an ImageJ plugin that automatically stitches,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> processes, and converts OME-TIFFs from Micro-Manager into Imaris files,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> which in turn allows a significantly greater throughput of imaging data
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> with much less effort from users.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> This library has been instrumental to the workflow of users
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> in the imaging center in which I work, and I want to find a way to share
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> its utility with researchers everywhere. Incorporating it into the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Bio-Formats exporter would both increase its visibility and leverage the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> multitude of formats on Bio-Formats' front end to make it usable with all
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> types of microscopy data. In addition, I've convinced Bitplane to make
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> their format open source, and I believe this may allow .ims files to grow
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> beyond a proprietary file format into a generalized multi-resolution format
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> useful for a variety of applications that deal with the visualization of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> extremely large stitched images. I'm happy to rework the library in
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> whatever ways make it easiest to incorporate on your end. Let me know your
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> thoughts on how to best proceed.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Henry
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> _______________________________________________
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> SCIFIO mailing list
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> On Thu, Jan 15, 2015 at 4:21 PM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Henry,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; Is it possible to include these binaries directly in the maven
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> repository?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Not directly. But since their license allows them to be
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> redistributed, I think what we want is to make NARs out of them[1] and put
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> the NAR in the maven repository.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> However, there are almost certainly limitations right now. I
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> personally do not have experience with the nar-maven-plugin, but I would go
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> into it expecting some hurdles.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On the other hand, I think your ImarisFormat is an awesome use case
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> for the nar-maven-plugin and this is a great opportunity to work out
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> problems and document NAR usage in SCIFIO/ImageJ2/Fiji! So I'd be happy to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> help investigate further.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Also, it's worth noting the ImageJ wiki also has a higher-level
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> discussion of using native code[2], though it is outdated (and doesn't
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> discuss the nar-maven-plugin).
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt;Actually, I think the SCIFIO tutorials described the flow quite
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> well.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Thanks for that! I still felt the need to revise the format
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> tutorial[3], as there were some basic elements that simply weren't
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> discussed (like ColorTables).
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt;The library that I'm adding in to the ImarisFormat is only for
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writing IMS files and doesn't support reading them, so I opted to model
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> this off of JavaFormat.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt;There are a few basic metadata fields needed for writing, but I
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> didn't think it necessary to create a format-specific metadata class to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> hold them.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt;Since Imaris is a software for only analysis, no acquisition
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> softwares save directly into IMS format.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt;So the most complete set of metadata will always reside in whatever
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> format was used to create the IMS file.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> This makes a lot of sense - thank you for the explanation. I now
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> think your decision not to have an ImarisFormat.Metadata class is correct -
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> except for the fact that ImarisFormat has LUTs (see below).
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt;I took a look at BMPFormat, and I think the color table here is
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> being read from a BMP file and then stored in the BMP specific metadata,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> right? I'm actually looking to do
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt;the opposite--write an LUT into an IMS. So then I should use the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> one provided by the SCIFIO config method, right?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Sort of. I think the SCIFIOConfig and Writer.getColorModel API are
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> incorrect to use java.awt.image.ColorModels. I opened a ticket[4] to update
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> them to the ImgLib2 ColorTable class. When that ticket is complete, this is
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> how everything should work:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> * You should make an ImarisFormat.Metadata that is a trivial
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> extension of DefaultMetadata, but implements the HasColorTable interface
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> * When your Writer is passed a SCIFIOConfig with an attached
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ColorTable, the framework will pass the ColorTable to the Writer's
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ImarisFormat.Metadata
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> * In your Writer's writePlane implementation, you would check for a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ColorTable on a) the provided Plane and b) the attached Metadata and write
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> it out as appropriate.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> So asking the Plane for its ColorTable was the right thing to do.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> The fact that the ColorTable isn't being transferred from your
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> original TIFF dataset is likely a bug. I'm not sure if it wasn't read
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> properly on the TIFF side, or if it was read but didn't get passed to your
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ImarisFormat.Writer. Could you share your failing TIFF dataset so I can
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> debug a bit more and figure out where it's going wrong? (note that you can
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> use Fiji to upload a dataset[5] so that it won't be shared publicly)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Looking forward to getting this working for you - thanks again!
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Mark
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [1] <A HREF="http://maven-nar.github.io/index.html">http://maven-nar.github.io/index.html</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [2] <A HREF="http://imagej.net/Native">http://imagej.net/Native</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [3]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio-tutorials/commit/5780247e65b0671f1b0e4bba744bde7661114531">https://github.com/scifio/scifio-tutorials/commit/5780247e65b0671f1b0e4bba744bde7661114531</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [4] <A HREF="https://github.com/scifio/scifio/issues/239">https://github.com/scifio/scifio/issues/239</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [5] <A HREF="http://imagej.net/Upload_Sample_Image">http://imagej.net/Upload_Sample_Image</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Thu, Jan 15, 2015 at 11:07 AM, Henry Pinkard &lt;
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">henry.pinkard at gmail.com</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Mark,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Thanks for the quick reply!
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 1) Curtis knows this topic better than me, but I believe you can
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> use the Maven NAR plugin[1] to build native code archives (.nar) which then
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> can be distributed via a maven repository, such as our
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://maven.imagej.net,">http://maven.imagej.net,</A> and consumed as a normal Maven
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> dependency by your writer. How is the native code you're using licensed?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> I don't actually need to build the native archives. They are
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> distributed as pre built binaries on the HDF website. Is it possible to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> include these binaries directly in the maven repository? The license is a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &quot;BSD style open-source license.&quot; More info can be found at:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://www.hdfgroup.org/products/licenses.html">http://www.hdfgroup.org/products/licenses.html</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 2) You're absolutely right, AbstractWriter is provided to take care
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> of as much boilerplate as possible, to try and keep what developers like
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> you have to implement to a minimum. We avoid using public/protected fields
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> in our libraries because of the problems they create, given that there is
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> no way to respond when such fields are directly modified. The way to access
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> these fields should be accessor/mutator methods (e.g. getMetadata(),
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> isInitialized(...), etc...), with the expectation that they can be
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> overridden if necessary. Since it feels like you're overriding too many of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> these, though, could you provide some more information about what
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> functionality you needed to add/modify? If the API is lacking, my first
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> choice would be to improve AbstractWriter so that it better meets your
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> needs (and those of future developers!).
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> As I look over this again, I think that this writer is probably an
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> exception that operates by different mechanisms than most Formats, and
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> probably doesn't warrant a change in the API. more on this below.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 3) So, what you most likely want to do here is implement your own
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Metadata class for the ImarisFormat. DefaultMetadata was created as a dummy
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> class to provide some minimal default implementation for formats that
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> simply don't have any metadata to store (e.g. the JavaFormat, which only
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writes images). If you use DefaultMetadata, your Format should still work -
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> but if you want to convert an ImarisFormat image to something else (such as
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> an .ome.tif) you may be missing the opportunity to preserve any
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Imaris-specific metadata.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> I think this flow was not properly described in SCIFIO. To take a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> step towards improvement, I updated the custom format tutorial[2] to better
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> explain the role of format-specific metadata.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> As to the actual LUT question, I suggest modeling the ImarisFormat
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> after a simple format that has a LUT - such as BMPFormat[3]. You can see
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> that the BMPFormat's metadata implements a HasColorTable interface[4]. It
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> is then the role of the Parser to populate the metadata's color table[5].
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Then it is the role of the Reader to attach the color table to a plane[6].
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> The SCIFIOConfig method you mentioned[7] is for external software
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> to set a custom LUT when saving an image.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Actually, I think the SCIFIO tutorials described the flow quite
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> well. The library that I'm adding in to the ImarisFormat is only for
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writing IMS files and doesn't support reading them, so I opted to model
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> this off of JavaFormat. There are a few basic metadata fields needed for
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writing, but I didn't think it necessary to create a format-specific
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> metadata class to hold them. Since Imaris is a software for only analysis,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> no acquisition softwares save directly into IMS format. So the most
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> complete set of metadata will always reside in whatever format was used to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> create the IMS file. If you think it would be better to create an
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ImarisFormat.Metadata class, I'm happy to do so, but I don't think it would
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> affect the functionality of the format.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> I took a look at BMPFormat, and I think the color table here is
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> being read from a BMP file and then stored in the BMP specific metadata,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> right? I'm actually looking to do the opposite--write an LUT into an IMS.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> So then I should use the one provided by the SCIFIO config method, right?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> How about date/time stamps? Is there any way to extract this from
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> default metadata classes or does it need to be done in a metadata
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> format-specific manner?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Henry
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [1] <A HREF="https://github.com/maven-nar/nar-maven-plugin">https://github.com/maven-nar/nar-maven-plugin</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [2]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio-tutorials/blob/5f9212a685c18ddc0cb4500e7ac4a3f1aad1940b/core/src/main/java/io/scif/tutorials/core/T3aCustomFormats.java#L123-133">https://github.com/scifio/scifio-tutorials/blob/5f9212a685c18ddc0cb4500e7ac4a3f1aad1940b/core/src/main/java/io/scif/tutorials/core/T3aCustomFormats.java#L123-133</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [3]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java">https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [4]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java#L90-91">https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java#L90-91</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [5]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java#L283-292">https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java#L283-292</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [6]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java#L399-400">https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/formats/BMPFormat.java#L399-400</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [7]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/config/SCIFIOConfig.java#L264-271">https://github.com/scifio/scifio/blob/37822206e9ca842bb18596ef0f0312ad3f2e6d5f/src/main/java/io/scif/config/SCIFIOConfig.java#L264-271</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Wed, Jan 14, 2015 at 3:28 PM, Henry Pinkard &lt;
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">henry.pinkard at gmail.com</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Curtis and Mark,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Finally back to work on this project. I've created an
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ImarisFormat class in my local copy of SCIFIO and have gotten a basic
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> version of ImarisFormat.Writer working. Several questions regarding this:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 1) Since .ims files are a specific type of HDF5 file, I'm
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> utilizing the HDF Java library to do the writing. Maven is able to record a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> dependency for the .jar file needed by this library, but I'm not sure how
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> to indicate a dependency on the the native files that the library uses
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> through the JNI. For testing purposes I just copied these libraries into
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> the SCIFIO root directory, but this is obviously not a solution. I assume
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> that there is an elegant way of doing this, since the BioFormats Imaris
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> reader is able to read these files. Any thoughts?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 2) I'm unsure whether to have the writer extend AbstractWriter or
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> simply implement TypedWrtier. I would think that AbstractWriter is provided
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> as a stub to easily extend when making writer classes, but the private
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> access to all of this classes field's (metadata, initialized, etc.) mean
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> that I have to extend many more methods than I would like. Could these
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> fields be made protected, or should I switch to TypedWriter and have a lot
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> of empty, irrelevant methods?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 3) I'm able to pull all the metadata required for writing these
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> files from DefaultMetadata and DefaultImageMetadata, with the exception of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> two things. First, is there a way to get the acquisition date and
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> timestamps form individual planes? Second, the config.writerGetColorModel()
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> call that I copied from AbstractWriter returns null, as does
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> plane.getColorTable(). Is there some other way to get image lookup tables?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> My test code opens a Tiff stack saved by FIJI that has LUTs applied, so I
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> would think they would be there. Is there another mechanism for getting
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> image LUTs?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Excited to see this writer become part of SCIFIO in the near
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> future.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Henry
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Wed, Jul 16, 2014 at 4:32 PM, Curtis Rueden &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">ctrueden at wisc.edu</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Henry,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; I've created a class in the io.scif.formats package for my
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writer.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; Since I only have the writer components, but not the reader,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> how
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; should I go about implementing all of the component classes of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Format
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; (Metadata, Parser, Checker, Reader, Writer, Translator). The
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> first 4
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; are listed as mandatory in the tutorial, but it seems like I
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> shouldn't
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; need all of them for writing functionality alone.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Agreed, it should not be necessary to create Reader or Parser
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> components. However, writer-only components are still a little rough around
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> the edges. The relevant issue is:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/issues/211">https://github.com/scifio/scifio/issues/211</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Feel free to comment on that so that GitHub sends you updates if
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> you care about progress on it.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> But in the meantime, it should still be possible to create a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writer-only component. For an example, see the JavaFormat:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/scifio-0.15.4/scifio/src/main/java/io/scif/formats/JavaFormat.java">https://github.com/scifio/scifio/blob/scifio-0.15.4/scifio/src/main/java/io/scif/formats/JavaFormat.java</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Regards,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Curtis
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Wed, Jun 25, 2014 at 1:21 PM, Henry Pinkard &lt;
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">henry.pinkard at gmail.com</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Curtis,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> This all sounds great. I've cloned the SCIFIO core as well as
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> the tutorials, which have been quite helpful in getting things set up.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> I've created a class in the io.scif.formats package for my
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> writer. Since I only have the writer components, but not the reader, how
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> should I go about implementing all of the component classes of Format
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> (Metadata, Parser, Checker, Reader, Writer, Translator). The first 4 are
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> listed as mandatory in the tutorial, but it seems like I shouldn't need all
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> of them for writing functionality alone.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Henry
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Sun, Jun 1, 2014 at 7:27 AM, Curtis Rueden &lt;
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">ctrueden at wisc.edu</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Henry,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; Over the past couple years, I've been developing and testing
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> a java
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; library that is capable of writing Imaris .ims files. This
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> library has
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; allowed me to build an ImageJ plugin that automatically
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> stitches,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; processes, and converts OME-TIFFs from Micro-Manager into
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Imaris
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; files, which in turn allows a significantly greater
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> throughput of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; imaging data with much less effort from users.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Sounds great!
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; This library has been instrumental to the workflow of users
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> in the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; imaging center in which I work, and I want to find a way to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> share its
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; utility with researchers everywhere. Incorporating it into
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; Bio-Formats exporter would both increase its visibility and
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> leverage
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; the multitude of formats on Bio-Formats' front end to make
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> it usable
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; with all types of microscopy data.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Rather than implementing a Bio-Formats writer, I encourage you
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> to check out SCIFIO [1, 2, 3]. Though still in beta, SCIFIO is the core I/O
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> mechanism of ImageJ2, which is finally due for release later this week.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> SCIFIO uses the SciJava plugin framework, meaning your writer would be
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> automatically discovered and used as appropriate with no additional work
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> from you. And we have recently integrated SCIFIO directly into ImageJ at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> the core level, so things like File &gt; Open now use it, including whatever
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> format plugins are available. (SCIFIO also has a Bio-Formats format plugin,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> so that all of the BF formats work in ImageJ that way, too!)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> You could then serve your Imaris writer from its own ImageJ
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> update site [4, 5], to make it available to all ImageJ users.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; In addition, I've convinced Bitplane to make their format
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> open source,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; and I believe this may allow .ims files to grow beyond a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> proprietary
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; file format into a generalized multi-resolution format
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> useful for a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; variety of applications that deal with the visualization of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> extremely
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; large stitched images.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Glad to hear that Bitplane is willing to do this. In that
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> case, if you do complete a SCIFIO Imaris writer and want to donate the code
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> upstream, you could file a pull request against the SCIFIO LifeSci project
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [6] to contribute it there, since that project houses readers &amp; writers for
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> _open_ life sciences formats. So if Bitplane publishes an open
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> specification, we would be willing to add it to the project.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> If you have any questions about SCIFIO, please feel free to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> use the SCIFIO mailing list [7]. Or if you go the Bio-Formats route, you
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> can use ome-devel [8].
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Regards,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Curtis
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [1] <A HREF="http://loci.wisc.edu/software/scifio">http://loci.wisc.edu/software/scifio</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [2] <A HREF="https://github.com/scifio/scifio">https://github.com/scifio/scifio</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [3] <A HREF="https://github.com/scifio/scifio-tutorials">https://github.com/scifio/scifio-tutorials</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [4] <A HREF="http://wiki.imagej.net/Update_Sites">http://wiki.imagej.net/Update_Sites</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [5] <A HREF="http://wiki.imagej.net/List_of_update_sites">http://wiki.imagej.net/List_of_update_sites</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>  [6] <A HREF="https://github.com/scifio/scifio-lifesci">https://github.com/scifio/scifio-lifesci</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [7] <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> [8]
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/">http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Thu, May 29, 2014 at 6:55 PM, Henry Pinkard &lt;
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">henry.pinkard at gmail.com</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Melissa and Curtis,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Over the past couple years, I've been developing and testing
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> a java library that is capable of writing Imaris .ims files. This library
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> has allowed me to build an ImageJ plugin that automatically stitches,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> processes, and converts OME-TIFFs from Micro-Manager into Imaris files,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> which in turn allows a significantly greater throughput of imaging data
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> with much less effort from users.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> This library has been instrumental to the workflow of users
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> in the imaging center in which I work, and I want to find a way to share
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> its utility with researchers everywhere. Incorporating it into the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Bio-Formats exporter would both increase its visibility and leverage the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> multitude of formats on Bio-Formats' front end to make it usable with all
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> types of microscopy data. In addition, I've convinced Bitplane to make
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> their format open source, and I believe this may allow .ims files to grow
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> beyond a proprietary file format into a generalized multi-resolution format
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> useful for a variety of applications that deal with the visualization of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> extremely large stitched images. I'm happy to rework the library in
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> whatever ways make it easiest to incorporate on your end. Let me know your
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> thoughts on how to best proceed.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Best,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Henry
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> _______________________________________________
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> SCIFIO mailing list
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20150126/3aa56207/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20150126/3aa56207/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000246.html">[SCIFIO] Bio-Formats Imaris writer
+</A></li>
+	<LI>Next message: <A HREF="000243.html">[SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to	TIFF
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#247">[ date ]</a>
+              <a href="thread.html#247">[ thread ]</a>
+              <a href="subject.html#247">[ subject ]</a>
+              <a href="author.html#247">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

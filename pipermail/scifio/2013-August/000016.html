@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> ImgOpener
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20ImgOpener&In-Reply-To=%3C52026784.2090309%40gmx.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000015.html">
+   <LINK REL="Next"  HREF="000017.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>ImgOpener</H1>
+    <B>Michael Zinsmaier</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20ImgOpener&In-Reply-To=%3C52026784.2090309%40gmx.de%3E"
+       TITLE="ImgOpener">michael.zinsmaier at gmx.de
+       </A><BR>
+    <I>Wed Aug  7 10:28:04 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000015.html">ImgOpener
+</A></li>
+        <LI>Next message: <A HREF="000017.html">ImgOpener
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#16">[ date ]</a>
+              <a href="thread.html#16">[ thread ]</a>
+              <a href="subject.html#16">[ subject ]</a>
+              <a href="author.html#16">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Mark,
+
+that sound great. We used Snapshot versions because we want to actively 
+test the ImgOpener however given your fast release cycle the latest 
+stable version should be recent enough.
+Removing the need to depend on OME-XML 4.5 would be great.
+
+Regards Michael
+
+&gt;<i> Hi Michael,
+</I>&gt;<i>
+</I>&gt;<i>  I'm copying the scifio mailing list, as this could be of general
+</I>&gt;<i> interest.
+</I>&gt;<i>
+</I>&gt;<i>     bioformats, scifio and scifio-bf-compat are the latest snapshot
+</I>&gt;<i>     versions from the maven repository
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> First of all, I would recommend trying to use the release versions
+</I>&gt;<i> first (scifio 0.4.1, scifio-bf-compat 1.0.1). Is there some API in the
+</I>&gt;<i> snapshot versions you need specifically? If so, you could then
+</I>&gt;<i> transition from the release to snapshots, once you're updated to the
+</I>&gt;<i> SCIFIO 0.4.X API.
+</I>&gt;<i>
+</I>&gt;<i> Of course, SCIFIO-BF-compat 1.0.0 includes a scifio 0.3.X dependency
+</I>&gt;<i> so it's not compatible with 0.4.X... so I understand why you had to
+</I>&gt;<i> use snapshots. :(
+</I>&gt;<i>
+</I>&gt;<i>      * bioformats 4.4.8
+</I>&gt;<i>      * ome-xml 4.5
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> This looks like a limitation of the current SCIFIO-BF-compat project.
+</I>&gt;<i> First of all, it includes bio-formats and ome-xml 4.4.8 dependencies,
+</I>&gt;<i> so you shouldn't need to explicitly declare them.
+</I>&gt;<i>
+</I>&gt;<i> The OME-XML 4.5 with OMEMetadata class isn't really ready for
+</I>&gt;<i> consumption yet. Having an OME-XML 4.5 on the classpath with the
+</I>&gt;<i> inherited 4.4.8 dependency seems like a bad idea. So I think
+</I>&gt;<i> SCIFIO-BF-compat should have its own copy of the OMEMetadata class +
+</I>&gt;<i> translators for now, so you can translate to it to extract the OME-XML.
+</I>&gt;<i>
+</I>&gt;<i> This would be a temporary solution until our Bio-Formats fork is
+</I>&gt;<i> actually released (which could be a while, and would still have to
+</I>&gt;<i> resolve the 4.5.X and 4.4.X dependency issues).
+</I>&gt;<i>
+</I>&gt;<i> Unless anyone has other suggestions I'll do migrate over the
+</I>&gt;<i> OMEMetadata + translators this afternoon and release a
+</I>&gt;<i> SCIFIO-BF-compat 1.1.0. That should resolve your dependency issues, at
+</I>&gt;<i> least, by also updating the SCIFIO version to 0.4.X, so you can use
+</I>&gt;<i> actual release artifacts.
+</I>&gt;<i>
+</I>&gt;<i>     The error message is &quot;IllegalArgumentException: Invalid dimension
+</I>&gt;<i>     order: XYC&quot;
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> This is a bug introduced in this commit
+</I>&gt;<i> &lt;<A HREF="https://github.com/scifio/scifio-bf-compat/commit/677fe7645e26e9e692f0ca823698f50349b69ef7">https://github.com/scifio/scifio-bf-compat/commit/677fe7645e26e9e692f0ca823698f50349b69ef7</A>&gt;.
+</I>&gt;<i> I will resolve it and make sure you can extract OME-XML with
+</I>&gt;<i> scifio-bf-compat + scifio 0.4.1 before releasing.
+</I>&gt;<i>
+</I>&gt;<i> Hope that helps! Thanks for testing :)
+</I>&gt;<i>
+</I>&gt;<i> - Mark
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> On Tue, Aug 6, 2013 at 4:46 PM, Michael Zinsmaier
+</I>&gt;<i> &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">michael.zinsmaier at gmx.de</A> &lt;mailto:<A HREF="http://scif.io/mailman/listinfo/scifio">michael.zinsmaier at gmx.de</A>&gt;&gt; wrote:
+</I>&gt;<i>
+</I>&gt;<i>     Hi Mark,
+</I>&gt;<i>
+</I>&gt;<i>     we just started to use the ImgOpener. Unfortunately I can't open
+</I>&gt;<i>     .jpg images.
+</I>&gt;<i>     The error message is &quot;IllegalArgumentException: Invalid dimension
+</I>&gt;<i>     order: XYC&quot;
+</I>&gt;<i>
+</I>&gt;<i>     My last working testversion used
+</I>&gt;<i>      * scifio3.1
+</I>&gt;<i>      * bioformats 4.4.8
+</I>&gt;<i>      * ome-xml 4.5
+</I>&gt;<i>      * scifio-bf-compat 1.0.1
+</I>&gt;<i>
+</I>&gt;<i>     and builds from roughly 3 weeks ago
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>     the new setup uses
+</I>&gt;<i>     * scifio4.2
+</I>&gt;<i>      * bioformats 4.4.8
+</I>&gt;<i>      * ome-xml 4.5
+</I>&gt;<i>      * scifio-bf-compat 1.0.1
+</I>&gt;<i>
+</I>&gt;<i>     bioformats, scifio and scifio-bf-compat are the latest snapshot
+</I>&gt;<i>     versions from the maven repository, ome-xml
+</I>&gt;<i>     is self build updated to the scifio branch from bioformats (last
+</I>&gt;<i>     commit 12.07)
+</I>&gt;<i>     (By the way can I add the scifio ome-xml with OMEMetadata as maven
+</I>&gt;<i>     dependency? If yes how do I do it?)
+</I>&gt;<i>
+</I>&gt;<i>     Any ideas?
+</I>&gt;<i>
+</I>&gt;<i>     Best regards
+</I>&gt;<i>     Michael
+</I>&gt;<i>
+</I>&gt;<i>
+</I>
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000015.html">ImgOpener
+</A></li>
+	<LI>Next message: <A HREF="000017.html">ImgOpener
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#16">[ date ]</a>
+              <a href="thread.html#16">[ thread ]</a>
+              <a href="subject.html#16">[ subject ]</a>
+              <a href="author.html#16">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

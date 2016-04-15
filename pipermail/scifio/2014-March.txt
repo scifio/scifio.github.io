@@ -1,0 +1,116 @@
+From hinerm at gmail.com  Mon Mar 10 12:43:51 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 10 Mar 2014 12:43:51 -0500
+Subject: [SCIFIO] SCIFIO 0.10.1 release
+Message-ID: <CA+B=mGrW9gfFHoHrD5Cx2WdLfc1TMcdrzu-SZ7y=7kJ0eFPEDQ@mail.gmail.com>
+
+Hi all,
+
+ I haven't sent out a release notice in a while for SCIFIO, so I wanted to
+bring people up to date with the new features and improvements in the
+latest releases:
+
+* We added a configuration
+framework<https://github.com/scifio/scifio/commit/917e6105bc61aed39bdc52853c7c8e8dbe3e47a9>.
+Like Bio-Formats, the lower level SCIFIO components (e.g. readers, writers,
+parser) try to provide configuration options to adjust behavior as needed.
+However, we realized that the steps required to select configuration
+options were overly cumbersome, and in some cases completely papered over
+by convenience methods. To avoid proliferating configuration options
+through method signatures, we now have a single class that can accept
+configuration for a variety of SCIFIO components - essentially locking in
+state for the scope of one execution. This also should make it much easier
+to expose these options in consuming software like IJ2, as the appropriate
+information just needs to used to populate one object, and then the
+framework can take over.
+
+* We split the translation API <https://github.com/scifio/scifio/issues/145>,
+to allow ImageMetadata and format-specific Metadata to be handled
+separately. This fixed a fundamental problem with translation, in that
+wrapped Metadata objects couldn't be translated properly.
+
+* One of the highest impact changes didn't come from SCIFIO, but rather in
+Fiji we can now support proper plugin class loading when switching to
+modern mode. This means that the SCIFIO plugins
+scifio-ome-xml<https://github.com/scifio/scifio-ome-xml>and
+scifio-bf-compat <https://github.com/scifio/scifio-bf-compat> are now
+working as intended, and you can now work with Bio-Formats formats and
+OME-XML through SCIFIO when using Fiji.
+
+There were also a large number of bug fixes, API improvements (continuing
+to simplify Format implementation, removal of protected field use) and
+more. See the SCIFIO issues
+page<https://github.com/scifio/scifio/issues/milestones?state=closed>for
+a more complete listing.
+
+
+My current priorities for the 0.10.X line are continuing bug fixes (some
+problems writing certain formats still) and migrating the Bio-Formats test
+suite to SCIFIO, to establish regression tests.
+
+Please let me know if you have any questions!
+
+Thanks,
+Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140310/8c80fb38/attachment.html>
+
+From hinerm at gmail.com  Mon Mar 10 12:43:51 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 10 Mar 2014 12:43:51 -0500
+Subject: [SCIFIO] SCIFIO 0.10.1 release
+Message-ID: <CA+B=mGrW9gfFHoHrD5Cx2WdLfc1TMcdrzu-SZ7y=7kJ0eFPEDQ@mail.gmail.com>
+
+Hi all,
+
+ I haven't sent out a release notice in a while for SCIFIO, so I wanted to
+bring people up to date with the new features and improvements in the
+latest releases:
+
+* We added a configuration
+framework<https://github.com/scifio/scifio/commit/917e6105bc61aed39bdc52853c7c8e8dbe3e47a9>.
+Like Bio-Formats, the lower level SCIFIO components (e.g. readers, writers,
+parser) try to provide configuration options to adjust behavior as needed.
+However, we realized that the steps required to select configuration
+options were overly cumbersome, and in some cases completely papered over
+by convenience methods. To avoid proliferating configuration options
+through method signatures, we now have a single class that can accept
+configuration for a variety of SCIFIO components - essentially locking in
+state for the scope of one execution. This also should make it much easier
+to expose these options in consuming software like IJ2, as the appropriate
+information just needs to used to populate one object, and then the
+framework can take over.
+
+* We split the translation API <https://github.com/scifio/scifio/issues/145>,
+to allow ImageMetadata and format-specific Metadata to be handled
+separately. This fixed a fundamental problem with translation, in that
+wrapped Metadata objects couldn't be translated properly.
+
+* One of the highest impact changes didn't come from SCIFIO, but rather in
+Fiji we can now support proper plugin class loading when switching to
+modern mode. This means that the SCIFIO plugins
+scifio-ome-xml<https://github.com/scifio/scifio-ome-xml>and
+scifio-bf-compat <https://github.com/scifio/scifio-bf-compat> are now
+working as intended, and you can now work with Bio-Formats formats and
+OME-XML through SCIFIO when using Fiji.
+
+There were also a large number of bug fixes, API improvements (continuing
+to simplify Format implementation, removal of protected field use) and
+more. See the SCIFIO issues
+page<https://github.com/scifio/scifio/issues/milestones?state=closed>for
+a more complete listing.
+
+
+My current priorities for the 0.10.X line are continuing bug fixes (some
+problems writing certain formats still) and migrating the Bio-Formats test
+suite to SCIFIO, to establish regression tests.
+
+Please let me know if you have any questions!
+
+Thanks,
+Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140310/8c80fb38/attachment-0002.html>
+

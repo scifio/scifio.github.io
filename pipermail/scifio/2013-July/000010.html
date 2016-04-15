@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [ImageJ-devel] Scifion Img Opener some question
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BImageJ-devel%5D%20Scifion%20Img%20Opener%20some%20question&In-Reply-To=%3C51D6A18C.3050004%40gmx.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000009.html">
+   <LINK REL="Next"  HREF="000011.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[ImageJ-devel] Scifion Img Opener some question</H1>
+    <B>Michael Zinsmaier</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BImageJ-devel%5D%20Scifion%20Img%20Opener%20some%20question&In-Reply-To=%3C51D6A18C.3050004%40gmx.de%3E"
+       TITLE="[ImageJ-devel] Scifion Img Opener some question">michael.zinsmaier at gmx.de
+       </A><BR>
+    <I>Fri Jul  5 05:35:56 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000009.html">Nrrd ITK-SCIFIO Bug
+</A></li>
+        <LI>Next message: <A HREF="000011.html">[ImageJ-devel] Scifion Img Opener some question
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#10">[ date ]</a>
+              <a href="thread.html#10">[ thread ]</a>
+              <a href="subject.html#10">[ subject ]</a>
+              <a href="author.html#10">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi together, hi Mark,
+
+I just started to convert the Knime Image Processing &quot;Image Reader&quot; code 
+to the new implementation of ImgOpener (scifio). However I am a bit 
+stuck could you help me with a few questions regarding the code changes?
+
+- the imglib2.io ImgOpener has some static methods like
+         - public static AxisType[] getDimTypes(final IFormatReader r)
+         - public static double[] getCalibration(final IFormatReader r)
+
+     how can I retriev such data using the scifio ImgOpener?
+
+-  the scifio ImgOpener's openImg method has the parameters Reader, 
+type, factory and options
+         - What is the relationship between Reader and IFormatReader (we 
+used previously the openImg(IFormatReader ...) method)
+         - can we retriev the type from a Reader (IFormatReader x; 
+ImgIOUtils.makeType(x.getPixelType())
+
+- ImgOptions supports the selection of an interval (thanks for that). 
+But for our implementation we would need a multiple interval selection 
+(e.g. the first 10 frames of a video and the last 10). Is it possible to 
+change the implementation such that ImgOption accepts an array of intervals?
+
+Thanks in advance
+best regards,
+Michael
+
+_______________________________________________
+ImageJ-devel mailing list
+<A HREF="http://scif.io/mailman/listinfo/scifio">ImageJ-devel at imagej.net</A>
+<A HREF="http://imagej.net/mailman/listinfo/imagej-devel">http://imagej.net/mailman/listinfo/imagej-devel</A>
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000009.html">Nrrd ITK-SCIFIO Bug
+</A></li>
+	<LI>Next message: <A HREF="000011.html">[ImageJ-devel] Scifion Img Opener some question
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#10">[ date ]</a>
+              <a href="thread.html#10">[ thread ]</a>
+              <a href="subject.html#10">[ subject ]</a>
+              <a href="author.html#10">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

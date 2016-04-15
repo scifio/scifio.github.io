@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] SCIFIO post from phsiao at cs.unc.edu requires approval
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%20post%20from%20phsiao%40cs.unc.edu%20requires%20approval&In-Reply-To=%3CCAPYmBX0VSJQp0aFjquzvO5B-3TsbHh4qymgkCCK9DEJNZW1Bjg%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000042.html">
+   <LINK REL="Next"  HREF="000044.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] SCIFIO post from phsiao at cs.unc.edu requires approval</H1>
+    <B>Joe Ping-Lin Hsiao</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%20post%20from%20phsiao%40cs.unc.edu%20requires%20approval&In-Reply-To=%3CCAPYmBX0VSJQp0aFjquzvO5B-3TsbHh4qymgkCCK9DEJNZW1Bjg%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] SCIFIO post from phsiao at cs.unc.edu requires approval">phsiao at cs.unc.edu
+       </A><BR>
+    <I>Tue Oct 15 15:21:08 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000042.html">[SCIFIO] SCIFIO post from phsiao at cs.unc.edu requires approval
+</A></li>
+        <LI>Next message: <A HREF="000044.html">[SCIFIO] Error reading a 32-bit nrrd image via ITK
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#43">[ date ]</a>
+              <a href="thread.html#43">[ thread ]</a>
+              <a href="subject.html#43">[ subject ]</a>
+              <a href="author.html#43">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Mark,
+
+The output dimension is 3, which is equal to the input's dimension. I also
+tried &quot;-d 5&quot;. Seems to me it doesn't change anything of the output. The
+output dimension is still 3 and the pixel values are wrong.
+
+Don't know if this helps. I put the following code after reader-&gt;Update()
+to check the image's min and max pixel values:
+
+typedef itk::MinimumMaximumImageCalculator &lt;ImageType&gt;
+ImageCalculatorFilterType;
+ImageCalculatorFilterType::Pointer imageCalculatorFilter =
+ImageCalculatorFilterType::New ();
+imageCalculatorFilter-&gt;SetImage(reader-&gt;GetOutput());
+imageCalculatorFilter-&gt;Compute();
+cout &lt;&lt; &quot;max intensity &quot; &lt;&lt; imageCalculatorFilter-&gt;GetMaximum() &lt;&lt; endl;
+cout &lt;&lt; &quot;min intensity &quot; &lt;&lt; imageCalculatorFilter-&gt;GetMinimum();
+
+The value range is the full range of 'float' from -3.49e38 to 3.49e38,
+which seems wrong. But if I comment out reader-&gt;SetImageIO(io), the values
+look reasonable.
+
+Thanks,
+Joe
+
+
+On Tue, Oct 15, 2013 at 3:50 PM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hinerm at gmail.com</A>&gt; wrote:
+
+&gt;<i> Hi Joe,
+</I>&gt;<i>
+</I>&gt;<i>  Thanks for reporting this issue.
+</I>&gt;<i>
+</I>&gt;<i> reader-&gt;SetImageIO( io );
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>  Just so you know, this is just disabling SCIFIO I believe, and defaulting
+</I>&gt;<i> to the ITK DICOM ImageIO.
+</I>&gt;<i>
+</I>&gt;<i>  Does the output file have the correct number of total planes? If not, you
+</I>&gt;<i> might try &quot;-d 5&quot; just to test. The dimension order is XYCZT but XYZ are the
+</I>&gt;<i> dimensions with length more than 1. The SCIFIO plugin is supposed to
+</I>&gt;<i> account for that but it could be a bug.
+</I>&gt;<i>
+</I>&gt;<i>  Otherwise if the dimensions are correct it could be an issue with the
+</I>&gt;<i> dataset being interleaved.
+</I>&gt;<i>
+</I>&gt;<i>  I'll try to look at it soon.
+</I>&gt;<i>
+</I>&gt;<i> Thanks,
+</I>&gt;<i> Mark
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> From: Joe Ping-Lin Hsiao &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">phsiao at cs.unc.edu</A>&gt;
+</I>&gt;&gt;<i> To: <A HREF="http://scif.io/mailman/listinfo/scifio">scifio at scif.io</A>
+</I>&gt;&gt;<i> Cc:
+</I>&gt;&gt;<i> Date: Tue, 15 Oct 2013 14:29:23 -0400
+</I>&gt;&gt;<i> Subject: Error reading a 32-bit nrrd image via ITK
+</I>&gt;&gt;<i> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image in
+</I>&gt;&gt;<i> my own program. The attached is a 32-bit 3-dimensional test image.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Then I used the following command to test with the SCIFIO test program:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff -w
+</I>&gt;&gt;<i> -d 3 -t float
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> The output '123.ome.tiff' has wrong pixel values and looks wrong in
+</I>&gt;&gt;<i> ImageJ.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if I
+</I>&gt;&gt;<i> comment out this line
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>    reader-&gt;SetImageIO( io );
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> to use ITK's default ImageIO, the output image becomes normal.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Thanks,
+</I>&gt;&gt;<i> Joe
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20131015/93291298/attachment.html">http://scif.io/pipermail/scifio/attachments/20131015/93291298/attachment.html</A>&gt;
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000042.html">[SCIFIO] SCIFIO post from phsiao at cs.unc.edu requires approval
+</A></li>
+	<LI>Next message: <A HREF="000044.html">[SCIFIO] Error reading a 32-bit nrrd image via ITK
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#43">[ date ]</a>
+              <a href="thread.html#43">[ thread ]</a>
+              <a href="subject.html#43">[ subject ]</a>
+              <a href="author.html#43">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] SCIFIO 0.7.4 Released today
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%200.7.4%20Released%20today&In-Reply-To=%3CCA%2BB%3DmGo3zhY4YdVyfa6AnRuXViZVca4u5axX1QJBSXK%2BqtxBVg%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000050.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] SCIFIO 0.7.4 Released today</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%200.7.4%20Released%20today&In-Reply-To=%3CCA%2BB%3DmGo3zhY4YdVyfa6AnRuXViZVca4u5axX1QJBSXK%2BqtxBVg%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] SCIFIO 0.7.4 Released today">hiner at wisc.edu
+       </A><BR>
+    <I>Wed Dec 11 11:18:13 CST 2013</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000050.html">[SCIFIO] Problem with Tiff Calibration
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#49">[ date ]</a>
+              <a href="thread.html#49">[ thread ]</a>
+              <a href="subject.html#49">[ subject ]</a>
+              <a href="author.html#49">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi all,
+
+ Today I released SCIFIO 0.7.4 - it can be downloaded directly from
+GitHub&lt;<A HREF="https://github.com/scifio/scifio/releases">https://github.com/scifio/scifio/releases</A>&gt;,
+and is part of pom-scijava
+1.111&lt;<A HREF="https://github.com/scijava/scijava-common/commit/4cb7d8d92810b173f18fadcc25e1567b9b3d2e1a">https://github.com/scijava/scijava-common/commit/4cb7d8d92810b173f18fadcc25e1567b9b3d2e1a</A>&gt;.
+Side note: pom-scijava 1.111 also fixes a gav bug with scifio-lifesci, so
+this version is now being tracked correctly (e.g. if you want to use the
+updated SDTFormat&lt;<A HREF="https://github.com/scifio/scifio-lifesci/blob/master/src/main/java/io/scif/lifesci/SDTFormat.java">https://github.com/scifio/scifio-lifesci/blob/master/src/main/java/io/scif/lifesci/SDTFormat.java</A>&gt;
+).
+
+In addition to bug fixes and general improvements, I wanted to highlight a
+few new features:
+
+* Tools &lt;<A HREF="https://github.com/scifio/scifio/tree/master/tools">https://github.com/scifio/scifio/tree/master/tools</A>&gt;! The
+Bio-Formats command line tools have been ported to SCIFIO. In keeping with
+SCIFIO theme, these tools now support dynamic command extension - via the
+SCIFIOToolCommand&lt;<A HREF="https://github.com/scifio/scifio/blob/master/tools/src/main/java/io/scif/tools/SCIFIOToolCommand.java">https://github.com/scifio/scifio/blob/master/tools/src/main/java/io/scif/tools/SCIFIOToolCommand.java</A>&gt;plugins.
+Also, a lot of boilerplate is taken care of now in the abstract
+layer, e.g. using args4j &lt;<A HREF="http://args4j.kohsuke.org/">http://args4j.kohsuke.org/</A>&gt; to print command
+usage. I tried to adhere to Git syntax for using these tools, so I think it
+feels pretty slick.
+
+  I only ported show, info and convert for now. If you try implementing a
+new command and have any questions or problems please e-mail me/the list!
+
+  You can also download the latest
+tools&lt;<A HREF="http://jenkins.imagej.net/view/SCIFIO/job/SCIFIO/">http://jenkins.imagej.net/view/SCIFIO/job/SCIFIO/</A>&gt;from jenkins,
+in
+zip&lt;<A HREF="http://jenkins.imagej.net/view/SCIFIO/job/SCIFIO/lastSuccessfulBuild/artifact/tools/target/scifio-tools-0.7.5-SNAPSHOT-scripts.zip">http://jenkins.imagej.net/view/SCIFIO/job/SCIFIO/lastSuccessfulBuild/artifact/tools/target/scifio-tools-0.7.5-SNAPSHOT-scripts.zip</A>&gt;and
+bz2&lt;<A HREF="http://jenkins.imagej.net/view/SCIFIO/job/SCIFIO/lastSuccessfulBuild/artifact/tools/target/scifio-tools-0.7.5-SNAPSHOT-scripts.tar.bz2">http://jenkins.imagej.net/view/SCIFIO/job/SCIFIO/lastSuccessfulBuild/artifact/tools/target/scifio-tools-0.7.5-SNAPSHOT-scripts.tar.bz2</A>&gt;flavors.
+
+* New package: refs&lt;<A HREF="https://github.com/scifio/scifio/commit/d8cad77b212d6faf7bf49471f5a3ffaf46c75c7d">https://github.com/scifio/scifio/commit/d8cad77b212d6faf7bf49471f5a3ffaf46c75c7d</A>&gt;.
+This adds a RefManagerService&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/refs/RefManagerService.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/refs/RefManagerService.java</A>&gt;which
+works in unison with the new
+RefProvider&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/refs/RefProvider.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/refs/RefProvider.java</A>&gt;plugin
+type to manage references and perform cleanup operations  after they
+are enqueued in a ReferenceQueue.
+
+* Redesigned cache
+functionality&lt;<A HREF="https://github.com/scifio/scifio/commit/781ab8ef00845b6759d27ea2a9a60767505eeb5d">https://github.com/scifio/scifio/commit/781ab8ef00845b6759d27ea2a9a60767505eeb5d</A>&gt;.
+This is the result of our latest hackathon with Christian Dietz. A lot
+happened here, so you can look at the related
+issue&lt;<A HREF="https://github.com/scifio/scifio/issues/69">https://github.com/scifio/scifio/issues/69</A>&gt;and commit message
+for the complete story. But to summarize, cache
+performance was terrible and used some ill-advised Java practices. Now
+(thanks to the RefManagerService, among other things) we're doing things
+properly and performance is obscenely improved.
+
+Thanks for reading this update. If you have any questions/comments, please
+let me know.
+
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20131211/b5558342/attachment.html">http://scif.io/pipermail/scifio/attachments/20131211/b5558342/attachment.html</A>&gt;
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000050.html">[SCIFIO] Problem with Tiff Calibration
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#49">[ date ]</a>
+              <a href="thread.html#49">[ thread ]</a>
+              <a href="subject.html#49">[ subject ]</a>
+              <a href="author.html#49">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

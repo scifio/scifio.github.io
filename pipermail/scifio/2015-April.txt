@@ -1,0 +1,957 @@
+From burkhard.hoeckendorf at web.de  Mon Apr 13 12:59:33 2015
+From: burkhard.hoeckendorf at web.de (Burkhard Hoeckendorf)
+Date: Mon, 13 Apr 2015 13:59:33 -0400
+Subject: DICOM format detection
+Message-ID: <552C0405.3080605@web.de>
+
+Dear List,
+
+I apologize in case I am posting this mail twice. The first attempt at 
+the end of last week came with an attachment and I assume it was 
+probably scrubbed (and rightly so).
+
+We recently ran into an issue with DICOM format detection. We use a 
+custom file format that is completely unrelated to DICOM and that is 
+implemented for SCIFIO such that the file name extension alone is 
+necessary and sufficient to recognize it. This works well, except for a 
+single file which we couldn't open in Fiji. Reading it by other means 
+(C++, MATLAB) worked fine.
+
+As it turns out, even before looking at its file name extension, SCIFIO 
+opened the file and tried to detect whether its header is in DICOM 
+format. I am unfamiliar with the DICOM standard and not a professional 
+Programmer, but from the SCIFIO implementation 
+(io.scif.formats.DICOMFormat) it appears to me that the magic 'DICM' 
+string in the header is treated as optional. If it is not found, SCIFIO 
+tries to read a single header field, and if successful considers the 
+file a DICOM file. In our case, we got unlucky and by accident SCIFIO 
+retrieved a valid-enough result when reading the corresponding position 
+in the non-DICOM file. Hence, it was wrongly detected as a DICOM file.
+
+For the time being, we are now running our own, locally modified SCIFIO 
+that does not try harder when the 'DICM' string is missing, and this 
+solved our problem. For reference, we modified line 1079 in 
+io.scif.formats.DICOMFormat. I am also happy to send this as a pull 
+request, but I am not a DICOM user, so can not comment whether or not 
+this is actually a workable solution.
+
+More generally though, this experience has led me to wonder whether the 
+order in which file formats are detected could be tweaked such that the 
+ones requiring the most work are only attempted when the easier ones 
+fail. DICOM format detection would thus only occur when the file name 
+extension does not match that of any format where the extension alone is 
+necessary and sufficient. This may help prevent similar conflicts in the 
+future and may additionally contribute a little bit to a much needed 
+performance increase.
+
+Cheers,
+Burkhard
+
+
+
+From hiner at wisc.edu  Mon Apr 13 13:37:46 2015
+From: hiner at wisc.edu (Mark Hiner)
+Date: Mon, 13 Apr 2015 13:37:46 -0500
+Subject: [SCIFIO] DICOM format detection
+In-Reply-To: <552C0405.3080605@web.de>
+References: <552C0405.3080605@web.de>
+Message-ID: <CA+B=mGou2ihEnXZnwf6ZVP3OKLbkLM3kcGoxxVOvSwa1+DGuww@mail.gmail.com>
+
+Hi Burkhard,
+
+>I apologize in case I am posting this mail twice. The first attempt at the
+end of last week came with an attachment and I assume it was probably
+scrubbed (and rightly so).
+
+No worries - there actually was a technical issue with the mailing list
+that's now fixed. Sorry about that!
+
+>As it turns out, even before looking at its file name extension, SCIFIO
+opened the file and tried to detect whether its header is in DICOM format
+
+DICOM is an unfortunate example that has some history in Bio-Formats
+(extensionless DICOM images, DICOM images with no magic string) that
+carried over to the SCIFIO implementation with potential for false
+positives. However, I think the best solution right now is to set your
+format to a higher priority. Formats are checked in plugin priority order.
+
+For example, see a sample format that uses a higher priority[1]. DICOM uses
+the normal priority (0), so you can use any of the higher constants[2] or
+set it manually[3] to a value > 0 for your format to be detected first.
+
+>More generally though, this experience has led me to wonder whether the
+order in which file formats are detected could be tweaked such that the
+ones requiring the most work are only attempted when the easier ones fail.
+
+Agreed completely. Plugin priority was a starting point, but we have
+started discussing how exactly to do things better[4] with some ideas very
+similar to what you outline.
+
+Thanks for the feedback, let us know if you have any more suggestions or
+questions.
+
+Best,
+Mark
+
+[1]
+https://github.com/scifio/scifio-bf-compat/blob/scifio-bf-compat-1.11.0/src/main/java/io/scif/bf/BioFormatsFormat.java#L79-80
+[2]
+https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/Priority.java#L48-55
+[3]
+https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/plugin/Plugin.java#L108-129
+[4] https://github.com/scifio/scifio/issues/39
+
+On Mon, Apr 13, 2015 at 12:59 PM, Burkhard Hoeckendorf <
+burkhard.hoeckendorf at web.de> wrote:
+
+> Dear List,
+>
+> I apologize in case I am posting this mail twice. The first attempt at the
+> end of last week came with an attachment and I assume it was probably
+> scrubbed (and rightly so).
+>
+> We recently ran into an issue with DICOM format detection. We use a custom
+> file format that is completely unrelated to DICOM and that is implemented
+> for SCIFIO such that the file name extension alone is necessary and
+> sufficient to recognize it. This works well, except for a single file which
+> we couldn't open in Fiji. Reading it by other means (C++, MATLAB) worked
+> fine.
+>
+> As it turns out, even before looking at its file name extension, SCIFIO
+> opened the file and tried to detect whether its header is in DICOM format.
+> I am unfamiliar with the DICOM standard and not a professional Programmer,
+> but from the SCIFIO implementation (io.scif.formats.DICOMFormat) it appears
+> to me that the magic 'DICM' string in the header is treated as optional. If
+> it is not found, SCIFIO tries to read a single header field, and if
+> successful considers the file a DICOM file. In our case, we got unlucky and
+> by accident SCIFIO retrieved a valid-enough result when reading the
+> corresponding position in the non-DICOM file. Hence, it was wrongly
+> detected as a DICOM file.
+>
+> For the time being, we are now running our own, locally modified SCIFIO
+> that does not try harder when the 'DICM' string is missing, and this solved
+> our problem. For reference, we modified line 1079 in
+> io.scif.formats.DICOMFormat. I am also happy to send this as a pull
+> request, but I am not a DICOM user, so can not comment whether or not this
+> is actually a workable solution.
+>
+> More generally though, this experience has led me to wonder whether the
+> order in which file formats are detected could be tweaked such that the
+> ones requiring the most work are only attempted when the easier ones fail.
+> DICOM format detection would thus only occur when the file name extension
+> does not match that of any format where the extension alone is necessary
+> and sufficient. This may help prevent similar conflicts in the future and
+> may additionally contribute a little bit to a much needed performance
+> increase.
+>
+> Cheers,
+> Burkhard
+>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150413/a89ccb8e/attachment.html>
+
+From burkhard.hoeckendorf at web.de  Mon Apr 13 14:23:19 2015
+From: burkhard.hoeckendorf at web.de (Burkhard Hoeckendorf)
+Date: Mon, 13 Apr 2015 15:23:19 -0400
+Subject: [SCIFIO] DICOM format detection
+In-Reply-To: <CA+B=mGou2ihEnXZnwf6ZVP3OKLbkLM3kcGoxxVOvSwa1+DGuww@mail.gmail.com>
+References: <552C0405.3080605@web.de>
+	<CA+B=mGou2ihEnXZnwf6ZVP3OKLbkLM3kcGoxxVOvSwa1+DGuww@mail.gmail.com>
+Message-ID: <552C17A7.7060500@web.de>
+
+Dear Mark,
+
+Thanks a lot for your help. I'll try playing with the format priority. 
+That being said, I've tried this strategy (in an unrelated project) to 
+override a format implementation in SCIFIO with our own implementation. 
+Back then (a few months ago), it did not work reliably in my hands.
+
+Another question is whether there is an option to turn off the automatic 
+min-max computation. Thanks to SCIFIO, we've found a nice way to 
+integrate our format with ImageJ, but using this comes at the price of a 
+pretty substantial IO performance hit that frankly is a source of 
+constant dissatisfaction. I suspect deactivating the min-max computation 
+may be an easy way to improve things, presumably without breaking 
+anything else (?)
+
+Best,
+Burkhard
+
+
+
+On 4/13/2015 2:37 PM, Mark Hiner wrote:
+> Hi Burkhard,
+>
+>  >I apologize in case I am posting this mail twice. The first attempt at
+> the end of last week came with an attachment and I assume it was
+> probably scrubbed (and rightly so).
+>
+> No worries - there actually was a technical issue with the mailing list
+> that's now fixed. Sorry about that!
+>
+>  >As it turns out, even before looking at its file name extension,
+> SCIFIO opened the file and tried to detect whether its header is in
+> DICOM format
+>
+> DICOM is an unfortunate example that has some history in Bio-Formats
+> (extensionless DICOM images, DICOM images with no magic string) that
+> carried over to the SCIFIO implementation with potential for false
+> positives. However, I think the best solution right now is to set your
+> format to a higher priority. Formats are checked in plugin priority order.
+>
+> For example, see a sample format that uses a higher priority[1]. DICOM
+> uses the normal priority (0), so you can use any of the higher
+> constants[2] or set it manually[3] to a value > 0 for your format to be
+> detected first.
+>
+>  >More generally though, this experience has led me to wonder whether
+> the order in which file formats are detected could be tweaked such that
+> the ones requiring the most work are only attempted when the easier ones
+> fail.
+>
+> Agreed completely. Plugin priority was a starting point, but we have
+> started discussing how exactly to do things better[4] with some ideas
+> very similar to what you outline.
+>
+> Thanks for the feedback, let us know if you have any more suggestions or
+> questions.
+>
+> Best,
+> Mark
+>
+> [1]
+> https://github.com/scifio/scifio-bf-compat/blob/scifio-bf-compat-1.11.0/src/main/java/io/scif/bf/BioFormatsFormat.java#L79-80
+> [2]
+> https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/Priority.java#L48-55
+> [3]
+> https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/plugin/Plugin.java#L108-129
+> [4] https://github.com/scifio/scifio/issues/39
+>
+> On Mon, Apr 13, 2015 at 12:59 PM, Burkhard Hoeckendorf
+> <burkhard.hoeckendorf at web.de <mailto:burkhard.hoeckendorf at web.de>> wrote:
+>
+>     Dear List,
+>
+>     I apologize in case I am posting this mail twice. The first attempt
+>     at the end of last week came with an attachment and I assume it was
+>     probably scrubbed (and rightly so).
+>
+>     We recently ran into an issue with DICOM format detection. We use a
+>     custom file format that is completely unrelated to DICOM and that is
+>     implemented for SCIFIO such that the file name extension alone is
+>     necessary and sufficient to recognize it. This works well, except
+>     for a single file which we couldn't open in Fiji. Reading it by
+>     other means (C++, MATLAB) worked fine.
+>
+>     As it turns out, even before looking at its file name extension,
+>     SCIFIO opened the file and tried to detect whether its header is in
+>     DICOM format. I am unfamiliar with the DICOM standard and not a
+>     professional Programmer, but from the SCIFIO implementation
+>     (io.scif.formats.DICOMFormat) it appears to me that the magic 'DICM'
+>     string in the header is treated as optional. If it is not found,
+>     SCIFIO tries to read a single header field, and if successful
+>     considers the file a DICOM file. In our case, we got unlucky and by
+>     accident SCIFIO retrieved a valid-enough result when reading the
+>     corresponding position in the non-DICOM file. Hence, it was wrongly
+>     detected as a DICOM file.
+>
+>     For the time being, we are now running our own, locally modified
+>     SCIFIO that does not try harder when the 'DICM' string is missing,
+>     and this solved our problem. For reference, we modified line 1079 in
+>     io.scif.formats.DICOMFormat. I am also happy to send this as a pull
+>     request, but I am not a DICOM user, so can not comment whether or
+>     not this is actually a workable solution.
+>
+>     More generally though, this experience has led me to wonder whether
+>     the order in which file formats are detected could be tweaked such
+>     that the ones requiring the most work are only attempted when the
+>     easier ones fail. DICOM format detection would thus only occur when
+>     the file name extension does not match that of any format where the
+>     extension alone is necessary and sufficient. This may help prevent
+>     similar conflicts in the future and may additionally contribute a
+>     little bit to a much needed performance increase.
+>
+>     Cheers,
+>     Burkhard
+>
+>
+>
+
+
+From hiner at wisc.edu  Tue Apr 14 12:28:40 2015
+From: hiner at wisc.edu (Mark Hiner)
+Date: Tue, 14 Apr 2015 12:28:40 -0500
+Subject: [SCIFIO] DICOM format detection
+In-Reply-To: <552C17A7.7060500@web.de>
+References: <552C0405.3080605@web.de>
+	<CA+B=mGou2ihEnXZnwf6ZVP3OKLbkLM3kcGoxxVOvSwa1+DGuww@mail.gmail.com>
+	<552C17A7.7060500@web.de>
+Message-ID: <CA+B=mGoxFfcnwkh8nQD_+kJDgNh9wzLEQOurOUz0XYxUktOwvQ@mail.gmail.com>
+
+Hi Burkhard,
+
+>That being said, I've tried this strategy (in an unrelated project) to
+override a format implementation in SCIFIO with our own implementation.
+Back then (a few months ago), it did not work reliably in my hands.
+
+If you're still unable to override formats using Plugin priority then
+that's certainly worrisome - please let me know how it goes. I'm happy to
+look at code samples to help identify problems; this is fundamental
+functionality that we want to ensure is both working properly, and easy for
+users/developers to implement.
+
+>Another question is whether there is an option to turn off the automatic
+min-max computation. Thanks to SCIFIO, we've found a nice way to integrate
+our format with ImageJ, but using this comes at the price of a pretty
+>substantial IO performance hit that frankly is a source of constant
+dissatisfaction.
+
+Yes; I actually did some performance profiling in February and thought
+automatic min-max computation had been disabled. But it does seem like it
+may not be working as intended[1]. The desire is that if SCIFIO is used via
+"File > Open" or drag and drop, we won't force min-max computation. If
+SCIFIO is used explicitly (via File > Import > Image...) there should be a
+checkbox to use it, which I will add[2].
+
+If you still have performance issues after any min-max computation fixes,
+please continue to let us know!
+
+Thanks again,
+Mark
+
+[1] https://github.com/scifio/scifio/issues/269
+[2] https://github.com/imagej/imagej-plugins-commands/issues/23
+
+On Mon, Apr 13, 2015 at 2:23 PM, Burkhard Hoeckendorf <
+burkhard.hoeckendorf at web.de> wrote:
+
+> Dear Mark,
+>
+> Thanks a lot for your help. I'll try playing with the format priority.
+> That being said, I've tried this strategy (in an unrelated project) to
+> override a format implementation in SCIFIO with our own implementation.
+> Back then (a few months ago), it did not work reliably in my hands.
+>
+> Another question is whether there is an option to turn off the automatic
+> min-max computation. Thanks to SCIFIO, we've found a nice way to integrate
+> our format with ImageJ, but using this comes at the price of a pretty
+> substantial IO performance hit that frankly is a source of constant
+> dissatisfaction. I suspect deactivating the min-max computation may be an
+> easy way to improve things, presumably without breaking anything else (?)
+>
+> Best,
+> Burkhard
+>
+>
+>
+>
+> On 4/13/2015 2:37 PM, Mark Hiner wrote:
+>
+>> Hi Burkhard,
+>>
+>>  >I apologize in case I am posting this mail twice. The first attempt at
+>> the end of last week came with an attachment and I assume it was
+>> probably scrubbed (and rightly so).
+>>
+>> No worries - there actually was a technical issue with the mailing list
+>> that's now fixed. Sorry about that!
+>>
+>>  >As it turns out, even before looking at its file name extension,
+>> SCIFIO opened the file and tried to detect whether its header is in
+>> DICOM format
+>>
+>> DICOM is an unfortunate example that has some history in Bio-Formats
+>> (extensionless DICOM images, DICOM images with no magic string) that
+>> carried over to the SCIFIO implementation with potential for false
+>> positives. However, I think the best solution right now is to set your
+>> format to a higher priority. Formats are checked in plugin priority order.
+>>
+>> For example, see a sample format that uses a higher priority[1]. DICOM
+>> uses the normal priority (0), so you can use any of the higher
+>> constants[2] or set it manually[3] to a value > 0 for your format to be
+>> detected first.
+>>
+>>  >More generally though, this experience has led me to wonder whether
+>> the order in which file formats are detected could be tweaked such that
+>> the ones requiring the most work are only attempted when the easier ones
+>> fail.
+>>
+>> Agreed completely. Plugin priority was a starting point, but we have
+>> started discussing how exactly to do things better[4] with some ideas
+>> very similar to what you outline.
+>>
+>> Thanks for the feedback, let us know if you have any more suggestions or
+>> questions.
+>>
+>> Best,
+>> Mark
+>>
+>> [1]
+>> https://github.com/scifio/scifio-bf-compat/blob/scifio-
+>> bf-compat-1.11.0/src/main/java/io/scif/bf/BioFormatsFormat.java#L79-80
+>> [2]
+>> https://github.com/scijava/scijava-common/blob/scijava-
+>> common-2.40.0/src/main/java/org/scijava/Priority.java#L48-55
+>> [3]
+>> https://github.com/scijava/scijava-common/blob/scijava-
+>> common-2.40.0/src/main/java/org/scijava/plugin/Plugin.java#L108-129
+>> [4] https://github.com/scifio/scifio/issues/39
+>>
+>> On Mon, Apr 13, 2015 at 12:59 PM, Burkhard Hoeckendorf
+>> <burkhard.hoeckendorf at web.de <mailto:burkhard.hoeckendorf at web.de>> wrote:
+>>
+>>     Dear List,
+>>
+>>     I apologize in case I am posting this mail twice. The first attempt
+>>     at the end of last week came with an attachment and I assume it was
+>>     probably scrubbed (and rightly so).
+>>
+>>     We recently ran into an issue with DICOM format detection. We use a
+>>     custom file format that is completely unrelated to DICOM and that is
+>>     implemented for SCIFIO such that the file name extension alone is
+>>     necessary and sufficient to recognize it. This works well, except
+>>     for a single file which we couldn't open in Fiji. Reading it by
+>>     other means (C++, MATLAB) worked fine.
+>>
+>>     As it turns out, even before looking at its file name extension,
+>>     SCIFIO opened the file and tried to detect whether its header is in
+>>     DICOM format. I am unfamiliar with the DICOM standard and not a
+>>     professional Programmer, but from the SCIFIO implementation
+>>     (io.scif.formats.DICOMFormat) it appears to me that the magic 'DICM'
+>>     string in the header is treated as optional. If it is not found,
+>>     SCIFIO tries to read a single header field, and if successful
+>>     considers the file a DICOM file. In our case, we got unlucky and by
+>>     accident SCIFIO retrieved a valid-enough result when reading the
+>>     corresponding position in the non-DICOM file. Hence, it was wrongly
+>>     detected as a DICOM file.
+>>
+>>     For the time being, we are now running our own, locally modified
+>>     SCIFIO that does not try harder when the 'DICM' string is missing,
+>>     and this solved our problem. For reference, we modified line 1079 in
+>>     io.scif.formats.DICOMFormat. I am also happy to send this as a pull
+>>     request, but I am not a DICOM user, so can not comment whether or
+>>     not this is actually a workable solution.
+>>
+>>     More generally though, this experience has led me to wonder whether
+>>     the order in which file formats are detected could be tweaked such
+>>     that the ones requiring the most work are only attempted when the
+>>     easier ones fail. DICOM format detection would thus only occur when
+>>     the file name extension does not match that of any format where the
+>>     extension alone is necessary and sufficient. This may help prevent
+>>     similar conflicts in the future and may additionally contribute a
+>>     little bit to a much needed performance increase.
+>>
+>>     Cheers,
+>>     Burkhard
+>>
+>>
+>>
+>>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150414/a7a6d90c/attachment.html>
+
+From burkhard.hoeckendorf at web.de  Tue Apr 14 15:54:32 2015
+From: burkhard.hoeckendorf at web.de (Burkhard Hoeckendorf)
+Date: Tue, 14 Apr 2015 16:54:32 -0400
+Subject: [SCIFIO] DICOM format detection
+In-Reply-To: <CA+B=mGoxFfcnwkh8nQD_+kJDgNh9wzLEQOurOUz0XYxUktOwvQ@mail.gmail.com>
+References: <552C0405.3080605@web.de>
+	<CA+B=mGou2ihEnXZnwf6ZVP3OKLbkLM3kcGoxxVOvSwa1+DGuww@mail.gmail.com>
+	<552C17A7.7060500@web.de>
+	<CA+B=mGoxFfcnwkh8nQD_+kJDgNh9wzLEQOurOUz0XYxUktOwvQ@mail.gmail.com>
+Message-ID: <552D7E88.2010507@web.de>
+
+Dear Mark,
+
+Great, thanks!
+
+Best,
+Burkhard
+
+
+On 4/14/2015 1:28 PM, Mark Hiner wrote:
+> Hi Burkhard,
+>
+>  >That being said, I've tried this strategy (in an unrelated project) to
+> override a format implementation in SCIFIO with our own implementation.
+> Back then (a few months ago), it did not work reliably in my hands.
+>
+> If you're still unable to override formats using Plugin priority then
+> that's certainly worrisome - please let me know how it goes. I'm happy
+> to look at code samples to help identify problems; this is fundamental
+> functionality that we want to ensure is both working properly, and easy
+> for users/developers to implement.
+>
+>  >Another question is whether there is an option to turn off the
+> automatic min-max computation. Thanks to SCIFIO, we've found a nice way
+> to integrate our format with ImageJ, but using this comes at the price
+> of a pretty
+>  >substantial IO performance hit that frankly is a source of constant
+> dissatisfaction.
+>
+> Yes; I actually did some performance profiling in February and thought
+> automatic min-max computation had been disabled. But it does seem like
+> it may not be working as intended[1]. The desire is that if SCIFIO is
+> used via "File > Open" or drag and drop, we won't force min-max
+> computation. If SCIFIO is used explicitly (via File > Import > Image...)
+> there should be a checkbox to use it, which I will add[2].
+>
+> If you still have performance issues after any min-max computation
+> fixes, please continue to let us know!
+>
+> Thanks again,
+> Mark
+>
+> [1] https://github.com/scifio/scifio/issues/269
+> [2] https://github.com/imagej/imagej-plugins-commands/issues/23
+>
+> On Mon, Apr 13, 2015 at 2:23 PM, Burkhard Hoeckendorf
+> <burkhard.hoeckendorf at web.de <mailto:burkhard.hoeckendorf at web.de>> wrote:
+>
+>     Dear Mark,
+>
+>     Thanks a lot for your help. I'll try playing with the format
+>     priority. That being said, I've tried this strategy (in an unrelated
+>     project) to override a format implementation in SCIFIO with our own
+>     implementation. Back then (a few months ago), it did not work
+>     reliably in my hands.
+>
+>     Another question is whether there is an option to turn off the
+>     automatic min-max computation. Thanks to SCIFIO, we've found a nice
+>     way to integrate our format with ImageJ, but using this comes at the
+>     price of a pretty substantial IO performance hit that frankly is a
+>     source of constant dissatisfaction. I suspect deactivating the
+>     min-max computation may be an easy way to improve things, presumably
+>     without breaking anything else (?)
+>
+>     Best,
+>     Burkhard
+>
+>
+>
+>
+>     On 4/13/2015 2:37 PM, Mark Hiner wrote:
+>
+>         Hi Burkhard,
+>
+>           >I apologize in case I am posting this mail twice. The first
+>         attempt at
+>         the end of last week came with an attachment and I assume it was
+>         probably scrubbed (and rightly so).
+>
+>         No worries - there actually was a technical issue with the
+>         mailing list
+>         that's now fixed. Sorry about that!
+>
+>           >As it turns out, even before looking at its file name extension,
+>         SCIFIO opened the file and tried to detect whether its header is in
+>         DICOM format
+>
+>         DICOM is an unfortunate example that has some history in Bio-Formats
+>         (extensionless DICOM images, DICOM images with no magic string) that
+>         carried over to the SCIFIO implementation with potential for false
+>         positives. However, I think the best solution right now is to
+>         set your
+>         format to a higher priority. Formats are checked in plugin
+>         priority order.
+>
+>         For example, see a sample format that uses a higher priority[1].
+>         DICOM
+>         uses the normal priority (0), so you can use any of the higher
+>         constants[2] or set it manually[3] to a value > 0 for your
+>         format to be
+>         detected first.
+>
+>           >More generally though, this experience has led me to wonder
+>         whether
+>         the order in which file formats are detected could be tweaked
+>         such that
+>         the ones requiring the most work are only attempted when the
+>         easier ones
+>         fail.
+>
+>         Agreed completely. Plugin priority was a starting point, but we have
+>         started discussing how exactly to do things better[4] with some
+>         ideas
+>         very similar to what you outline.
+>
+>         Thanks for the feedback, let us know if you have any more
+>         suggestions or
+>         questions.
+>
+>         Best,
+>         Mark
+>
+>         [1]
+>         https://github.com/scifio/__scifio-bf-compat/blob/scifio-__bf-compat-1.11.0/src/main/__java/io/scif/bf/__BioFormatsFormat.java#L79-80
+>         <https://github.com/scifio/scifio-bf-compat/blob/scifio-bf-compat-1.11.0/src/main/java/io/scif/bf/BioFormatsFormat.java#L79-80>
+>         [2]
+>         https://github.com/scijava/__scijava-common/blob/scijava-__common-2.40.0/src/main/java/__org/scijava/Priority.java#L48-__55
+>         <https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/Priority.java#L48-55>
+>         [3]
+>         https://github.com/scijava/__scijava-common/blob/scijava-__common-2.40.0/src/main/java/__org/scijava/plugin/Plugin.__java#L108-129
+>         <https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/plugin/Plugin.java#L108-129>
+>         [4] https://github.com/scifio/__scifio/issues/39
+>         <https://github.com/scifio/scifio/issues/39>
+>
+>         On Mon, Apr 13, 2015 at 12:59 PM, Burkhard Hoeckendorf
+>         <burkhard.hoeckendorf at web.de
+>         <mailto:burkhard.hoeckendorf at web.de>
+>         <mailto:burkhard.hoeckendorf at __web.de
+>         <mailto:burkhard.hoeckendorf at web.de>>> wrote:
+>
+>              Dear List,
+>
+>              I apologize in case I am posting this mail twice. The first
+>         attempt
+>              at the end of last week came with an attachment and I
+>         assume it was
+>              probably scrubbed (and rightly so).
+>
+>              We recently ran into an issue with DICOM format detection.
+>         We use a
+>              custom file format that is completely unrelated to DICOM
+>         and that is
+>              implemented for SCIFIO such that the file name extension
+>         alone is
+>              necessary and sufficient to recognize it. This works well,
+>         except
+>              for a single file which we couldn't open in Fiji. Reading it by
+>              other means (C++, MATLAB) worked fine.
+>
+>              As it turns out, even before looking at its file name
+>         extension,
+>              SCIFIO opened the file and tried to detect whether its
+>         header is in
+>              DICOM format. I am unfamiliar with the DICOM standard and not a
+>              professional Programmer, but from the SCIFIO implementation
+>              (io.scif.formats.DICOMFormat) it appears to me that the
+>         magic 'DICM'
+>              string in the header is treated as optional. If it is not
+>         found,
+>              SCIFIO tries to read a single header field, and if successful
+>              considers the file a DICOM file. In our case, we got
+>         unlucky and by
+>              accident SCIFIO retrieved a valid-enough result when
+>         reading the
+>              corresponding position in the non-DICOM file. Hence, it was
+>         wrongly
+>              detected as a DICOM file.
+>
+>              For the time being, we are now running our own, locally
+>         modified
+>              SCIFIO that does not try harder when the 'DICM' string is
+>         missing,
+>              and this solved our problem. For reference, we modified
+>         line 1079 in
+>              io.scif.formats.DICOMFormat. I am also happy to send this
+>         as a pull
+>              request, but I am not a DICOM user, so can not comment
+>         whether or
+>              not this is actually a workable solution.
+>
+>              More generally though, this experience has led me to wonder
+>         whether
+>              the order in which file formats are detected could be
+>         tweaked such
+>              that the ones requiring the most work are only attempted
+>         when the
+>              easier ones fail. DICOM format detection would thus only
+>         occur when
+>              the file name extension does not match that of any format
+>         where the
+>              extension alone is necessary and sufficient. This may help
+>         prevent
+>              similar conflicts in the future and may additionally
+>         contribute a
+>              little bit to a much needed performance increase.
+>
+>              Cheers,
+>              Burkhard
+>
+>
+>
+>
+>     _________________________________________________
+>     SCIFIO mailing list
+>     SCIFIO at scif.io <mailto:SCIFIO at scif.io>
+>     http://scif.io/mailman/__listinfo/scifio
+>     <http://scif.io/mailman/listinfo/scifio>
+>
+>
+
+
+From burkhard.hoeckendorf at web.de  Tue Apr 14 17:26:35 2015
+From: burkhard.hoeckendorf at web.de (Burkhard Hoeckendorf)
+Date: Tue, 14 Apr 2015 18:26:35 -0400
+Subject: [SCIFIO] DICOM format detection
+In-Reply-To: <552D7E88.2010507@web.de>
+References: <552C0405.3080605@web.de>
+	<CA+B=mGou2ihEnXZnwf6ZVP3OKLbkLM3kcGoxxVOvSwa1+DGuww@mail.gmail.com>
+	<552C17A7.7060500@web.de>
+	<CA+B=mGoxFfcnwkh8nQD_+kJDgNh9wzLEQOurOUz0XYxUktOwvQ@mail.gmail.com>
+	<552D7E88.2010507@web.de>
+Message-ID: <552D941B.2010804@web.de>
+
+Hi again,
+
+Just wanted to enthusiastically report that increasing our format's 
+priority and using a build of the current master branch of SCIFIO on 
+github (i.e. with deactivated min/max computation) yields a huge 
+performance increase and precludes file format misdetection.
+
+Thanks heaps and best wishes,
+Burkhard
+
+
+On 4/14/2015 4:54 PM, Burkhard Hoeckendorf wrote:
+> Dear Mark,
+>
+> Great, thanks!
+>
+> Best,
+> Burkhard
+>
+>
+> On 4/14/2015 1:28 PM, Mark Hiner wrote:
+>> Hi Burkhard,
+>>
+>>  >That being said, I've tried this strategy (in an unrelated project) to
+>> override a format implementation in SCIFIO with our own implementation.
+>> Back then (a few months ago), it did not work reliably in my hands.
+>>
+>> If you're still unable to override formats using Plugin priority then
+>> that's certainly worrisome - please let me know how it goes. I'm happy
+>> to look at code samples to help identify problems; this is fundamental
+>> functionality that we want to ensure is both working properly, and easy
+>> for users/developers to implement.
+>>
+>>  >Another question is whether there is an option to turn off the
+>> automatic min-max computation. Thanks to SCIFIO, we've found a nice way
+>> to integrate our format with ImageJ, but using this comes at the price
+>> of a pretty
+>>  >substantial IO performance hit that frankly is a source of constant
+>> dissatisfaction.
+>>
+>> Yes; I actually did some performance profiling in February and thought
+>> automatic min-max computation had been disabled. But it does seem like
+>> it may not be working as intended[1]. The desire is that if SCIFIO is
+>> used via "File > Open" or drag and drop, we won't force min-max
+>> computation. If SCIFIO is used explicitly (via File > Import > Image...)
+>> there should be a checkbox to use it, which I will add[2].
+>>
+>> If you still have performance issues after any min-max computation
+>> fixes, please continue to let us know!
+>>
+>> Thanks again,
+>> Mark
+>>
+>> [1] https://github.com/scifio/scifio/issues/269
+>> [2] https://github.com/imagej/imagej-plugins-commands/issues/23
+>>
+>> On Mon, Apr 13, 2015 at 2:23 PM, Burkhard Hoeckendorf
+>> <burkhard.hoeckendorf at web.de <mailto:burkhard.hoeckendorf at web.de>> wrote:
+>>
+>>     Dear Mark,
+>>
+>>     Thanks a lot for your help. I'll try playing with the format
+>>     priority. That being said, I've tried this strategy (in an unrelated
+>>     project) to override a format implementation in SCIFIO with our own
+>>     implementation. Back then (a few months ago), it did not work
+>>     reliably in my hands.
+>>
+>>     Another question is whether there is an option to turn off the
+>>     automatic min-max computation. Thanks to SCIFIO, we've found a nice
+>>     way to integrate our format with ImageJ, but using this comes at the
+>>     price of a pretty substantial IO performance hit that frankly is a
+>>     source of constant dissatisfaction. I suspect deactivating the
+>>     min-max computation may be an easy way to improve things, presumably
+>>     without breaking anything else (?)
+>>
+>>     Best,
+>>     Burkhard
+>>
+>>
+>>
+>>
+>>     On 4/13/2015 2:37 PM, Mark Hiner wrote:
+>>
+>>         Hi Burkhard,
+>>
+>>           >I apologize in case I am posting this mail twice. The first
+>>         attempt at
+>>         the end of last week came with an attachment and I assume it was
+>>         probably scrubbed (and rightly so).
+>>
+>>         No worries - there actually was a technical issue with the
+>>         mailing list
+>>         that's now fixed. Sorry about that!
+>>
+>>           >As it turns out, even before looking at its file name
+>> extension,
+>>         SCIFIO opened the file and tried to detect whether its header
+>> is in
+>>         DICOM format
+>>
+>>         DICOM is an unfortunate example that has some history in
+>> Bio-Formats
+>>         (extensionless DICOM images, DICOM images with no magic
+>> string) that
+>>         carried over to the SCIFIO implementation with potential for
+>> false
+>>         positives. However, I think the best solution right now is to
+>>         set your
+>>         format to a higher priority. Formats are checked in plugin
+>>         priority order.
+>>
+>>         For example, see a sample format that uses a higher priority[1].
+>>         DICOM
+>>         uses the normal priority (0), so you can use any of the higher
+>>         constants[2] or set it manually[3] to a value > 0 for your
+>>         format to be
+>>         detected first.
+>>
+>>           >More generally though, this experience has led me to wonder
+>>         whether
+>>         the order in which file formats are detected could be tweaked
+>>         such that
+>>         the ones requiring the most work are only attempted when the
+>>         easier ones
+>>         fail.
+>>
+>>         Agreed completely. Plugin priority was a starting point, but
+>> we have
+>>         started discussing how exactly to do things better[4] with some
+>>         ideas
+>>         very similar to what you outline.
+>>
+>>         Thanks for the feedback, let us know if you have any more
+>>         suggestions or
+>>         questions.
+>>
+>>         Best,
+>>         Mark
+>>
+>>         [1]
+>>
+>> https://github.com/scifio/__scifio-bf-compat/blob/scifio-__bf-compat-1.11.0/src/main/__java/io/scif/bf/__BioFormatsFormat.java#L79-80
+>>
+>>
+>> <https://github.com/scifio/scifio-bf-compat/blob/scifio-bf-compat-1.11.0/src/main/java/io/scif/bf/BioFormatsFormat.java#L79-80>
+>>
+>>         [2]
+>>
+>> https://github.com/scijava/__scijava-common/blob/scijava-__common-2.40.0/src/main/java/__org/scijava/Priority.java#L48-__55
+>>
+>>
+>> <https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/Priority.java#L48-55>
+>>
+>>         [3]
+>>
+>> https://github.com/scijava/__scijava-common/blob/scijava-__common-2.40.0/src/main/java/__org/scijava/plugin/Plugin.__java#L108-129
+>>
+>>
+>> <https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/plugin/Plugin.java#L108-129>
+>>
+>>         [4] https://github.com/scifio/__scifio/issues/39
+>>         <https://github.com/scifio/scifio/issues/39>
+>>
+>>         On Mon, Apr 13, 2015 at 12:59 PM, Burkhard Hoeckendorf
+>>         <burkhard.hoeckendorf at web.de
+>>         <mailto:burkhard.hoeckendorf at web.de>
+>>         <mailto:burkhard.hoeckendorf at __web.de
+>>         <mailto:burkhard.hoeckendorf at web.de>>> wrote:
+>>
+>>              Dear List,
+>>
+>>              I apologize in case I am posting this mail twice. The first
+>>         attempt
+>>              at the end of last week came with an attachment and I
+>>         assume it was
+>>              probably scrubbed (and rightly so).
+>>
+>>              We recently ran into an issue with DICOM format detection.
+>>         We use a
+>>              custom file format that is completely unrelated to DICOM
+>>         and that is
+>>              implemented for SCIFIO such that the file name extension
+>>         alone is
+>>              necessary and sufficient to recognize it. This works well,
+>>         except
+>>              for a single file which we couldn't open in Fiji. Reading
+>> it by
+>>              other means (C++, MATLAB) worked fine.
+>>
+>>              As it turns out, even before looking at its file name
+>>         extension,
+>>              SCIFIO opened the file and tried to detect whether its
+>>         header is in
+>>              DICOM format. I am unfamiliar with the DICOM standard and
+>> not a
+>>              professional Programmer, but from the SCIFIO implementation
+>>              (io.scif.formats.DICOMFormat) it appears to me that the
+>>         magic 'DICM'
+>>              string in the header is treated as optional. If it is not
+>>         found,
+>>              SCIFIO tries to read a single header field, and if
+>> successful
+>>              considers the file a DICOM file. In our case, we got
+>>         unlucky and by
+>>              accident SCIFIO retrieved a valid-enough result when
+>>         reading the
+>>              corresponding position in the non-DICOM file. Hence, it was
+>>         wrongly
+>>              detected as a DICOM file.
+>>
+>>              For the time being, we are now running our own, locally
+>>         modified
+>>              SCIFIO that does not try harder when the 'DICM' string is
+>>         missing,
+>>              and this solved our problem. For reference, we modified
+>>         line 1079 in
+>>              io.scif.formats.DICOMFormat. I am also happy to send this
+>>         as a pull
+>>              request, but I am not a DICOM user, so can not comment
+>>         whether or
+>>              not this is actually a workable solution.
+>>
+>>              More generally though, this experience has led me to wonder
+>>         whether
+>>              the order in which file formats are detected could be
+>>         tweaked such
+>>              that the ones requiring the most work are only attempted
+>>         when the
+>>              easier ones fail. DICOM format detection would thus only
+>>         occur when
+>>              the file name extension does not match that of any format
+>>         where the
+>>              extension alone is necessary and sufficient. This may help
+>>         prevent
+>>              similar conflicts in the future and may additionally
+>>         contribute a
+>>              little bit to a much needed performance increase.
+>>
+>>              Cheers,
+>>              Burkhard
+>>
+>>
+>>
+>>
+>>     _________________________________________________
+>>     SCIFIO mailing list
+>>     SCIFIO at scif.io <mailto:SCIFIO at scif.io>
+>>     http://scif.io/mailman/__listinfo/scifio
+>>     <http://scif.io/mailman/listinfo/scifio>
+>>
+>>
+
+

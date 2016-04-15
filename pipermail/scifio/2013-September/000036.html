@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] NullPointer using the DICOMOMETranslator to extract	calibration data
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20NullPointer%20using%20the%20DICOMOMETranslator%20to%20extract%0A%09calibration%20data&In-Reply-To=%3C522DD441.9080701%40gmx.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000037.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] NullPointer using the DICOMOMETranslator to extract	calibration data</H1>
+    <B>Michael Zinsmaier</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20NullPointer%20using%20the%20DICOMOMETranslator%20to%20extract%0A%09calibration%20data&In-Reply-To=%3C522DD441.9080701%40gmx.de%3E"
+       TITLE="[SCIFIO] NullPointer using the DICOMOMETranslator to extract	calibration data">michael.zinsmaier at gmx.de
+       </A><BR>
+    <I>Mon Sep  9 08:59:29 CDT 2013</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000037.html">[SCIFIO] Minimal Service Setup for ImgOpener
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#36">[ date ]</a>
+              <a href="thread.html#36">[ thread ]</a>
+              <a href="subject.html#36">[ subject ]</a>
+              <a href="author.html#36">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi togehter,
+
+we try to load metadata from a  *.DCM file. To extract calibration data 
+we use the following code:
+
+         Metadata meta = XYZ.initializer().parseMetadata(imgRef, true);
+
+         // translate to ome metadata to get access to calibration values
+         OMEMetadata omexml = new OMEMetadata(XYZ_SCIFIO.getContext());
+         XYZ_SCIFIO.translator().translate(meta, omexml, false);
+
+afterwards we read calibration data like this
+
+     omexml.getAxes(currentSeries)
+
+I don't think the file actually has calibration data so the resulting 
+value should be the default (1).
+However the call to translate fails with a NullPointerException:
+
+class: DefaultOMEXMLMetadataService
+method: populateImageMetadata
+first line
+
+The submitted parameters are:
+         retrieve -&gt; OMEXMLMetadataImpl
+         imageIndex -&gt; 0
+         ImageMetadata -&gt; DefaultImageMetadata
+
+Maybe something is not initialized at that point?
+
+Thanks for your help
+best regards Michael
+
+
+@Mark I will send you and example file in a private mail
+
+
+
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000037.html">[SCIFIO] Minimal Service Setup for ImgOpener
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#36">[ date ]</a>
+              <a href="thread.html#36">[ thread ]</a>
+              <a href="subject.html#36">[ subject ]</a>
+              <a href="author.html#36">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,1334 @@
+From hiner at wisc.edu  Mon Oct 14 12:20:55 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Mon, 14 Oct 2013 12:20:55 -0500
+Subject: [SCIFIO] SCIFIO 0.7.0 Release
+Message-ID: <CA+B=mGqxskUdWvwEOE+LBx+iiJEeZZ6zyHhAB9hjMLAH_reqYA@mail.gmail.com>
+
+Hi all,
+
+ Today I released
+SCIFIO-0.7.0<https://github.com/scifio/scifio/releases/tag/scifio-0.7.0>.
+You can see a full list of the major changes on the github issues
+page<https://github.com/scifio/scifio/issues?milestone=4&state=closed>
+.
+
+Highlights include:
+* Refactoring to an N-D model from the fixed 5D of Bio-Formats.
+* Upgrading to Java 6.
+* Bug fixes!
+
+Updates to the OME-Formats <https://github.com/scifio/ome-formats> and
+SCIFIO-BF-compat <https://github.com/scifio/scifio-bf-compat> projects will
+be coming today/tomorrow. The latest
+ImageJ2<https://github.com/imagej/imagej>master is already using
+SCIFIO 0.7.0 and opening N-D images.
+
+Development has already begun on
+SCIFIO-0.8.0<https://github.com/scifio/scifio/issues?page=1&state=open>.
+The next release will see some polishing of the source
+code<https://github.com/scifio/scifio/issues/76>and
+documentation <https://github.com/scifio/scifio/issues/48>, simplification
+of the Metadata API <https://github.com/scifio/scifio/issues/74>, and a
+necessary overhaul of caching
+performance<https://github.com/scifio/scifio/issues/69>
+.
+
+Because of the scope of the N-D refactoring, there may still be some issues
+to address. As always, just let us know if you come across any bugs, or
+find the N-D API difficult to use.
+
+Thanks!
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131014/dfa4eb6a/attachment.html>
+
+From hinerm at gmail.com  Tue Oct 15 14:50:41 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Tue, 15 Oct 2013 14:50:41 -0500
+Subject: [SCIFIO] SCIFIO post from phsiao@cs.unc.edu requires approval
+In-Reply-To: <mailman.955.1381861787.24261.scifio@scif.io>
+References: <mailman.955.1381861787.24261.scifio@scif.io>
+Message-ID: <CA+B=mGqH7SmtLijL5SsZTzWK07ZbbBa+C2+zG1pK8fw_jKJNHQ@mail.gmail.com>
+
+Hi Joe,
+
+ Thanks for reporting this issue.
+
+reader->SetImageIO( io );
+>
+
+ Just so you know, this is just disabling SCIFIO I believe, and defaulting
+to the ITK DICOM ImageIO.
+
+ Does the output file have the correct number of total planes? If not, you
+might try "-d 5" just to test. The dimension order is XYCZT but XYZ are the
+dimensions with length more than 1. The SCIFIO plugin is supposed to
+account for that but it could be a bug.
+
+ Otherwise if the dimensions are correct it could be an issue with the
+dataset being interleaved.
+
+ I'll try to look at it soon.
+
+Thanks,
+Mark
+
+
+From: Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>
+> To: scifio at scif.io
+> Cc:
+> Date: Tue, 15 Oct 2013 14:29:23 -0400
+> Subject: Error reading a 32-bit nrrd image via ITK
+> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image in my
+> own program. The attached is a 32-bit 3-dimensional test image.
+>
+> Then I used the following command to test with the SCIFIO test program:
+>
+> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff -w -d
+> 3 -t float
+>
+> The output '123.ome.tiff' has wrong pixel values and looks wrong in ImageJ.
+>
+> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if I
+> comment out this line
+>
+>    reader->SetImageIO( io );
+>
+> to use ITK's default ImageIO, the output image becomes normal.
+>
+> Thanks,
+> Joe
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131015/d7012abf/attachment.html>
+
+From phsiao at cs.unc.edu  Tue Oct 15 15:21:08 2013
+From: phsiao at cs.unc.edu (Joe Ping-Lin Hsiao)
+Date: Tue, 15 Oct 2013 16:21:08 -0400
+Subject: [SCIFIO] SCIFIO post from phsiao@cs.unc.edu requires approval
+In-Reply-To: <CA+B=mGqH7SmtLijL5SsZTzWK07ZbbBa+C2+zG1pK8fw_jKJNHQ@mail.gmail.com>
+References: <mailman.955.1381861787.24261.scifio@scif.io>
+	<CA+B=mGqH7SmtLijL5SsZTzWK07ZbbBa+C2+zG1pK8fw_jKJNHQ@mail.gmail.com>
+Message-ID: <CAPYmBX0VSJQp0aFjquzvO5B-3TsbHh4qymgkCCK9DEJNZW1Bjg@mail.gmail.com>
+
+Hi Mark,
+
+The output dimension is 3, which is equal to the input's dimension. I also
+tried "-d 5". Seems to me it doesn't change anything of the output. The
+output dimension is still 3 and the pixel values are wrong.
+
+Don't know if this helps. I put the following code after reader->Update()
+to check the image's min and max pixel values:
+
+typedef itk::MinimumMaximumImageCalculator <ImageType>
+ImageCalculatorFilterType;
+ImageCalculatorFilterType::Pointer imageCalculatorFilter =
+ImageCalculatorFilterType::New ();
+imageCalculatorFilter->SetImage(reader->GetOutput());
+imageCalculatorFilter->Compute();
+cout << "max intensity " << imageCalculatorFilter->GetMaximum() << endl;
+cout << "min intensity " << imageCalculatorFilter->GetMinimum();
+
+The value range is the full range of 'float' from -3.49e38 to 3.49e38,
+which seems wrong. But if I comment out reader->SetImageIO(io), the values
+look reasonable.
+
+Thanks,
+Joe
+
+
+On Tue, Oct 15, 2013 at 3:50 PM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Hi Joe,
+>
+>  Thanks for reporting this issue.
+>
+> reader->SetImageIO( io );
+>>
+>
+>  Just so you know, this is just disabling SCIFIO I believe, and defaulting
+> to the ITK DICOM ImageIO.
+>
+>  Does the output file have the correct number of total planes? If not, you
+> might try "-d 5" just to test. The dimension order is XYCZT but XYZ are the
+> dimensions with length more than 1. The SCIFIO plugin is supposed to
+> account for that but it could be a bug.
+>
+>  Otherwise if the dimensions are correct it could be an issue with the
+> dataset being interleaved.
+>
+>  I'll try to look at it soon.
+>
+> Thanks,
+> Mark
+>
+>
+>
+> From: Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>
+>> To: scifio at scif.io
+>> Cc:
+>> Date: Tue, 15 Oct 2013 14:29:23 -0400
+>> Subject: Error reading a 32-bit nrrd image via ITK
+>> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image in
+>> my own program. The attached is a 32-bit 3-dimensional test image.
+>>
+>> Then I used the following command to test with the SCIFIO test program:
+>>
+>> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff -w
+>> -d 3 -t float
+>>
+>> The output '123.ome.tiff' has wrong pixel values and looks wrong in
+>> ImageJ.
+>>
+>> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if I
+>> comment out this line
+>>
+>>    reader->SetImageIO( io );
+>>
+>> to use ITK's default ImageIO, the output image becomes normal.
+>>
+>> Thanks,
+>> Joe
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131015/93291298/attachment.html>
+
+From hinerm at gmail.com  Wed Oct 23 13:31:51 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Wed, 23 Oct 2013 13:31:51 -0500
+Subject: [SCIFIO] Error reading a 32-bit nrrd image via ITK
+Message-ID: <CA+B=mGr+m4hh5NM1r_RPOfQcAzmkyvbN+As-=B3pzV=wNM+xmw@mail.gmail.com>
+
+Hi Joe,
+
+ Just wanted to let you know I identified that this is an error with
+endianness not being handled correctly in the SCIFIO ImageIO.
+
+ I fixed it locally, but found some bugs with how indexed and RGB images
+are being handled along the way. Once I have those fixed I'll update the
+SCIFIO ImageIO module and let you know.
+
+Thank you for reporting this, and for using the SCIFIO-ITK imageIO!
+
+- Mark
+
+On Tue, Oct 15, 2013 at 3:21 PM, Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>wrote:
+
+> Hi Mark,
+>
+> The output dimension is 3, which is equal to the input's dimension. I also
+> tried "-d 5". Seems to me it doesn't change anything of the output. The
+> output dimension is still 3 and the pixel values are wrong.
+>
+> Don't know if this helps. I put the following code after reader->Update()
+> to check the image's min and max pixel values:
+>
+> typedef itk::MinimumMaximumImageCalculator <ImageType>
+> ImageCalculatorFilterType;
+> ImageCalculatorFilterType::Pointer imageCalculatorFilter =
+> ImageCalculatorFilterType::New ();
+> imageCalculatorFilter->SetImage(reader->GetOutput());
+> imageCalculatorFilter->Compute();
+> cout << "max intensity " << imageCalculatorFilter->GetMaximum() << endl;
+> cout << "min intensity " << imageCalculatorFilter->GetMinimum();
+>
+> The value range is the full range of 'float' from -3.49e38 to 3.49e38,
+> which seems wrong. But if I comment out reader->SetImageIO(io), the values
+> look reasonable.
+>
+> Thanks,
+> Joe
+>
+>
+> On Tue, Oct 15, 2013 at 3:50 PM, Mark Hiner <hinerm at gmail.com> wrote:
+>
+>> Hi Joe,
+>>
+>>  Thanks for reporting this issue.
+>>
+>> reader->SetImageIO( io );
+>>>
+>>
+>>  Just so you know, this is just disabling SCIFIO I believe, and
+>> defaulting to the ITK DICOM ImageIO.
+>>
+>>  Does the output file have the correct number of total planes? If not,
+>> you might try "-d 5" just to test. The dimension order is XYCZT but XYZ are
+>> the dimensions with length more than 1. The SCIFIO plugin is supposed to
+>> account for that but it could be a bug.
+>>
+>>  Otherwise if the dimensions are correct it could be an issue with the
+>> dataset being interleaved.
+>>
+>>  I'll try to look at it soon.
+>>
+>> Thanks,
+>> Mark
+>>
+>>
+>>
+>> From: Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>
+>>> To: scifio at scif.io
+>>> Cc:
+>>> Date: Tue, 15 Oct 2013 14:29:23 -0400
+>>> Subject: Error reading a 32-bit nrrd image via ITK
+>>> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image in
+>>> my own program. The attached is a 32-bit 3-dimensional test image.
+>>>
+>>> Then I used the following command to test with the SCIFIO test program:
+>>>
+>>> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff -w
+>>> -d 3 -t float
+>>>
+>>> The output '123.ome.tiff' has wrong pixel values and looks wrong in
+>>> ImageJ.
+>>>
+>>> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if I
+>>> comment out this line
+>>>
+>>>    reader->SetImageIO( io );
+>>>
+>>> to use ITK's default ImageIO, the output image becomes normal.
+>>>
+>>> Thanks,
+>>> Joe
+>>>
+>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131023/edbb3d66/attachment.html>
+
+From hiner at wisc.edu  Wed Oct 23 15:19:25 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 23 Oct 2013 15:19:25 -0500
+Subject: [SCIFIO] Error reading a 32-bit nrrd image via ITK
+In-Reply-To: <CA+B=mGr+m4hh5NM1r_RPOfQcAzmkyvbN+As-=B3pzV=wNM+xmw@mail.gmail.com>
+References: <CA+B=mGr+m4hh5NM1r_RPOfQcAzmkyvbN+As-=B3pzV=wNM+xmw@mail.gmail.com>
+Message-ID: <CA+B=mGpP8hFF=XaOhzfUAzgocx0V9BsVx4cao=KK-KjWxoUsnA@mail.gmail.com>
+
+Hi Joe,
+
+ I made my changes and pushed a new scifio-itk-bridge.jar. I didn't have to
+change the C++ side at all, so all you should have to do is delete the
+"scifio-itk-bridge-1.0.0.jar" in your local $ITK_BUILD/lib/jars, then clean
+and rebuild the SCIFIO module (which should trigger a download of the
+latest jar, but only if it's not already present in $ITK_BUILD/lib/jars).
+
+ You can also manually
+download<http://jenkins.imagej.net/view/SCIFIO/job/SCIFIOITKBridge/lastSuccessfulBuild/artifact/target/scifio-itk-bridge-1.0.0.jar>and
+replace the jar if you don't want to rebuild everything.
+
+ Let me know if you have any more problems, or if this fix doesn't work for
+you.
+
+Thanks,
+Mark
+
+
+On Wed, Oct 23, 2013 at 1:31 PM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Hi Joe,
+>
+>  Just wanted to let you know I identified that this is an error with
+> endianness not being handled correctly in the SCIFIO ImageIO.
+>
+>  I fixed it locally, but found some bugs with how indexed and RGB images
+> are being handled along the way. Once I have those fixed I'll update the
+> SCIFIO ImageIO module and let you know.
+>
+> Thank you for reporting this, and for using the SCIFIO-ITK imageIO!
+>
+> - Mark
+>
+> On Tue, Oct 15, 2013 at 3:21 PM, Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>wrote:
+>
+>> Hi Mark,
+>>
+>> The output dimension is 3, which is equal to the input's dimension. I
+>> also tried "-d 5". Seems to me it doesn't change anything of the output.
+>> The output dimension is still 3 and the pixel values are wrong.
+>>
+>> Don't know if this helps. I put the following code after reader->Update()
+>> to check the image's min and max pixel values:
+>>
+>> typedef itk::MinimumMaximumImageCalculator <ImageType>
+>> ImageCalculatorFilterType;
+>> ImageCalculatorFilterType::Pointer imageCalculatorFilter =
+>> ImageCalculatorFilterType::New ();
+>> imageCalculatorFilter->SetImage(reader->GetOutput());
+>> imageCalculatorFilter->Compute();
+>> cout << "max intensity " << imageCalculatorFilter->GetMaximum() << endl;
+>> cout << "min intensity " << imageCalculatorFilter->GetMinimum();
+>>
+>> The value range is the full range of 'float' from -3.49e38 to 3.49e38,
+>> which seems wrong. But if I comment out reader->SetImageIO(io), the values
+>> look reasonable.
+>>
+>> Thanks,
+>> Joe
+>>
+>>
+>> On Tue, Oct 15, 2013 at 3:50 PM, Mark Hiner <hinerm at gmail.com> wrote:
+>>
+>>> Hi Joe,
+>>>
+>>>  Thanks for reporting this issue.
+>>>
+>>> reader->SetImageIO( io );
+>>>>
+>>>
+>>>  Just so you know, this is just disabling SCIFIO I believe, and
+>>> defaulting to the ITK DICOM ImageIO.
+>>>
+>>>  Does the output file have the correct number of total planes? If not,
+>>> you might try "-d 5" just to test. The dimension order is XYCZT but XYZ are
+>>> the dimensions with length more than 1. The SCIFIO plugin is supposed to
+>>> account for that but it could be a bug.
+>>>
+>>>  Otherwise if the dimensions are correct it could be an issue with the
+>>> dataset being interleaved.
+>>>
+>>>  I'll try to look at it soon.
+>>>
+>>> Thanks,
+>>> Mark
+>>>
+>>>
+>>>
+>>> From: Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>
+>>>> To: scifio at scif.io
+>>>> Cc:
+>>>> Date: Tue, 15 Oct 2013 14:29:23 -0400
+>>>> Subject: Error reading a 32-bit nrrd image via ITK
+>>>> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image in
+>>>> my own program. The attached is a 32-bit 3-dimensional test image.
+>>>>
+>>>> Then I used the following command to test with the SCIFIO test program:
+>>>>
+>>>> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff -w
+>>>> -d 3 -t float
+>>>>
+>>>> The output '123.ome.tiff' has wrong pixel values and looks wrong in
+>>>> ImageJ.
+>>>>
+>>>> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if I
+>>>> comment out this line
+>>>>
+>>>>    reader->SetImageIO( io );
+>>>>
+>>>> to use ITK's default ImageIO, the output image becomes normal.
+>>>>
+>>>> Thanks,
+>>>> Joe
+>>>>
+>>>
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131023/58896f08/attachment.html>
+
+From phsiao at cs.unc.edu  Thu Oct 24 16:58:31 2013
+From: phsiao at cs.unc.edu (Joe Ping-Lin Hsiao)
+Date: Thu, 24 Oct 2013 17:58:31 -0400
+Subject: [SCIFIO] Error reading a 32-bit nrrd image via ITK
+In-Reply-To: <CA+B=mGpP8hFF=XaOhzfUAzgocx0V9BsVx4cao=KK-KjWxoUsnA@mail.gmail.com>
+References: <CA+B=mGr+m4hh5NM1r_RPOfQcAzmkyvbN+As-=B3pzV=wNM+xmw@mail.gmail.com>
+	<CA+B=mGpP8hFF=XaOhzfUAzgocx0V9BsVx4cao=KK-KjWxoUsnA@mail.gmail.com>
+Message-ID: <CAPYmBX06kmkQgt=t6XdhCxxbL9tpEp8E7EKgXvjSxhfWHcFy=A@mail.gmail.com>
+
+Thanks, Mike! The pixels values are correct now.
+
+
+For the same sample image, I also found the SCIFIO reader reports different
+'Voxel sizes', which is microns/pixels for x, y, and z, comparing to what I
+see from Fiji's Image ->  Show information. If I don't do "reader->SetImageIO(
+io );", ITK's DICOM ImageIO actually reports the same value as Fiji's.
+Should I create another topic for this issue?
+
+
+
+On Wed, Oct 23, 2013 at 4:19 PM, Mark Hiner <hiner at wisc.edu> wrote:
+
+> Hi Joe,
+>
+>  I made my changes and pushed a new scifio-itk-bridge.jar. I didn't have
+> to change the C++ side at all, so all you should have to do is delete the
+> "scifio-itk-bridge-1.0.0.jar" in your local $ITK_BUILD/lib/jars, then clean
+> and rebuild the SCIFIO module (which should trigger a download of the
+> latest jar, but only if it's not already present in $ITK_BUILD/lib/jars).
+>
+>  You can also manually download<http://jenkins.imagej.net/view/SCIFIO/job/SCIFIOITKBridge/lastSuccessfulBuild/artifact/target/scifio-itk-bridge-1.0.0.jar>and replace the jar if you don't want to rebuild everything.
+>
+>  Let me know if you have any more problems, or if this fix doesn't work
+> for you.
+>
+> Thanks,
+> Mark
+>
+>
+> On Wed, Oct 23, 2013 at 1:31 PM, Mark Hiner <hinerm at gmail.com> wrote:
+>
+>> Hi Joe,
+>>
+>>  Just wanted to let you know I identified that this is an error with
+>> endianness not being handled correctly in the SCIFIO ImageIO.
+>>
+>>  I fixed it locally, but found some bugs with how indexed and RGB images
+>> are being handled along the way. Once I have those fixed I'll update the
+>> SCIFIO ImageIO module and let you know.
+>>
+>> Thank you for reporting this, and for using the SCIFIO-ITK imageIO!
+>>
+>> - Mark
+>>
+>> On Tue, Oct 15, 2013 at 3:21 PM, Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>wrote:
+>>
+>>> Hi Mark,
+>>>
+>>> The output dimension is 3, which is equal to the input's dimension. I
+>>> also tried "-d 5". Seems to me it doesn't change anything of the output.
+>>> The output dimension is still 3 and the pixel values are wrong.
+>>>
+>>> Don't know if this helps. I put the following code after
+>>> reader->Update() to check the image's min and max pixel values:
+>>>
+>>> typedef itk::MinimumMaximumImageCalculator <ImageType>
+>>> ImageCalculatorFilterType;
+>>> ImageCalculatorFilterType::Pointer imageCalculatorFilter =
+>>> ImageCalculatorFilterType::New ();
+>>> imageCalculatorFilter->SetImage(reader->GetOutput());
+>>> imageCalculatorFilter->Compute();
+>>> cout << "max intensity " << imageCalculatorFilter->GetMaximum() << endl;
+>>> cout << "min intensity " << imageCalculatorFilter->GetMinimum();
+>>>
+>>> The value range is the full range of 'float' from -3.49e38 to 3.49e38,
+>>> which seems wrong. But if I comment out reader->SetImageIO(io), the values
+>>> look reasonable.
+>>>
+>>> Thanks,
+>>> Joe
+>>>
+>>>
+>>> On Tue, Oct 15, 2013 at 3:50 PM, Mark Hiner <hinerm at gmail.com> wrote:
+>>>
+>>>> Hi Joe,
+>>>>
+>>>>  Thanks for reporting this issue.
+>>>>
+>>>> reader->SetImageIO( io );
+>>>>>
+>>>>
+>>>>  Just so you know, this is just disabling SCIFIO I believe, and
+>>>> defaulting to the ITK DICOM ImageIO.
+>>>>
+>>>>  Does the output file have the correct number of total planes? If not,
+>>>> you might try "-d 5" just to test. The dimension order is XYCZT but XYZ are
+>>>> the dimensions with length more than 1. The SCIFIO plugin is supposed to
+>>>> account for that but it could be a bug.
+>>>>
+>>>>  Otherwise if the dimensions are correct it could be an issue with the
+>>>> dataset being interleaved.
+>>>>
+>>>>  I'll try to look at it soon.
+>>>>
+>>>> Thanks,
+>>>> Mark
+>>>>
+>>>>
+>>>>
+>>>> From: Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>
+>>>>> To: scifio at scif.io
+>>>>> Cc:
+>>>>> Date: Tue, 15 Oct 2013 14:29:23 -0400
+>>>>> Subject: Error reading a 32-bit nrrd image via ITK
+>>>>> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image
+>>>>> in my own program. The attached is a 32-bit 3-dimensional test image.
+>>>>>
+>>>>> Then I used the following command to test with the SCIFIO test program:
+>>>>>
+>>>>> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff
+>>>>> -w -d 3 -t float
+>>>>>
+>>>>> The output '123.ome.tiff' has wrong pixel values and looks wrong in
+>>>>> ImageJ.
+>>>>>
+>>>>> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if
+>>>>> I comment out this line
+>>>>>
+>>>>>    reader->SetImageIO( io );
+>>>>>
+>>>>> to use ITK's default ImageIO, the output image becomes normal.
+>>>>>
+>>>>> Thanks,
+>>>>> Joe
+>>>>>
+>>>>
+>>>>
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131024/76385f4a/attachment.html>
+
+From hinerm at gmail.com  Fri Oct 25 09:36:11 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Fri, 25 Oct 2013 09:36:11 -0500
+Subject: [SCIFIO] Error reading a 32-bit nrrd image via ITK
+In-Reply-To: <CAPYmBX06kmkQgt=t6XdhCxxbL9tpEp8E7EKgXvjSxhfWHcFy=A@mail.gmail.com>
+References: <CA+B=mGr+m4hh5NM1r_RPOfQcAzmkyvbN+As-=B3pzV=wNM+xmw@mail.gmail.com>
+	<CA+B=mGpP8hFF=XaOhzfUAzgocx0V9BsVx4cao=KK-KjWxoUsnA@mail.gmail.com>
+	<CAPYmBX06kmkQgt=t6XdhCxxbL9tpEp8E7EKgXvjSxhfWHcFy=A@mail.gmail.com>
+Message-ID: <CA+B=mGppKCqvPiW+xp1t3799+LDetjRbpjssB6XKd29wrb5-cw@mail.gmail.com>
+
+> I also found the SCIFIO reader reports different 'Voxel sizes'
+>
+
+Can you tell me what steps you used to check the voxel sizes with the
+ITK-SCIFIO plugin?
+
+No need to make another thread, I will look into it when I get time.
+
+Thanks!
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131025/402ee60e/attachment.html>
+
+From phsiao at cs.unc.edu  Fri Oct 25 15:43:19 2013
+From: phsiao at cs.unc.edu (Joe Ping-Lin Hsiao)
+Date: Fri, 25 Oct 2013 16:43:19 -0400
+Subject: [SCIFIO] Error reading a 32-bit nrrd image via ITK
+In-Reply-To: <CA+B=mGppKCqvPiW+xp1t3799+LDetjRbpjssB6XKd29wrb5-cw@mail.gmail.com>
+References: <CA+B=mGr+m4hh5NM1r_RPOfQcAzmkyvbN+As-=B3pzV=wNM+xmw@mail.gmail.com>
+	<CA+B=mGpP8hFF=XaOhzfUAzgocx0V9BsVx4cao=KK-KjWxoUsnA@mail.gmail.com>
+	<CAPYmBX06kmkQgt=t6XdhCxxbL9tpEp8E7EKgXvjSxhfWHcFy=A@mail.gmail.com>
+	<CA+B=mGppKCqvPiW+xp1t3799+LDetjRbpjssB6XKd29wrb5-cw@mail.gmail.com>
+Message-ID: <CAPYmBX069YuFxFUOuski8Rmk2MK_2b+1oL=t=LXagUXFpVdJhQ@mail.gmail.com>
+
+Mike,
+
+I added the following three lines of code to itkSCIFIOImageIOTest.cxx,
+right before the line "typedef itk::ImageFileWriter< ImageType >
+WriterType;":
+
+reader->Update();
+itk::ImageIOBase* io2 = reader->GetImageIO();
+std::cout << "spacing: " << io2->GetSpacing(0) << " " << io2->GetSpacing(1)
+<< " " << io2->GetSpacing(2) << std::endl;
+
+And I run the following command with the same test image "sample_5.nrrd":
+
+SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd aa.ome.tiff -w -d 3
+-t float
+
+the spacing output is different with and without "reader->SetImageIO( io
+);".
+
+According to the ITK::ImageBase (
+http://www.itk.org/Doxygen/html/classitk_1_1ImageBase.html#a2d92ff5736deb71ffd0f1e43201b4c96),
+spacing is the size of a pixel in physical space.
+
+Thanks for taking time looking into this.
+
+Joe
+
+
+
+
+
+
+On Fri, Oct 25, 2013 at 10:36 AM, Mark Hiner <hinerm at gmail.com> wrote:
+
+>
+> I also found the SCIFIO reader reports different 'Voxel sizes'
+>>
+>
+> Can you tell me what steps you used to check the voxel sizes with the
+> ITK-SCIFIO plugin?
+>
+> No need to make another thread, I will look into it when I get time.
+>
+> Thanks!
+> - Mark
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131025/ad0cf7a8/attachment.html>
+
+From hiner at wisc.edu  Mon Oct 14 12:20:55 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Mon, 14 Oct 2013 12:20:55 -0500
+Subject: [SCIFIO] SCIFIO 0.7.0 Release
+Message-ID: <CA+B=mGqxskUdWvwEOE+LBx+iiJEeZZ6zyHhAB9hjMLAH_reqYA@mail.gmail.com>
+
+Hi all,
+
+ Today I released
+SCIFIO-0.7.0<https://github.com/scifio/scifio/releases/tag/scifio-0.7.0>.
+You can see a full list of the major changes on the github issues
+page<https://github.com/scifio/scifio/issues?milestone=4&state=closed>
+.
+
+Highlights include:
+* Refactoring to an N-D model from the fixed 5D of Bio-Formats.
+* Upgrading to Java 6.
+* Bug fixes!
+
+Updates to the OME-Formats <https://github.com/scifio/ome-formats> and
+SCIFIO-BF-compat <https://github.com/scifio/scifio-bf-compat> projects will
+be coming today/tomorrow. The latest
+ImageJ2<https://github.com/imagej/imagej>master is already using
+SCIFIO 0.7.0 and opening N-D images.
+
+Development has already begun on
+SCIFIO-0.8.0<https://github.com/scifio/scifio/issues?page=1&state=open>.
+The next release will see some polishing of the source
+code<https://github.com/scifio/scifio/issues/76>and
+documentation <https://github.com/scifio/scifio/issues/48>, simplification
+of the Metadata API <https://github.com/scifio/scifio/issues/74>, and a
+necessary overhaul of caching
+performance<https://github.com/scifio/scifio/issues/69>
+.
+
+Because of the scope of the N-D refactoring, there may still be some issues
+to address. As always, just let us know if you come across any bugs, or
+find the N-D API difficult to use.
+
+Thanks!
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131014/dfa4eb6a/attachment-0002.html>
+
+From hinerm at gmail.com  Tue Oct 15 14:50:41 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Tue, 15 Oct 2013 14:50:41 -0500
+Subject: [SCIFIO] SCIFIO post from phsiao@cs.unc.edu requires approval
+In-Reply-To: <mailman.955.1381861787.24261.scifio@scif.io>
+References: <mailman.955.1381861787.24261.scifio@scif.io>
+Message-ID: <CA+B=mGqH7SmtLijL5SsZTzWK07ZbbBa+C2+zG1pK8fw_jKJNHQ@mail.gmail.com>
+
+Hi Joe,
+
+ Thanks for reporting this issue.
+
+reader->SetImageIO( io );
+>
+
+ Just so you know, this is just disabling SCIFIO I believe, and defaulting
+to the ITK DICOM ImageIO.
+
+ Does the output file have the correct number of total planes? If not, you
+might try "-d 5" just to test. The dimension order is XYCZT but XYZ are the
+dimensions with length more than 1. The SCIFIO plugin is supposed to
+account for that but it could be a bug.
+
+ Otherwise if the dimensions are correct it could be an issue with the
+dataset being interleaved.
+
+ I'll try to look at it soon.
+
+Thanks,
+Mark
+
+
+From: Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>
+> To: scifio at scif.io
+> Cc:
+> Date: Tue, 15 Oct 2013 14:29:23 -0400
+> Subject: Error reading a 32-bit nrrd image via ITK
+> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image in my
+> own program. The attached is a 32-bit 3-dimensional test image.
+>
+> Then I used the following command to test with the SCIFIO test program:
+>
+> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff -w -d
+> 3 -t float
+>
+> The output '123.ome.tiff' has wrong pixel values and looks wrong in ImageJ.
+>
+> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if I
+> comment out this line
+>
+>    reader->SetImageIO( io );
+>
+> to use ITK's default ImageIO, the output image becomes normal.
+>
+> Thanks,
+> Joe
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131015/d7012abf/attachment-0002.html>
+
+From phsiao at cs.unc.edu  Tue Oct 15 15:21:08 2013
+From: phsiao at cs.unc.edu (Joe Ping-Lin Hsiao)
+Date: Tue, 15 Oct 2013 16:21:08 -0400
+Subject: [SCIFIO] SCIFIO post from phsiao@cs.unc.edu requires approval
+In-Reply-To: <CA+B=mGqH7SmtLijL5SsZTzWK07ZbbBa+C2+zG1pK8fw_jKJNHQ@mail.gmail.com>
+References: <mailman.955.1381861787.24261.scifio@scif.io>
+	<CA+B=mGqH7SmtLijL5SsZTzWK07ZbbBa+C2+zG1pK8fw_jKJNHQ@mail.gmail.com>
+Message-ID: <CAPYmBX0VSJQp0aFjquzvO5B-3TsbHh4qymgkCCK9DEJNZW1Bjg@mail.gmail.com>
+
+Hi Mark,
+
+The output dimension is 3, which is equal to the input's dimension. I also
+tried "-d 5". Seems to me it doesn't change anything of the output. The
+output dimension is still 3 and the pixel values are wrong.
+
+Don't know if this helps. I put the following code after reader->Update()
+to check the image's min and max pixel values:
+
+typedef itk::MinimumMaximumImageCalculator <ImageType>
+ImageCalculatorFilterType;
+ImageCalculatorFilterType::Pointer imageCalculatorFilter =
+ImageCalculatorFilterType::New ();
+imageCalculatorFilter->SetImage(reader->GetOutput());
+imageCalculatorFilter->Compute();
+cout << "max intensity " << imageCalculatorFilter->GetMaximum() << endl;
+cout << "min intensity " << imageCalculatorFilter->GetMinimum();
+
+The value range is the full range of 'float' from -3.49e38 to 3.49e38,
+which seems wrong. But if I comment out reader->SetImageIO(io), the values
+look reasonable.
+
+Thanks,
+Joe
+
+
+On Tue, Oct 15, 2013 at 3:50 PM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Hi Joe,
+>
+>  Thanks for reporting this issue.
+>
+> reader->SetImageIO( io );
+>>
+>
+>  Just so you know, this is just disabling SCIFIO I believe, and defaulting
+> to the ITK DICOM ImageIO.
+>
+>  Does the output file have the correct number of total planes? If not, you
+> might try "-d 5" just to test. The dimension order is XYCZT but XYZ are the
+> dimensions with length more than 1. The SCIFIO plugin is supposed to
+> account for that but it could be a bug.
+>
+>  Otherwise if the dimensions are correct it could be an issue with the
+> dataset being interleaved.
+>
+>  I'll try to look at it soon.
+>
+> Thanks,
+> Mark
+>
+>
+>
+> From: Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>
+>> To: scifio at scif.io
+>> Cc:
+>> Date: Tue, 15 Oct 2013 14:29:23 -0400
+>> Subject: Error reading a 32-bit nrrd image via ITK
+>> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image in
+>> my own program. The attached is a 32-bit 3-dimensional test image.
+>>
+>> Then I used the following command to test with the SCIFIO test program:
+>>
+>> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff -w
+>> -d 3 -t float
+>>
+>> The output '123.ome.tiff' has wrong pixel values and looks wrong in
+>> ImageJ.
+>>
+>> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if I
+>> comment out this line
+>>
+>>    reader->SetImageIO( io );
+>>
+>> to use ITK's default ImageIO, the output image becomes normal.
+>>
+>> Thanks,
+>> Joe
+>>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131015/93291298/attachment-0002.html>
+
+From hinerm at gmail.com  Wed Oct 23 13:31:51 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Wed, 23 Oct 2013 13:31:51 -0500
+Subject: [SCIFIO] Error reading a 32-bit nrrd image via ITK
+Message-ID: <CA+B=mGr+m4hh5NM1r_RPOfQcAzmkyvbN+As-=B3pzV=wNM+xmw@mail.gmail.com>
+
+Hi Joe,
+
+ Just wanted to let you know I identified that this is an error with
+endianness not being handled correctly in the SCIFIO ImageIO.
+
+ I fixed it locally, but found some bugs with how indexed and RGB images
+are being handled along the way. Once I have those fixed I'll update the
+SCIFIO ImageIO module and let you know.
+
+Thank you for reporting this, and for using the SCIFIO-ITK imageIO!
+
+- Mark
+
+On Tue, Oct 15, 2013 at 3:21 PM, Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>wrote:
+
+> Hi Mark,
+>
+> The output dimension is 3, which is equal to the input's dimension. I also
+> tried "-d 5". Seems to me it doesn't change anything of the output. The
+> output dimension is still 3 and the pixel values are wrong.
+>
+> Don't know if this helps. I put the following code after reader->Update()
+> to check the image's min and max pixel values:
+>
+> typedef itk::MinimumMaximumImageCalculator <ImageType>
+> ImageCalculatorFilterType;
+> ImageCalculatorFilterType::Pointer imageCalculatorFilter =
+> ImageCalculatorFilterType::New ();
+> imageCalculatorFilter->SetImage(reader->GetOutput());
+> imageCalculatorFilter->Compute();
+> cout << "max intensity " << imageCalculatorFilter->GetMaximum() << endl;
+> cout << "min intensity " << imageCalculatorFilter->GetMinimum();
+>
+> The value range is the full range of 'float' from -3.49e38 to 3.49e38,
+> which seems wrong. But if I comment out reader->SetImageIO(io), the values
+> look reasonable.
+>
+> Thanks,
+> Joe
+>
+>
+> On Tue, Oct 15, 2013 at 3:50 PM, Mark Hiner <hinerm at gmail.com> wrote:
+>
+>> Hi Joe,
+>>
+>>  Thanks for reporting this issue.
+>>
+>> reader->SetImageIO( io );
+>>>
+>>
+>>  Just so you know, this is just disabling SCIFIO I believe, and
+>> defaulting to the ITK DICOM ImageIO.
+>>
+>>  Does the output file have the correct number of total planes? If not,
+>> you might try "-d 5" just to test. The dimension order is XYCZT but XYZ are
+>> the dimensions with length more than 1. The SCIFIO plugin is supposed to
+>> account for that but it could be a bug.
+>>
+>>  Otherwise if the dimensions are correct it could be an issue with the
+>> dataset being interleaved.
+>>
+>>  I'll try to look at it soon.
+>>
+>> Thanks,
+>> Mark
+>>
+>>
+>>
+>> From: Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>
+>>> To: scifio at scif.io
+>>> Cc:
+>>> Date: Tue, 15 Oct 2013 14:29:23 -0400
+>>> Subject: Error reading a 32-bit nrrd image via ITK
+>>> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image in
+>>> my own program. The attached is a 32-bit 3-dimensional test image.
+>>>
+>>> Then I used the following command to test with the SCIFIO test program:
+>>>
+>>> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff -w
+>>> -d 3 -t float
+>>>
+>>> The output '123.ome.tiff' has wrong pixel values and looks wrong in
+>>> ImageJ.
+>>>
+>>> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if I
+>>> comment out this line
+>>>
+>>>    reader->SetImageIO( io );
+>>>
+>>> to use ITK's default ImageIO, the output image becomes normal.
+>>>
+>>> Thanks,
+>>> Joe
+>>>
+>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131023/edbb3d66/attachment-0002.html>
+
+From hiner at wisc.edu  Wed Oct 23 15:19:25 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 23 Oct 2013 15:19:25 -0500
+Subject: [SCIFIO] Error reading a 32-bit nrrd image via ITK
+In-Reply-To: <CA+B=mGr+m4hh5NM1r_RPOfQcAzmkyvbN+As-=B3pzV=wNM+xmw@mail.gmail.com>
+References: <CA+B=mGr+m4hh5NM1r_RPOfQcAzmkyvbN+As-=B3pzV=wNM+xmw@mail.gmail.com>
+Message-ID: <CA+B=mGpP8hFF=XaOhzfUAzgocx0V9BsVx4cao=KK-KjWxoUsnA@mail.gmail.com>
+
+Hi Joe,
+
+ I made my changes and pushed a new scifio-itk-bridge.jar. I didn't have to
+change the C++ side at all, so all you should have to do is delete the
+"scifio-itk-bridge-1.0.0.jar" in your local $ITK_BUILD/lib/jars, then clean
+and rebuild the SCIFIO module (which should trigger a download of the
+latest jar, but only if it's not already present in $ITK_BUILD/lib/jars).
+
+ You can also manually
+download<http://jenkins.imagej.net/view/SCIFIO/job/SCIFIOITKBridge/lastSuccessfulBuild/artifact/target/scifio-itk-bridge-1.0.0.jar>and
+replace the jar if you don't want to rebuild everything.
+
+ Let me know if you have any more problems, or if this fix doesn't work for
+you.
+
+Thanks,
+Mark
+
+
+On Wed, Oct 23, 2013 at 1:31 PM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Hi Joe,
+>
+>  Just wanted to let you know I identified that this is an error with
+> endianness not being handled correctly in the SCIFIO ImageIO.
+>
+>  I fixed it locally, but found some bugs with how indexed and RGB images
+> are being handled along the way. Once I have those fixed I'll update the
+> SCIFIO ImageIO module and let you know.
+>
+> Thank you for reporting this, and for using the SCIFIO-ITK imageIO!
+>
+> - Mark
+>
+> On Tue, Oct 15, 2013 at 3:21 PM, Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>wrote:
+>
+>> Hi Mark,
+>>
+>> The output dimension is 3, which is equal to the input's dimension. I
+>> also tried "-d 5". Seems to me it doesn't change anything of the output.
+>> The output dimension is still 3 and the pixel values are wrong.
+>>
+>> Don't know if this helps. I put the following code after reader->Update()
+>> to check the image's min and max pixel values:
+>>
+>> typedef itk::MinimumMaximumImageCalculator <ImageType>
+>> ImageCalculatorFilterType;
+>> ImageCalculatorFilterType::Pointer imageCalculatorFilter =
+>> ImageCalculatorFilterType::New ();
+>> imageCalculatorFilter->SetImage(reader->GetOutput());
+>> imageCalculatorFilter->Compute();
+>> cout << "max intensity " << imageCalculatorFilter->GetMaximum() << endl;
+>> cout << "min intensity " << imageCalculatorFilter->GetMinimum();
+>>
+>> The value range is the full range of 'float' from -3.49e38 to 3.49e38,
+>> which seems wrong. But if I comment out reader->SetImageIO(io), the values
+>> look reasonable.
+>>
+>> Thanks,
+>> Joe
+>>
+>>
+>> On Tue, Oct 15, 2013 at 3:50 PM, Mark Hiner <hinerm at gmail.com> wrote:
+>>
+>>> Hi Joe,
+>>>
+>>>  Thanks for reporting this issue.
+>>>
+>>> reader->SetImageIO( io );
+>>>>
+>>>
+>>>  Just so you know, this is just disabling SCIFIO I believe, and
+>>> defaulting to the ITK DICOM ImageIO.
+>>>
+>>>  Does the output file have the correct number of total planes? If not,
+>>> you might try "-d 5" just to test. The dimension order is XYCZT but XYZ are
+>>> the dimensions with length more than 1. The SCIFIO plugin is supposed to
+>>> account for that but it could be a bug.
+>>>
+>>>  Otherwise if the dimensions are correct it could be an issue with the
+>>> dataset being interleaved.
+>>>
+>>>  I'll try to look at it soon.
+>>>
+>>> Thanks,
+>>> Mark
+>>>
+>>>
+>>>
+>>> From: Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>
+>>>> To: scifio at scif.io
+>>>> Cc:
+>>>> Date: Tue, 15 Oct 2013 14:29:23 -0400
+>>>> Subject: Error reading a 32-bit nrrd image via ITK
+>>>> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image in
+>>>> my own program. The attached is a 32-bit 3-dimensional test image.
+>>>>
+>>>> Then I used the following command to test with the SCIFIO test program:
+>>>>
+>>>> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff -w
+>>>> -d 3 -t float
+>>>>
+>>>> The output '123.ome.tiff' has wrong pixel values and looks wrong in
+>>>> ImageJ.
+>>>>
+>>>> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if I
+>>>> comment out this line
+>>>>
+>>>>    reader->SetImageIO( io );
+>>>>
+>>>> to use ITK's default ImageIO, the output image becomes normal.
+>>>>
+>>>> Thanks,
+>>>> Joe
+>>>>
+>>>
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131023/58896f08/attachment-0002.html>
+
+From phsiao at cs.unc.edu  Thu Oct 24 16:58:31 2013
+From: phsiao at cs.unc.edu (Joe Ping-Lin Hsiao)
+Date: Thu, 24 Oct 2013 17:58:31 -0400
+Subject: [SCIFIO] Error reading a 32-bit nrrd image via ITK
+In-Reply-To: <CA+B=mGpP8hFF=XaOhzfUAzgocx0V9BsVx4cao=KK-KjWxoUsnA@mail.gmail.com>
+References: <CA+B=mGr+m4hh5NM1r_RPOfQcAzmkyvbN+As-=B3pzV=wNM+xmw@mail.gmail.com>
+	<CA+B=mGpP8hFF=XaOhzfUAzgocx0V9BsVx4cao=KK-KjWxoUsnA@mail.gmail.com>
+Message-ID: <CAPYmBX06kmkQgt=t6XdhCxxbL9tpEp8E7EKgXvjSxhfWHcFy=A@mail.gmail.com>
+
+Thanks, Mike! The pixels values are correct now.
+
+
+For the same sample image, I also found the SCIFIO reader reports different
+'Voxel sizes', which is microns/pixels for x, y, and z, comparing to what I
+see from Fiji's Image ->  Show information. If I don't do "reader->SetImageIO(
+io );", ITK's DICOM ImageIO actually reports the same value as Fiji's.
+Should I create another topic for this issue?
+
+
+
+On Wed, Oct 23, 2013 at 4:19 PM, Mark Hiner <hiner at wisc.edu> wrote:
+
+> Hi Joe,
+>
+>  I made my changes and pushed a new scifio-itk-bridge.jar. I didn't have
+> to change the C++ side at all, so all you should have to do is delete the
+> "scifio-itk-bridge-1.0.0.jar" in your local $ITK_BUILD/lib/jars, then clean
+> and rebuild the SCIFIO module (which should trigger a download of the
+> latest jar, but only if it's not already present in $ITK_BUILD/lib/jars).
+>
+>  You can also manually download<http://jenkins.imagej.net/view/SCIFIO/job/SCIFIOITKBridge/lastSuccessfulBuild/artifact/target/scifio-itk-bridge-1.0.0.jar>and replace the jar if you don't want to rebuild everything.
+>
+>  Let me know if you have any more problems, or if this fix doesn't work
+> for you.
+>
+> Thanks,
+> Mark
+>
+>
+> On Wed, Oct 23, 2013 at 1:31 PM, Mark Hiner <hinerm at gmail.com> wrote:
+>
+>> Hi Joe,
+>>
+>>  Just wanted to let you know I identified that this is an error with
+>> endianness not being handled correctly in the SCIFIO ImageIO.
+>>
+>>  I fixed it locally, but found some bugs with how indexed and RGB images
+>> are being handled along the way. Once I have those fixed I'll update the
+>> SCIFIO ImageIO module and let you know.
+>>
+>> Thank you for reporting this, and for using the SCIFIO-ITK imageIO!
+>>
+>> - Mark
+>>
+>> On Tue, Oct 15, 2013 at 3:21 PM, Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>wrote:
+>>
+>>> Hi Mark,
+>>>
+>>> The output dimension is 3, which is equal to the input's dimension. I
+>>> also tried "-d 5". Seems to me it doesn't change anything of the output.
+>>> The output dimension is still 3 and the pixel values are wrong.
+>>>
+>>> Don't know if this helps. I put the following code after
+>>> reader->Update() to check the image's min and max pixel values:
+>>>
+>>> typedef itk::MinimumMaximumImageCalculator <ImageType>
+>>> ImageCalculatorFilterType;
+>>> ImageCalculatorFilterType::Pointer imageCalculatorFilter =
+>>> ImageCalculatorFilterType::New ();
+>>> imageCalculatorFilter->SetImage(reader->GetOutput());
+>>> imageCalculatorFilter->Compute();
+>>> cout << "max intensity " << imageCalculatorFilter->GetMaximum() << endl;
+>>> cout << "min intensity " << imageCalculatorFilter->GetMinimum();
+>>>
+>>> The value range is the full range of 'float' from -3.49e38 to 3.49e38,
+>>> which seems wrong. But if I comment out reader->SetImageIO(io), the values
+>>> look reasonable.
+>>>
+>>> Thanks,
+>>> Joe
+>>>
+>>>
+>>> On Tue, Oct 15, 2013 at 3:50 PM, Mark Hiner <hinerm at gmail.com> wrote:
+>>>
+>>>> Hi Joe,
+>>>>
+>>>>  Thanks for reporting this issue.
+>>>>
+>>>> reader->SetImageIO( io );
+>>>>>
+>>>>
+>>>>  Just so you know, this is just disabling SCIFIO I believe, and
+>>>> defaulting to the ITK DICOM ImageIO.
+>>>>
+>>>>  Does the output file have the correct number of total planes? If not,
+>>>> you might try "-d 5" just to test. The dimension order is XYCZT but XYZ are
+>>>> the dimensions with length more than 1. The SCIFIO plugin is supposed to
+>>>> account for that but it could be a bug.
+>>>>
+>>>>  Otherwise if the dimensions are correct it could be an issue with the
+>>>> dataset being interleaved.
+>>>>
+>>>>  I'll try to look at it soon.
+>>>>
+>>>> Thanks,
+>>>> Mark
+>>>>
+>>>>
+>>>>
+>>>> From: Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>
+>>>>> To: scifio at scif.io
+>>>>> Cc:
+>>>>> Date: Tue, 15 Oct 2013 14:29:23 -0400
+>>>>> Subject: Error reading a 32-bit nrrd image via ITK
+>>>>> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image
+>>>>> in my own program. The attached is a 32-bit 3-dimensional test image.
+>>>>>
+>>>>> Then I used the following command to test with the SCIFIO test program:
+>>>>>
+>>>>> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff
+>>>>> -w -d 3 -t float
+>>>>>
+>>>>> The output '123.ome.tiff' has wrong pixel values and looks wrong in
+>>>>> ImageJ.
+>>>>>
+>>>>> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if
+>>>>> I comment out this line
+>>>>>
+>>>>>    reader->SetImageIO( io );
+>>>>>
+>>>>> to use ITK's default ImageIO, the output image becomes normal.
+>>>>>
+>>>>> Thanks,
+>>>>> Joe
+>>>>>
+>>>>
+>>>>
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131024/76385f4a/attachment-0002.html>
+
+From hinerm at gmail.com  Fri Oct 25 09:36:11 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Fri, 25 Oct 2013 09:36:11 -0500
+Subject: [SCIFIO] Error reading a 32-bit nrrd image via ITK
+In-Reply-To: <CAPYmBX06kmkQgt=t6XdhCxxbL9tpEp8E7EKgXvjSxhfWHcFy=A@mail.gmail.com>
+References: <CA+B=mGr+m4hh5NM1r_RPOfQcAzmkyvbN+As-=B3pzV=wNM+xmw@mail.gmail.com>
+	<CA+B=mGpP8hFF=XaOhzfUAzgocx0V9BsVx4cao=KK-KjWxoUsnA@mail.gmail.com>
+	<CAPYmBX06kmkQgt=t6XdhCxxbL9tpEp8E7EKgXvjSxhfWHcFy=A@mail.gmail.com>
+Message-ID: <CA+B=mGppKCqvPiW+xp1t3799+LDetjRbpjssB6XKd29wrb5-cw@mail.gmail.com>
+
+> I also found the SCIFIO reader reports different 'Voxel sizes'
+>
+
+Can you tell me what steps you used to check the voxel sizes with the
+ITK-SCIFIO plugin?
+
+No need to make another thread, I will look into it when I get time.
+
+Thanks!
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131025/402ee60e/attachment-0002.html>
+
+From phsiao at cs.unc.edu  Fri Oct 25 15:43:19 2013
+From: phsiao at cs.unc.edu (Joe Ping-Lin Hsiao)
+Date: Fri, 25 Oct 2013 16:43:19 -0400
+Subject: [SCIFIO] Error reading a 32-bit nrrd image via ITK
+In-Reply-To: <CA+B=mGppKCqvPiW+xp1t3799+LDetjRbpjssB6XKd29wrb5-cw@mail.gmail.com>
+References: <CA+B=mGr+m4hh5NM1r_RPOfQcAzmkyvbN+As-=B3pzV=wNM+xmw@mail.gmail.com>
+	<CA+B=mGpP8hFF=XaOhzfUAzgocx0V9BsVx4cao=KK-KjWxoUsnA@mail.gmail.com>
+	<CAPYmBX06kmkQgt=t6XdhCxxbL9tpEp8E7EKgXvjSxhfWHcFy=A@mail.gmail.com>
+	<CA+B=mGppKCqvPiW+xp1t3799+LDetjRbpjssB6XKd29wrb5-cw@mail.gmail.com>
+Message-ID: <CAPYmBX069YuFxFUOuski8Rmk2MK_2b+1oL=t=LXagUXFpVdJhQ@mail.gmail.com>
+
+Mike,
+
+I added the following three lines of code to itkSCIFIOImageIOTest.cxx,
+right before the line "typedef itk::ImageFileWriter< ImageType >
+WriterType;":
+
+reader->Update();
+itk::ImageIOBase* io2 = reader->GetImageIO();
+std::cout << "spacing: " << io2->GetSpacing(0) << " " << io2->GetSpacing(1)
+<< " " << io2->GetSpacing(2) << std::endl;
+
+And I run the following command with the same test image "sample_5.nrrd":
+
+SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd aa.ome.tiff -w -d 3
+-t float
+
+the spacing output is different with and without "reader->SetImageIO( io
+);".
+
+According to the ITK::ImageBase (
+http://www.itk.org/Doxygen/html/classitk_1_1ImageBase.html#a2d92ff5736deb71ffd0f1e43201b4c96),
+spacing is the size of a pixel in physical space.
+
+Thanks for taking time looking into this.
+
+Joe
+
+
+
+
+
+
+On Fri, Oct 25, 2013 at 10:36 AM, Mark Hiner <hinerm at gmail.com> wrote:
+
+>
+> I also found the SCIFIO reader reports different 'Voxel sizes'
+>>
+>
+> Can you tell me what steps you used to check the voxel sizes with the
+> ITK-SCIFIO plugin?
+>
+> No need to make another thread, I will look into it when I get time.
+>
+> Thanks!
+> - Mark
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131025/ad0cf7a8/attachment-0002.html>
+

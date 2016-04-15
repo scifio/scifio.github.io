@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to	TIFF
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20T1dSavingImagePlanes%20breaks%20when%20changing%20from%20PNG%20to%0A%09TIFF&In-Reply-To=%3C5CB83033-2121-4BFE-8A33-23F1232E2CDA%40dsuk.biz%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000230.html">
+   <LINK REL="Next"  HREF="000232.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to	TIFF</H1>
+    <B>Michael Ellis</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20T1dSavingImagePlanes%20breaks%20when%20changing%20from%20PNG%20to%0A%09TIFF&In-Reply-To=%3C5CB83033-2121-4BFE-8A33-23F1232E2CDA%40dsuk.biz%3E"
+       TITLE="[SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to	TIFF">michael.ellis at dsuk.biz
+       </A><BR>
+    <I>Wed Dec  3 12:40:12 CST 2014</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000230.html">[SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to	TIFF
+</A></li>
+        <LI>Next message: <A HREF="000232.html">[SCIFIO] Scifio Cell Img
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#231">[ date ]</a>
+              <a href="thread.html#231">[ thread ]</a>
+              <a href="subject.html#231">[ subject ]</a>
+              <a href="author.html#231">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Curtis, many thanks.
+
+Whilst I&#8217;m on the subject of TIFF I experimented with using the TIFF specific reader/parser.
+
+Our TIFF files use the PAGE_NAME TIFF TIFF tag to give a name to each of the channel names. Is this information accessible through the SCIFIO?
+
+Many thanks &#8212; Michael Ellis
+
+On 3 Dec 2014, at 18:26, Curtis Rueden &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">ctrueden at wisc.edu</A>&gt; wrote:
+
+&gt;<i> Hi Michael,
+</I>&gt;<i> 
+</I>&gt;<i> &gt; I&#8217;m curious though because I didn&#8217;t think PNG files could handle
+</I>&gt;<i> &gt; anything other than 2D images.
+</I>&gt;<i> 
+</I>&gt;<i> SCIFIO writes the APNG format [1] when there are multiple planes.
+</I>&gt;<i> 
+</I>&gt;<i> &gt; So I try to open the SCIFIOTutorial.png in ImageJ and I see only a
+</I>&gt;<i> &gt; single plane image.
+</I>&gt;<i> 
+</I>&gt;<i> Standard PNG readers (including ImageJ 1.x's built-in PNG reader) will read only the first plane. Did you try with File &gt; Import &gt; Image... which uses SCIFIO when opening?
+</I>&gt;<i> 
+</I>&gt;<i> &gt; I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program.
+</I>&gt;<i> &gt; I get the following exception:
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; Exception in thread &quot;main&quot; io.scif.FormatException: Buffer too small
+</I>&gt;<i> &gt; (got 2500, expected 12500).
+</I>&gt;<i> 
+</I>&gt;<i> Thanks for the report. I can confirm this bug. I filed an issue for it:
+</I>&gt;<i>     <A HREF="https://github.com/scifio/scifio/issues/236">https://github.com/scifio/scifio/issues/236</A>
+</I>&gt;<i> 
+</I>&gt;<i> &gt; So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+</I>&gt;<i> 
+</I>&gt;<i> Once that issue is resolved, things should work!
+</I>&gt;<i> 
+</I>&gt;<i> Regards,
+</I>&gt;<i> Curtis
+</I>&gt;<i> 
+</I>&gt;<i> [1] <A HREF="https://en.wikipedia.org/wiki/APNG">https://en.wikipedia.org/wiki/APNG</A>
+</I>&gt;<i> 
+</I>&gt;<i> On Wed, Dec 3, 2014 at 5:20 AM, Michael Ellis &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">michael.ellis at dsuk.biz</A>&gt; wrote:
+</I>&gt;<i> T1dSavingImagePlanes saves a fake image &#8220;8bit-signed&amp;pixelType=int8&amp;lengths=50,50,3,5,7&amp;axes=X,Y,Z,Channel,Time.fake&#8221; as a png file.
+</I>&gt;<i> 
+</I>&gt;<i> I run the program and it completes without errors.
+</I>&gt;<i> 
+</I>&gt;<i> I&#8217;m curious though because I didn&#8217;t think PNG files could handle anything other than 2D images. So I try to open the SCIFIOTutorial.png
+</I>&gt;<i> in ImageJ and I see only a single plane image. There are no warnings or errors when saving the file to suggest that there is any loss of fidelity. Is
+</I>&gt;<i> that the intention?
+</I>&gt;<i> 
+</I>&gt;<i> Anyway, I know TIFF files can support multiple channels, so I change SCIFIOTutorial.png to SCIFIOTutorial.tif and run the program. I get the following exception:
+</I>&gt;<i> 
+</I>&gt;<i> Exception in thread &quot;main&quot; io.scif.FormatException: Buffer too small (got 2500, expected 12500).
+</I>&gt;<i>         at io.scif.util.FormatTools.checkBufferSize(FormatTools.java:665)
+</I>&gt;<i>         at io.scif.util.FormatTools.checkPlaneForWriting(FormatTools.java:610)
+</I>&gt;<i>         at io.scif.AbstractWriter.checkParams(AbstractWriter.java:121)
+</I>&gt;<i>         at io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1291)
+</I>&gt;<i>         at io.scif.formats.TIFFFormat$Writer.writePlane(TIFFFormat.java:1399)
+</I>&gt;<i>         at io.scif.AbstractWriter.savePlane(AbstractWriter.java:168)
+</I>&gt;<i>         at io.scif.AbstractWriter.savePlane(AbstractWriter.java:159)
+</I>&gt;<i>         at io.scif.tutorials.core.T1dSavingImagePlanes.main(T1dSavingImagePlanes.java:75)
+</I>&gt;<i> 
+</I>&gt;<i> Now this is most unexpected, because I would have assumed the TIFF format was able to store the images with at least the same fidelity as PNG.
+</I>&gt;<i> 
+</I>&gt;<i> OK I know TIFF can save files of 3 dimensions, so I change the fake images to &#8220;8bit-signed&amp;pixelType=int8&amp;lengths=50,50,7&amp;axes=X,Y,Channel.fake&#8221;
+</I>&gt;<i> 
+</I>&gt;<i> Again I get and exception.
+</I>&gt;<i> 
+</I>&gt;<i> OK, how about a 2D image, &#8220;8bit-signed&amp;pixelType=int8&amp;lengths=50,50&amp;axes=X,Y.fake&#8221;?
+</I>&gt;<i> 
+</I>&gt;<i> And that finally works.
+</I>&gt;<i> 
+</I>&gt;<i> So how do I save a X,Y,Channels image in TIFF format with SCIFIO?
+</I>&gt;<i> 
+</I>&gt;<i> Thanks for any help.
+</I>&gt;<i> 
+</I>&gt;<i> &#8212; Michael Ellis
+</I>&gt;<i> Digital Scientific UK Ltd.
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> _______________________________________________
+</I>&gt;<i> SCIFIO mailing list
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;<i> 
+</I>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20141203/e7cafb39/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20141203/e7cafb39/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000230.html">[SCIFIO] T1dSavingImagePlanes breaks when changing from PNG to	TIFF
+</A></li>
+	<LI>Next message: <A HREF="000232.html">[SCIFIO] Scifio Cell Img
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#231">[ date ]</a>
+              <a href="thread.html#231">[ thread ]</a>
+              <a href="subject.html#231">[ subject ]</a>
+              <a href="author.html#231">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

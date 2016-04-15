@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> Nrrd ITK-SCIFIO Bug
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20Nrrd%20ITK-SCIFIO%20Bug&In-Reply-To=%3CCAHfi%3DGKtAOnEGJv8DPBDonOGU0tA6Yrx0KnK9jcebni8kftPgA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000003.html">
+   <LINK REL="Next"  HREF="000005.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>Nrrd ITK-SCIFIO Bug</H1>
+    <B>Kedar Grama</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20Nrrd%20ITK-SCIFIO%20Bug&In-Reply-To=%3CCAHfi%3DGKtAOnEGJv8DPBDonOGU0tA6Yrx0KnK9jcebni8kftPgA%40mail.gmail.com%3E"
+       TITLE="Nrrd ITK-SCIFIO Bug">gbkedar at gmail.com
+       </A><BR>
+    <I>Tue Jul  2 14:50:02 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000003.html">Nrrd ITK-SCIFIO Bug
+</A></li>
+        <LI>Next message: <A HREF="000005.html">Nrrd ITK-SCIFIO Bug
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#4">[ date ]</a>
+              <a href="thread.html#4">[ thread ]</a>
+              <a href="subject.html#4">[ subject ]</a>
+              <a href="author.html#4">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Mark,
+
+You are right. I just need access to the multi-series dataset and the
+vector image seems like the logical choice. However each series is not a 3D
+image. They are 11 2D-images of the same scene at different wavelengths.
+
+Thanks,
+
+-Kedar
+
+
+On Tue, Jul 2, 2013 at 3:46 PM, Kedar Grama &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">gbkedar at gmail.com</A>&gt; wrote:
+
+&gt;<i> Hi Mark,
+</I>&gt;<i>
+</I>&gt;<i> You are right. I just need access to the multi-series dataset and the
+</I>&gt;<i> vector image. However each series is not a 3D image. They are 11 2D-images
+</I>&gt;<i> of the same scene at different wavelengths.
+</I>&gt;<i>
+</I>&gt;<i> Thanks,
+</I>&gt;<i>
+</I>&gt;<i> -Kedar
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> On Tue, Jul 2, 2013 at 3:37 PM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hinerm at gmail.com</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> Curtis - sorry, I actually did the @ encoding to extract specific series
+</I>&gt;&gt;<i> earlier today (here&lt;<A HREF="https://github.com/scifio/scifio-itk-bridge/commit/3661b29b2faac4a71f5a625efc882010e84f4a23">https://github.com/scifio/scifio-itk-bridge/commit/3661b29b2faac4a71f5a625efc882010e84f4a23</A>&gt;)
+</I>&gt;&gt;<i> and replied by private e-mail.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Kedar can correct me if I'm wrong, but I don't think he explicitly needs
+</I>&gt;&gt;<i> Vector images types... he just wants the ability to convert a complete
+</I>&gt;&gt;<i> multi-series dataset, and VectorImages seemed to make the most sense to me.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> You could convert each series in a dataset right now with the @ encoding,
+</I>&gt;&gt;<i> but in Kedar's use case (a 65GB .czi file) the entire image gets parsed
+</I>&gt;&gt;<i> each time a single series is read and written (of 580 total).. so the time
+</I>&gt;&gt;<i> requirements don't seem reasonable. Also, a new file is created for each
+</I>&gt;&gt;<i> series (although these could be consolidated with the ImageSeriesReader&lt;<A HREF="http://www.itk.org/Doxygen/html/classitk_1_1ImageSeriesReader.html">http://www.itk.org/Doxygen/html/classitk_1_1ImageSeriesReader.html</A>&gt;I think).
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> But even in Kedar's case where I believe all the 3D images are the same
+</I>&gt;&gt;<i> size, the creation of a VectorImage is not simple, because - from what I
+</I>&gt;&gt;<i> understand - it expects all the pixel 0 values, then all the pixel 1
+</I>&gt;&gt;<i> values, etc... which is basically worst-case-scenario when getting data one
+</I>&gt;&gt;<i> series at a time from Bio-Formats (and piped back in arbitrary chunks with
+</I>&gt;&gt;<i> no concept of pixel delimitation, at that).
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> If there was an itk::image type that expects series to appear
+</I>&gt;&gt;<i> sequentially though, that would at least be a start..
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> On Tue, Jul 2, 2013 at 2:10 PM, Curtis Rueden &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">ctrueden at wisc.edu</A>&gt; wrote:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Hi Kedar,
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Thanks for exercising the new code! I have a question, and a request.
+</I>&gt;&gt;&gt;<i> First, the latter: we just created a new SCIFIO mailing list (CCed). Can we
+</I>&gt;&gt;&gt;<i> please discuss these technical issues on the public list from now on?
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> And my question: can you describe your need for the Vector image type in
+</I>&gt;&gt;&gt;<i> a little more detail? From my (limited) perspective,  using an ITK vector
+</I>&gt;&gt;&gt;<i> image type to represent multiple N-D Image blocks, which may have differing
+</I>&gt;&gt;&gt;<i> dimensional extents, is fundamentally unworkable. Is there another way to
+</I>&gt;&gt;&gt;<i> accomplish your goals?
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Regards,
+</I>&gt;&gt;&gt;<i> Curtis
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> P.S. I spoke with Mark this morning about a possible alternative
+</I>&gt;&gt;&gt;<i> approach for requesting specific Images (i.e. &quot;series&quot;) from the SCIFIO
+</I>&gt;&gt;&gt;<i> ImageIO: encode it in the file path string somehow.
+</I>&gt;&gt;&gt;<i>  On Jul 2, 2013 1:24 PM, &quot;Kedar Grama&quot; &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">gbkedar at gmail.com</A>&gt; wrote:
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> Hi Mark,
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> Thanks for working on the vector image support through SCIFIO. I have
+</I>&gt;&gt;&gt;&gt;<i> shared a nrrd file with you on google docs. When I read it with the
+</I>&gt;&gt;&gt;&gt;<i> ITK-SCIFIO reader it switches the bit ordering LittleEndian/BigEndian
+</I>&gt;&gt;&gt;&gt;<i> whereas if I read it in Fiji or build ITK without SCIFIO it is read
+</I>&gt;&gt;&gt;&gt;<i> properly. To test this you can use the ITK reader example and write the
+</I>&gt;&gt;&gt;&gt;<i> image out as a tiff while building with/without SCIFIO.
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> Thanks,
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> -Kedar
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130702/401995ff/attachment.html">http://scif.io/pipermail/scifio/attachments/20130702/401995ff/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000003.html">Nrrd ITK-SCIFIO Bug
+</A></li>
+	<LI>Next message: <A HREF="000005.html">Nrrd ITK-SCIFIO Bug
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#4">[ date ]</a>
+              <a href="thread.html#4">[ thread ]</a>
+              <a href="subject.html#4">[ subject ]</a>
+              <a href="author.html#4">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

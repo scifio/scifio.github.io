@@ -1,0 +1,3258 @@
+From djego.joss at gmail.com  Mon Jul  7 07:04:18 2014
+From: djego.joss at gmail.com (Diego Joss)
+Date: Mon, 7 Jul 2014 14:04:18 +0200
+Subject: [SCIFIO] jpeg2000format.java error
+Message-ID: <CAE+6duODDxpzB1ZNWJczfAcsiqi_Hpcp7RsgdYD0QcxteAdt0g@mail.gmail.com>
+
+Hi everyone,
+
+I was looking at the github page, and stumbled by chance upon a silly
+bug in src/main/java/io/scif/formats/JPEG2000Format.java:221 in the
+public method ColorTable, in the conditionals testing the pixeldepth,
+instead of testing for bytedepth == 2 for 16bit jp2 images, the test
+is == 1!
+
+Cheers,
+Diego
+
+
+From Johannes.Schindelin at gmx.de  Mon Jul  7 12:53:20 2014
+From: Johannes.Schindelin at gmx.de (Johannes Schindelin)
+Date: Mon, 7 Jul 2014 19:53:20 +0200 (CEST)
+Subject: [SCIFIO] jpeg2000format.java error
+In-Reply-To: <CAE+6duODDxpzB1ZNWJczfAcsiqi_Hpcp7RsgdYD0QcxteAdt0g@mail.gmail.com>
+References: <CAE+6duODDxpzB1ZNWJczfAcsiqi_Hpcp7RsgdYD0QcxteAdt0g@mail.gmail.com>
+Message-ID: <alpine.DEB.1.00.1407071952370.18949@s15462909.onlinehome-server.info>
+
+Hi Diego,
+
+On Mon, 7 Jul 2014, Diego Joss wrote:
+
+> I was looking at the github page, and stumbled by chance upon a silly
+> bug in src/main/java/io/scif/formats/JPEG2000Format.java:221 in the
+> public method ColorTable, in the conditionals testing the pixeldepth,
+> instead of testing for bytedepth == 2 for 16bit jp2 images, the test is
+> == 1!
+
+Would you terribly mind opening a Pull Request? It would attribute this
+patch to you properly, and it is easy!
+https://help.github.com/articles/using-pull-requests
+
+Ciao,
+Johannes
+
+
+From hinerm at gmail.com  Tue Jul  8 08:11:17 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Tue, 8 Jul 2014 08:11:17 -0500
+Subject: [SCIFIO] jpeg2000format.java error
+In-Reply-To: <alpine.DEB.1.00.1407071952370.18949@s15462909.onlinehome-server.info>
+References: <CAE+6duODDxpzB1ZNWJczfAcsiqi_Hpcp7RsgdYD0QcxteAdt0g@mail.gmail.com>
+	<alpine.DEB.1.00.1407071952370.18949@s15462909.onlinehome-server.info>
+Message-ID: <CA+B=mGqFsR+oDh_JP1wBEjjtLweKECcSxspfMMEeB0sDzBF1VQ@mail.gmail.com>
+
+Opened an issue: https://github.com/scifio/scifio/issues/210 so this won't
+get lost.
+
+- Mark
+
+
+On Mon, Jul 7, 2014 at 12:53 PM, Johannes Schindelin <
+Johannes.Schindelin at gmx.de> wrote:
+
+> Hi Diego,
+>
+> On Mon, 7 Jul 2014, Diego Joss wrote:
+>
+> > I was looking at the github page, and stumbled by chance upon a silly
+> > bug in src/main/java/io/scif/formats/JPEG2000Format.java:221 in the
+> > public method ColorTable, in the conditionals testing the pixeldepth,
+> > instead of testing for bytedepth == 2 for 16bit jp2 images, the test is
+> > == 1!
+>
+> Would you terribly mind opening a Pull Request? It would attribute this
+> patch to you properly, and it is easy!
+> https://help.github.com/articles/using-pull-requests
+>
+> Ciao,
+> Johannes
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140708/4bb3b235/attachment.html>
+
+From burkhard.hoeckendorf at web.de  Sat Jul 12 13:54:47 2014
+From: burkhard.hoeckendorf at web.de (=?ISO-8859-1?Q?Burkhard_H=F6ckendorf?=)
+Date: Sat, 12 Jul 2014 14:54:47 -0400
+Subject: [SCIFIO] SCIFIO does not seem to release memory of closed images
+Message-ID: <53C18477.6090302@web.de>
+
+Dear List,
+
+First of all thanks for developing scifio and doing that open source. I 
+have started to use it with ImageJ, since Fiji now offers the option to 
+use it. Having said that, I may also have stumbled upon an issue. I'm 
+unsure when (or whether) scifio releases the corresponding memory after 
+images are closed. To look at this in a somewhat systematic way, I ran a 
+macro (see below) to repeatedly open and close a 3GB single file 
+uncompressed TIFF stack (2048x2048x367x16bits) and record some 
+performance stats along the way. I ran this using a new download of Fiji.
+
+Here are the results with scifio disabled:
+      11450 ms to open files
+   28578184 mem before opening files
+9282667288 mem after opening files
+9272732560 mem after opening files & GC
+9272780080 mem after closing files
+   24220936 mem after closing files & GC
+
+And here with scifio enabled:
+       43715 ms to open files
+    26765224 mem before opening files
+10517954400 mem after opening files
+  9327459480 mem after opening files & GC
+  9327506440 mem after closing files
+  9314822896 mem after closing files & GC
+
+I have also checked, whether memory is freed a couple of minutes after 
+closing the images, which does not appear to be the case.
+
+Note that scifio is also somewhat slower, although I'm a bit hesitant to 
+bring this up, because it is still relatively young and I can see a few 
+"improve ... performance" tickets in the issue tracker.
+
+Below is the macro.
+Kind regards,
+Burkhard
+
+
+nOpenTimes = 3;
+file = "/path/to/stack";
+
+run("Collect Garbage");
+memBefore = IJ.currentMemory();
+
+msToOpen = getTime();
+for (i=0; i<nOpenTimes; i+=1) {
+	open(file);
+}
+msToOpen = getTime() - msToOpen;
+
+memFilesOpen = IJ.currentMemory();
+run("Collect Garbage");
+memFilesOpenGC = IJ.currentMemory();
+
+for (i=0; i<nOpenTimes; i+=1) {
+	close();
+}
+memFilesClosed = IJ.currentMemory();
+run("Collect Garbage");
+memFilesClosedGC = IJ.currentMemory();
+
+print(""+ msToOpen + " ms to open files");
+print(""+ memBefore + " mem before opening files");
+print(""+ memFilesOpen + " mem after opening files");
+print(""+ memFilesOpenGC + " mem after opening files & GC");
+print(""+ memFilesClosed + " mem after closing files");
+print(""+ memFilesClosedGC + " mem after closing files & GC");
+
+
+From hinerm at gmail.com  Mon Jul 14 07:22:55 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 14 Jul 2014 07:22:55 -0500
+Subject: [SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+In-Reply-To: <CAHfi=GJVwBtnkJgBSn3V-DFf-psxz2--jaJo_+1q3Bpca3w1hw@mail.gmail.com>
+References: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+	<CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+	<CAHfi=GKaJWgeKKXUiKnOPyd8ebimciumdxeoYN81g5s6XPgGzQ@mail.gmail.com>
+	<CADN69y=fHP39Tp8RpwYyZnHhEuZUWOcaF6RU-AGVruai9Xxk5g@mail.gmail.com>
+	<CAHfi=GLe5iZN_U-MZd6wRquXvjBNvoH5u9-LndyPZj5Cq0T3BQ@mail.gmail.com>
+	<CAHfi=GJVwBtnkJgBSn3V-DFf-psxz2--jaJo_+1q3Bpca3w1hw@mail.gmail.com>
+Message-ID: <CA+B=mGoZ3vBo4rms417Qz+t=sgJCwwBafc+xSPnPzVVYf3E41g@mail.gmail.com>
+
+Hi Kedar,
+
+> Any suggestions on how I might begin to debug the problem?
+
+In your original e-mail you said you'd written this with SCIFIO.. I assume
+this was with the SCIFIO-ImageIO C++ API. This is still bound to Bio-Formats
+4.4.9
+<https://github.com/scifio/scifio-imageio/blob/master/src/CMakeLists.txt#L22>.
+If the conversion worked with the latest Bio-Formats command line tools, I
+would suggest trying the C++ API again with the 5.0.2 LOCI Tools downloaded
+here: http://downloads.openmicroscopy.org/bio-formats/5.0.2/
+
+Hope that fixes things.
+
+- Mark
+
+
+On Fri, Jul 11, 2014 at 3:23 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+
+> Hi Mark,
+>
+> I hope your release cycle for ImageJ2 went well. I got an executable from
+> people at zeiss to export the images from czi to tiff stacks so I have
+> reliable access to my data right now. I would like to help figure out the
+> problem that I had emailed you about. I ran just bio-formats from the
+> command line and the problem did not recur but I can not be sure that bug
+> is on the java side because it was pretty random earlier too. Any
+> suggestions on how I might begin to debug the problem?
+>
+> Thanks,
+>
+> -Kedar
+>
+>
+> On Thu, Jun 19, 2014 at 3:58 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+>
+>> Hi Curtis,
+>>
+>> I have wrapped the Bioformats tools and am using it for now. I'll let you
+>> know and e-mail the ome-users list if the problem recurs.
+>>
+>> Thanks,
+>>
+>> -Kedar
+>>
+>>
+>> On Thu, Jun 19, 2014 at 3:48 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+>>
+>>> Hi Kedar,
+>>>
+>>> > I have made montages of the same image in three instances where tiles
+>>> > were scrambled and once when it worked.
+>>>
+>>> When you have file-format-specific problems like this, it is very
+>>> important to understand at what layer the problem is occurring. Please test
+>>> with Bio-Formats 5.0.2 -- e.g., with the command line tools, or in an
+>>> up-to-date version of Fiji -- and verify whether you see the same faulty
+>>> behavior. Then test with an older version of Bio-Formats [1], too. If the
+>>> problem occurs with 5.0.2 on its own, that rules out the SCIFIO-ITK bridge
+>>> layer as the culprit, meaning the bug should be reported to the ome-users
+>>> list [2] so that the Bio-Formats developers can address it.
+>>>
+>>> Or if the problem truly is with the ITK bridge, then Mark is the best
+>>> person to investigate, when he returns from vacation.
+>>>
+>>> Regards,
+>>> Curtis
+>>>
+>>> [1] http://downloads.openmicroscopy.org/bio-formats/
+>>> [2] http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users/
+>>>
+>>>
+>>> On Thu, Jun 19, 2014 at 9:20 AM, Kedar Grama <gbkedar at gmail.com> wrote:
+>>>
+>>>> Hi Mark,
+>>>>
+>>>> I have filed an issue on the github site scifio-itk-bridge. We will
+>>>> work around the issue for now.
+>>>>
+>>>> Thanks,
+>>>>
+>>>> -Kedar
+>>>>
+>>>>
+>>>> On Thu, Jun 19, 2014 at 8:34 AM, Mark Hiner <hinerm at gmail.com> wrote:
+>>>>
+>>>>> Hi Kedar,
+>>>>>
+>>>>>  Just wanted to let you know that I'll be out of the country for two
+>>>>> weeks starting tomorrow, and all of my time right now is being spent on the ImageJ2
+>>>>> release
+>>>>> <http://developer.imagej.net/2014/06/04/imagej-200-release-candidate>.
+>>>>>
+>>>>>  Would you mind filing this as an issue on the scifio-itk-bridge
+>>>>> github site: https://github.com/scifio/scifio-itk-bridge ? That way
+>>>>> it won't get lost in my e-mail and I can investigate when I get back.
+>>>>>
+>>>>> Thanks!
+>>>>> - Mark
+>>>>>
+>>>>>
+>>>>> On Wed, Jun 18, 2014 at 2:39 PM, Kedar Grama <gbkedar at gmail.com>
+>>>>> wrote:
+>>>>>
+>>>>>> Hi Mark,
+>>>>>>
+>>>>>> I used SCIFIO to write czi as a 3d stack of either nrrd or tiffs. I
+>>>>>> get tiles that are scrambled and this happens at random. My code to convert
+>>>>>> the files is here:
+>>>>>>
+>>>>>> https://github.com/gbkedar/farsight/blob/IlluminationGraphCuts/IlluminationCorrection/readCziWriteCorrectedTiles.cpp
+>>>>>>
+>>>>>> I have made montages of the same image in three instances where tiles
+>>>>>> were scrambled and once when it worked. The czi file is similar to the one
+>>>>>> I sent you in June or July last year. Please let me know if you need the
+>>>>>> file that I'm using right now and I'll upload it.
+>>>>>>
+>>>>>> Thanks,
+>>>>>>
+>>>>>> -Kedar
+>>>>>>
+>>>>>
+>>>>>
+>>>>
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140714/432f082b/attachment.html>
+
+From hinerm at gmail.com  Mon Jul 14 08:34:45 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 14 Jul 2014 08:34:45 -0500
+Subject: [SCIFIO] SCIFIO does not seem to release memory of closed images
+In-Reply-To: <53C18477.6090302@web.de>
+References: <53C18477.6090302@web.de>
+Message-ID: <CA+B=mGqx47SkUzM_FHGkoyAy3vbpf8+NMMbURUOSJ65UfeCf3w@mail.gmail.com>
+
+Hi Burkhard,
+
+ > run("Collect Garbage");
+
+ This just calls System.gc().. twice, actually. There are many articles and
+StackOverflow posts about why System.gc() is unreliable
+<http://stackoverflow.com/questions/2414105/why-is-it-a-bad-practice-to-call-system-gc>.
+I personally have seen endlessly repeated System.gc() calls effectively do
+nothing, necessitating the creation of large objects to force memory to be
+released.
+
+ Also, the JVM should automatically attempt to run the garbage collector
+when memory is requested for allocation in excess of the JVM's memory
+limits. So the best way to test if SCIFIO has a memory leak would be:
+
+1) Open datasets that occupy slightly less than the max memory allocated to
+your Fiji
+2) Close these datasets
+3) Try opening more datasets (of a size such that, if the original datasets
+not released, the total memory used would exceed the max allocation)
+
+If you see OutOfMemory errors then there could quite possibly be a leak.
+
+Note also that we have unit tests in place designed to catch these leaks:
+https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java.
+An excellent way to demonstrate the memory error would be to come up with
+another test in this class that fails.
+
+Thanks,
+Mark
+
+
+On Sat, Jul 12, 2014 at 1:54 PM, Burkhard H?ckendorf <
+burkhard.hoeckendorf at web.de> wrote:
+
+> Dear List,
+>
+> First of all thanks for developing scifio and doing that open source. I
+> have started to use it with ImageJ, since Fiji now offers the option to use
+> it. Having said that, I may also have stumbled upon an issue. I'm unsure
+> when (or whether) scifio releases the corresponding memory after images are
+> closed. To look at this in a somewhat systematic way, I ran a macro (see
+> below) to repeatedly open and close a 3GB single file uncompressed TIFF
+> stack (2048x2048x367x16bits) and record some performance stats along the
+> way. I ran this using a new download of Fiji.
+>
+> Here are the results with scifio disabled:
+>      11450 ms to open files
+>   28578184 mem before opening files
+> 9282667288 mem after opening files
+> 9272732560 mem after opening files & GC
+> 9272780080 mem after closing files
+>   24220936 mem after closing files & GC
+>
+> And here with scifio enabled:
+>       43715 ms to open files
+>    26765224 mem before opening files
+> 10517954400 mem after opening files
+>  9327459480 mem after opening files & GC
+>  9327506440 mem after closing files
+>  9314822896 mem after closing files & GC
+>
+> I have also checked, whether memory is freed a couple of minutes after
+> closing the images, which does not appear to be the case.
+>
+> Note that scifio is also somewhat slower, although I'm a bit hesitant to
+> bring this up, because it is still relatively young and I can see a few
+> "improve ... performance" tickets in the issue tracker.
+>
+> Below is the macro.
+> Kind regards,
+> Burkhard
+>
+>
+> nOpenTimes = 3;
+> file = "/path/to/stack";
+>
+> run("Collect Garbage");
+> memBefore = IJ.currentMemory();
+>
+> msToOpen = getTime();
+> for (i=0; i<nOpenTimes; i+=1) {
+>         open(file);
+> }
+> msToOpen = getTime() - msToOpen;
+>
+> memFilesOpen = IJ.currentMemory();
+> run("Collect Garbage");
+> memFilesOpenGC = IJ.currentMemory();
+>
+> for (i=0; i<nOpenTimes; i+=1) {
+>         close();
+> }
+> memFilesClosed = IJ.currentMemory();
+> run("Collect Garbage");
+> memFilesClosedGC = IJ.currentMemory();
+>
+> print(""+ msToOpen + " ms to open files");
+> print(""+ memBefore + " mem before opening files");
+> print(""+ memFilesOpen + " mem after opening files");
+> print(""+ memFilesOpenGC + " mem after opening files & GC");
+> print(""+ memFilesClosed + " mem after closing files");
+> print(""+ memFilesClosedGC + " mem after closing files & GC");
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140714/0e7f8b63/attachment.html>
+
+From burkhard.hoeckendorf at web.de  Mon Jul 14 13:39:29 2014
+From: burkhard.hoeckendorf at web.de (=?ISO-8859-1?Q?Burkhard_H=F6ckendorf?=)
+Date: Mon, 14 Jul 2014 14:39:29 -0400
+Subject: [SCIFIO] SCIFIO does not seem to release memory of closed,
+	images
+In-Reply-To: <mailman.7.1405357201.24546.scifio@scif.io>
+References: <mailman.7.1405357201.24546.scifio@scif.io>
+Message-ID: <53C423E1.6030000@web.de>
+
+Hi Mark,
+
+Thanks for the speedy response. I've rewritten my macro to perhaps 
+illustrate my point more clearly. It now opens the file and immediately 
+closes it again, for 50 iterations.
+
+With scifio enabled I do not get an out of memory error, but it still 
+accumulates memory to the point that it can not open the entire image 
+anymore but instead opens virtual stacks. Without scifio this does not 
+occur.
+
+Also note that reading the full image into memory without scifio is 
+performance-wise much closer to opening a scifio virtual image than 
+reading the full image with scifio.
+
+Below is the macro and its output.
+Best,
+Burkhard
+
+nOpenTimes = 50;
+file = "/path/to/image";
+
+for (i=1; i<=nOpenTimes; i+=1) {
+	msToOpen = getTime();
+	open(file);
+	msToOpen = getTime() - msToOpen;
+
+	msg = ""+ i +": "+ IJ.currentMemory() +" mem, "+ msToOpen +" ms";
+	if (is("Virtual Stack"))
+		msg += " (virtual)";
+	print(msg);
+
+	close();
+}
+
+Using SCIFIO:
+  1:  3822648536 mem, 15984 ms
+  2:  7572956280 mem, 14986 ms
+  3:  9998931400 mem, 14821 ms
+  4: 13784264296 mem, 14895 ms
+  5: 16885256128 mem, 15019 ms
+  6: 19656427040 mem, 15036 ms
+  7: 24079096808 mem, 15212 ms
+  8: 27510832552 mem, 15179 ms
+  9: 32077394688 mem, 15427 ms
+10: 34409304040 mem, 15482 ms
+11: 36859610432 mem, 15227 ms
+12: 43061552320 mem, 15607 ms
+13: 42104714576 mem, 15359 ms
+14: 47910156296 mem, 15073 ms
+15: 48044651592 mem, 3053 ms (virtual)
+16: 48170004824 mem, 2502 ms (virtual)
+17: 48295208256 mem, 2522 ms (virtual)
+18: 48422832064 mem, 2495 ms (virtual)
+19: 48550863920 mem, 2504 ms (virtual)
+20: 48228290696 mem, 2615 ms (virtual)
+21: 48343976264 mem, 2482 ms (virtual)
+22: 48461224352 mem, 2495 ms (virtual)
+23: 48577275224 mem, 2482 ms (virtual)
+24: 48696021320 mem, 2493 ms (virtual)
+25: 48815302152 mem, 2513 ms (virtual)
+26: 48512671680 mem, 2682 ms (virtual)
+27: 48624380048 mem, 2493 ms (virtual)
+28: 48734321624 mem, 2487 ms (virtual)
+29: 48847280096 mem, 2504 ms (virtual)
+30: 48958189928 mem, 2491 ms (virtual)
+31: 49069385672 mem, 2499 ms (virtual)
+32: 48787137328 mem, 2614 ms (virtual)
+33: 48896061816 mem, 2500 ms (virtual)
+34: 49004784912 mem, 2488 ms (virtual)
+35: 49116572664 mem, 2516 ms (virtual)
+36: 49226035440 mem, 2497 ms (virtual)
+37: 49334418896 mem, 2500 ms (virtual)
+38: 49074728512 mem, 2660 ms (virtual)
+39: 49183254768 mem, 2506 ms (virtual)
+40: 49290891152 mem, 2491 ms (virtual)
+41: 49399382336 mem, 2499 ms (virtual)
+42: 49505843008 mem, 2487 ms (virtual)
+43: 49613438808 mem, 2487 ms (virtual)
+44: 49721198184 mem, 2481 ms (virtual)
+45: 49441266864 mem, 2709 ms (virtual)
+46: 49548934656 mem, 2485 ms (virtual)
+47: 49656785920 mem, 2501 ms (virtual)
+48: 49764127512 mem, 2480 ms (virtual)
+49: 49872069552 mem, 2495 ms (virtual)
+50: 49979814216 mem, 2482 ms (virtual)
+
+Not using SCIFIO:
+  1: 3107094592 mem, 3921 ms
+  2: 3109153032 mem, 3837 ms
+  3: 3109836568 mem, 3631 ms
+  4: 3109512264 mem, 3581 ms
+  5: 3109478728 mem, 3633 ms
+  6: 3123692656 mem, 4145 ms
+  7: 3112714624 mem, 3301 ms
+  8: 3128373632 mem, 3202 ms
+  9: 3117798216 mem, 3235 ms
+10: 3133595872 mem, 3190 ms
+11: 3123048664 mem, 3229 ms
+12: 5754899128 mem, 3404 ms
+13: 3128308704 mem, 3307 ms
+14: 3117759024 mem, 3219 ms
+15: 5910573440 mem, 3112 ms
+16: 5488969832 mem, 3222 ms
+17: 3112824736 mem, 3273 ms
+18: 3128647888 mem, 3147 ms
+19: 3118094280 mem, 3208 ms
+20: 5902184440 mem, 3281 ms
+21: 3123372736 mem, 3224 ms
+22: 3112825408 mem, 3259 ms
+23: 3128648960 mem, 3146 ms
+24: 3118100760 mem, 3230 ms
+25: 3133941888 mem, 3119 ms
+26: 5488982136 mem, 3225 ms
+27: 3112820248 mem, 3249 ms
+28: 3128655064 mem, 3154 ms
+29: 3118110296 mem, 3241 ms
+30: 3133956392 mem, 3176 ms
+31: 3123381976 mem, 3220 ms
+32: 3112831584 mem, 3264 ms
+33: 3128664576 mem, 3170 ms
+34: 3118103400 mem, 3209 ms
+35: 3133956744 mem, 3163 ms
+36: 3123387312 mem, 3233 ms
+37: 3112827304 mem, 3279 ms
+38: 3128664688 mem, 3158 ms
+39: 3118115152 mem, 3256 ms
+40: 3133956432 mem, 3128 ms
+41: 5488994224 mem, 3214 ms
+42: 5746873888 mem, 3266 ms
+43: 3128666592 mem, 3174 ms
+44: 3118109984 mem, 3215 ms
+45: 3133949360 mem, 3131 ms
+46: 3123388320 mem, 3207 ms
+47: 3112843792 mem, 3269 ms
+48: 3128683960 mem, 3144 ms
+49: 5617941896 mem, 3201 ms
+50: 5902216016 mem, 3131 ms
+
+
+> Date: Mon, 14 Jul 2014 08:34:45 -0500
+> From: Mark Hiner <hinerm at gmail.com>
+> To: Burkhard H?ckendorf <burkhard.hoeckendorf at web.de>
+> Cc: "scifio at scif.io" <scifio at scif.io>
+> Subject: Re: [SCIFIO] SCIFIO does not seem to release memory of closed
+> 	images
+> Message-ID:
+> 	<CA+B=mGqx47SkUzM_FHGkoyAy3vbpf8+NMMbURUOSJ65UfeCf3w at mail.gmail.com>
+> Content-Type: text/plain; charset="utf-8"
+>
+> Hi Burkhard,
+>
+>   > run("Collect Garbage");
+>
+>   This just calls System.gc().. twice, actually. There are many articles and
+> StackOverflow posts about why System.gc() is unreliable
+> <http://stackoverflow.com/questions/2414105/why-is-it-a-bad-practice-to-call-system-gc>.
+> I personally have seen endlessly repeated System.gc() calls effectively do
+> nothing, necessitating the creation of large objects to force memory to be
+> released.
+>
+>   Also, the JVM should automatically attempt to run the garbage collector
+> when memory is requested for allocation in excess of the JVM's memory
+> limits. So the best way to test if SCIFIO has a memory leak would be:
+>
+> 1) Open datasets that occupy slightly less than the max memory allocated to
+> your Fiji
+> 2) Close these datasets
+> 3) Try opening more datasets (of a size such that, if the original datasets
+> not released, the total memory used would exceed the max allocation)
+>
+> If you see OutOfMemory errors then there could quite possibly be a leak.
+>
+> Note also that we have unit tests in place designed to catch these leaks:
+> https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java.
+> An excellent way to demonstrate the memory error would be to come up with
+> another test in this class that fails.
+>
+> Thanks,
+> Mark
+>
+>
+> On Sat, Jul 12, 2014 at 1:54 PM, Burkhard H?ckendorf <
+> burkhard.hoeckendorf at web.de> wrote:
+>
+>> Dear List,
+>>
+>> First of all thanks for developing scifio and doing that open source. I
+>> have started to use it with ImageJ, since Fiji now offers the option to use
+>> it. Having said that, I may also have stumbled upon an issue. I'm unsure
+>> when (or whether) scifio releases the corresponding memory after images are
+>> closed. To look at this in a somewhat systematic way, I ran a macro (see
+>> below) to repeatedly open and close a 3GB single file uncompressed TIFF
+>> stack (2048x2048x367x16bits) and record some performance stats along the
+>> way. I ran this using a new download of Fiji.
+>>
+>> Here are the results with scifio disabled:
+>>       11450 ms to open files
+>>    28578184 mem before opening files
+>> 9282667288 mem after opening files
+>> 9272732560 mem after opening files & GC
+>> 9272780080 mem after closing files
+>>    24220936 mem after closing files & GC
+>>
+>> And here with scifio enabled:
+>>        43715 ms to open files
+>>     26765224 mem before opening files
+>> 10517954400 mem after opening files
+>>   9327459480 mem after opening files & GC
+>>   9327506440 mem after closing files
+>>   9314822896 mem after closing files & GC
+>>
+>> I have also checked, whether memory is freed a couple of minutes after
+>> closing the images, which does not appear to be the case.
+>>
+>> Note that scifio is also somewhat slower, although I'm a bit hesitant to
+>> bring this up, because it is still relatively young and I can see a few
+>> "improve ... performance" tickets in the issue tracker.
+>>
+>> Below is the macro.
+>> Kind regards,
+>> Burkhard
+>>
+>>
+>> nOpenTimes = 3;
+>> file = "/path/to/stack";
+>>
+>> run("Collect Garbage");
+>> memBefore = IJ.currentMemory();
+>>
+>> msToOpen = getTime();
+>> for (i=0; i<nOpenTimes; i+=1) {
+>>          open(file);
+>> }
+>> msToOpen = getTime() - msToOpen;
+>>
+>> memFilesOpen = IJ.currentMemory();
+>> run("Collect Garbage");
+>> memFilesOpenGC = IJ.currentMemory();
+>>
+>> for (i=0; i<nOpenTimes; i+=1) {
+>>          close();
+>> }
+>> memFilesClosed = IJ.currentMemory();
+>> run("Collect Garbage");
+>> memFilesClosedGC = IJ.currentMemory();
+>>
+>> print(""+ msToOpen + " ms to open files");
+>> print(""+ memBefore + " mem before opening files");
+>> print(""+ memFilesOpen + " mem after opening files");
+>> print(""+ memFilesOpenGC + " mem after opening files & GC");
+>> print(""+ memFilesClosed + " mem after closing files");
+>> print(""+ memFilesClosedGC + " mem after closing files & GC");
+>>
+>> _______________________________________________
+>> SCIFIO mailing list
+>> SCIFIO at scif.io
+>> http://scif.io/mailman/listinfo/scifio
+>>
+> -------------- next part --------------
+> An HTML attachment was scrubbed...
+> URL: <http://scif.io/pipermail/scifio/attachments/20140714/0e7f8b63/attachment-0001.html>
+>
+> ------------------------------
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+> End of SCIFIO Digest, Vol 11, Issue 5
+> *************************************
+>
+
+
+From hinerm at gmail.com  Tue Jul 15 11:18:05 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Tue, 15 Jul 2014 11:18:05 -0500
+Subject: [SCIFIO] SCIFIO does not seem to release memory of closed,
+	images
+In-Reply-To: <53C423E1.6030000@web.de>
+References: <mailman.7.1405357201.24546.scifio@scif.io>
+	<53C423E1.6030000@web.de>
+Message-ID: <CA+B=mGoxT5rtJHZ=RpJ_e66htKARMZEQT_ky8pmz5N8KpV8E2w@mail.gmail.com>
+
+Hello again Burkhard,
+
+Thank you for your persistence in this issue. After looking at it again
+today, I realized that there must be a memory leak in how we try to map and
+synchronize ImageJ 1.x ImagePluses with ImageJ2 data structures.
+
+Indeed, that was exactly what I found... however, the solution is
+non-trivial.
+
+I have filed a new issue for this here:
+https://github.com/imagej/imagej-legacy/issues/67. It is something I would
+like to resolve quickly, but because it is an involved issue that requires
+additional investigation and discussion, it's at a lower priority than some
+necessary grant work this week.
+
+Thanks again for the report - it is, at least, good to know where the
+problem is now.
+- Mark
+
+
+On Mon, Jul 14, 2014 at 1:39 PM, Burkhard H?ckendorf <
+burkhard.hoeckendorf at web.de> wrote:
+
+> Hi Mark,
+>
+> Thanks for the speedy response. I've rewritten my macro to perhaps
+> illustrate my point more clearly. It now opens the file and immediately
+> closes it again, for 50 iterations.
+>
+> With scifio enabled I do not get an out of memory error, but it still
+> accumulates memory to the point that it can not open the entire image
+> anymore but instead opens virtual stacks. Without scifio this does not
+> occur.
+>
+> Also note that reading the full image into memory without scifio is
+> performance-wise much closer to opening a scifio virtual image than reading
+> the full image with scifio.
+>
+> Below is the macro and its output.
+> Best,
+> Burkhard
+>
+> nOpenTimes = 50;
+> file = "/path/to/image";
+>
+> for (i=1; i<=nOpenTimes; i+=1) {
+>         msToOpen = getTime();
+>         open(file);
+>         msToOpen = getTime() - msToOpen;
+>
+>         msg = ""+ i +": "+ IJ.currentMemory() +" mem, "+ msToOpen +" ms";
+>         if (is("Virtual Stack"))
+>                 msg += " (virtual)";
+>         print(msg);
+>
+>         close();
+> }
+>
+> Using SCIFIO:
+>  1:  3822648536 mem, 15984 ms
+>  2:  7572956280 mem, 14986 ms
+>  3:  9998931400 mem, 14821 ms
+>  4: 13784264296 mem, 14895 ms
+>  5: 16885256128 mem, 15019 ms
+>  6: 19656427040 mem, 15036 ms
+>  7: 24079096808 mem, 15212 ms
+>  8: 27510832552 mem, 15179 ms
+>  9: 32077394688 mem, 15427 ms
+> 10: 34409304040 mem, 15482 ms
+> 11: 36859610432 mem, 15227 ms
+> 12: 43061552320 mem, 15607 ms
+> 13: 42104714576 mem, 15359 ms
+> 14: 47910156296 mem, 15073 ms
+> 15: 48044651592 mem, 3053 ms (virtual)
+> 16: 48170004824 mem, 2502 ms (virtual)
+> 17: 48295208256 mem, 2522 ms (virtual)
+> 18: 48422832064 mem, 2495 ms (virtual)
+> 19: 48550863920 mem, 2504 ms (virtual)
+> 20: 48228290696 mem, 2615 ms (virtual)
+> 21: 48343976264 mem, 2482 ms (virtual)
+> 22: 48461224352 mem, 2495 ms (virtual)
+> 23: 48577275224 mem, 2482 ms (virtual)
+> 24: 48696021320 mem, 2493 ms (virtual)
+> 25: 48815302152 mem, 2513 ms (virtual)
+> 26: 48512671680 mem, 2682 ms (virtual)
+> 27: 48624380048 mem, 2493 ms (virtual)
+> 28: 48734321624 mem, 2487 ms (virtual)
+> 29: 48847280096 mem, 2504 ms (virtual)
+> 30: 48958189928 mem, 2491 ms (virtual)
+> 31: 49069385672 mem, 2499 ms (virtual)
+> 32: 48787137328 mem, 2614 ms (virtual)
+> 33: 48896061816 mem, 2500 ms (virtual)
+> 34: 49004784912 mem, 2488 ms (virtual)
+> 35: 49116572664 mem, 2516 ms (virtual)
+> 36: 49226035440 mem, 2497 ms (virtual)
+> 37: 49334418896 mem, 2500 ms (virtual)
+> 38: 49074728512 mem, 2660 ms (virtual)
+> 39: 49183254768 mem, 2506 ms (virtual)
+> 40: 49290891152 mem, 2491 ms (virtual)
+> 41: 49399382336 mem, 2499 ms (virtual)
+> 42: 49505843008 mem, 2487 ms (virtual)
+> 43: 49613438808 mem, 2487 ms (virtual)
+> 44: 49721198184 mem, 2481 ms (virtual)
+> 45: 49441266864 mem, 2709 ms (virtual)
+> 46: 49548934656 mem, 2485 ms (virtual)
+> 47: 49656785920 mem, 2501 ms (virtual)
+> 48: 49764127512 mem, 2480 ms (virtual)
+> 49: 49872069552 mem, 2495 ms (virtual)
+> 50: 49979814216 mem, 2482 ms (virtual)
+>
+> Not using SCIFIO:
+>  1: 3107094592 mem, 3921 ms
+>  2: 3109153032 mem, 3837 ms
+>  3: 3109836568 mem, 3631 ms
+>  4: 3109512264 mem, 3581 ms
+>  5: 3109478728 mem, 3633 ms
+>  6: 3123692656 mem, 4145 ms
+>  7: 3112714624 mem, 3301 ms
+>  8: 3128373632 mem, 3202 ms
+>  9: 3117798216 mem, 3235 ms
+> 10: 3133595872 mem, 3190 ms
+> 11: 3123048664 mem, 3229 ms
+> 12: 5754899128 mem, 3404 ms
+> 13: 3128308704 mem, 3307 ms
+> 14: 3117759024 mem, 3219 ms
+> 15: 5910573440 mem, 3112 ms
+> 16: 5488969832 mem, 3222 ms
+> 17: 3112824736 mem, 3273 ms
+> 18: 3128647888 mem, 3147 ms
+> 19: 3118094280 mem, 3208 ms
+> 20: 5902184440 mem, 3281 ms
+> 21: 3123372736 mem, 3224 ms
+> 22: 3112825408 mem, 3259 ms
+> 23: 3128648960 mem, 3146 ms
+> 24: 3118100760 mem, 3230 ms
+> 25: 3133941888 mem, 3119 ms
+> 26: 5488982136 mem, 3225 ms
+> 27: 3112820248 mem, 3249 ms
+> 28: 3128655064 mem, 3154 ms
+> 29: 3118110296 mem, 3241 ms
+> 30: 3133956392 mem, 3176 ms
+> 31: 3123381976 mem, 3220 ms
+> 32: 3112831584 mem, 3264 ms
+> 33: 3128664576 mem, 3170 ms
+> 34: 3118103400 mem, 3209 ms
+> 35: 3133956744 mem, 3163 ms
+> 36: 3123387312 mem, 3233 ms
+> 37: 3112827304 mem, 3279 ms
+> 38: 3128664688 mem, 3158 ms
+> 39: 3118115152 mem, 3256 ms
+> 40: 3133956432 mem, 3128 ms
+> 41: 5488994224 mem, 3214 ms
+> 42: 5746873888 mem, 3266 ms
+> 43: 3128666592 mem, 3174 ms
+> 44: 3118109984 mem, 3215 ms
+> 45: 3133949360 mem, 3131 ms
+> 46: 3123388320 mem, 3207 ms
+> 47: 3112843792 mem, 3269 ms
+> 48: 3128683960 mem, 3144 ms
+> 49: 5617941896 mem, 3201 ms
+> 50: 5902216016 mem, 3131 ms
+>
+>
+>  Date: Mon, 14 Jul 2014 08:34:45 -0500
+>> From: Mark Hiner <hinerm at gmail.com>
+>> To: Burkhard H?ckendorf <burkhard.hoeckendorf at web.de>
+>> Cc: "scifio at scif.io" <scifio at scif.io>
+>> Subject: Re: [SCIFIO] SCIFIO does not seem to release memory of closed
+>>         images
+>> Message-ID:
+>>         <CA+B=mGqx47SkUzM_FHGkoyAy3vbpf8+NMMbURUOSJ65UfeCf3w at mail.
+>> gmail.com>
+>> Content-Type: text/plain; charset="utf-8"
+>>
+>> Hi Burkhard,
+>>
+>>   > run("Collect Garbage");
+>>
+>>   This just calls System.gc().. twice, actually. There are many articles
+>> and
+>> StackOverflow posts about why System.gc() is unreliable
+>> <http://stackoverflow.com/questions/2414105/why-is-it-a-
+>> bad-practice-to-call-system-gc>.
+>> I personally have seen endlessly repeated System.gc() calls effectively do
+>> nothing, necessitating the creation of large objects to force memory to be
+>> released.
+>>
+>>   Also, the JVM should automatically attempt to run the garbage collector
+>> when memory is requested for allocation in excess of the JVM's memory
+>> limits. So the best way to test if SCIFIO has a memory leak would be:
+>>
+>> 1) Open datasets that occupy slightly less than the max memory allocated
+>> to
+>> your Fiji
+>> 2) Close these datasets
+>> 3) Try opening more datasets (of a size such that, if the original
+>> datasets
+>> not released, the total memory used would exceed the max allocation)
+>>
+>> If you see OutOfMemory errors then there could quite possibly be a leak.
+>>
+>> Note also that we have unit tests in place designed to catch these leaks:
+>> https://github.com/scifio/scifio/blob/master/src/test/
+>> java/io/scif/img/cell/cache/utests/CacheServiceTest.java.
+>> An excellent way to demonstrate the memory error would be to come up with
+>> another test in this class that fails.
+>>
+>> Thanks,
+>> Mark
+>>
+>>
+>> On Sat, Jul 12, 2014 at 1:54 PM, Burkhard H?ckendorf <
+>> burkhard.hoeckendorf at web.de> wrote:
+>>
+>>  Dear List,
+>>>
+>>> First of all thanks for developing scifio and doing that open source. I
+>>> have started to use it with ImageJ, since Fiji now offers the option to
+>>> use
+>>> it. Having said that, I may also have stumbled upon an issue. I'm unsure
+>>> when (or whether) scifio releases the corresponding memory after images
+>>> are
+>>> closed. To look at this in a somewhat systematic way, I ran a macro (see
+>>> below) to repeatedly open and close a 3GB single file uncompressed TIFF
+>>> stack (2048x2048x367x16bits) and record some performance stats along the
+>>> way. I ran this using a new download of Fiji.
+>>>
+>>> Here are the results with scifio disabled:
+>>>       11450 ms to open files
+>>>    28578184 mem before opening files
+>>> 9282667288 mem after opening files
+>>> 9272732560 mem after opening files & GC
+>>> 9272780080 mem after closing files
+>>>    24220936 mem after closing files & GC
+>>>
+>>> And here with scifio enabled:
+>>>        43715 ms to open files
+>>>     26765224 mem before opening files
+>>> 10517954400 mem after opening files
+>>>   9327459480 mem after opening files & GC
+>>>   9327506440 mem after closing files
+>>>   9314822896 mem after closing files & GC
+>>>
+>>> I have also checked, whether memory is freed a couple of minutes after
+>>> closing the images, which does not appear to be the case.
+>>>
+>>> Note that scifio is also somewhat slower, although I'm a bit hesitant to
+>>> bring this up, because it is still relatively young and I can see a few
+>>> "improve ... performance" tickets in the issue tracker.
+>>>
+>>> Below is the macro.
+>>> Kind regards,
+>>> Burkhard
+>>>
+>>>
+>>> nOpenTimes = 3;
+>>> file = "/path/to/stack";
+>>>
+>>> run("Collect Garbage");
+>>> memBefore = IJ.currentMemory();
+>>>
+>>> msToOpen = getTime();
+>>> for (i=0; i<nOpenTimes; i+=1) {
+>>>          open(file);
+>>> }
+>>> msToOpen = getTime() - msToOpen;
+>>>
+>>> memFilesOpen = IJ.currentMemory();
+>>> run("Collect Garbage");
+>>> memFilesOpenGC = IJ.currentMemory();
+>>>
+>>> for (i=0; i<nOpenTimes; i+=1) {
+>>>          close();
+>>> }
+>>> memFilesClosed = IJ.currentMemory();
+>>> run("Collect Garbage");
+>>> memFilesClosedGC = IJ.currentMemory();
+>>>
+>>> print(""+ msToOpen + " ms to open files");
+>>> print(""+ memBefore + " mem before opening files");
+>>> print(""+ memFilesOpen + " mem after opening files");
+>>> print(""+ memFilesOpenGC + " mem after opening files & GC");
+>>> print(""+ memFilesClosed + " mem after closing files");
+>>> print(""+ memFilesClosedGC + " mem after closing files & GC");
+>>>
+>>> _______________________________________________
+>>> SCIFIO mailing list
+>>> SCIFIO at scif.io
+>>> http://scif.io/mailman/listinfo/scifio
+>>>
+>>>  -------------- next part --------------
+>> An HTML attachment was scrubbed...
+>> URL: <http://scif.io/pipermail/scifio/attachments/20140714/
+>> 0e7f8b63/attachment-0001.html>
+>>
+>> ------------------------------
+>>
+>> _______________________________________________
+>> SCIFIO mailing list
+>> SCIFIO at scif.io
+>> http://scif.io/mailman/listinfo/scifio
+>>
+>>
+>> End of SCIFIO Digest, Vol 11, Issue 5
+>> *************************************
+>>
+>>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140715/d4dc0809/attachment-0001.html>
+
+From ctrueden at wisc.edu  Wed Jul 16 15:32:20 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Wed, 16 Jul 2014 15:32:20 -0500
+Subject: [SCIFIO] Bio-Formats Imaris writer
+In-Reply-To: <CAHQgS39WcwSZQz6TsPEuC6sK7E0=wUHa8qRgonzpL42HSwn6Cg@mail.gmail.com>
+References: <CAHQgS3_4ypPJanhXv1dr=j8go_rsSRzkh-3QG0jH3ssx=BLgZg@mail.gmail.com>
+	<CADN69ynbrDr5WcV5jepwFscRMKoyFEe539Seo64b_xvCEamFng@mail.gmail.com>
+	<CAHQgS39WcwSZQz6TsPEuC6sK7E0=wUHa8qRgonzpL42HSwn6Cg@mail.gmail.com>
+Message-ID: <CADN69ymR-SWYoEn6fJxWWjsdFZKN6rrShkPoPa5qSQdwQ=xYvg@mail.gmail.com>
+
+Hi Henry,
+
+> I've created a class in the io.scif.formats package for my writer.
+> Since I only have the writer components, but not the reader, how
+> should I go about implementing all of the component classes of Format
+> (Metadata, Parser, Checker, Reader, Writer, Translator). The first 4
+> are listed as mandatory in the tutorial, but it seems like I shouldn't
+> need all of them for writing functionality alone.
+
+Agreed, it should not be necessary to create Reader or Parser components.
+However, writer-only components are still a little rough around the edges.
+The relevant issue is:
+
+https://github.com/scifio/scifio/issues/211
+
+Feel free to comment on that so that GitHub sends you updates if you care
+about progress on it.
+
+But in the meantime, it should still be possible to create a writer-only
+component. For an example, see the JavaFormat:
+
+https://github.com/scifio/scifio/blob/scifio-0.15.4/scifio/src/main/java/io/scif/formats/JavaFormat.java
+
+Regards,
+Curtis
+
+
+On Wed, Jun 25, 2014 at 1:21 PM, Henry Pinkard <henry.pinkard at gmail.com>
+wrote:
+
+> Hi Curtis,
+>
+> This all sounds great. I've cloned the SCIFIO core as well as the
+> tutorials, which have been quite helpful in getting things set up.
+>
+> I've created a class in the io.scif.formats package for my writer. Since I
+> only have the writer components, but not the reader, how should I go about
+> implementing all of the component classes of Format (Metadata, Parser,
+> Checker, Reader, Writer, Translator). The first 4 are listed as mandatory
+> in the tutorial, but it seems like I shouldn't need all of them for writing
+> functionality alone.
+>
+> Best,
+> Henry
+>
+>
+> On Sun, Jun 1, 2014 at 7:27 AM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+>
+>> Hi Henry,
+>>
+>> > Over the past couple years, I've been developing and testing a java
+>> > library that is capable of writing Imaris .ims files. This library has
+>> > allowed me to build an ImageJ plugin that automatically stitches,
+>> > processes, and converts OME-TIFFs from Micro-Manager into Imaris
+>> > files, which in turn allows a significantly greater throughput of
+>> > imaging data with much less effort from users.
+>>
+>> Sounds great!
+>>
+>> > This library has been instrumental to the workflow of users in the
+>> > imaging center in which I work, and I want to find a way to share its
+>> > utility with researchers everywhere. Incorporating it into the
+>> > Bio-Formats exporter would both increase its visibility and leverage
+>> > the multitude of formats on Bio-Formats' front end to make it usable
+>> > with all types of microscopy data.
+>>
+>> Rather than implementing a Bio-Formats writer, I encourage you to check
+>> out SCIFIO [1, 2, 3]. Though still in beta, SCIFIO is the core I/O
+>> mechanism of ImageJ2, which is finally due for release later this week.
+>> SCIFIO uses the SciJava plugin framework, meaning your writer would be
+>> automatically discovered and used as appropriate with no additional work
+>> from you. And we have recently integrated SCIFIO directly into ImageJ at
+>> the core level, so things like File > Open now use it, including whatever
+>> format plugins are available. (SCIFIO also has a Bio-Formats format plugin,
+>> so that all of the BF formats work in ImageJ that way, too!)
+>>
+>> You could then serve your Imaris writer from its own ImageJ update site
+>> [4, 5], to make it available to all ImageJ users.
+>>
+>> > In addition, I've convinced Bitplane to make their format open source,
+>> > and I believe this may allow .ims files to grow beyond a proprietary
+>> > file format into a generalized multi-resolution format useful for a
+>> > variety of applications that deal with the visualization of extremely
+>> > large stitched images.
+>>
+>> Glad to hear that Bitplane is willing to do this. In that case, if you do
+>> complete a SCIFIO Imaris writer and want to donate the code upstream, you
+>> could file a pull request against the SCIFIO LifeSci project [6] to
+>> contribute it there, since that project houses readers & writers for _open_
+>> life sciences formats. So if Bitplane publishes an open specification, we
+>> would be willing to add it to the project.
+>>
+>> If you have any questions about SCIFIO, please feel free to use the
+>> SCIFIO mailing list [7]. Or if you go the Bio-Formats route, you can use
+>> ome-devel [8].
+>>
+>> Regards,
+>> Curtis
+>>
+>> [1] http://loci.wisc.edu/software/scifio
+>> [2] https://github.com/scifio/scifio
+>> [3] https://github.com/scifio/scifio-tutorials
+>> [4] http://wiki.imagej.net/Update_Sites
+>> [5] http://wiki.imagej.net/List_of_update_sites
+>>  [6] https://github.com/scifio/scifio-lifesci
+>> [7] http://scif.io/mailman/listinfo/scifio
+>> [8] http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/
+>>
+>>
+>> On Thu, May 29, 2014 at 6:55 PM, Henry Pinkard <henry.pinkard at gmail.com>
+>> wrote:
+>>
+>>> Hi Melissa and Curtis,
+>>>
+>>> Over the past couple years, I've been developing and testing a java
+>>> library that is capable of writing Imaris .ims files. This library has
+>>> allowed me to build an ImageJ plugin that automatically stitches,
+>>> processes, and converts OME-TIFFs from Micro-Manager into Imaris files,
+>>> which in turn allows a significantly greater throughput of imaging data
+>>> with much less effort from users.
+>>>
+>>> This library has been instrumental to the workflow of users in the
+>>> imaging center in which I work, and I want to find a way to share its
+>>> utility with researchers everywhere. Incorporating it into the Bio-Formats
+>>> exporter would both increase its visibility and leverage the multitude of
+>>> formats on Bio-Formats' front end to make it usable with all types of
+>>> microscopy data. In addition, I've convinced Bitplane to make their format
+>>> open source, and I believe this may allow .ims files to grow beyond a
+>>> proprietary file format into a generalized multi-resolution format useful
+>>> for a variety of applications that deal with the visualization of extremely
+>>> large stitched images. I'm happy to rework the library in whatever ways
+>>> make it easiest to incorporate on your end. Let me know your thoughts on
+>>> how to best proceed.
+>>>
+>>> Best,
+>>> Henry
+>>>
+>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140716/6cb66ce5/attachment.html>
+
+From martin.hoehne at uk-koeln.de  Thu Jul 17 11:39:18 2014
+From: martin.hoehne at uk-koeln.de (=?iso-8859-1?Q?Martin_H=F6hne?=)
+Date: Thu, 17 Jul 2014 16:39:18 +0000
+Subject: [SCIFIO] bug report: missing slice labels with Fiji using SCIFIO
+Message-ID: <E450B219918B8C47A2C631E943340A708B391F01@UKK086.ADS.UK-KOELN.DE>
+
+Dear All,
+when using SCIFO for saving Tiff-stacks with Fiji (ImageJ 2.0.0-rc-9/1.49d) the slice labels are lost.
+The following macro reproduces the error. 
+
+path=getDirectory("temp");
+run("Blobs (25K)");
+run("Duplicate...", "title=blobs-1.gif");
+run("Duplicate...", "title=blobs-2.gif");
+run("Images to Stack", "name=Stack title=[] use");
+saveAs("Tiff", path+File.separator+"Stack.tif");
+rename("Before_save");
+open(path+File.separator+"Stack.tif");
+File.delete(path+File.separator+"Stack.tif");
+
+
+Thanks for all you effort,
+
+Martin 
+
+
+
+
+From Johannes.Schindelin at gmx.de  Thu Jul 17 12:09:43 2014
+From: Johannes.Schindelin at gmx.de (Johannes Schindelin)
+Date: Thu, 17 Jul 2014 19:09:43 +0200 (CEST)
+Subject: [SCIFIO] bug report: missing slice labels with Fiji using SCIFIO
+In-Reply-To: <E450B219918B8C47A2C631E943340A708B391F01@UKK086.ADS.UK-KOELN.DE>
+References: <E450B219918B8C47A2C631E943340A708B391F01@UKK086.ADS.UK-KOELN.DE>
+Message-ID: <alpine.DEB.1.00.1407171909231.3456@s15462909.onlinehome-server.info>
+
+Hi,
+
+On Thu, 17 Jul 2014, Martin H?hne wrote:
+
+> when using SCIFO for saving Tiff-stacks with Fiji (ImageJ
+> 2.0.0-rc-9/1.49d) the slice labels are lost.
+
+See https://github.com/scifio/scifio/pull/209
+
+Ciao,
+Johannes
+
+From burkhard.hoeckendorf at web.de  Wed Jul 23 13:41:45 2014
+From: burkhard.hoeckendorf at web.de (=?UTF-8?B?QnVya2hhcmQgSMO2Y2tlbmRvcmY=?=)
+Date: Wed, 23 Jul 2014 14:41:45 -0400
+Subject: [SCIFIO] SCIFIO does not seem to release memory of closed images
+In-Reply-To: <CA+B=mGoxT5rtJHZ=RpJ_e66htKARMZEQT_ky8pmz5N8KpV8E2w@mail.gmail.com>
+References: <mailman.7.1405357201.24546.scifio@scif.io>
+	<53C423E1.6030000@web.de>
+	<CA+B=mGoxT5rtJHZ=RpJ_e66htKARMZEQT_ky8pmz5N8KpV8E2w@mail.gmail.com>
+Message-ID: <53D001E9.8070704@web.de>
+
+Dear Mark,
+
+Thanks for looking into this. The bug report seems involved indeed, 
+which also means that I can be of little help. I hope you'll find a good 
+(and relatively pain-free) solution and that the grant work is going well.
+
+Best,
+Burkhard
+
+
+On 7/15/2014 12:18 PM, Mark Hiner wrote:
+> Hello again Burkhard,
+>
+> Thank you for your persistence in this issue. After looking at it again
+> today, I realized that there must be a memory leak in how we try to map
+> and synchronize ImageJ 1.x ImagePluses with ImageJ2 data structures.
+>
+> Indeed, that was exactly what I found... however, the solution is
+> non-trivial.
+>
+> I have filed a new issue for this here:
+> https://github.com/imagej/imagej-legacy/issues/67. It is something I
+> would like to resolve quickly, but because it is an involved issue that
+> requires additional investigation and discussion, it's at a lower
+> priority than some necessary grant work this week.
+>
+> Thanks again for the report - it is, at least, good to know where the
+> problem is now.
+> - Mark
+>
+>
+> On Mon, Jul 14, 2014 at 1:39 PM, Burkhard H?ckendorf
+> <burkhard.hoeckendorf at web.de <mailto:burkhard.hoeckendorf at web.de>> wrote:
+>
+>     Hi Mark,
+>
+>     Thanks for the speedy response. I've rewritten my macro to perhaps
+>     illustrate my point more clearly. It now opens the file and
+>     immediately closes it again, for 50 iterations.
+>
+>     With scifio enabled I do not get an out of memory error, but it
+>     still accumulates memory to the point that it can not open the
+>     entire image anymore but instead opens virtual stacks. Without
+>     scifio this does not occur.
+>
+>     Also note that reading the full image into memory without scifio is
+>     performance-wise much closer to opening a scifio virtual image than
+>     reading the full image with scifio.
+>
+>     Below is the macro and its output.
+>     Best,
+>     Burkhard
+>
+>     nOpenTimes = 50;
+>     file = "/path/to/image";
+>
+>     for (i=1; i<=nOpenTimes; i+=1) {
+>              msToOpen = getTime();
+>              open(file);
+>              msToOpen = getTime() - msToOpen;
+>
+>              msg = ""+ i +": "+ IJ.currentMemory() +" mem, "+ msToOpen
+>     +" ms";
+>              if (is("Virtual Stack"))
+>                      msg += " (virtual)";
+>              print(msg);
+>
+>              close();
+>     }
+>
+>     Using SCIFIO:
+>       1:  3822648536 mem, 15984 ms
+>       2: 7572956280 <tel:7572956280> mem, 14986 ms
+>       3:  9998931400 mem, 14821 ms
+>       4: 13784264296 mem, 14895 ms
+>       5: 16885256128 mem, 15019 ms
+>       6: 19656427040 mem, 15036 ms
+>       7: 24079096808 mem, 15212 ms
+>       8: 27510832552 mem, 15179 ms
+>       9: 32077394688 mem, 15427 ms
+>     10: 34409304040 mem, 15482 ms
+>     11: 36859610432 mem, 15227 ms
+>     12: 43061552320 mem, 15607 ms
+>     13: 42104714576 mem, 15359 ms
+>     14: 47910156296 mem, 15073 ms
+>     15: 48044651592 mem, 3053 ms (virtual)
+>     16: 48170004824 mem, 2502 ms (virtual)
+>     17: 48295208256 mem, 2522 ms (virtual)
+>     18: 48422832064 mem, 2495 ms (virtual)
+>     19: 48550863920 mem, 2504 ms (virtual)
+>     20: 48228290696 mem, 2615 ms (virtual)
+>     21: 48343976264 mem, 2482 ms (virtual)
+>     22: 48461224352 mem, 2495 ms (virtual)
+>     23: 48577275224 mem, 2482 ms (virtual)
+>     24: 48696021320 mem, 2493 ms (virtual)
+>     25: 48815302152 mem, 2513 ms (virtual)
+>     26: 48512671680 mem, 2682 ms (virtual)
+>     27: 48624380048 mem, 2493 ms (virtual)
+>     28: 48734321624 mem, 2487 ms (virtual)
+>     29: 48847280096 mem, 2504 ms (virtual)
+>     30: 48958189928 mem, 2491 ms (virtual)
+>     31: 49069385672 mem, 2499 ms (virtual)
+>     32: 48787137328 mem, 2614 ms (virtual)
+>     33: 48896061816 mem, 2500 ms (virtual)
+>     34: 49004784912 mem, 2488 ms (virtual)
+>     35: 49116572664 mem, 2516 ms (virtual)
+>     36: 49226035440 mem, 2497 ms (virtual)
+>     37: 49334418896 mem, 2500 ms (virtual)
+>     38: 49074728512 mem, 2660 ms (virtual)
+>     39: 49183254768 mem, 2506 ms (virtual)
+>     40: 49290891152 mem, 2491 ms (virtual)
+>     41: 49399382336 mem, 2499 ms (virtual)
+>     42: 49505843008 mem, 2487 ms (virtual)
+>     43: 49613438808 mem, 2487 ms (virtual)
+>     44: 49721198184 mem, 2481 ms (virtual)
+>     45: 49441266864 mem, 2709 ms (virtual)
+>     46: 49548934656 mem, 2485 ms (virtual)
+>     47: 49656785920 mem, 2501 ms (virtual)
+>     48: 49764127512 mem, 2480 ms (virtual)
+>     49: 49872069552 mem, 2495 ms (virtual)
+>     50: 49979814216 mem, 2482 ms (virtual)
+>
+>     Not using SCIFIO:
+>       1: 3107094592 <tel:3107094592> mem, 3921 ms
+>       2: 3109153032 <tel:3109153032> mem, 3837 ms
+>       3: 3109836568 <tel:3109836568> mem, 3631 ms
+>       4: 3109512264 <tel:3109512264> mem, 3581 ms
+>       5: 3109478728 <tel:3109478728> mem, 3633 ms
+>       6: 3123692656 <tel:3123692656> mem, 4145 ms
+>       7: 3112714624 mem, 3301 ms
+>       8: 3128373632 <tel:3128373632> mem, 3202 ms
+>       9: 3117798216 mem, 3235 ms
+>     10: 3133595872 <tel:3133595872> mem, 3190 ms
+>     11: 3123048664 <tel:3123048664> mem, 3229 ms
+>     12: 5754899128 <tel:5754899128> mem, 3404 ms
+>     13: 3128308704 <tel:3128308704> mem, 3307 ms
+>     14: 3117759024 mem, 3219 ms
+>     15: 5910573440 mem, 3112 ms
+>     16: 5488969832 mem, 3222 ms
+>     17: 3112824736 mem, 3273 ms
+>     18: 3128647888 <tel:3128647888> mem, 3147 ms
+>     19: 3118094280 mem, 3208 ms
+>     20: 5902184440 mem, 3281 ms
+>     21: 3123372736 <tel:3123372736> mem, 3224 ms
+>     22: 3112825408 mem, 3259 ms
+>     23: 3128648960 <tel:3128648960> mem, 3146 ms
+>     24: 3118100760 mem, 3230 ms
+>     25: 3133941888 <tel:3133941888> mem, 3119 ms
+>     26: 5488982136 mem, 3225 ms
+>     27: 3112820248 mem, 3249 ms
+>     28: 3128655064 <tel:3128655064> mem, 3154 ms
+>     29: 3118110296 mem, 3241 ms
+>     30: 3133956392 <tel:3133956392> mem, 3176 ms
+>     31: 3123381976 <tel:3123381976> mem, 3220 ms
+>     32: 3112831584 mem, 3264 ms
+>     33: 3128664576 <tel:3128664576> mem, 3170 ms
+>     34: 3118103400 mem, 3209 ms
+>     35: 3133956744 <tel:3133956744> mem, 3163 ms
+>     36: 3123387312 <tel:3123387312> mem, 3233 ms
+>     37: 3112827304 mem, 3279 ms
+>     38: 3128664688 <tel:3128664688> mem, 3158 ms
+>     39: 3118115152 mem, 3256 ms
+>     40: 3133956432 <tel:3133956432> mem, 3128 ms
+>     41: 5488994224 mem, 3214 ms
+>     42: 5746873888 <tel:5746873888> mem, 3266 ms
+>     43: 3128666592 <tel:3128666592> mem, 3174 ms
+>     44: 3118109984 mem, 3215 ms
+>     45: 3133949360 <tel:3133949360> mem, 3131 ms
+>     46: 3123388320 <tel:3123388320> mem, 3207 ms
+>     47: 3112843792 mem, 3269 ms
+>     48: 3128683960 <tel:3128683960> mem, 3144 ms
+>     49: 5617941896 <tel:5617941896> mem, 3201 ms
+>     50: 5902216016 mem, 3131 ms
+>
+>
+>         Date: Mon, 14 Jul 2014 08:34:45 -0500
+>         From: Mark Hiner <hinerm at gmail.com <mailto:hinerm at gmail.com>>
+>         To: Burkhard H?ckendorf <burkhard.hoeckendorf at web.de
+>         <mailto:burkhard.hoeckendorf at web.de>>
+>         Cc: "scifio at scif.io <mailto:scifio at scif.io>" <scifio at scif.io
+>         <mailto:scifio at scif.io>>
+>         Subject: Re: [SCIFIO] SCIFIO does not seem to release memory of
+>         closed
+>                  images
+>         Message-ID:
+>
+>         <CA+B=mGqx47SkUzM___FHGkoyAy3vbpf8+__NMMbURUOSJ65UfeCf3w at mail.__gmail.com
+>         <mailto:mGqx47SkUzM_FHGkoyAy3vbpf8%2BNMMbURUOSJ65UfeCf3w at mail.gmail.com>>
+>         Content-Type: text/plain; charset="utf-8"
+>
+>         Hi Burkhard,
+>
+>            > run("Collect Garbage");
+>
+>            This just calls System.gc().. twice, actually. There are many
+>         articles and
+>         StackOverflow posts about why System.gc() is unreliable
+>         <http://stackoverflow.com/__questions/2414105/why-is-it-a-__bad-practice-to-call-system-gc
+>         <http://stackoverflow.com/questions/2414105/why-is-it-a-bad-practice-to-call-system-gc>__>.
+>         I personally have seen endlessly repeated System.gc() calls
+>         effectively do
+>         nothing, necessitating the creation of large objects to force
+>         memory to be
+>         released.
+>
+>            Also, the JVM should automatically attempt to run the garbage
+>         collector
+>         when memory is requested for allocation in excess of the JVM's
+>         memory
+>         limits. So the best way to test if SCIFIO has a memory leak
+>         would be:
+>
+>         1) Open datasets that occupy slightly less than the max memory
+>         allocated to
+>         your Fiji
+>         2) Close these datasets
+>         3) Try opening more datasets (of a size such that, if the
+>         original datasets
+>         not released, the total memory used would exceed the max allocation)
+>
+>         If you see OutOfMemory errors then there could quite possibly be
+>         a leak.
+>
+>         Note also that we have unit tests in place designed to catch
+>         these leaks:
+>         https://github.com/scifio/__scifio/blob/master/src/test/__java/io/scif/img/cell/cache/__utests/CacheServiceTest.java
+>         <https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java>.
+>         An excellent way to demonstrate the memory error would be to
+>         come up with
+>         another test in this class that fails.
+>
+>         Thanks,
+>         Mark
+>
+>
+>         On Sat, Jul 12, 2014 at 1:54 PM, Burkhard H?ckendorf <
+>         burkhard.hoeckendorf at web.de
+>         <mailto:burkhard.hoeckendorf at web.de>> wrote:
+>
+>             Dear List,
+>
+>             First of all thanks for developing scifio and doing that
+>             open source. I
+>             have started to use it with ImageJ, since Fiji now offers
+>             the option to use
+>             it. Having said that, I may also have stumbled upon an
+>             issue. I'm unsure
+>             when (or whether) scifio releases the corresponding memory
+>             after images are
+>             closed. To look at this in a somewhat systematic way, I ran
+>             a macro (see
+>             below) to repeatedly open and close a 3GB single file
+>             uncompressed TIFF
+>             stack (2048x2048x367x16bits) and record some performance
+>             stats along the
+>             way. I ran this using a new download of Fiji.
+>
+>             Here are the results with scifio disabled:
+>                    11450 ms to open files
+>                 28578184 mem before opening files
+>             9282667288 <tel:9282667288> mem after opening files
+>             9272732560 mem after opening files & GC
+>             9272780080 mem after closing files
+>                 24220936 mem after closing files & GC
+>
+>             And here with scifio enabled:
+>                     43715 ms to open files
+>                  26765224 mem before opening files
+>             10517954400 mem after opening files
+>                9327459480 mem after opening files & GC
+>                9327506440 mem after closing files
+>             9314822896 <tel:9314822896> mem after closing files & GC
+>
+>             I have also checked, whether memory is freed a couple of
+>             minutes after
+>             closing the images, which does not appear to be the case.
+>
+>             Note that scifio is also somewhat slower, although I'm a bit
+>             hesitant to
+>             bring this up, because it is still relatively young and I
+>             can see a few
+>             "improve ... performance" tickets in the issue tracker.
+>
+>             Below is the macro.
+>             Kind regards,
+>             Burkhard
+>
+>
+>             nOpenTimes = 3;
+>             file = "/path/to/stack";
+>
+>             run("Collect Garbage");
+>             memBefore = IJ.currentMemory();
+>
+>             msToOpen = getTime();
+>             for (i=0; i<nOpenTimes; i+=1) {
+>                       open(file);
+>             }
+>             msToOpen = getTime() - msToOpen;
+>
+>             memFilesOpen = IJ.currentMemory();
+>             run("Collect Garbage");
+>             memFilesOpenGC = IJ.currentMemory();
+>
+>             for (i=0; i<nOpenTimes; i+=1) {
+>                       close();
+>             }
+>             memFilesClosed = IJ.currentMemory();
+>             run("Collect Garbage");
+>             memFilesClosedGC = IJ.currentMemory();
+>
+>             print(""+ msToOpen + " ms to open files");
+>             print(""+ memBefore + " mem before opening files");
+>             print(""+ memFilesOpen + " mem after opening files");
+>             print(""+ memFilesOpenGC + " mem after opening files & GC");
+>             print(""+ memFilesClosed + " mem after closing files");
+>             print(""+ memFilesClosedGC + " mem after closing files & GC");
+>
+>             _________________________________________________
+>             SCIFIO mailing list
+>             SCIFIO at scif.io <mailto:SCIFIO at scif.io>
+>             http://scif.io/mailman/__listinfo/scifio
+>             <http://scif.io/mailman/listinfo/scifio>
+>
+>         -------------- next part --------------
+>         An HTML attachment was scrubbed...
+>         URL:
+>         <http://scif.io/pipermail/__scifio/attachments/20140714/__0e7f8b63/attachment-0001.html
+>         <http://scif.io/pipermail/scifio/attachments/20140714/0e7f8b63/attachment-0001.html>>
+>
+>         ------------------------------
+>
+>         _________________________________________________
+>         SCIFIO mailing list
+>         SCIFIO at scif.io <mailto:SCIFIO at scif.io>
+>         http://scif.io/mailman/__listinfo/scifio
+>         <http://scif.io/mailman/listinfo/scifio>
+>
+>
+>         End of SCIFIO Digest, Vol 11, Issue 5
+>         ******************************__*******
+>
+>
+>     _________________________________________________
+>     SCIFIO mailing list
+>     SCIFIO at scif.io <mailto:SCIFIO at scif.io>
+>     http://scif.io/mailman/__listinfo/scifio
+>     <http://scif.io/mailman/listinfo/scifio>
+>
+>
+
+
+From hadrien.mary at gmail.com  Tue Jul 29 02:29:18 2014
+From: hadrien.mary at gmail.com (Hadrien Mary)
+Date: Tue, 29 Jul 2014 09:29:18 +0200
+Subject: [SCIFIO] Bugzilla
+Message-ID: <CAEpSnnZVqrj3V0V6=PiZ6eod=fcYk=9hbCTW3fBCP4fpQHSO6g@mail.gmail.com>
+
+Hi guys,
+
+I am not sure how much the fiji bugzilla is used accoring to the number of
+bugs opened. So I post here three potential bugs I created yesterday and
+today.
+
+http://fiji.sc/bugzilla/buglist.cgi?resolution=---&emailassigned_to1=1&emailreporter1=1&emailtype1=exact&email1=marelo64%40gmail.com&list_id=954
+
+Best,
+
+--
+HadiM
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140729/229bc952/attachment.html>
+
+From djego.joss at gmail.com  Mon Jul  7 07:04:18 2014
+From: djego.joss at gmail.com (Diego Joss)
+Date: Mon, 7 Jul 2014 14:04:18 +0200
+Subject: [SCIFIO] jpeg2000format.java error
+Message-ID: <CAE+6duODDxpzB1ZNWJczfAcsiqi_Hpcp7RsgdYD0QcxteAdt0g@mail.gmail.com>
+
+Hi everyone,
+
+I was looking at the github page, and stumbled by chance upon a silly
+bug in src/main/java/io/scif/formats/JPEG2000Format.java:221 in the
+public method ColorTable, in the conditionals testing the pixeldepth,
+instead of testing for bytedepth == 2 for 16bit jp2 images, the test
+is == 1!
+
+Cheers,
+Diego
+
+
+
+From Johannes.Schindelin at gmx.de  Mon Jul  7 12:53:20 2014
+From: Johannes.Schindelin at gmx.de (Johannes Schindelin)
+Date: Mon, 7 Jul 2014 19:53:20 +0200 (CEST)
+Subject: [SCIFIO] jpeg2000format.java error
+In-Reply-To: <CAE+6duODDxpzB1ZNWJczfAcsiqi_Hpcp7RsgdYD0QcxteAdt0g@mail.gmail.com>
+References: <CAE+6duODDxpzB1ZNWJczfAcsiqi_Hpcp7RsgdYD0QcxteAdt0g@mail.gmail.com>
+Message-ID: <alpine.DEB.1.00.1407071952370.18949@s15462909.onlinehome-server.info>
+
+Hi Diego,
+
+On Mon, 7 Jul 2014, Diego Joss wrote:
+
+> I was looking at the github page, and stumbled by chance upon a silly
+> bug in src/main/java/io/scif/formats/JPEG2000Format.java:221 in the
+> public method ColorTable, in the conditionals testing the pixeldepth,
+> instead of testing for bytedepth == 2 for 16bit jp2 images, the test is
+> == 1!
+
+Would you terribly mind opening a Pull Request? It would attribute this
+patch to you properly, and it is easy!
+https://help.github.com/articles/using-pull-requests
+
+Ciao,
+Johannes
+
+
+
+From hinerm at gmail.com  Tue Jul  8 08:11:17 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Tue, 8 Jul 2014 08:11:17 -0500
+Subject: [SCIFIO] jpeg2000format.java error
+In-Reply-To: <alpine.DEB.1.00.1407071952370.18949@s15462909.onlinehome-server.info>
+References: <CAE+6duODDxpzB1ZNWJczfAcsiqi_Hpcp7RsgdYD0QcxteAdt0g@mail.gmail.com>
+	<alpine.DEB.1.00.1407071952370.18949@s15462909.onlinehome-server.info>
+Message-ID: <CA+B=mGqFsR+oDh_JP1wBEjjtLweKECcSxspfMMEeB0sDzBF1VQ@mail.gmail.com>
+
+Opened an issue: https://github.com/scifio/scifio/issues/210 so this won't
+get lost.
+
+- Mark
+
+
+On Mon, Jul 7, 2014 at 12:53 PM, Johannes Schindelin <
+Johannes.Schindelin at gmx.de> wrote:
+
+> Hi Diego,
+>
+> On Mon, 7 Jul 2014, Diego Joss wrote:
+>
+> > I was looking at the github page, and stumbled by chance upon a silly
+> > bug in src/main/java/io/scif/formats/JPEG2000Format.java:221 in the
+> > public method ColorTable, in the conditionals testing the pixeldepth,
+> > instead of testing for bytedepth == 2 for 16bit jp2 images, the test is
+> > == 1!
+>
+> Would you terribly mind opening a Pull Request? It would attribute this
+> patch to you properly, and it is easy!
+> https://help.github.com/articles/using-pull-requests
+>
+> Ciao,
+> Johannes
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140708/4bb3b235/attachment-0002.html>
+
+From burkhard.hoeckendorf at web.de  Sat Jul 12 13:54:47 2014
+From: burkhard.hoeckendorf at web.de (=?ISO-8859-1?Q?Burkhard_H=F6ckendorf?=)
+Date: Sat, 12 Jul 2014 14:54:47 -0400
+Subject: [SCIFIO] SCIFIO does not seem to release memory of closed images
+Message-ID: <53C18477.6090302@web.de>
+
+Dear List,
+
+First of all thanks for developing scifio and doing that open source. I 
+have started to use it with ImageJ, since Fiji now offers the option to 
+use it. Having said that, I may also have stumbled upon an issue. I'm 
+unsure when (or whether) scifio releases the corresponding memory after 
+images are closed. To look at this in a somewhat systematic way, I ran a 
+macro (see below) to repeatedly open and close a 3GB single file 
+uncompressed TIFF stack (2048x2048x367x16bits) and record some 
+performance stats along the way. I ran this using a new download of Fiji.
+
+Here are the results with scifio disabled:
+      11450 ms to open files
+   28578184 mem before opening files
+9282667288 mem after opening files
+9272732560 mem after opening files & GC
+9272780080 mem after closing files
+   24220936 mem after closing files & GC
+
+And here with scifio enabled:
+       43715 ms to open files
+    26765224 mem before opening files
+10517954400 mem after opening files
+  9327459480 mem after opening files & GC
+  9327506440 mem after closing files
+  9314822896 mem after closing files & GC
+
+I have also checked, whether memory is freed a couple of minutes after 
+closing the images, which does not appear to be the case.
+
+Note that scifio is also somewhat slower, although I'm a bit hesitant to 
+bring this up, because it is still relatively young and I can see a few 
+"improve ... performance" tickets in the issue tracker.
+
+Below is the macro.
+Kind regards,
+Burkhard
+
+
+nOpenTimes = 3;
+file = "/path/to/stack";
+
+run("Collect Garbage");
+memBefore = IJ.currentMemory();
+
+msToOpen = getTime();
+for (i=0; i<nOpenTimes; i+=1) {
+	open(file);
+}
+msToOpen = getTime() - msToOpen;
+
+memFilesOpen = IJ.currentMemory();
+run("Collect Garbage");
+memFilesOpenGC = IJ.currentMemory();
+
+for (i=0; i<nOpenTimes; i+=1) {
+	close();
+}
+memFilesClosed = IJ.currentMemory();
+run("Collect Garbage");
+memFilesClosedGC = IJ.currentMemory();
+
+print(""+ msToOpen + " ms to open files");
+print(""+ memBefore + " mem before opening files");
+print(""+ memFilesOpen + " mem after opening files");
+print(""+ memFilesOpenGC + " mem after opening files & GC");
+print(""+ memFilesClosed + " mem after closing files");
+print(""+ memFilesClosedGC + " mem after closing files & GC");
+
+
+
+From hinerm at gmail.com  Mon Jul 14 07:22:55 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 14 Jul 2014 07:22:55 -0500
+Subject: [SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+In-Reply-To: <CAHfi=GJVwBtnkJgBSn3V-DFf-psxz2--jaJo_+1q3Bpca3w1hw@mail.gmail.com>
+References: <CAHfi=G+XhHfVkZCXy2FsG6cSs5bVoNs0-MCy9CGyHmqGnbSevg@mail.gmail.com>
+	<CA+B=mGobbWCRXq1tLtHzveqpaYnzKDOH060t4knw4+nX6FuGBw@mail.gmail.com>
+	<CAHfi=GKaJWgeKKXUiKnOPyd8ebimciumdxeoYN81g5s6XPgGzQ@mail.gmail.com>
+	<CADN69y=fHP39Tp8RpwYyZnHhEuZUWOcaF6RU-AGVruai9Xxk5g@mail.gmail.com>
+	<CAHfi=GLe5iZN_U-MZd6wRquXvjBNvoH5u9-LndyPZj5Cq0T3BQ@mail.gmail.com>
+	<CAHfi=GJVwBtnkJgBSn3V-DFf-psxz2--jaJo_+1q3Bpca3w1hw@mail.gmail.com>
+Message-ID: <CA+B=mGoZ3vBo4rms417Qz+t=sgJCwwBafc+xSPnPzVVYf3E41g@mail.gmail.com>
+
+Hi Kedar,
+
+> Any suggestions on how I might begin to debug the problem?
+
+In your original e-mail you said you'd written this with SCIFIO.. I assume
+this was with the SCIFIO-ImageIO C++ API. This is still bound to Bio-Formats
+4.4.9
+<https://github.com/scifio/scifio-imageio/blob/master/src/CMakeLists.txt#L22>.
+If the conversion worked with the latest Bio-Formats command line tools, I
+would suggest trying the C++ API again with the 5.0.2 LOCI Tools downloaded
+here: http://downloads.openmicroscopy.org/bio-formats/5.0.2/
+
+Hope that fixes things.
+
+- Mark
+
+
+On Fri, Jul 11, 2014 at 3:23 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+
+> Hi Mark,
+>
+> I hope your release cycle for ImageJ2 went well. I got an executable from
+> people at zeiss to export the images from czi to tiff stacks so I have
+> reliable access to my data right now. I would like to help figure out the
+> problem that I had emailed you about. I ran just bio-formats from the
+> command line and the problem did not recur but I can not be sure that bug
+> is on the java side because it was pretty random earlier too. Any
+> suggestions on how I might begin to debug the problem?
+>
+> Thanks,
+>
+> -Kedar
+>
+>
+> On Thu, Jun 19, 2014 at 3:58 PM, Kedar Grama <gbkedar at gmail.com> wrote:
+>
+>> Hi Curtis,
+>>
+>> I have wrapped the Bioformats tools and am using it for now. I'll let you
+>> know and e-mail the ome-users list if the problem recurs.
+>>
+>> Thanks,
+>>
+>> -Kedar
+>>
+>>
+>> On Thu, Jun 19, 2014 at 3:48 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+>>
+>>> Hi Kedar,
+>>>
+>>> > I have made montages of the same image in three instances where tiles
+>>> > were scrambled and once when it worked.
+>>>
+>>> When you have file-format-specific problems like this, it is very
+>>> important to understand at what layer the problem is occurring. Please test
+>>> with Bio-Formats 5.0.2 -- e.g., with the command line tools, or in an
+>>> up-to-date version of Fiji -- and verify whether you see the same faulty
+>>> behavior. Then test with an older version of Bio-Formats [1], too. If the
+>>> problem occurs with 5.0.2 on its own, that rules out the SCIFIO-ITK bridge
+>>> layer as the culprit, meaning the bug should be reported to the ome-users
+>>> list [2] so that the Bio-Formats developers can address it.
+>>>
+>>> Or if the problem truly is with the ITK bridge, then Mark is the best
+>>> person to investigate, when he returns from vacation.
+>>>
+>>> Regards,
+>>> Curtis
+>>>
+>>> [1] http://downloads.openmicroscopy.org/bio-formats/
+>>> [2] http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users/
+>>>
+>>>
+>>> On Thu, Jun 19, 2014 at 9:20 AM, Kedar Grama <gbkedar at gmail.com> wrote:
+>>>
+>>>> Hi Mark,
+>>>>
+>>>> I have filed an issue on the github site scifio-itk-bridge. We will
+>>>> work around the issue for now.
+>>>>
+>>>> Thanks,
+>>>>
+>>>> -Kedar
+>>>>
+>>>>
+>>>> On Thu, Jun 19, 2014 at 8:34 AM, Mark Hiner <hinerm at gmail.com> wrote:
+>>>>
+>>>>> Hi Kedar,
+>>>>>
+>>>>>  Just wanted to let you know that I'll be out of the country for two
+>>>>> weeks starting tomorrow, and all of my time right now is being spent on the ImageJ2
+>>>>> release
+>>>>> <http://developer.imagej.net/2014/06/04/imagej-200-release-candidate>.
+>>>>>
+>>>>>  Would you mind filing this as an issue on the scifio-itk-bridge
+>>>>> github site: https://github.com/scifio/scifio-itk-bridge ? That way
+>>>>> it won't get lost in my e-mail and I can investigate when I get back.
+>>>>>
+>>>>> Thanks!
+>>>>> - Mark
+>>>>>
+>>>>>
+>>>>> On Wed, Jun 18, 2014 at 2:39 PM, Kedar Grama <gbkedar at gmail.com>
+>>>>> wrote:
+>>>>>
+>>>>>> Hi Mark,
+>>>>>>
+>>>>>> I used SCIFIO to write czi as a 3d stack of either nrrd or tiffs. I
+>>>>>> get tiles that are scrambled and this happens at random. My code to convert
+>>>>>> the files is here:
+>>>>>>
+>>>>>> https://github.com/gbkedar/farsight/blob/IlluminationGraphCuts/IlluminationCorrection/readCziWriteCorrectedTiles.cpp
+>>>>>>
+>>>>>> I have made montages of the same image in three instances where tiles
+>>>>>> were scrambled and once when it worked. The czi file is similar to the one
+>>>>>> I sent you in June or July last year. Please let me know if you need the
+>>>>>> file that I'm using right now and I'll upload it.
+>>>>>>
+>>>>>> Thanks,
+>>>>>>
+>>>>>> -Kedar
+>>>>>>
+>>>>>
+>>>>>
+>>>>
+>>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140714/432f082b/attachment-0002.html>
+
+From hinerm at gmail.com  Mon Jul 14 08:34:45 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 14 Jul 2014 08:34:45 -0500
+Subject: [SCIFIO] SCIFIO does not seem to release memory of closed images
+In-Reply-To: <53C18477.6090302@web.de>
+References: <53C18477.6090302@web.de>
+Message-ID: <CA+B=mGqx47SkUzM_FHGkoyAy3vbpf8+NMMbURUOSJ65UfeCf3w@mail.gmail.com>
+
+Hi Burkhard,
+
+ > run("Collect Garbage");
+
+ This just calls System.gc().. twice, actually. There are many articles and
+StackOverflow posts about why System.gc() is unreliable
+<http://stackoverflow.com/questions/2414105/why-is-it-a-bad-practice-to-call-system-gc>.
+I personally have seen endlessly repeated System.gc() calls effectively do
+nothing, necessitating the creation of large objects to force memory to be
+released.
+
+ Also, the JVM should automatically attempt to run the garbage collector
+when memory is requested for allocation in excess of the JVM's memory
+limits. So the best way to test if SCIFIO has a memory leak would be:
+
+1) Open datasets that occupy slightly less than the max memory allocated to
+your Fiji
+2) Close these datasets
+3) Try opening more datasets (of a size such that, if the original datasets
+not released, the total memory used would exceed the max allocation)
+
+If you see OutOfMemory errors then there could quite possibly be a leak.
+
+Note also that we have unit tests in place designed to catch these leaks:
+https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java.
+An excellent way to demonstrate the memory error would be to come up with
+another test in this class that fails.
+
+Thanks,
+Mark
+
+
+On Sat, Jul 12, 2014 at 1:54 PM, Burkhard H?ckendorf <
+burkhard.hoeckendorf at web.de> wrote:
+
+> Dear List,
+>
+> First of all thanks for developing scifio and doing that open source. I
+> have started to use it with ImageJ, since Fiji now offers the option to use
+> it. Having said that, I may also have stumbled upon an issue. I'm unsure
+> when (or whether) scifio releases the corresponding memory after images are
+> closed. To look at this in a somewhat systematic way, I ran a macro (see
+> below) to repeatedly open and close a 3GB single file uncompressed TIFF
+> stack (2048x2048x367x16bits) and record some performance stats along the
+> way. I ran this using a new download of Fiji.
+>
+> Here are the results with scifio disabled:
+>      11450 ms to open files
+>   28578184 mem before opening files
+> 9282667288 mem after opening files
+> 9272732560 mem after opening files & GC
+> 9272780080 mem after closing files
+>   24220936 mem after closing files & GC
+>
+> And here with scifio enabled:
+>       43715 ms to open files
+>    26765224 mem before opening files
+> 10517954400 mem after opening files
+>  9327459480 mem after opening files & GC
+>  9327506440 mem after closing files
+>  9314822896 mem after closing files & GC
+>
+> I have also checked, whether memory is freed a couple of minutes after
+> closing the images, which does not appear to be the case.
+>
+> Note that scifio is also somewhat slower, although I'm a bit hesitant to
+> bring this up, because it is still relatively young and I can see a few
+> "improve ... performance" tickets in the issue tracker.
+>
+> Below is the macro.
+> Kind regards,
+> Burkhard
+>
+>
+> nOpenTimes = 3;
+> file = "/path/to/stack";
+>
+> run("Collect Garbage");
+> memBefore = IJ.currentMemory();
+>
+> msToOpen = getTime();
+> for (i=0; i<nOpenTimes; i+=1) {
+>         open(file);
+> }
+> msToOpen = getTime() - msToOpen;
+>
+> memFilesOpen = IJ.currentMemory();
+> run("Collect Garbage");
+> memFilesOpenGC = IJ.currentMemory();
+>
+> for (i=0; i<nOpenTimes; i+=1) {
+>         close();
+> }
+> memFilesClosed = IJ.currentMemory();
+> run("Collect Garbage");
+> memFilesClosedGC = IJ.currentMemory();
+>
+> print(""+ msToOpen + " ms to open files");
+> print(""+ memBefore + " mem before opening files");
+> print(""+ memFilesOpen + " mem after opening files");
+> print(""+ memFilesOpenGC + " mem after opening files & GC");
+> print(""+ memFilesClosed + " mem after closing files");
+> print(""+ memFilesClosedGC + " mem after closing files & GC");
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140714/0e7f8b63/attachment-0002.html>
+
+From burkhard.hoeckendorf at web.de  Mon Jul 14 13:39:29 2014
+From: burkhard.hoeckendorf at web.de (=?ISO-8859-1?Q?Burkhard_H=F6ckendorf?=)
+Date: Mon, 14 Jul 2014 14:39:29 -0400
+Subject: [SCIFIO] SCIFIO does not seem to release memory of closed,
+	images
+In-Reply-To: <mailman.7.1405357201.24546.scifio@scif.io>
+References: <mailman.7.1405357201.24546.scifio@scif.io>
+Message-ID: <53C423E1.6030000@web.de>
+
+Hi Mark,
+
+Thanks for the speedy response. I've rewritten my macro to perhaps 
+illustrate my point more clearly. It now opens the file and immediately 
+closes it again, for 50 iterations.
+
+With scifio enabled I do not get an out of memory error, but it still 
+accumulates memory to the point that it can not open the entire image 
+anymore but instead opens virtual stacks. Without scifio this does not 
+occur.
+
+Also note that reading the full image into memory without scifio is 
+performance-wise much closer to opening a scifio virtual image than 
+reading the full image with scifio.
+
+Below is the macro and its output.
+Best,
+Burkhard
+
+nOpenTimes = 50;
+file = "/path/to/image";
+
+for (i=1; i<=nOpenTimes; i+=1) {
+	msToOpen = getTime();
+	open(file);
+	msToOpen = getTime() - msToOpen;
+
+	msg = ""+ i +": "+ IJ.currentMemory() +" mem, "+ msToOpen +" ms";
+	if (is("Virtual Stack"))
+		msg += " (virtual)";
+	print(msg);
+
+	close();
+}
+
+Using SCIFIO:
+  1:  3822648536 mem, 15984 ms
+  2:  7572956280 mem, 14986 ms
+  3:  9998931400 mem, 14821 ms
+  4: 13784264296 mem, 14895 ms
+  5: 16885256128 mem, 15019 ms
+  6: 19656427040 mem, 15036 ms
+  7: 24079096808 mem, 15212 ms
+  8: 27510832552 mem, 15179 ms
+  9: 32077394688 mem, 15427 ms
+10: 34409304040 mem, 15482 ms
+11: 36859610432 mem, 15227 ms
+12: 43061552320 mem, 15607 ms
+13: 42104714576 mem, 15359 ms
+14: 47910156296 mem, 15073 ms
+15: 48044651592 mem, 3053 ms (virtual)
+16: 48170004824 mem, 2502 ms (virtual)
+17: 48295208256 mem, 2522 ms (virtual)
+18: 48422832064 mem, 2495 ms (virtual)
+19: 48550863920 mem, 2504 ms (virtual)
+20: 48228290696 mem, 2615 ms (virtual)
+21: 48343976264 mem, 2482 ms (virtual)
+22: 48461224352 mem, 2495 ms (virtual)
+23: 48577275224 mem, 2482 ms (virtual)
+24: 48696021320 mem, 2493 ms (virtual)
+25: 48815302152 mem, 2513 ms (virtual)
+26: 48512671680 mem, 2682 ms (virtual)
+27: 48624380048 mem, 2493 ms (virtual)
+28: 48734321624 mem, 2487 ms (virtual)
+29: 48847280096 mem, 2504 ms (virtual)
+30: 48958189928 mem, 2491 ms (virtual)
+31: 49069385672 mem, 2499 ms (virtual)
+32: 48787137328 mem, 2614 ms (virtual)
+33: 48896061816 mem, 2500 ms (virtual)
+34: 49004784912 mem, 2488 ms (virtual)
+35: 49116572664 mem, 2516 ms (virtual)
+36: 49226035440 mem, 2497 ms (virtual)
+37: 49334418896 mem, 2500 ms (virtual)
+38: 49074728512 mem, 2660 ms (virtual)
+39: 49183254768 mem, 2506 ms (virtual)
+40: 49290891152 mem, 2491 ms (virtual)
+41: 49399382336 mem, 2499 ms (virtual)
+42: 49505843008 mem, 2487 ms (virtual)
+43: 49613438808 mem, 2487 ms (virtual)
+44: 49721198184 mem, 2481 ms (virtual)
+45: 49441266864 mem, 2709 ms (virtual)
+46: 49548934656 mem, 2485 ms (virtual)
+47: 49656785920 mem, 2501 ms (virtual)
+48: 49764127512 mem, 2480 ms (virtual)
+49: 49872069552 mem, 2495 ms (virtual)
+50: 49979814216 mem, 2482 ms (virtual)
+
+Not using SCIFIO:
+  1: 3107094592 mem, 3921 ms
+  2: 3109153032 mem, 3837 ms
+  3: 3109836568 mem, 3631 ms
+  4: 3109512264 mem, 3581 ms
+  5: 3109478728 mem, 3633 ms
+  6: 3123692656 mem, 4145 ms
+  7: 3112714624 mem, 3301 ms
+  8: 3128373632 mem, 3202 ms
+  9: 3117798216 mem, 3235 ms
+10: 3133595872 mem, 3190 ms
+11: 3123048664 mem, 3229 ms
+12: 5754899128 mem, 3404 ms
+13: 3128308704 mem, 3307 ms
+14: 3117759024 mem, 3219 ms
+15: 5910573440 mem, 3112 ms
+16: 5488969832 mem, 3222 ms
+17: 3112824736 mem, 3273 ms
+18: 3128647888 mem, 3147 ms
+19: 3118094280 mem, 3208 ms
+20: 5902184440 mem, 3281 ms
+21: 3123372736 mem, 3224 ms
+22: 3112825408 mem, 3259 ms
+23: 3128648960 mem, 3146 ms
+24: 3118100760 mem, 3230 ms
+25: 3133941888 mem, 3119 ms
+26: 5488982136 mem, 3225 ms
+27: 3112820248 mem, 3249 ms
+28: 3128655064 mem, 3154 ms
+29: 3118110296 mem, 3241 ms
+30: 3133956392 mem, 3176 ms
+31: 3123381976 mem, 3220 ms
+32: 3112831584 mem, 3264 ms
+33: 3128664576 mem, 3170 ms
+34: 3118103400 mem, 3209 ms
+35: 3133956744 mem, 3163 ms
+36: 3123387312 mem, 3233 ms
+37: 3112827304 mem, 3279 ms
+38: 3128664688 mem, 3158 ms
+39: 3118115152 mem, 3256 ms
+40: 3133956432 mem, 3128 ms
+41: 5488994224 mem, 3214 ms
+42: 5746873888 mem, 3266 ms
+43: 3128666592 mem, 3174 ms
+44: 3118109984 mem, 3215 ms
+45: 3133949360 mem, 3131 ms
+46: 3123388320 mem, 3207 ms
+47: 3112843792 mem, 3269 ms
+48: 3128683960 mem, 3144 ms
+49: 5617941896 mem, 3201 ms
+50: 5902216016 mem, 3131 ms
+
+
+> Date: Mon, 14 Jul 2014 08:34:45 -0500
+> From: Mark Hiner <hinerm at gmail.com>
+> To: Burkhard H?ckendorf <burkhard.hoeckendorf at web.de>
+> Cc: "scifio at scif.io" <scifio at scif.io>
+> Subject: Re: [SCIFIO] SCIFIO does not seem to release memory of closed
+> 	images
+> Message-ID:
+> 	<CA+B=mGqx47SkUzM_FHGkoyAy3vbpf8+NMMbURUOSJ65UfeCf3w at mail.gmail.com>
+> Content-Type: text/plain; charset="utf-8"
+>
+> Hi Burkhard,
+>
+>   > run("Collect Garbage");
+>
+>   This just calls System.gc().. twice, actually. There are many articles and
+> StackOverflow posts about why System.gc() is unreliable
+> <http://stackoverflow.com/questions/2414105/why-is-it-a-bad-practice-to-call-system-gc>.
+> I personally have seen endlessly repeated System.gc() calls effectively do
+> nothing, necessitating the creation of large objects to force memory to be
+> released.
+>
+>   Also, the JVM should automatically attempt to run the garbage collector
+> when memory is requested for allocation in excess of the JVM's memory
+> limits. So the best way to test if SCIFIO has a memory leak would be:
+>
+> 1) Open datasets that occupy slightly less than the max memory allocated to
+> your Fiji
+> 2) Close these datasets
+> 3) Try opening more datasets (of a size such that, if the original datasets
+> not released, the total memory used would exceed the max allocation)
+>
+> If you see OutOfMemory errors then there could quite possibly be a leak.
+>
+> Note also that we have unit tests in place designed to catch these leaks:
+> https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java.
+> An excellent way to demonstrate the memory error would be to come up with
+> another test in this class that fails.
+>
+> Thanks,
+> Mark
+>
+>
+> On Sat, Jul 12, 2014 at 1:54 PM, Burkhard H?ckendorf <
+> burkhard.hoeckendorf at web.de> wrote:
+>
+>> Dear List,
+>>
+>> First of all thanks for developing scifio and doing that open source. I
+>> have started to use it with ImageJ, since Fiji now offers the option to use
+>> it. Having said that, I may also have stumbled upon an issue. I'm unsure
+>> when (or whether) scifio releases the corresponding memory after images are
+>> closed. To look at this in a somewhat systematic way, I ran a macro (see
+>> below) to repeatedly open and close a 3GB single file uncompressed TIFF
+>> stack (2048x2048x367x16bits) and record some performance stats along the
+>> way. I ran this using a new download of Fiji.
+>>
+>> Here are the results with scifio disabled:
+>>       11450 ms to open files
+>>    28578184 mem before opening files
+>> 9282667288 mem after opening files
+>> 9272732560 mem after opening files & GC
+>> 9272780080 mem after closing files
+>>    24220936 mem after closing files & GC
+>>
+>> And here with scifio enabled:
+>>        43715 ms to open files
+>>     26765224 mem before opening files
+>> 10517954400 mem after opening files
+>>   9327459480 mem after opening files & GC
+>>   9327506440 mem after closing files
+>>   9314822896 mem after closing files & GC
+>>
+>> I have also checked, whether memory is freed a couple of minutes after
+>> closing the images, which does not appear to be the case.
+>>
+>> Note that scifio is also somewhat slower, although I'm a bit hesitant to
+>> bring this up, because it is still relatively young and I can see a few
+>> "improve ... performance" tickets in the issue tracker.
+>>
+>> Below is the macro.
+>> Kind regards,
+>> Burkhard
+>>
+>>
+>> nOpenTimes = 3;
+>> file = "/path/to/stack";
+>>
+>> run("Collect Garbage");
+>> memBefore = IJ.currentMemory();
+>>
+>> msToOpen = getTime();
+>> for (i=0; i<nOpenTimes; i+=1) {
+>>          open(file);
+>> }
+>> msToOpen = getTime() - msToOpen;
+>>
+>> memFilesOpen = IJ.currentMemory();
+>> run("Collect Garbage");
+>> memFilesOpenGC = IJ.currentMemory();
+>>
+>> for (i=0; i<nOpenTimes; i+=1) {
+>>          close();
+>> }
+>> memFilesClosed = IJ.currentMemory();
+>> run("Collect Garbage");
+>> memFilesClosedGC = IJ.currentMemory();
+>>
+>> print(""+ msToOpen + " ms to open files");
+>> print(""+ memBefore + " mem before opening files");
+>> print(""+ memFilesOpen + " mem after opening files");
+>> print(""+ memFilesOpenGC + " mem after opening files & GC");
+>> print(""+ memFilesClosed + " mem after closing files");
+>> print(""+ memFilesClosedGC + " mem after closing files & GC");
+>>
+>> _______________________________________________
+>> SCIFIO mailing list
+>> SCIFIO at scif.io
+>> http://scif.io/mailman/listinfo/scifio
+>>
+> -------------- next part --------------
+> An HTML attachment was scrubbed...
+> URL: <http://scif.io/pipermail/scifio/attachments/20140714/0e7f8b63/attachment-0001.html>
+>
+> ------------------------------
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+> End of SCIFIO Digest, Vol 11, Issue 5
+> *************************************
+>
+
+
+
+From hinerm at gmail.com  Tue Jul 15 11:18:05 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Tue, 15 Jul 2014 11:18:05 -0500
+Subject: [SCIFIO] SCIFIO does not seem to release memory of closed,
+	images
+In-Reply-To: <53C423E1.6030000@web.de>
+References: <mailman.7.1405357201.24546.scifio@scif.io>
+	<53C423E1.6030000@web.de>
+Message-ID: <CA+B=mGoxT5rtJHZ=RpJ_e66htKARMZEQT_ky8pmz5N8KpV8E2w@mail.gmail.com>
+
+Hello again Burkhard,
+
+Thank you for your persistence in this issue. After looking at it again
+today, I realized that there must be a memory leak in how we try to map and
+synchronize ImageJ 1.x ImagePluses with ImageJ2 data structures.
+
+Indeed, that was exactly what I found... however, the solution is
+non-trivial.
+
+I have filed a new issue for this here:
+https://github.com/imagej/imagej-legacy/issues/67. It is something I would
+like to resolve quickly, but because it is an involved issue that requires
+additional investigation and discussion, it's at a lower priority than some
+necessary grant work this week.
+
+Thanks again for the report - it is, at least, good to know where the
+problem is now.
+- Mark
+
+
+On Mon, Jul 14, 2014 at 1:39 PM, Burkhard H?ckendorf <
+burkhard.hoeckendorf at web.de> wrote:
+
+> Hi Mark,
+>
+> Thanks for the speedy response. I've rewritten my macro to perhaps
+> illustrate my point more clearly. It now opens the file and immediately
+> closes it again, for 50 iterations.
+>
+> With scifio enabled I do not get an out of memory error, but it still
+> accumulates memory to the point that it can not open the entire image
+> anymore but instead opens virtual stacks. Without scifio this does not
+> occur.
+>
+> Also note that reading the full image into memory without scifio is
+> performance-wise much closer to opening a scifio virtual image than reading
+> the full image with scifio.
+>
+> Below is the macro and its output.
+> Best,
+> Burkhard
+>
+> nOpenTimes = 50;
+> file = "/path/to/image";
+>
+> for (i=1; i<=nOpenTimes; i+=1) {
+>         msToOpen = getTime();
+>         open(file);
+>         msToOpen = getTime() - msToOpen;
+>
+>         msg = ""+ i +": "+ IJ.currentMemory() +" mem, "+ msToOpen +" ms";
+>         if (is("Virtual Stack"))
+>                 msg += " (virtual)";
+>         print(msg);
+>
+>         close();
+> }
+>
+> Using SCIFIO:
+>  1:  3822648536 mem, 15984 ms
+>  2:  7572956280 mem, 14986 ms
+>  3:  9998931400 mem, 14821 ms
+>  4: 13784264296 mem, 14895 ms
+>  5: 16885256128 mem, 15019 ms
+>  6: 19656427040 mem, 15036 ms
+>  7: 24079096808 mem, 15212 ms
+>  8: 27510832552 mem, 15179 ms
+>  9: 32077394688 mem, 15427 ms
+> 10: 34409304040 mem, 15482 ms
+> 11: 36859610432 mem, 15227 ms
+> 12: 43061552320 mem, 15607 ms
+> 13: 42104714576 mem, 15359 ms
+> 14: 47910156296 mem, 15073 ms
+> 15: 48044651592 mem, 3053 ms (virtual)
+> 16: 48170004824 mem, 2502 ms (virtual)
+> 17: 48295208256 mem, 2522 ms (virtual)
+> 18: 48422832064 mem, 2495 ms (virtual)
+> 19: 48550863920 mem, 2504 ms (virtual)
+> 20: 48228290696 mem, 2615 ms (virtual)
+> 21: 48343976264 mem, 2482 ms (virtual)
+> 22: 48461224352 mem, 2495 ms (virtual)
+> 23: 48577275224 mem, 2482 ms (virtual)
+> 24: 48696021320 mem, 2493 ms (virtual)
+> 25: 48815302152 mem, 2513 ms (virtual)
+> 26: 48512671680 mem, 2682 ms (virtual)
+> 27: 48624380048 mem, 2493 ms (virtual)
+> 28: 48734321624 mem, 2487 ms (virtual)
+> 29: 48847280096 mem, 2504 ms (virtual)
+> 30: 48958189928 mem, 2491 ms (virtual)
+> 31: 49069385672 mem, 2499 ms (virtual)
+> 32: 48787137328 mem, 2614 ms (virtual)
+> 33: 48896061816 mem, 2500 ms (virtual)
+> 34: 49004784912 mem, 2488 ms (virtual)
+> 35: 49116572664 mem, 2516 ms (virtual)
+> 36: 49226035440 mem, 2497 ms (virtual)
+> 37: 49334418896 mem, 2500 ms (virtual)
+> 38: 49074728512 mem, 2660 ms (virtual)
+> 39: 49183254768 mem, 2506 ms (virtual)
+> 40: 49290891152 mem, 2491 ms (virtual)
+> 41: 49399382336 mem, 2499 ms (virtual)
+> 42: 49505843008 mem, 2487 ms (virtual)
+> 43: 49613438808 mem, 2487 ms (virtual)
+> 44: 49721198184 mem, 2481 ms (virtual)
+> 45: 49441266864 mem, 2709 ms (virtual)
+> 46: 49548934656 mem, 2485 ms (virtual)
+> 47: 49656785920 mem, 2501 ms (virtual)
+> 48: 49764127512 mem, 2480 ms (virtual)
+> 49: 49872069552 mem, 2495 ms (virtual)
+> 50: 49979814216 mem, 2482 ms (virtual)
+>
+> Not using SCIFIO:
+>  1: 3107094592 mem, 3921 ms
+>  2: 3109153032 mem, 3837 ms
+>  3: 3109836568 mem, 3631 ms
+>  4: 3109512264 mem, 3581 ms
+>  5: 3109478728 mem, 3633 ms
+>  6: 3123692656 mem, 4145 ms
+>  7: 3112714624 mem, 3301 ms
+>  8: 3128373632 mem, 3202 ms
+>  9: 3117798216 mem, 3235 ms
+> 10: 3133595872 mem, 3190 ms
+> 11: 3123048664 mem, 3229 ms
+> 12: 5754899128 mem, 3404 ms
+> 13: 3128308704 mem, 3307 ms
+> 14: 3117759024 mem, 3219 ms
+> 15: 5910573440 mem, 3112 ms
+> 16: 5488969832 mem, 3222 ms
+> 17: 3112824736 mem, 3273 ms
+> 18: 3128647888 mem, 3147 ms
+> 19: 3118094280 mem, 3208 ms
+> 20: 5902184440 mem, 3281 ms
+> 21: 3123372736 mem, 3224 ms
+> 22: 3112825408 mem, 3259 ms
+> 23: 3128648960 mem, 3146 ms
+> 24: 3118100760 mem, 3230 ms
+> 25: 3133941888 mem, 3119 ms
+> 26: 5488982136 mem, 3225 ms
+> 27: 3112820248 mem, 3249 ms
+> 28: 3128655064 mem, 3154 ms
+> 29: 3118110296 mem, 3241 ms
+> 30: 3133956392 mem, 3176 ms
+> 31: 3123381976 mem, 3220 ms
+> 32: 3112831584 mem, 3264 ms
+> 33: 3128664576 mem, 3170 ms
+> 34: 3118103400 mem, 3209 ms
+> 35: 3133956744 mem, 3163 ms
+> 36: 3123387312 mem, 3233 ms
+> 37: 3112827304 mem, 3279 ms
+> 38: 3128664688 mem, 3158 ms
+> 39: 3118115152 mem, 3256 ms
+> 40: 3133956432 mem, 3128 ms
+> 41: 5488994224 mem, 3214 ms
+> 42: 5746873888 mem, 3266 ms
+> 43: 3128666592 mem, 3174 ms
+> 44: 3118109984 mem, 3215 ms
+> 45: 3133949360 mem, 3131 ms
+> 46: 3123388320 mem, 3207 ms
+> 47: 3112843792 mem, 3269 ms
+> 48: 3128683960 mem, 3144 ms
+> 49: 5617941896 mem, 3201 ms
+> 50: 5902216016 mem, 3131 ms
+>
+>
+>  Date: Mon, 14 Jul 2014 08:34:45 -0500
+>> From: Mark Hiner <hinerm at gmail.com>
+>> To: Burkhard H?ckendorf <burkhard.hoeckendorf at web.de>
+>> Cc: "scifio at scif.io" <scifio at scif.io>
+>> Subject: Re: [SCIFIO] SCIFIO does not seem to release memory of closed
+>>         images
+>> Message-ID:
+>>         <CA+B=mGqx47SkUzM_FHGkoyAy3vbpf8+NMMbURUOSJ65UfeCf3w at mail.
+>> gmail.com>
+>> Content-Type: text/plain; charset="utf-8"
+>>
+>> Hi Burkhard,
+>>
+>>   > run("Collect Garbage");
+>>
+>>   This just calls System.gc().. twice, actually. There are many articles
+>> and
+>> StackOverflow posts about why System.gc() is unreliable
+>> <http://stackoverflow.com/questions/2414105/why-is-it-a-
+>> bad-practice-to-call-system-gc>.
+>> I personally have seen endlessly repeated System.gc() calls effectively do
+>> nothing, necessitating the creation of large objects to force memory to be
+>> released.
+>>
+>>   Also, the JVM should automatically attempt to run the garbage collector
+>> when memory is requested for allocation in excess of the JVM's memory
+>> limits. So the best way to test if SCIFIO has a memory leak would be:
+>>
+>> 1) Open datasets that occupy slightly less than the max memory allocated
+>> to
+>> your Fiji
+>> 2) Close these datasets
+>> 3) Try opening more datasets (of a size such that, if the original
+>> datasets
+>> not released, the total memory used would exceed the max allocation)
+>>
+>> If you see OutOfMemory errors then there could quite possibly be a leak.
+>>
+>> Note also that we have unit tests in place designed to catch these leaks:
+>> https://github.com/scifio/scifio/blob/master/src/test/
+>> java/io/scif/img/cell/cache/utests/CacheServiceTest.java.
+>> An excellent way to demonstrate the memory error would be to come up with
+>> another test in this class that fails.
+>>
+>> Thanks,
+>> Mark
+>>
+>>
+>> On Sat, Jul 12, 2014 at 1:54 PM, Burkhard H?ckendorf <
+>> burkhard.hoeckendorf at web.de> wrote:
+>>
+>>  Dear List,
+>>>
+>>> First of all thanks for developing scifio and doing that open source. I
+>>> have started to use it with ImageJ, since Fiji now offers the option to
+>>> use
+>>> it. Having said that, I may also have stumbled upon an issue. I'm unsure
+>>> when (or whether) scifio releases the corresponding memory after images
+>>> are
+>>> closed. To look at this in a somewhat systematic way, I ran a macro (see
+>>> below) to repeatedly open and close a 3GB single file uncompressed TIFF
+>>> stack (2048x2048x367x16bits) and record some performance stats along the
+>>> way. I ran this using a new download of Fiji.
+>>>
+>>> Here are the results with scifio disabled:
+>>>       11450 ms to open files
+>>>    28578184 mem before opening files
+>>> 9282667288 mem after opening files
+>>> 9272732560 mem after opening files & GC
+>>> 9272780080 mem after closing files
+>>>    24220936 mem after closing files & GC
+>>>
+>>> And here with scifio enabled:
+>>>        43715 ms to open files
+>>>     26765224 mem before opening files
+>>> 10517954400 mem after opening files
+>>>   9327459480 mem after opening files & GC
+>>>   9327506440 mem after closing files
+>>>   9314822896 mem after closing files & GC
+>>>
+>>> I have also checked, whether memory is freed a couple of minutes after
+>>> closing the images, which does not appear to be the case.
+>>>
+>>> Note that scifio is also somewhat slower, although I'm a bit hesitant to
+>>> bring this up, because it is still relatively young and I can see a few
+>>> "improve ... performance" tickets in the issue tracker.
+>>>
+>>> Below is the macro.
+>>> Kind regards,
+>>> Burkhard
+>>>
+>>>
+>>> nOpenTimes = 3;
+>>> file = "/path/to/stack";
+>>>
+>>> run("Collect Garbage");
+>>> memBefore = IJ.currentMemory();
+>>>
+>>> msToOpen = getTime();
+>>> for (i=0; i<nOpenTimes; i+=1) {
+>>>          open(file);
+>>> }
+>>> msToOpen = getTime() - msToOpen;
+>>>
+>>> memFilesOpen = IJ.currentMemory();
+>>> run("Collect Garbage");
+>>> memFilesOpenGC = IJ.currentMemory();
+>>>
+>>> for (i=0; i<nOpenTimes; i+=1) {
+>>>          close();
+>>> }
+>>> memFilesClosed = IJ.currentMemory();
+>>> run("Collect Garbage");
+>>> memFilesClosedGC = IJ.currentMemory();
+>>>
+>>> print(""+ msToOpen + " ms to open files");
+>>> print(""+ memBefore + " mem before opening files");
+>>> print(""+ memFilesOpen + " mem after opening files");
+>>> print(""+ memFilesOpenGC + " mem after opening files & GC");
+>>> print(""+ memFilesClosed + " mem after closing files");
+>>> print(""+ memFilesClosedGC + " mem after closing files & GC");
+>>>
+>>> _______________________________________________
+>>> SCIFIO mailing list
+>>> SCIFIO at scif.io
+>>> http://scif.io/mailman/listinfo/scifio
+>>>
+>>>  -------------- next part --------------
+>> An HTML attachment was scrubbed...
+>> URL: <http://scif.io/pipermail/scifio/attachments/20140714/
+>> 0e7f8b63/attachment-0001.html>
+>>
+>> ------------------------------
+>>
+>> _______________________________________________
+>> SCIFIO mailing list
+>> SCIFIO at scif.io
+>> http://scif.io/mailman/listinfo/scifio
+>>
+>>
+>> End of SCIFIO Digest, Vol 11, Issue 5
+>> *************************************
+>>
+>>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140715/d4dc0809/attachment-0002.html>
+
+From ctrueden at wisc.edu  Wed Jul 16 15:32:20 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Wed, 16 Jul 2014 15:32:20 -0500
+Subject: [SCIFIO] Bio-Formats Imaris writer
+In-Reply-To: <CAHQgS39WcwSZQz6TsPEuC6sK7E0=wUHa8qRgonzpL42HSwn6Cg@mail.gmail.com>
+References: <CAHQgS3_4ypPJanhXv1dr=j8go_rsSRzkh-3QG0jH3ssx=BLgZg@mail.gmail.com>
+	<CADN69ynbrDr5WcV5jepwFscRMKoyFEe539Seo64b_xvCEamFng@mail.gmail.com>
+	<CAHQgS39WcwSZQz6TsPEuC6sK7E0=wUHa8qRgonzpL42HSwn6Cg@mail.gmail.com>
+Message-ID: <CADN69ymR-SWYoEn6fJxWWjsdFZKN6rrShkPoPa5qSQdwQ=xYvg@mail.gmail.com>
+
+Hi Henry,
+
+> I've created a class in the io.scif.formats package for my writer.
+> Since I only have the writer components, but not the reader, how
+> should I go about implementing all of the component classes of Format
+> (Metadata, Parser, Checker, Reader, Writer, Translator). The first 4
+> are listed as mandatory in the tutorial, but it seems like I shouldn't
+> need all of them for writing functionality alone.
+
+Agreed, it should not be necessary to create Reader or Parser components.
+However, writer-only components are still a little rough around the edges.
+The relevant issue is:
+
+https://github.com/scifio/scifio/issues/211
+
+Feel free to comment on that so that GitHub sends you updates if you care
+about progress on it.
+
+But in the meantime, it should still be possible to create a writer-only
+component. For an example, see the JavaFormat:
+
+https://github.com/scifio/scifio/blob/scifio-0.15.4/scifio/src/main/java/io/scif/formats/JavaFormat.java
+
+Regards,
+Curtis
+
+
+On Wed, Jun 25, 2014 at 1:21 PM, Henry Pinkard <henry.pinkard at gmail.com>
+wrote:
+
+> Hi Curtis,
+>
+> This all sounds great. I've cloned the SCIFIO core as well as the
+> tutorials, which have been quite helpful in getting things set up.
+>
+> I've created a class in the io.scif.formats package for my writer. Since I
+> only have the writer components, but not the reader, how should I go about
+> implementing all of the component classes of Format (Metadata, Parser,
+> Checker, Reader, Writer, Translator). The first 4 are listed as mandatory
+> in the tutorial, but it seems like I shouldn't need all of them for writing
+> functionality alone.
+>
+> Best,
+> Henry
+>
+>
+> On Sun, Jun 1, 2014 at 7:27 AM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+>
+>> Hi Henry,
+>>
+>> > Over the past couple years, I've been developing and testing a java
+>> > library that is capable of writing Imaris .ims files. This library has
+>> > allowed me to build an ImageJ plugin that automatically stitches,
+>> > processes, and converts OME-TIFFs from Micro-Manager into Imaris
+>> > files, which in turn allows a significantly greater throughput of
+>> > imaging data with much less effort from users.
+>>
+>> Sounds great!
+>>
+>> > This library has been instrumental to the workflow of users in the
+>> > imaging center in which I work, and I want to find a way to share its
+>> > utility with researchers everywhere. Incorporating it into the
+>> > Bio-Formats exporter would both increase its visibility and leverage
+>> > the multitude of formats on Bio-Formats' front end to make it usable
+>> > with all types of microscopy data.
+>>
+>> Rather than implementing a Bio-Formats writer, I encourage you to check
+>> out SCIFIO [1, 2, 3]. Though still in beta, SCIFIO is the core I/O
+>> mechanism of ImageJ2, which is finally due for release later this week.
+>> SCIFIO uses the SciJava plugin framework, meaning your writer would be
+>> automatically discovered and used as appropriate with no additional work
+>> from you. And we have recently integrated SCIFIO directly into ImageJ at
+>> the core level, so things like File > Open now use it, including whatever
+>> format plugins are available. (SCIFIO also has a Bio-Formats format plugin,
+>> so that all of the BF formats work in ImageJ that way, too!)
+>>
+>> You could then serve your Imaris writer from its own ImageJ update site
+>> [4, 5], to make it available to all ImageJ users.
+>>
+>> > In addition, I've convinced Bitplane to make their format open source,
+>> > and I believe this may allow .ims files to grow beyond a proprietary
+>> > file format into a generalized multi-resolution format useful for a
+>> > variety of applications that deal with the visualization of extremely
+>> > large stitched images.
+>>
+>> Glad to hear that Bitplane is willing to do this. In that case, if you do
+>> complete a SCIFIO Imaris writer and want to donate the code upstream, you
+>> could file a pull request against the SCIFIO LifeSci project [6] to
+>> contribute it there, since that project houses readers & writers for _open_
+>> life sciences formats. So if Bitplane publishes an open specification, we
+>> would be willing to add it to the project.
+>>
+>> If you have any questions about SCIFIO, please feel free to use the
+>> SCIFIO mailing list [7]. Or if you go the Bio-Formats route, you can use
+>> ome-devel [8].
+>>
+>> Regards,
+>> Curtis
+>>
+>> [1] http://loci.wisc.edu/software/scifio
+>> [2] https://github.com/scifio/scifio
+>> [3] https://github.com/scifio/scifio-tutorials
+>> [4] http://wiki.imagej.net/Update_Sites
+>> [5] http://wiki.imagej.net/List_of_update_sites
+>>  [6] https://github.com/scifio/scifio-lifesci
+>> [7] http://scif.io/mailman/listinfo/scifio
+>> [8] http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-devel/
+>>
+>>
+>> On Thu, May 29, 2014 at 6:55 PM, Henry Pinkard <henry.pinkard at gmail.com>
+>> wrote:
+>>
+>>> Hi Melissa and Curtis,
+>>>
+>>> Over the past couple years, I've been developing and testing a java
+>>> library that is capable of writing Imaris .ims files. This library has
+>>> allowed me to build an ImageJ plugin that automatically stitches,
+>>> processes, and converts OME-TIFFs from Micro-Manager into Imaris files,
+>>> which in turn allows a significantly greater throughput of imaging data
+>>> with much less effort from users.
+>>>
+>>> This library has been instrumental to the workflow of users in the
+>>> imaging center in which I work, and I want to find a way to share its
+>>> utility with researchers everywhere. Incorporating it into the Bio-Formats
+>>> exporter would both increase its visibility and leverage the multitude of
+>>> formats on Bio-Formats' front end to make it usable with all types of
+>>> microscopy data. In addition, I've convinced Bitplane to make their format
+>>> open source, and I believe this may allow .ims files to grow beyond a
+>>> proprietary file format into a generalized multi-resolution format useful
+>>> for a variety of applications that deal with the visualization of extremely
+>>> large stitched images. I'm happy to rework the library in whatever ways
+>>> make it easiest to incorporate on your end. Let me know your thoughts on
+>>> how to best proceed.
+>>>
+>>> Best,
+>>> Henry
+>>>
+>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140716/6cb66ce5/attachment-0002.html>
+
+From martin.hoehne at uk-koeln.de  Thu Jul 17 11:39:18 2014
+From: martin.hoehne at uk-koeln.de (=?iso-8859-1?Q?Martin_H=F6hne?=)
+Date: Thu, 17 Jul 2014 16:39:18 +0000
+Subject: [SCIFIO] bug report: missing slice labels with Fiji using SCIFIO
+Message-ID: <E450B219918B8C47A2C631E943340A708B391F01@UKK086.ADS.UK-KOELN.DE>
+
+Dear All,
+when using SCIFO for saving Tiff-stacks with Fiji (ImageJ 2.0.0-rc-9/1.49d) the slice labels are lost.
+The following macro reproduces the error. 
+
+path=getDirectory("temp");
+run("Blobs (25K)");
+run("Duplicate...", "title=blobs-1.gif");
+run("Duplicate...", "title=blobs-2.gif");
+run("Images to Stack", "name=Stack title=[] use");
+saveAs("Tiff", path+File.separator+"Stack.tif");
+rename("Before_save");
+open(path+File.separator+"Stack.tif");
+File.delete(path+File.separator+"Stack.tif");
+
+
+Thanks for all you effort,
+
+Martin 
+
+
+
+
+
+From Johannes.Schindelin at gmx.de  Thu Jul 17 12:09:43 2014
+From: Johannes.Schindelin at gmx.de (Johannes Schindelin)
+Date: Thu, 17 Jul 2014 19:09:43 +0200 (CEST)
+Subject: [SCIFIO] bug report: missing slice labels with Fiji using SCIFIO
+In-Reply-To: <E450B219918B8C47A2C631E943340A708B391F01@UKK086.ADS.UK-KOELN.DE>
+References: <E450B219918B8C47A2C631E943340A708B391F01@UKK086.ADS.UK-KOELN.DE>
+Message-ID: <alpine.DEB.1.00.1407171909231.3456@s15462909.onlinehome-server.info>
+
+Hi,
+
+On Thu, 17 Jul 2014, Martin H?hne wrote:
+
+> when using SCIFO for saving Tiff-stacks with Fiji (ImageJ
+> 2.0.0-rc-9/1.49d) the slice labels are lost.
+
+See https://github.com/scifio/scifio/pull/209
+
+Ciao,
+Johannes
+
+From burkhard.hoeckendorf at web.de  Wed Jul 23 13:41:45 2014
+From: burkhard.hoeckendorf at web.de (=?UTF-8?B?QnVya2hhcmQgSMO2Y2tlbmRvcmY=?=)
+Date: Wed, 23 Jul 2014 14:41:45 -0400
+Subject: [SCIFIO] SCIFIO does not seem to release memory of closed images
+In-Reply-To: <CA+B=mGoxT5rtJHZ=RpJ_e66htKARMZEQT_ky8pmz5N8KpV8E2w@mail.gmail.com>
+References: <mailman.7.1405357201.24546.scifio@scif.io>
+	<53C423E1.6030000@web.de>
+	<CA+B=mGoxT5rtJHZ=RpJ_e66htKARMZEQT_ky8pmz5N8KpV8E2w@mail.gmail.com>
+Message-ID: <53D001E9.8070704@web.de>
+
+Dear Mark,
+
+Thanks for looking into this. The bug report seems involved indeed, 
+which also means that I can be of little help. I hope you'll find a good 
+(and relatively pain-free) solution and that the grant work is going well.
+
+Best,
+Burkhard
+
+
+On 7/15/2014 12:18 PM, Mark Hiner wrote:
+> Hello again Burkhard,
+>
+> Thank you for your persistence in this issue. After looking at it again
+> today, I realized that there must be a memory leak in how we try to map
+> and synchronize ImageJ 1.x ImagePluses with ImageJ2 data structures.
+>
+> Indeed, that was exactly what I found... however, the solution is
+> non-trivial.
+>
+> I have filed a new issue for this here:
+> https://github.com/imagej/imagej-legacy/issues/67. It is something I
+> would like to resolve quickly, but because it is an involved issue that
+> requires additional investigation and discussion, it's at a lower
+> priority than some necessary grant work this week.
+>
+> Thanks again for the report - it is, at least, good to know where the
+> problem is now.
+> - Mark
+>
+>
+> On Mon, Jul 14, 2014 at 1:39 PM, Burkhard H?ckendorf
+> <burkhard.hoeckendorf at web.de <mailto:burkhard.hoeckendorf at web.de>> wrote:
+>
+>     Hi Mark,
+>
+>     Thanks for the speedy response. I've rewritten my macro to perhaps
+>     illustrate my point more clearly. It now opens the file and
+>     immediately closes it again, for 50 iterations.
+>
+>     With scifio enabled I do not get an out of memory error, but it
+>     still accumulates memory to the point that it can not open the
+>     entire image anymore but instead opens virtual stacks. Without
+>     scifio this does not occur.
+>
+>     Also note that reading the full image into memory without scifio is
+>     performance-wise much closer to opening a scifio virtual image than
+>     reading the full image with scifio.
+>
+>     Below is the macro and its output.
+>     Best,
+>     Burkhard
+>
+>     nOpenTimes = 50;
+>     file = "/path/to/image";
+>
+>     for (i=1; i<=nOpenTimes; i+=1) {
+>              msToOpen = getTime();
+>              open(file);
+>              msToOpen = getTime() - msToOpen;
+>
+>              msg = ""+ i +": "+ IJ.currentMemory() +" mem, "+ msToOpen
+>     +" ms";
+>              if (is("Virtual Stack"))
+>                      msg += " (virtual)";
+>              print(msg);
+>
+>              close();
+>     }
+>
+>     Using SCIFIO:
+>       1:  3822648536 mem, 15984 ms
+>       2: 7572956280 <tel:7572956280> mem, 14986 ms
+>       3:  9998931400 mem, 14821 ms
+>       4: 13784264296 mem, 14895 ms
+>       5: 16885256128 mem, 15019 ms
+>       6: 19656427040 mem, 15036 ms
+>       7: 24079096808 mem, 15212 ms
+>       8: 27510832552 mem, 15179 ms
+>       9: 32077394688 mem, 15427 ms
+>     10: 34409304040 mem, 15482 ms
+>     11: 36859610432 mem, 15227 ms
+>     12: 43061552320 mem, 15607 ms
+>     13: 42104714576 mem, 15359 ms
+>     14: 47910156296 mem, 15073 ms
+>     15: 48044651592 mem, 3053 ms (virtual)
+>     16: 48170004824 mem, 2502 ms (virtual)
+>     17: 48295208256 mem, 2522 ms (virtual)
+>     18: 48422832064 mem, 2495 ms (virtual)
+>     19: 48550863920 mem, 2504 ms (virtual)
+>     20: 48228290696 mem, 2615 ms (virtual)
+>     21: 48343976264 mem, 2482 ms (virtual)
+>     22: 48461224352 mem, 2495 ms (virtual)
+>     23: 48577275224 mem, 2482 ms (virtual)
+>     24: 48696021320 mem, 2493 ms (virtual)
+>     25: 48815302152 mem, 2513 ms (virtual)
+>     26: 48512671680 mem, 2682 ms (virtual)
+>     27: 48624380048 mem, 2493 ms (virtual)
+>     28: 48734321624 mem, 2487 ms (virtual)
+>     29: 48847280096 mem, 2504 ms (virtual)
+>     30: 48958189928 mem, 2491 ms (virtual)
+>     31: 49069385672 mem, 2499 ms (virtual)
+>     32: 48787137328 mem, 2614 ms (virtual)
+>     33: 48896061816 mem, 2500 ms (virtual)
+>     34: 49004784912 mem, 2488 ms (virtual)
+>     35: 49116572664 mem, 2516 ms (virtual)
+>     36: 49226035440 mem, 2497 ms (virtual)
+>     37: 49334418896 mem, 2500 ms (virtual)
+>     38: 49074728512 mem, 2660 ms (virtual)
+>     39: 49183254768 mem, 2506 ms (virtual)
+>     40: 49290891152 mem, 2491 ms (virtual)
+>     41: 49399382336 mem, 2499 ms (virtual)
+>     42: 49505843008 mem, 2487 ms (virtual)
+>     43: 49613438808 mem, 2487 ms (virtual)
+>     44: 49721198184 mem, 2481 ms (virtual)
+>     45: 49441266864 mem, 2709 ms (virtual)
+>     46: 49548934656 mem, 2485 ms (virtual)
+>     47: 49656785920 mem, 2501 ms (virtual)
+>     48: 49764127512 mem, 2480 ms (virtual)
+>     49: 49872069552 mem, 2495 ms (virtual)
+>     50: 49979814216 mem, 2482 ms (virtual)
+>
+>     Not using SCIFIO:
+>       1: 3107094592 <tel:3107094592> mem, 3921 ms
+>       2: 3109153032 <tel:3109153032> mem, 3837 ms
+>       3: 3109836568 <tel:3109836568> mem, 3631 ms
+>       4: 3109512264 <tel:3109512264> mem, 3581 ms
+>       5: 3109478728 <tel:3109478728> mem, 3633 ms
+>       6: 3123692656 <tel:3123692656> mem, 4145 ms
+>       7: 3112714624 mem, 3301 ms
+>       8: 3128373632 <tel:3128373632> mem, 3202 ms
+>       9: 3117798216 mem, 3235 ms
+>     10: 3133595872 <tel:3133595872> mem, 3190 ms
+>     11: 3123048664 <tel:3123048664> mem, 3229 ms
+>     12: 5754899128 <tel:5754899128> mem, 3404 ms
+>     13: 3128308704 <tel:3128308704> mem, 3307 ms
+>     14: 3117759024 mem, 3219 ms
+>     15: 5910573440 mem, 3112 ms
+>     16: 5488969832 mem, 3222 ms
+>     17: 3112824736 mem, 3273 ms
+>     18: 3128647888 <tel:3128647888> mem, 3147 ms
+>     19: 3118094280 mem, 3208 ms
+>     20: 5902184440 mem, 3281 ms
+>     21: 3123372736 <tel:3123372736> mem, 3224 ms
+>     22: 3112825408 mem, 3259 ms
+>     23: 3128648960 <tel:3128648960> mem, 3146 ms
+>     24: 3118100760 mem, 3230 ms
+>     25: 3133941888 <tel:3133941888> mem, 3119 ms
+>     26: 5488982136 mem, 3225 ms
+>     27: 3112820248 mem, 3249 ms
+>     28: 3128655064 <tel:3128655064> mem, 3154 ms
+>     29: 3118110296 mem, 3241 ms
+>     30: 3133956392 <tel:3133956392> mem, 3176 ms
+>     31: 3123381976 <tel:3123381976> mem, 3220 ms
+>     32: 3112831584 mem, 3264 ms
+>     33: 3128664576 <tel:3128664576> mem, 3170 ms
+>     34: 3118103400 mem, 3209 ms
+>     35: 3133956744 <tel:3133956744> mem, 3163 ms
+>     36: 3123387312 <tel:3123387312> mem, 3233 ms
+>     37: 3112827304 mem, 3279 ms
+>     38: 3128664688 <tel:3128664688> mem, 3158 ms
+>     39: 3118115152 mem, 3256 ms
+>     40: 3133956432 <tel:3133956432> mem, 3128 ms
+>     41: 5488994224 mem, 3214 ms
+>     42: 5746873888 <tel:5746873888> mem, 3266 ms
+>     43: 3128666592 <tel:3128666592> mem, 3174 ms
+>     44: 3118109984 mem, 3215 ms
+>     45: 3133949360 <tel:3133949360> mem, 3131 ms
+>     46: 3123388320 <tel:3123388320> mem, 3207 ms
+>     47: 3112843792 mem, 3269 ms
+>     48: 3128683960 <tel:3128683960> mem, 3144 ms
+>     49: 5617941896 <tel:5617941896> mem, 3201 ms
+>     50: 5902216016 mem, 3131 ms
+>
+>
+>         Date: Mon, 14 Jul 2014 08:34:45 -0500
+>         From: Mark Hiner <hinerm at gmail.com <mailto:hinerm at gmail.com>>
+>         To: Burkhard H?ckendorf <burkhard.hoeckendorf at web.de
+>         <mailto:burkhard.hoeckendorf at web.de>>
+>         Cc: "scifio at scif.io <mailto:scifio at scif.io>" <scifio at scif.io
+>         <mailto:scifio at scif.io>>
+>         Subject: Re: [SCIFIO] SCIFIO does not seem to release memory of
+>         closed
+>                  images
+>         Message-ID:
+>
+>         <CA+B=mGqx47SkUzM___FHGkoyAy3vbpf8+__NMMbURUOSJ65UfeCf3w at mail.__gmail.com
+>         <mailto:mGqx47SkUzM_FHGkoyAy3vbpf8%2BNMMbURUOSJ65UfeCf3w at mail.gmail.com>>
+>         Content-Type: text/plain; charset="utf-8"
+>
+>         Hi Burkhard,
+>
+>            > run("Collect Garbage");
+>
+>            This just calls System.gc().. twice, actually. There are many
+>         articles and
+>         StackOverflow posts about why System.gc() is unreliable
+>         <http://stackoverflow.com/__questions/2414105/why-is-it-a-__bad-practice-to-call-system-gc
+>         <http://stackoverflow.com/questions/2414105/why-is-it-a-bad-practice-to-call-system-gc>__>.
+>         I personally have seen endlessly repeated System.gc() calls
+>         effectively do
+>         nothing, necessitating the creation of large objects to force
+>         memory to be
+>         released.
+>
+>            Also, the JVM should automatically attempt to run the garbage
+>         collector
+>         when memory is requested for allocation in excess of the JVM's
+>         memory
+>         limits. So the best way to test if SCIFIO has a memory leak
+>         would be:
+>
+>         1) Open datasets that occupy slightly less than the max memory
+>         allocated to
+>         your Fiji
+>         2) Close these datasets
+>         3) Try opening more datasets (of a size such that, if the
+>         original datasets
+>         not released, the total memory used would exceed the max allocation)
+>
+>         If you see OutOfMemory errors then there could quite possibly be
+>         a leak.
+>
+>         Note also that we have unit tests in place designed to catch
+>         these leaks:
+>         https://github.com/scifio/__scifio/blob/master/src/test/__java/io/scif/img/cell/cache/__utests/CacheServiceTest.java
+>         <https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java>.
+>         An excellent way to demonstrate the memory error would be to
+>         come up with
+>         another test in this class that fails.
+>
+>         Thanks,
+>         Mark
+>
+>
+>         On Sat, Jul 12, 2014 at 1:54 PM, Burkhard H?ckendorf <
+>         burkhard.hoeckendorf at web.de
+>         <mailto:burkhard.hoeckendorf at web.de>> wrote:
+>
+>             Dear List,
+>
+>             First of all thanks for developing scifio and doing that
+>             open source. I
+>             have started to use it with ImageJ, since Fiji now offers
+>             the option to use
+>             it. Having said that, I may also have stumbled upon an
+>             issue. I'm unsure
+>             when (or whether) scifio releases the corresponding memory
+>             after images are
+>             closed. To look at this in a somewhat systematic way, I ran
+>             a macro (see
+>             below) to repeatedly open and close a 3GB single file
+>             uncompressed TIFF
+>             stack (2048x2048x367x16bits) and record some performance
+>             stats along the
+>             way. I ran this using a new download of Fiji.
+>
+>             Here are the results with scifio disabled:
+>                    11450 ms to open files
+>                 28578184 mem before opening files
+>             9282667288 <tel:9282667288> mem after opening files
+>             9272732560 mem after opening files & GC
+>             9272780080 mem after closing files
+>                 24220936 mem after closing files & GC
+>
+>             And here with scifio enabled:
+>                     43715 ms to open files
+>                  26765224 mem before opening files
+>             10517954400 mem after opening files
+>                9327459480 mem after opening files & GC
+>                9327506440 mem after closing files
+>             9314822896 <tel:9314822896> mem after closing files & GC
+>
+>             I have also checked, whether memory is freed a couple of
+>             minutes after
+>             closing the images, which does not appear to be the case.
+>
+>             Note that scifio is also somewhat slower, although I'm a bit
+>             hesitant to
+>             bring this up, because it is still relatively young and I
+>             can see a few
+>             "improve ... performance" tickets in the issue tracker.
+>
+>             Below is the macro.
+>             Kind regards,
+>             Burkhard
+>
+>
+>             nOpenTimes = 3;
+>             file = "/path/to/stack";
+>
+>             run("Collect Garbage");
+>             memBefore = IJ.currentMemory();
+>
+>             msToOpen = getTime();
+>             for (i=0; i<nOpenTimes; i+=1) {
+>                       open(file);
+>             }
+>             msToOpen = getTime() - msToOpen;
+>
+>             memFilesOpen = IJ.currentMemory();
+>             run("Collect Garbage");
+>             memFilesOpenGC = IJ.currentMemory();
+>
+>             for (i=0; i<nOpenTimes; i+=1) {
+>                       close();
+>             }
+>             memFilesClosed = IJ.currentMemory();
+>             run("Collect Garbage");
+>             memFilesClosedGC = IJ.currentMemory();
+>
+>             print(""+ msToOpen + " ms to open files");
+>             print(""+ memBefore + " mem before opening files");
+>             print(""+ memFilesOpen + " mem after opening files");
+>             print(""+ memFilesOpenGC + " mem after opening files & GC");
+>             print(""+ memFilesClosed + " mem after closing files");
+>             print(""+ memFilesClosedGC + " mem after closing files & GC");
+>
+>             _________________________________________________
+>             SCIFIO mailing list
+>             SCIFIO at scif.io <mailto:SCIFIO at scif.io>
+>             http://scif.io/mailman/__listinfo/scifio
+>             <http://scif.io/mailman/listinfo/scifio>
+>
+>         -------------- next part --------------
+>         An HTML attachment was scrubbed...
+>         URL:
+>         <http://scif.io/pipermail/__scifio/attachments/20140714/__0e7f8b63/attachment-0001.html
+>         <http://scif.io/pipermail/scifio/attachments/20140714/0e7f8b63/attachment-0001.html>>
+>
+>         ------------------------------
+>
+>         _________________________________________________
+>         SCIFIO mailing list
+>         SCIFIO at scif.io <mailto:SCIFIO at scif.io>
+>         http://scif.io/mailman/__listinfo/scifio
+>         <http://scif.io/mailman/listinfo/scifio>
+>
+>
+>         End of SCIFIO Digest, Vol 11, Issue 5
+>         ******************************__*******
+>
+>
+>     _________________________________________________
+>     SCIFIO mailing list
+>     SCIFIO at scif.io <mailto:SCIFIO at scif.io>
+>     http://scif.io/mailman/__listinfo/scifio
+>     <http://scif.io/mailman/listinfo/scifio>
+>
+>
+
+
+
+From hadrien.mary at gmail.com  Tue Jul 29 02:29:18 2014
+From: hadrien.mary at gmail.com (Hadrien Mary)
+Date: Tue, 29 Jul 2014 09:29:18 +0200
+Subject: [SCIFIO] Bugzilla
+Message-ID: <CAEpSnnZVqrj3V0V6=PiZ6eod=fcYk=9hbCTW3fBCP4fpQHSO6g@mail.gmail.com>
+
+Hi guys,
+
+I am not sure how much the fiji bugzilla is used accoring to the number of
+bugs opened. So I post here three potential bugs I created yesterday and
+today.
+
+http://fiji.sc/bugzilla/buglist.cgi?resolution=---&emailassigned_to1=1&emailreporter1=1&emailtype1=exact&email1=marelo64%40gmail.com&list_id=954
+
+Best,
+
+--
+HadiM
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140729/229bc952/attachment-0002.html>
+

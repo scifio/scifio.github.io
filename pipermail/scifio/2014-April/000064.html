@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] How to make ITK to download the SCIFIO module?
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20How%20to%20make%20ITK%20to%20download%20the%20SCIFIO%20module%3F&In-Reply-To=%3CCA%2BB%3DmGqeRLCW4JN1FAFynbd32seXMAMGgdiieGda6o2Kef67qQ%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000063.html">
+   <LINK REL="Next"  HREF="000065.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] How to make ITK to download the SCIFIO module?</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20How%20to%20make%20ITK%20to%20download%20the%20SCIFIO%20module%3F&In-Reply-To=%3CCA%2BB%3DmGqeRLCW4JN1FAFynbd32seXMAMGgdiieGda6o2Kef67qQ%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] How to make ITK to download the SCIFIO module?">hinerm at gmail.com
+       </A><BR>
+    <I>Fri Apr  4 06:49:42 CDT 2014</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000063.html">[SCIFIO] How to make ITK to download the SCIFIO module?
+</A></li>
+        <LI>Next message: <A HREF="000065.html">[SCIFIO] How to make ITK to download the SCIFIO module?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#64">[ date ]</a>
+              <a href="thread.html#64">[ thread ]</a>
+              <a href="subject.html#64">[ subject ]</a>
+              <a href="author.html#64">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Joe,
+
+I don't see an option of 'Module_SCIFIO' or 'Fetch_SCIFIO'
+&gt;<i>
+</I>
+Unfortunately those instructions are correct (although it is called
+&quot;Module_SCIFIO&quot; now, and not &quot;Fetch_SCIFIO&quot; on 4.5.1).
+
+What operating system are you using?
+
+I am assuming you just did something like (from the top-level of the ITK
+checkout):
+* mkdir build
+* cd build
+* ccmake ..
+
+to start the CMake configuration.. does that sound about right? That works
+for me locally right now.
+
+Thanks,
+Mark
+
+
+On Wed, Apr 2, 2014 at 2:38 PM, Joe Ping-Lin Hsiao &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">phsiao at cs.unc.edu</A>&gt;wrote:
+
+&gt;<i> Hi,
+</I>&gt;<i>
+</I>&gt;<i>    I 'git pull' the latest ITK code and switch to v4.5.1 by 'git checkout
+</I>&gt;<i> tags/v4.5.1'. In CMake (advanced mode) I don't see an option of
+</I>&gt;<i> 'Module_SCIFIO' or 'Fetch_SCIFIO' like the page says (
+</I>&gt;<i> <A HREF="http://www.openmicroscopy.org/site/support/bio-formats5/users/itk/">http://www.openmicroscopy.org/site/support/bio-formats5/users/itk/</A>). How
+</I>&gt;<i> do I make ITK to download SCIFIO?
+</I>&gt;<i>
+</I>&gt;<i> Thanks,
+</I>&gt;<i> Joe
+</I>&gt;<i>
+</I>&gt;<i> _______________________________________________
+</I>&gt;<i> SCIFIO mailing list
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20140404/f270e143/attachment.html">http://scif.io/pipermail/scifio/attachments/20140404/f270e143/attachment.html</A>&gt;
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000063.html">[SCIFIO] How to make ITK to download the SCIFIO module?
+</A></li>
+	<LI>Next message: <A HREF="000065.html">[SCIFIO] How to make ITK to download the SCIFIO module?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#64">[ date ]</a>
+              <a href="thread.html#64">[ thread ]</a>
+              <a href="subject.html#64">[ subject ]</a>
+              <a href="author.html#64">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

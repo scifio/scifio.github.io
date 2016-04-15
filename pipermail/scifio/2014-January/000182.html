@@ -1,0 +1,426 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] [ImageJ-devel] [ImgLib2] The img-metadata branch
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20%5BImageJ-devel%5D%20%5BImgLib2%5D%20The%20img-metadata%20branch&In-Reply-To=%3CCA%2BB%3DmGrvxVDsK6J_j-Nv%3Dp%3DzUtF2Dfqsvmb88eam6s65%2B-w%3DHA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000181.html">
+   <LINK REL="Next"  HREF="000183.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] [ImageJ-devel] [ImgLib2] The img-metadata branch</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20%5BImageJ-devel%5D%20%5BImgLib2%5D%20The%20img-metadata%20branch&In-Reply-To=%3CCA%2BB%3DmGrvxVDsK6J_j-Nv%3Dp%3DzUtF2Dfqsvmb88eam6s65%2B-w%3DHA%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] [ImageJ-devel] [ImgLib2] The img-metadata branch">hiner at wisc.edu
+       </A><BR>
+    <I>Wed Jan  8 15:52:16 CST 2014</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000181.html">[SCIFIO] [ImageJ-devel] [ImgLib2] The img-metadata branch
+</A></li>
+        <LI>Next message: <A HREF="000183.html">[SCIFIO] [ImageJ-devel] [ImgLib2] The img-metadata branch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#182">[ date ]</a>
+              <a href="thread.html#182">[ thread ]</a>
+              <a href="subject.html#182">[ subject ]</a>
+              <a href="author.html#182">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Ahh.. looks like this was just a general bug in opening TIFF data. Sorry
+that wasn't clear to me.
+
+Anyway, it's fixed now locally. I'll release SCIFIO 0.8.2 tonight or
+tomorrow which will include the fix (you'll just have to update your
+pom-scijava to the latest version at that point).
+
+Side note: you may want to define your CreatePhantomCommand (and other
+commands?) as discoverable IJ2 commands..
+
+For example:
+
+@Plugin(type=Command.class, menu = {
+    @Menu(label = MenuConstants.PLUGINS_LABEL,
+            weight = MenuConstants.PLUGINS_WEIGHT,
+            mnemonic = MenuConstants.PLUGINS_MNEMONIC),
+        @Menu(label = &quot;Truenorth&quot;, mnemonic = 't'), @Menu(label = &quot;Create
+Phantom&quot;, weight = 1) })
+public class CreatePhantomCommand  implements Command
+{
+...
+}
+
+Would make the CreatePhantomCommand discoverable by searching commands, or
+via the Plugin menu. Made testing in IJ2 a little easier for me..
+
+Anyway, thanks again!
+- Mark
+
+
+On Wed, Jan 8, 2014 at 3:01 PM, Brian Northan &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">bnorthan at gmail.com</A>&gt; wrote:
+
+&gt;<i> Hi Mark
+</I>&gt;<i>
+</I>&gt;<i> To clarify I was only changing the spacings to 0 as a hack to get around
+</I>&gt;<i> the error I was seeing.  The code I was wondering about (around line 975 of
+</I>&gt;<i> TIFFFormat.java) is only called for spacing &gt; 0.0.
+</I>&gt;<i>
+</I>&gt;<i> You can repeat the error by running the CreatePhantomCommand we discussed
+</I>&gt;<i> a couple weeks ago.  (I believe you retrieved the code and got it running
+</I>&gt;<i> but let me know if you need the instructions again).
+</I>&gt;<i>
+</I>&gt;<i> The error can be repeated by running the CreatePhantomCommand to create a
+</I>&gt;<i> blank image and then trying to load the output into ImageJ2.  The stack
+</I>&gt;<i> trace that I get from ImageJ2 is then as follows...
+</I>&gt;<i>
+</I>&gt;<i> java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
+</I>&gt;<i>     at java.util.ArrayList.rangeCheck(ArrayList.java:604)
+</I>&gt;<i>     at java.util.ArrayList.get(ArrayList.java:382)
+</I>&gt;<i>     at io.scif.AbstractMetadata.get(AbstractMetadata.java:138)
+</I>&gt;<i>     at
+</I>&gt;<i> io.scif.formats.TIFFFormat$BaseTIFFParser.initMetadata(TIFFFormat.java:975)
+</I>&gt;<i>     at io.scif.formats.TIFFFormat$Parser.initMetadata(TIFFFormat.java:375)
+</I>&gt;<i>     at
+</I>&gt;<i> io.scif.formats.TIFFFormat$BaseTIFFParser.typedParse(TIFFFormat.java:645)
+</I>&gt;<i>     at
+</I>&gt;<i> io.scif.formats.TIFFFormat$BaseTIFFParser.typedParse(TIFFFormat.java:627)
+</I>&gt;<i>     at io.scif.AbstractParser.parse(AbstractParser.java:326)
+</I>&gt;<i>     at io.scif.AbstractParser.parse(AbstractParser.java:105)
+</I>&gt;<i>     at io.scif.AbstractParser.parse(AbstractParser.java:59)
+</I>&gt;<i>     at io.scif.AbstractReader.setSource(AbstractReader.java:217)
+</I>&gt;<i>     at
+</I>&gt;<i> io.scif.services.DefaultInitializeService.initializeReader(DefaultInitializeService.java:96)
+</I>&gt;<i>     at io.scif.img.ImgOpener.createReader(ImgOpener.java:365)
+</I>&gt;<i>     at io.scif.img.ImgOpener.openImg(ImgOpener.java:147)
+</I>&gt;<i>     at
+</I>&gt;<i> imagej.data.DefaultDatasetService.open(DefaultDatasetService.java:254)
+</I>&gt;<i>     at imagej.data.io.DatasetIOPlugin.open(DatasetIOPlugin.java:82)
+</I>&gt;<i>     at imagej.data.io.DatasetIOPlugin.open(DatasetIOPlugin.java:54)
+</I>&gt;<i>     at imagej.io.DefaultIOService.open(DefaultIOService.java:87)
+</I>&gt;<i>     at imagej.plugins.commands.io.OpenFile.run(OpenFile.java:85)
+</I>&gt;<i>     at imagej.command.CommandModule.run(CommandModule.java:196)
+</I>&gt;<i>     at imagej.module.ModuleRunner.run(ModuleRunner.java:170)
+</I>&gt;<i>     at imagej.module.ModuleRunner.call(ModuleRunner.java:131)
+</I>&gt;<i>     at imagej.module.ModuleRunner.call(ModuleRunner.java:70)
+</I>&gt;<i>     at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+</I>&gt;<i>     at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+</I>&gt;<i>     at
+</I>&gt;<i> java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+</I>&gt;<i>     at
+</I>&gt;<i> java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+</I>&gt;<i>     at java.lang.Thread.run(Thread.java:724)
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> On Wed, Jan 8, 2014 at 3:40 PM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> Hi Brian,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  Sorry to hear that some tests are failing for you now.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  It does sound like there could be a bug here, but I will need more
+</I>&gt;&gt;<i> information to track it down.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  Which tests are you running exactly, and what's the stack trace you get?
+</I>&gt;&gt;<i> If you could provide a minimal set of steps to reproduce the error, that
+</I>&gt;&gt;<i> would be great. Also, where are you setting the pixel size to be 0? (as a
+</I>&gt;&gt;<i> side note, a value of 1.0 might be safer.. which is what these axes are
+</I>&gt;&gt;<i> supposed to default to)
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Thanks!
+</I>&gt;&gt;<i> Mark
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> On Wed, Jan 8, 2014 at 9:57 AM, Brian Northan &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">bnorthan at gmail.com</A>&gt; wrote:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Hi Mark
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Hope you had a good holiday.   I noticed some tests of mine failing just
+</I>&gt;&gt;&gt;<i> after Christmas. I think the failure possibly has something to do with a
+</I>&gt;&gt;&gt;<i> change in setting pixel size when loading.  Right around line 1000 in this
+</I>&gt;&gt;&gt;<i> commit.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/commit/232261b978cbaeb42eb28c67cdddb7aca1acb1b6">https://github.com/scifio/scifio/commit/232261b978cbaeb42eb28c67cdddb7aca1acb1b6</A>
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> If you remember I have a script SimpleCreatePhantoms.sh which creates a
+</I>&gt;&gt;&gt;<i> blank image then places a sphere in it.  It now fails in the second step
+</I>&gt;&gt;&gt;<i> because it cannot reload the blank image.  I also cannot reload the newly
+</I>&gt;&gt;&gt;<i> created blank image into the latest build of ImageJ.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> I have a workaround (set pixel size to zero since I am not actually
+</I>&gt;&gt;&gt;<i> using it right now) so it isn't critical but thought I'd let you know about
+</I>&gt;&gt;&gt;<i> a potential bug.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Brian
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> On Mon, Dec 16, 2013 at 3:32 PM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> No problem. That &quot;error&quot; message when failing to create services is
+</I>&gt;&gt;&gt;&gt;<i> confusing.
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> Glad it's working, let us know if you have any more problems!
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> - Mark
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> On Mon, Dec 16, 2013 at 2:19 PM, Brian Northan &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">bnorthan at gmail.com</A>&gt;wrote:
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> Hi Mark
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> I just checked and It did work after all...  I actually never checked
+</I>&gt;&gt;&gt;&gt;&gt;<i> to see if the final output was created.  I just saw the exception and
+</I>&gt;&gt;&gt;&gt;&gt;<i> assumed it had stopped.
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> So everything appears great now,.  Looks like the floating point
+</I>&gt;&gt;&gt;&gt;&gt;<i> numbers are being saved correctly.
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> Thanks for the fix
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> Brian
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i> On Mon, Dec 16, 2013 at 2:46 PM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Brian,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>  So, running your CreatePhantomCommand via the DeconvolutionTest
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> class actually creates a blank image for me... I ran it from Eclipse
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> directly though.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>  Also, I did observe the same error message that you saw, but the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> message was just logged and execution continued (because the services that
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> failed to instantiate weren't necessary for execution.. so the &quot;error&quot;
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> nature of the message is a bit of an overstatement in this case).
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>  It is possible that some classes in SCIFIO erroneously have required
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> services that aren't available in headless mode, but nothing stood out to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> me as suspicious.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> Could you do two more things for me:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> 1) Try running your scripts without using a headless IJ2 to verify
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> this works on your end.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> 2) Set the Java system property: &quot;scijava.log.level=4&quot; and re-paste
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> the error output. This will turn full debugging on.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> Thanks,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> Mark
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i> On Mon, Dec 16, 2013 at 11:23 AM, Brian Northan &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">bnorthan at gmail.com</A>&gt;wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Mark
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> My code is here: <A HREF="https://github.com/bnorthan/projects">https://github.com/bnorthan/projects</A> -- be warned
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> it is in need of some refactoring which I plan to do as ImageJ2 scripting
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> becomes available.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> A simple example of running my custom commands is in
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &quot;SimpleCreatePhantoms.sh&quot;  (the other scripts will not work because of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> references to things on my own machine).
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> The code is for a project I did earlier in the year (
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> <A HREF="http://spie.org/x648.xml?product_id=2002974">http://spie.org/x648.xml?product_id=2002974</A>).
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> The main program is called DeconvolutionTest.java... which has ended
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> up evolving into a command parser.  I never really polished it though
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> because I am going to throw it away and use ImageJ2 scripting as that
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> develops.     A lot of things in the code base fall into that category,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> things I put together quickly but are meant to be replaced with the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &quot;proper&quot; imagej2 component.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> SimpleCreatePhantoms.sh just calls a command to create a blank
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> phantom, then a second command to place a sphere in it.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Mon, Dec 16, 2013 at 9:09 AM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hinerm at gmail.com</A>&gt;wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> P.S. please feel free to send your commands via private e-mail, if
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> you don't want them to be public.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Similarly, if you can share the dataset you're using that would be
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ideal... but no worries if it's proprietary or anything.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Mon, Dec 16, 2013 at 8:07 AM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Brian,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>  Ahhh.. I'm sorry! I misunderstood. If that's the actual stack
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> trace then no, I don't think you are having any problems with the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> dependency tree, and all your pom settings should be fine given that stack
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> trace.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>  Sidetrack: the pom-scijava doesn't actually have snapshot
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> versions. It's basically just versioning glue - it defines a version
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> properties to help ensure consistent versions of the various SciJava
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> libraries (like SCIFIO) are consumed. Using 1.111 is fine, as we want to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> use the latest version of everything since SCIFIO-0.7.4/0.7.5 are quite
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> new. Let me know if that's not clear...
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>   Anyway, since we know it worked in 0.7.3, I would like to bisect&lt;<A HREF="https://www.kernel.org/pub/software/scm/git/docs/git-bisect.html">https://www.kernel.org/pub/software/scm/git/docs/git-bisect.html</A>&gt;and figure out what happened. However, I currently can't reproduce the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> issue. When I open a float dataset with SCIFIO 0.7.5 in IJ2 I'm able to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> write it as a .tif. So you're probably exposing a bug with other commands
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> interacting with SCIFIO.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>  Can you share your custom commands? If not, could you let me know
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> which commands you're calling?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Thanks,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> - Mark
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Fri, Dec 13, 2013 at 1:49 PM, Brian Northan &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">bnorthan at gmail.com</A>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> &gt; wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Mark
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> I am using IJ2 in headless mode with some custom commands I
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> wrote.  So it is always possible that I still have old references
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> somewhere.  However that stack trace was actually generated with 0.7.4.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> When I had noted that 0.7.5-SNAPSHOT threw an exception, I went back to
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 0.7.4 to make sure that worked but it also had the same exception.  Then I
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> went back to 0.7.3 which worked (other than the floating point problem).
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Below is the stack trace using 0.7.5-SNAPSHOT.   (btw since I am
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> using IJ2 maybe there is something else wrong in the dependency tree??  One
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> of the IJ2 components??  Should I set the sci-java version to a SNAPSHOT
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> version too??  It is 1.111 right now.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>      at org.scijava.Context.inject(Context.java:273)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> org.scijava.plugin.DefaultPluginService.createInstance(DefaultPluginService.java:241)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> org.scijava.plugin.DefaultPluginService.createInstances(DefaultPluginService.java:229)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> org.scijava.plugin.DefaultPluginService.createInstancesOfType(DefaultPluginService.java:220)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> org.scijava.plugin.AbstractSingletonService.createInstances(AbstractSingletonService.java:95)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> org.scijava.plugin.AbstractSingletonService.getInstances(AbstractSingletonService.java:73)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> org.scijava.plugin.AbstractSingletonService$1.get(AbstractSingletonService.java:87)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> org.scijava.plugin.AbstractSingletonService$1.get(AbstractSingletonService.java:83)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> org.scijava.object.ObjectIndex.resolvePending(ObjectIndex.java:391)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at org.scijava.object.ObjectIndex.get(ObjectIndex.java:136)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> org.scijava.object.DefaultObjectService.getObjects(DefaultObjectService.java:89)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> io.scif.codec.DefaultCodecService.getCodec(DefaultCodecService.java:65)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> io.scif.formats.tiff.TiffCompression.compress(TiffCompression.java:330)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> io.scif.formats.tiff.TiffSaver.writeImage(TiffSaver.java:391)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> io.scif.formats.tiff.TiffSaver.writeImage(TiffSaver.java:279)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>      at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1250)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1290)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at io.scif.AbstractWriter.savePlane(AbstractWriter.java:107)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at io.scif.img.ImgSaver.writePlanes(ImgSaver.java:532)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at io.scif.img.ImgSaver.saveImg(ImgSaver.java:380)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at io.scif.img.ImgSaver.saveImg(ImgSaver.java:133)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at io.scif.img.ImgSaver.saveImg(ImgSaver.java:114)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> On Fri, Dec 13, 2013 at 1:40 PM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hinerm at gmail.com</A>&gt;wrote:
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Hi Brian,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>  I referenced the scifio 0.7.5-SNAPSHOT (would that be correct
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> to get the absolute latest??)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Yep this should be the latest snapshot.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>  in my POM and ran into an exception when executing my code.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> ...
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>      at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1255)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> io.scif.formats.TIFFFormat$Writer.savePlane(TIFFFormat.java:1295)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at io.scif.AbstractWriter.savePlane(AbstractWriter.java:107)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at io.scif.img.ImgSaver.writePlanes(ImgSaver.java:532)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at io.scif.img.ImgSaver.saveImg(ImgSaver.java:380)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at io.scif.img.ImgSaver.saveImg(ImgSaver.java:133)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>     at io.scif.img.ImgSaver.saveImg(ImgSaver.java:114)
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> That stack trace suggests that an older version of the
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> TIFFFormat is being used. It must be from prior commit 37953&lt;<A HREF="https://github.com/scifio/scifio/commit/379530aab9a9848e59363d87dcbdb79c4842bfc3">https://github.com/scifio/scifio/commit/379530aab9a9848e59363d87dcbdb79c4842bfc3</A>&gt;(because the TiffSaver.writeImage call is now on line 1250, not 1255). I'm
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> assuming it's from the 0.7.4 release.
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>  Are you just running the code snippet that Curtis posted a
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> while back (or your own similar snippet)? Or are you using SCIFIO in IJ2,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> or another application?
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>  Could you run &quot;mvn dependency:tree&quot;, or check the &quot;Maven
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Dependencies&quot; tab if you're using Eclipse? I'm assuming something must
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> still have a 0.7.4 SCIFIO reference, which is being pulled in instead of
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> 0.7.5...
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Sorry for the inconvenience.. let me know what you find!
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Thanks,
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i> Mark
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20140108/facd20cc/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20140108/facd20cc/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000181.html">[SCIFIO] [ImageJ-devel] [ImgLib2] The img-metadata branch
+</A></li>
+	<LI>Next message: <A HREF="000183.html">[SCIFIO] [ImageJ-devel] [ImgLib2] The img-metadata branch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#182">[ date ]</a>
+              <a href="thread.html#182">[ thread ]</a>
+              <a href="subject.html#182">[ subject ]</a>
+              <a href="author.html#182">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

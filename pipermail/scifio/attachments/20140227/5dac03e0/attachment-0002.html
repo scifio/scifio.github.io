@@ -1,0 +1,46 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;Hi&nbsp;Brian,&lt;br&gt;&lt;br&gt;&lt;blockquote&nbsp;style=&quot;margin:0px&nbsp;0px&nbsp;0px&nbsp;0.8ex;border-left:1px&nbsp;solid&nbsp;rgb(204,204,204);padding-left:1ex&quot;&nbsp;class=&quot;gmail_quote&quot;&gt;I&#39;m&nbsp;also&nbsp;working&nbsp;on&nbsp;incorporating&nbsp;this&nbsp;into&nbsp;the&nbsp;Bio-Formats&nbsp;writer,&nbsp;so&nbsp;<br>
+if&nbsp;anyone&nbsp;here&nbsp;has&nbsp;advice&nbsp;along&nbsp;those&nbsp;lines,&nbsp;I&#39;d&nbsp;appreciate&nbsp;that&nbsp;too!&nbsp;<br>
+ I&#39;ll&nbsp;be&nbsp;cross-posting&nbsp;to&nbsp;their&nbsp;list&nbsp;as&nbsp;well&nbsp;when&nbsp;I&nbsp;have&nbsp;something&nbsp;<br>
+working&nbsp;for&nbsp;the&nbsp;BioFormats/Scifio/?&nbsp; Convert&nbsp;tool.&lt;br&gt;&lt;/blockquote&gt;&lt;br&gt;&lt;/div&gt;This&nbsp;is&nbsp;fantastic.&nbsp;I&nbsp;am&nbsp;selfishly&nbsp;quite&nbsp;excited&nbsp;for&nbsp;someone&nbsp;else&nbsp;to&nbsp;create&nbsp;a&nbsp;new&nbsp;SCIFIO&nbsp;format.&nbsp;:)&lt;br&gt;&lt;br&gt;&lt;/div&gt;To&nbsp;get&nbsp;you&nbsp;(and&nbsp;other&nbsp;developers)&nbsp;started,&nbsp;I&nbsp;put&nbsp;together&nbsp;&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio/wiki/Adding-support-for-an-image-format&quot;&nbsp;target=&quot;_blank&quot;&gt;a&nbsp;wiki&nbsp;page&lt;/a&gt;&nbsp;that&nbsp;discusses&nbsp;various&nbsp;aspects&nbsp;of&nbsp;format&nbsp;implementation,&nbsp;and&nbsp;provides&nbsp;a&nbsp;number&nbsp;of&nbsp;links&nbsp;to&nbsp;resources&nbsp;&amp;&nbsp;tutorials&nbsp;for&nbsp;both&nbsp;Bio-Formats&nbsp;and&nbsp;SCIFIO.&lt;br&gt;<br>
+<br>
+<br>
+&lt;div&gt;<br>
+&lt;div&gt;&lt;div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;The&nbsp;referenced&nbsp;tutorials&nbsp;are&nbsp;intended&nbsp;to&nbsp;take&nbsp;you&nbsp;through&nbsp;the&nbsp;format&nbsp;implementation&nbsp;process,&nbsp;but&nbsp;if&nbsp;you&nbsp;have&nbsp;any&nbsp;questions&nbsp;or&nbsp;run&nbsp;into&nbsp;problems,&nbsp;please&nbsp;feel&nbsp;welcome&nbsp;to&nbsp;reach&nbsp;out&nbsp;to&nbsp;the&nbsp;SCIFIO&nbsp;(&lt;a&nbsp;href=&quot;mailto:scifio@scif.io&quot;&nbsp;target=&quot;_blank&quot;&gt;scifio@scif.io&lt;/a&gt;)&nbsp;or&nbsp;Bio-Formats&nbsp;(&lt;a&nbsp;href=&quot;mailto:ome-devel@lists.openmicroscopy.org.uk&quot;&nbsp;target=&quot;_blank&quot;&gt;ome-devel@lists.openmicroscopy.org.uk&lt;/a&gt;)&nbsp;mailing&nbsp;lists.&lt;br&gt;<br>
+<br>
+<br>
+&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;Let&nbsp;me&nbsp;know&nbsp;if&nbsp;anything&nbsp;is&nbsp;unclear&nbsp;on&nbsp;the&nbsp;wiki&nbsp;page.&lt;br&gt;&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;Thanks,&nbsp;we&nbsp;look&nbsp;forward&nbsp;to&nbsp;your&nbsp;contribution!&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;-&nbsp;Mark&lt;br&gt;&lt;/div&gt;<br>
+<br>
+<br>
+&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;&lt;br&gt;&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0px&nbsp;0px&nbsp;0px&nbsp;0.8ex;border-left:1px&nbsp;solid&nbsp;rgb(204,204,204);padding-left:1ex&quot;&gt;----------&nbsp;Forwarded&nbsp;message&nbsp;----------&lt;br&gt;<br>
+From: Brian&nbsp;Long&nbsp;&lt;&lt;a&nbsp;href=&quot;mailto:brianl@ALLENINSTITUTE.ORG&quot;&nbsp;target=&quot;_blank&quot;&gt;brianl@ALLENINSTITUTE.ORG&lt;/a&gt;&gt;&lt;br&gt;To: &lt;a&nbsp;href=&quot;mailto:IMAGEJ@LIST.NIH.GOV&quot;&nbsp;target=&quot;_blank&quot;&gt;IMAGEJ@LIST.NIH.GOV&lt;/a&gt;&lt;br&gt;Cc: &lt;br&gt;Date: Mon,&nbsp;24&nbsp;Feb&nbsp;2014&nbsp;18:18:07&nbsp;+0000&lt;br&gt;<br>
+<br>
+<br>
+Subject: Contributing&nbsp;a&nbsp;&nbsp;new&nbsp;writer&nbsp;plugin&lt;br&gt;<br>
+Greetings-&lt;br&gt;<br>
+&lt;br&gt;<br>
+I&#39;ve&nbsp;written&nbsp;a&nbsp;new&nbsp;writer&nbsp;plugin&nbsp;for&nbsp;saving&nbsp;images&nbsp;in&nbsp;.v3draw&nbsp;format&nbsp;for&nbsp;opening&nbsp;in&nbsp;the&nbsp;3D&nbsp;visualization&nbsp;program&nbsp;Vaa3D.&nbsp; I&#39;m&nbsp;new&nbsp;to&nbsp;the&nbsp;world&nbsp;of&nbsp;java&nbsp;development,&nbsp; maven&nbsp;and&nbsp;git:&nbsp; how&nbsp;do&nbsp;I&nbsp;contribute&nbsp;the&nbsp;plugin&nbsp;to&nbsp;the&nbsp;main&nbsp;ImageJ&nbsp;1&nbsp;repo?&lt;br&gt;<br>
+<br>
+<br>
+<br>
+<br>
+&lt;br&gt;<br>
+My&nbsp;plugin&nbsp;is&nbsp;built&nbsp;off&nbsp;the&nbsp;minimal-ij-1-plugin&nbsp;maven&nbsp;project&nbsp;and&nbsp;currently&nbsp;configured&nbsp;to&nbsp;place&nbsp;another&nbsp;entry&nbsp;in&nbsp;the&nbsp;&#39;Save&nbsp;As&nbsp;&gt;&#39;&nbsp;menu.&lt;br&gt;<br>
+General&nbsp;Info:&nbsp; Vaa3D&nbsp;is&nbsp;an&nbsp;open-source&nbsp;platform&nbsp;for&nbsp;3D&nbsp;visualization&nbsp;and&nbsp;analysis&nbsp;of&nbsp;bio-images&nbsp;developed&nbsp;by&nbsp;Hanchuan&nbsp;Peng&nbsp;and&nbsp;his&nbsp;team&nbsp;(formerly&nbsp;Janelia&nbsp;Farm&nbsp;HHMI,&nbsp;currently&nbsp;at&nbsp;the&nbsp;Allen&nbsp;Institute&nbsp;for&nbsp;Brain&nbsp;Science).&nbsp; Unlike&nbsp;the&nbsp;previous&nbsp;Vaa3d&nbsp;writer&nbsp;plugin&nbsp;that&nbsp;stored&nbsp;the&nbsp;whole&nbsp;image&nbsp;as&nbsp;a&nbsp;variable&nbsp;before&nbsp;writing,&nbsp;this&nbsp;update&nbsp;writes&nbsp;plane-by-plane,&nbsp;meaning&nbsp;that&nbsp;large&nbsp;files&nbsp;can&nbsp;be&nbsp;loaded&nbsp;as&nbsp;virtual&nbsp;stacks&nbsp;and&nbsp;written&nbsp;to&nbsp;.v3draw.&lt;br&gt;<br>
+<br>
+<br>
+<br>
+<br>
+&lt;br&gt;<br>
+I&#39;m&nbsp;also&nbsp;working&nbsp;on&nbsp;incorporating&nbsp;this&nbsp;into&nbsp;the&nbsp;Bio-Formats&nbsp;writer,&nbsp;so&nbsp;if&nbsp;anyone&nbsp;here&nbsp;has&nbsp;advice&nbsp;along&nbsp;those&nbsp;lines,&nbsp;I&#39;d&nbsp;appreciate&nbsp;that&nbsp;too!&nbsp; I&#39;ll&nbsp;be&nbsp;cross-posting&nbsp;to&nbsp;their&nbsp;list&nbsp;as&nbsp;well&nbsp;when&nbsp;I&nbsp;have&nbsp;something&nbsp;working&nbsp;for&nbsp;the&nbsp;BioFormats/Scifio/?&nbsp; Convert&nbsp;tool.&lt;br&gt;<br>
+<br>
+<br>
+<br>
+<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+--&lt;br&gt;<br>
+ImageJ&nbsp;mailing&nbsp;list:&nbsp;&lt;a&nbsp;href=&quot;http://imagej.nih.gov/ij/list.html&quot;&nbsp;target=&quot;_blank&quot;&gt;http://imagej.nih.gov/ij/list.html&lt;/a&gt;&lt;br&gt;<br>
+&lt;br&gt;&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;<br>
+
+</tt>

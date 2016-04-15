@@ -1,0 +1,585 @@
+From michael.zinsmaier at gmx.de  Mon Sep  9 08:59:29 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Mon, 09 Sep 2013 15:59:29 +0200
+Subject: [SCIFIO] NullPointer using the DICOMOMETranslator to extract
+	calibration data
+Message-ID: <522DD441.9080701@gmx.de>
+
+Hi togehter,
+
+we try to load metadata from a  *.DCM file. To extract calibration data 
+we use the following code:
+
+         Metadata meta = XYZ.initializer().parseMetadata(imgRef, true);
+
+         // translate to ome metadata to get access to calibration values
+         OMEMetadata omexml = new OMEMetadata(XYZ_SCIFIO.getContext());
+         XYZ_SCIFIO.translator().translate(meta, omexml, false);
+
+afterwards we read calibration data like this
+
+     omexml.getAxes(currentSeries)
+
+I don't think the file actually has calibration data so the resulting 
+value should be the default (1).
+However the call to translate fails with a NullPointerException:
+
+class: DefaultOMEXMLMetadataService
+method: populateImageMetadata
+first line
+
+The submitted parameters are:
+         retrieve -> OMEXMLMetadataImpl
+         imageIndex -> 0
+         ImageMetadata -> DefaultImageMetadata
+
+Maybe something is not initialized at that point?
+
+Thanks for your help
+best regards Michael
+
+
+@Mark I will send you and example file in a private mail
+
+
+
+
+From ctrueden at wisc.edu  Wed Sep 25 00:00:08 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Wed, 25 Sep 2013 06:00:08 +0100
+Subject: [SCIFIO] Minimal Service Setup for ImgOpener
+In-Reply-To: <520A44A7.6060702@gmx.de>
+References: <520901A7.6090405@gmx.de>
+	<CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+	<520A44A7.6060702@gmx.de>
+Message-ID: <CADN69y=wpQnYVQ-NjQWxEONdcnRjDTS3gECU0pjMi89jeSnQxw@mail.gmail.com>
+
+Hi Michael & all,
+
+> Or more specific is there a better way than incrementally adding
+> services to get a "Bioformats" ImgOpener running without discovering
+> unrelated services like HotdrawService...
+
+Just to follow up on this thread: the scifio-0.6.1 and scifio-0.6.2
+releases have improved the default io.scif.SCIFIO constructor to behave
+this way. This constructor creates an application context with all
+available core SciJava & SCIFIO services using the invocation:
+
+        new Context(SciJavaService.class, SCIFIOService.class);
+
+The behavior of the SciJava application context was improved to load all
+services extending each given type. After some discussion we believe this
+is the simplest and most consistent way to do things. The SciJavaService
+interface is extended by all base SciJava services (e.g., PluginService).
+And the SCIFIOService interface is extended by all SCIFIO-related services.
+ImageJ2 also has an ImageJService now too for the same reasons. In this
+way, it is possible to easily restrict which sorts of services get added to
+the context in an extensible way.
+
+Regards,
+Curtis
+
+P.S. The only slightly unintuitive thing (IMHO) is that non-core services
+should *not* extend SciJavaService, because that interface is intended for
+use by the org.scijava.* services *only*. (E.g., SCIFIOService does not
+extend it.)
+
+
+On Tue, Aug 13, 2013 at 3:37 PM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+>  Hi Curtis,
+>
+> it does work as minimal setting.
+> But we discovered that we need more services to get the functionality that
+> we need within KNIP (opening all the images that are supported by
+> bioformats). So far we added the following services to open some test
+> pictures: "FormatService.class, CodecService.class, TiffService.class,
+> JAIIIOService.class"
+>
+> What other services will we need? Or more specific is there a better way
+> than incrementally adding services to get a "Bioformats" ImgOpener running
+> without discovering unrelated services like HotdrawService...
+>
+> Best Michael
+>
+>  Hi Michael,
+>
+>  > What is the minimal set of Services that we need just for the opener?
+>
+>  The noargs ImgOpener constructor is supposed to give you exactly that:
+>
+>
+> https://github.com/scifio/scifio/blob/8037fd38419030dff000eda84fca9b35909be3a4/scifio/src/main/java/io/scif/img/AbstractImgIOComponent.java#L68
+>
+>  Please let us know if it doesn't work for you!
+>
+>  Regards,
+> Curtis
+>
+>
+> On Mon, Aug 12, 2013 at 10:39 AM, Michael Zinsmaier <
+> michael.zinsmaier at gmx.de> wrote:
+>
+>> Hi all,
+>>
+>> we try to create a suitable context for the ImgOpener but on our
+>> classpath are several jar files that contain services which we do not
+>> intend to use and which cause problems if discovered (e.g. HotdrawService
+>> is discovered but we do not include all required libs...). What is the
+>> minimal set of Services that we need just for the opener?
+>>
+>> or more code based:
+>>
+>> given the following methods
+>>
+>>     public void foo() {
+>>         Context c = new Context(getIOContextServices());
+>>         m_scifio = new SCIFIO(c);
+>>         FORMATS = m_scifio.format().getAllFormats();
+>>     }
+>>
+>>     private List<Class<? extends Service>> getIOContextServices() {
+>>         final List services = new ArrayList();
+>>        services.add(FormatService.class);
+>>        return services;
+>>     }
+>>
+>> what would be the minimal list of required services in order to get a
+>> suitable Context for the ImgOpener?
+>>
+>> Regards Michael
+>>
+>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130925/b3f95edf/attachment.html>
+
+From Johannes.Schindelin at gmx.de  Wed Sep 25 11:50:14 2013
+From: Johannes.Schindelin at gmx.de (Johannes Schindelin)
+Date: Wed, 25 Sep 2013 18:50:14 +0200 (CEST)
+Subject: [SCIFIO] Minimal Service Setup for ImgOpener
+In-Reply-To: <CADN69y=wpQnYVQ-NjQWxEONdcnRjDTS3gECU0pjMi89jeSnQxw@mail.gmail.com>
+References: <520901A7.6090405@gmx.de>
+	<CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+	<520A44A7.6060702@gmx.de>
+	<CADN69y=wpQnYVQ-NjQWxEONdcnRjDTS3gECU0pjMi89jeSnQxw@mail.gmail.com>
+Message-ID: <alpine.DEB.1.00.1309251846210.1191@s15462909.onlinehome-server.info>
+
+Hi Curtis,
+
+On Wed, 25 Sep 2013, Curtis Rueden wrote:
+
+> P.S. The only slightly unintuitive thing (IMHO) is that non-core
+> services should *not* extend SciJavaService, because that interface is
+> intended for use by the org.scijava.* services *only*. (E.g.,
+> SCIFIOService does not extend it.)
+
+How about a warning in the ServiceHelper? It could detect if some service
+whose class' name does not have the org.scijava. prefix but that
+implements SciJavaService...
+
+Ciao,
+Dscho
+
+
+From hinerm at gmail.com  Wed Sep 25 12:16:32 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Wed, 25 Sep 2013 12:16:32 -0500
+Subject: [SCIFIO] Minimal Service Setup for ImgOpener
+In-Reply-To: <alpine.DEB.1.00.1309251846210.1191@s15462909.onlinehome-server.info>
+References: <520901A7.6090405@gmx.de>
+	<CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+	<520A44A7.6060702@gmx.de>
+	<CADN69y=wpQnYVQ-NjQWxEONdcnRjDTS3gECU0pjMi89jeSnQxw@mail.gmail.com>
+	<alpine.DEB.1.00.1309251846210.1191@s15462909.onlinehome-server.info>
+Message-ID: <CA+B=mGrJ5p8GkDjDB93NGCzth0kUZS8KJq1QrQ87=3M=Rg7hJQ@mail.gmail.com>
+
+Hi Johannes,
+
+How about a warning in the ServiceHelper? It could detect if some service
+> whose class' name does not have the org.scijava. prefix but that
+> implements SciJavaService...
+>
+
+This is a general issue with creating contexts using top-level Service
+markers. I would slightly modify Curtis's words along the lines of:
+
+"non-core services should only extend SciJavaService when they serve as a
+plug-in to scijava-common functionality"
+
+I would expect this to come up more for SCIFIO extensions. For example, I
+made SCIFIO-BF-compat services directly extend SCIFIOService, because even
+though they are in a different component, when present on the classpath
+they're intended to be integrated with the SCIFIO core.
+
+This allows code like: `new Context(SCIFIOService.class)` to then
+automatically load scifio-bf-compat services, when available.
+
+So, conceivably, non-LOCI SCIFIO extensions would want to similarly extend
+SCIFIOService, but would have different package prefixes.
+
+Anyway, I think a case could be made for warning when things extend
+SciJavaService, but I think there's the chance for such a warning to be
+confusing if a case arises where scijava-common functionality is truly
+being extended, because doing so isn't strictly wrong.
+
+And if we do add a SciJavaService warning, I don't think we should extend
+it to similarly-patterned marker interfaces (SCIFIOService and I think I
+made one for IJ2 as well).
+
+- Mark
+
+
+On Wed, Sep 25, 2013 at 11:50 AM, Johannes Schindelin <
+Johannes.Schindelin at gmx.de> wrote:
+
+> Hi Curtis,
+>
+> On Wed, 25 Sep 2013, Curtis Rueden wrote:
+>
+> > P.S. The only slightly unintuitive thing (IMHO) is that non-core
+> > services should *not* extend SciJavaService, because that interface is
+> > intended for use by the org.scijava.* services *only*. (E.g.,
+> > SCIFIOService does not extend it.)
+>
+> How about a warning in the ServiceHelper? It could detect if some service
+> whose class' name does not have the org.scijava. prefix but that
+> implements SciJavaService...
+>
+> Ciao,
+> Dscho
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130925/0ae35c63/attachment.html>
+
+From Johannes.Schindelin at gmx.de  Wed Sep 25 12:36:35 2013
+From: Johannes.Schindelin at gmx.de (Johannes Schindelin)
+Date: Wed, 25 Sep 2013 19:36:35 +0200 (CEST)
+Subject: [SCIFIO] Minimal Service Setup for ImgOpener
+In-Reply-To: <CA+B=mGrJ5p8GkDjDB93NGCzth0kUZS8KJq1QrQ87=3M=Rg7hJQ@mail.gmail.com>
+References: <520901A7.6090405@gmx.de>
+	<CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+	<520A44A7.6060702@gmx.de>
+	<CADN69y=wpQnYVQ-NjQWxEONdcnRjDTS3gECU0pjMi89jeSnQxw@mail.gmail.com>
+	<alpine.DEB.1.00.1309251846210.1191@s15462909.onlinehome-server.info>
+	<CA+B=mGrJ5p8GkDjDB93NGCzth0kUZS8KJq1QrQ87=3M=Rg7hJQ@mail.gmail.com>
+Message-ID: <alpine.DEB.1.00.1309251936090.1191@s15462909.onlinehome-server.info>
+
+Hi Mark,
+
+On Wed, 25 Sep 2013, Mark Hiner wrote:
+
+> Anyway, I think a case could be made for warning when things extend
+> SciJavaService, but I think there's the chance for such a warning to be
+> confusing if a case arises where scijava-common functionality is truly
+> being extended, because doing so isn't strictly wrong.
+
+True. Color me convinced that the warning should not be there.
+
+Ciao,
+Dscho
+
+
+From michael.zinsmaier at gmx.de  Mon Sep  9 08:59:29 2013
+From: michael.zinsmaier at gmx.de (Michael Zinsmaier)
+Date: Mon, 09 Sep 2013 15:59:29 +0200
+Subject: [SCIFIO] NullPointer using the DICOMOMETranslator to extract
+	calibration data
+Message-ID: <522DD441.9080701@gmx.de>
+
+Hi togehter,
+
+we try to load metadata from a  *.DCM file. To extract calibration data 
+we use the following code:
+
+         Metadata meta = XYZ.initializer().parseMetadata(imgRef, true);
+
+         // translate to ome metadata to get access to calibration values
+         OMEMetadata omexml = new OMEMetadata(XYZ_SCIFIO.getContext());
+         XYZ_SCIFIO.translator().translate(meta, omexml, false);
+
+afterwards we read calibration data like this
+
+     omexml.getAxes(currentSeries)
+
+I don't think the file actually has calibration data so the resulting 
+value should be the default (1).
+However the call to translate fails with a NullPointerException:
+
+class: DefaultOMEXMLMetadataService
+method: populateImageMetadata
+first line
+
+The submitted parameters are:
+         retrieve -> OMEXMLMetadataImpl
+         imageIndex -> 0
+         ImageMetadata -> DefaultImageMetadata
+
+Maybe something is not initialized at that point?
+
+Thanks for your help
+best regards Michael
+
+
+@Mark I will send you and example file in a private mail
+
+
+
+
+
+From ctrueden at wisc.edu  Wed Sep 25 00:00:08 2013
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Wed, 25 Sep 2013 06:00:08 +0100
+Subject: [SCIFIO] Minimal Service Setup for ImgOpener
+In-Reply-To: <520A44A7.6060702@gmx.de>
+References: <520901A7.6090405@gmx.de>
+	<CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+	<520A44A7.6060702@gmx.de>
+Message-ID: <CADN69y=wpQnYVQ-NjQWxEONdcnRjDTS3gECU0pjMi89jeSnQxw@mail.gmail.com>
+
+Hi Michael & all,
+
+> Or more specific is there a better way than incrementally adding
+> services to get a "Bioformats" ImgOpener running without discovering
+> unrelated services like HotdrawService...
+
+Just to follow up on this thread: the scifio-0.6.1 and scifio-0.6.2
+releases have improved the default io.scif.SCIFIO constructor to behave
+this way. This constructor creates an application context with all
+available core SciJava & SCIFIO services using the invocation:
+
+        new Context(SciJavaService.class, SCIFIOService.class);
+
+The behavior of the SciJava application context was improved to load all
+services extending each given type. After some discussion we believe this
+is the simplest and most consistent way to do things. The SciJavaService
+interface is extended by all base SciJava services (e.g., PluginService).
+And the SCIFIOService interface is extended by all SCIFIO-related services.
+ImageJ2 also has an ImageJService now too for the same reasons. In this
+way, it is possible to easily restrict which sorts of services get added to
+the context in an extensible way.
+
+Regards,
+Curtis
+
+P.S. The only slightly unintuitive thing (IMHO) is that non-core services
+should *not* extend SciJavaService, because that interface is intended for
+use by the org.scijava.* services *only*. (E.g., SCIFIOService does not
+extend it.)
+
+
+On Tue, Aug 13, 2013 at 3:37 PM, Michael Zinsmaier <michael.zinsmaier at gmx.de
+> wrote:
+
+>  Hi Curtis,
+>
+> it does work as minimal setting.
+> But we discovered that we need more services to get the functionality that
+> we need within KNIP (opening all the images that are supported by
+> bioformats). So far we added the following services to open some test
+> pictures: "FormatService.class, CodecService.class, TiffService.class,
+> JAIIIOService.class"
+>
+> What other services will we need? Or more specific is there a better way
+> than incrementally adding services to get a "Bioformats" ImgOpener running
+> without discovering unrelated services like HotdrawService...
+>
+> Best Michael
+>
+>  Hi Michael,
+>
+>  > What is the minimal set of Services that we need just for the opener?
+>
+>  The noargs ImgOpener constructor is supposed to give you exactly that:
+>
+>
+> https://github.com/scifio/scifio/blob/8037fd38419030dff000eda84fca9b35909be3a4/scifio/src/main/java/io/scif/img/AbstractImgIOComponent.java#L68
+>
+>  Please let us know if it doesn't work for you!
+>
+>  Regards,
+> Curtis
+>
+>
+> On Mon, Aug 12, 2013 at 10:39 AM, Michael Zinsmaier <
+> michael.zinsmaier at gmx.de> wrote:
+>
+>> Hi all,
+>>
+>> we try to create a suitable context for the ImgOpener but on our
+>> classpath are several jar files that contain services which we do not
+>> intend to use and which cause problems if discovered (e.g. HotdrawService
+>> is discovered but we do not include all required libs...). What is the
+>> minimal set of Services that we need just for the opener?
+>>
+>> or more code based:
+>>
+>> given the following methods
+>>
+>>     public void foo() {
+>>         Context c = new Context(getIOContextServices());
+>>         m_scifio = new SCIFIO(c);
+>>         FORMATS = m_scifio.format().getAllFormats();
+>>     }
+>>
+>>     private List<Class<? extends Service>> getIOContextServices() {
+>>         final List services = new ArrayList();
+>>        services.add(FormatService.class);
+>>        return services;
+>>     }
+>>
+>> what would be the minimal list of required services in order to get a
+>> suitable Context for the ImgOpener?
+>>
+>> Regards Michael
+>>
+>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130925/b3f95edf/attachment-0002.html>
+
+From Johannes.Schindelin at gmx.de  Wed Sep 25 11:50:14 2013
+From: Johannes.Schindelin at gmx.de (Johannes Schindelin)
+Date: Wed, 25 Sep 2013 18:50:14 +0200 (CEST)
+Subject: [SCIFIO] Minimal Service Setup for ImgOpener
+In-Reply-To: <CADN69y=wpQnYVQ-NjQWxEONdcnRjDTS3gECU0pjMi89jeSnQxw@mail.gmail.com>
+References: <520901A7.6090405@gmx.de>
+	<CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+	<520A44A7.6060702@gmx.de>
+	<CADN69y=wpQnYVQ-NjQWxEONdcnRjDTS3gECU0pjMi89jeSnQxw@mail.gmail.com>
+Message-ID: <alpine.DEB.1.00.1309251846210.1191@s15462909.onlinehome-server.info>
+
+Hi Curtis,
+
+On Wed, 25 Sep 2013, Curtis Rueden wrote:
+
+> P.S. The only slightly unintuitive thing (IMHO) is that non-core
+> services should *not* extend SciJavaService, because that interface is
+> intended for use by the org.scijava.* services *only*. (E.g.,
+> SCIFIOService does not extend it.)
+
+How about a warning in the ServiceHelper? It could detect if some service
+whose class' name does not have the org.scijava. prefix but that
+implements SciJavaService...
+
+Ciao,
+Dscho
+
+
+
+From hinerm at gmail.com  Wed Sep 25 12:16:32 2013
+From: hinerm at gmail.com (Mark Hiner)
+Date: Wed, 25 Sep 2013 12:16:32 -0500
+Subject: [SCIFIO] Minimal Service Setup for ImgOpener
+In-Reply-To: <alpine.DEB.1.00.1309251846210.1191@s15462909.onlinehome-server.info>
+References: <520901A7.6090405@gmx.de>
+	<CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+	<520A44A7.6060702@gmx.de>
+	<CADN69y=wpQnYVQ-NjQWxEONdcnRjDTS3gECU0pjMi89jeSnQxw@mail.gmail.com>
+	<alpine.DEB.1.00.1309251846210.1191@s15462909.onlinehome-server.info>
+Message-ID: <CA+B=mGrJ5p8GkDjDB93NGCzth0kUZS8KJq1QrQ87=3M=Rg7hJQ@mail.gmail.com>
+
+Hi Johannes,
+
+How about a warning in the ServiceHelper? It could detect if some service
+> whose class' name does not have the org.scijava. prefix but that
+> implements SciJavaService...
+>
+
+This is a general issue with creating contexts using top-level Service
+markers. I would slightly modify Curtis's words along the lines of:
+
+"non-core services should only extend SciJavaService when they serve as a
+plug-in to scijava-common functionality"
+
+I would expect this to come up more for SCIFIO extensions. For example, I
+made SCIFIO-BF-compat services directly extend SCIFIOService, because even
+though they are in a different component, when present on the classpath
+they're intended to be integrated with the SCIFIO core.
+
+This allows code like: `new Context(SCIFIOService.class)` to then
+automatically load scifio-bf-compat services, when available.
+
+So, conceivably, non-LOCI SCIFIO extensions would want to similarly extend
+SCIFIOService, but would have different package prefixes.
+
+Anyway, I think a case could be made for warning when things extend
+SciJavaService, but I think there's the chance for such a warning to be
+confusing if a case arises where scijava-common functionality is truly
+being extended, because doing so isn't strictly wrong.
+
+And if we do add a SciJavaService warning, I don't think we should extend
+it to similarly-patterned marker interfaces (SCIFIOService and I think I
+made one for IJ2 as well).
+
+- Mark
+
+
+On Wed, Sep 25, 2013 at 11:50 AM, Johannes Schindelin <
+Johannes.Schindelin at gmx.de> wrote:
+
+> Hi Curtis,
+>
+> On Wed, 25 Sep 2013, Curtis Rueden wrote:
+>
+> > P.S. The only slightly unintuitive thing (IMHO) is that non-core
+> > services should *not* extend SciJavaService, because that interface is
+> > intended for use by the org.scijava.* services *only*. (E.g.,
+> > SCIFIOService does not extend it.)
+>
+> How about a warning in the ServiceHelper? It could detect if some service
+> whose class' name does not have the org.scijava. prefix but that
+> implements SciJavaService...
+>
+> Ciao,
+> Dscho
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20130925/0ae35c63/attachment-0002.html>
+
+From Johannes.Schindelin at gmx.de  Wed Sep 25 12:36:35 2013
+From: Johannes.Schindelin at gmx.de (Johannes Schindelin)
+Date: Wed, 25 Sep 2013 19:36:35 +0200 (CEST)
+Subject: [SCIFIO] Minimal Service Setup for ImgOpener
+In-Reply-To: <CA+B=mGrJ5p8GkDjDB93NGCzth0kUZS8KJq1QrQ87=3M=Rg7hJQ@mail.gmail.com>
+References: <520901A7.6090405@gmx.de>
+	<CADN69y=LYYOTncvGVyuOpO0cpB0WVNyx1=kPC+L1J=dTqwpoSg@mail.gmail.com>
+	<520A44A7.6060702@gmx.de>
+	<CADN69y=wpQnYVQ-NjQWxEONdcnRjDTS3gECU0pjMi89jeSnQxw@mail.gmail.com>
+	<alpine.DEB.1.00.1309251846210.1191@s15462909.onlinehome-server.info>
+	<CA+B=mGrJ5p8GkDjDB93NGCzth0kUZS8KJq1QrQ87=3M=Rg7hJQ@mail.gmail.com>
+Message-ID: <alpine.DEB.1.00.1309251936090.1191@s15462909.onlinehome-server.info>
+
+Hi Mark,
+
+On Wed, 25 Sep 2013, Mark Hiner wrote:
+
+> Anyway, I think a case could be made for warning when things extend
+> SciJavaService, but I think there's the chance for such a warning to be
+> confusing if a case arises where scijava-common functionality is truly
+> being extended, because doing so isn't strictly wrong.
+
+True. Color me convinced that the warning should not be there.
+
+Ciao,
+Dscho
+
+
+

@@ -1,0 +1,70 @@
+From ctrueden at wisc.edu  Wed Oct 14 16:32:24 2015
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Wed, 14 Oct 2015 16:32:24 -0500
+Subject: [SCIFIO] This SCIFIO list is closed. Please use the ImageJ Forum.
+Message-ID: <CADN69y=G_zgsP1ckOAUM1dhRiAwkr0DEpeyp8CKCQXJruc-hug@mail.gmail.com>
+
+Hi everyone,
+
+Recently, we held a vote to determine whether the imagej-devel and
+fiji-devel mailing lists should be closed in favor of the new ImageJ Forum
+[1], and it was decided that they should be [2].
+
+Afterward, it occurred to me that this SCIFIO list is even more "special
+purpose" than the imagej-devel list was, and covers a subset of development
+topics. (This was not always true historically, but these days, the SCIFIO
+API is fully built on the ImageJ2 data model.)
+
+As such, we are also closing this list in favor of the ImageJ Forum. If you
+make a forum post about SCIFIO, just mark it with the scifio tag!
+
+See you on the forum!
+
+Regards,
+Curtis
+
+[1] http://forum.imagej.net/
+
+[2]
+http://forum.imagej.net/t/shut-down-the-imagej-devel-and-fiji-devel-mailing-lists/141
+
+[3] http://scif.io/
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20151014/db8a4f77/attachment.html>
+
+From ctrueden at wisc.edu  Wed Oct 14 19:12:00 2015
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Wed, 14 Oct 2015 19:12:00 -0500
+Subject: [SCIFIO] This SCIFIO list is closed. Please use the ImageJ Forum.
+Message-ID: <CADN69ykXHapfJ9sQ9kkuX+uxpRik1U0TPw60ZGYJkmGwb2NzXw@mail.gmail.com>
+
+Hi everyone,
+
+Last week, there was a vote about whether the imagej-devel and fiji-devel
+mailing lists should be closed in favor of the new ImageJ forum [1], and it
+was decided that they should be [2].
+
+Afterward, it occurred to me that this SCIFIO list is even more specialized
+than the imagej-devel list was, and covers a subset of development topics.
+(Historically, this was not always true. But these days, the SCIFIO API is
+fully built on the ImageJ2 data model.)
+
+As such, we have also closed this list in favor of the ImageJ forum. If you
+make a post about SCIFIO, just mark it with the scifio tag!
+
+See you on the forum!
+
+Regards,
+Curtis
+
+[1] http://forum.imagej.net/
+
+[2]
+http://forum.imagej.net/t/shut-down-the-imagej-devel-and-fiji-devel-mailing-lists/141
+
+[3] http://scif.io/
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20151014/6d6d202d/attachment.html>
+

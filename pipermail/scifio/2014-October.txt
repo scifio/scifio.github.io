@@ -1,0 +1,556 @@
+From michael.meuli at gmail.com  Sun Oct 19 15:55:44 2014
+From: michael.meuli at gmail.com (Michael Meuli)
+Date: Sun, 19 Oct 2014 22:55:44 +0200
+Subject: [SCIFIO] [ome-users] converting lif files to ome-tiff
+In-Reply-To: <CA+B=mGqGg99i1JxxJL1uiMr-hpxR6GRyPb08x_Tg9cVOAVaTmg@mail.gmail.com>
+References: <CAKSZWGyeBwBEsyPMqRrfiWbCRQSb8jn+uqbobO8L5UOjjgkX3A@mail.gmail.com>
+	<53F4B64C.8090506@dundee.ac.uk>
+	<CA+B=mGphC__Vv8Orfv4qWma3U9++pKV3+XbvQ6HDeu2JCES-Bg@mail.gmail.com>
+	<CA+B=mGqGg99i1JxxJL1uiMr-hpxR6GRyPb08x_Tg9cVOAVaTmg@mail.gmail.com>
+Message-ID: <CAKSZWGzPr05AR+kfSdAzvp+1MkKcrF=jdds19Nbh8U7cYeOMxw@mail.gmail.com>
+
+Hi Mark
+
+I've converted my files with Bio-Formats 5.0.5 and with the master ITK
+branch I was also able to fully convert my images as multi-series
+image, using the command:
+SCIFIOTestDriver ko-A.ome.tiff out.ome.tif -w -a -d 5
+
+Hower I think there is still a related problem. If I modify the
+RunTest() function in itkSCIFIOImageIOTest.cxx just a little bit to
+get hold of the image for processing it, I get the following error
+which appears, like the previous one, depending on the file, after a
+certain number of series were processed with the following error:
+
+terminate called after throwing an instance of
+'itk::InvalidRequestedRegionError'
+  what():  /home/michael/bioimage/itk/itk-master/InsightToolkit/Modules/Core/Common/src/itkDataObject.cxx:393:
+Requested region is (at least partially) outside the largest possible region.
+Aborted (core dumped)
+
+In case of dead-A.ome.tiff after processing the first two series.
+
+Please fnd attached the runnable code.
+The files can still be found here:
+https://www.dropbox.com/sh/t2z0f4jttcnfh8s/AADq21HNR7EwH1JFxskhXXhea
+
+Googling for the poblem I found the following about the Update() fuction:
+http://www.itk.org/Doxygen/html/classitk_1_1ProcessObject.html#a4041fb21e9105500eee311e265691bd5
+I don't really understand it but I've tried
+UpdateLargestPossibleRegion() instead of Update() but the complier
+didn't eat it.
+
+Many thanks and best regards
+Michael
+
+
+On 10 September 2014 22:11, Mark Hiner <hiner at wisc.edu> wrote:
+> Hi Michael,
+>
+> I opened a pull request to get the latest SCIFIO-ITK imageIO incorporated
+> into the master ITK branch.
+>
+> This fixes the metadata bug suspected by Roger (the dimensions of the first
+> series were always being used, which would crash on encountering a dataset
+> with smaller dimensions). It also upgrades the ImageIO to use Bio-Formats
+> 5.0.4, and has some other minor fixes and improvements.
+>
+> With these updates I was able to fully convert your image as a multi-series
+> image, using the command:
+> SCIFIOTestDriver ko-A.ome.tiff out.ome.tif -w -a -d 5
+>
+> Thanks for the report, it was very helpful. Please let us know if you run
+> into any more problems.
+>
+> Regards,
+> Mark
+>
+> On Wed, Aug 20, 2014 at 12:05 PM, Mark Hiner <hinerm at gmail.com> wrote:
+>>
+>> Hi all,
+>>
+>> >While I'm not entirely sure of the separation of responsibilities between
+>> > ITK, SCIFIO and Bio-Formats for this
+>> >particular task
+>>
+>> The readme for the SCIFIO-ITK ImageIO
+>> (https://github.com/scifio/scifio-imageio) was out of date. It should now
+>> correctly instruct users to e-mail scifio at scif.io (copied) for ITK imageIO
+>> troubleshooting.
+>>
+>> > I found this only occurs when you enable "-w" to use SCIFIO for output.
+>>
+>> Note that without the -w flag, the default ITK TIFF writer will be used,
+>> which I thought was limited to 3 dimensions (or at least it was at one
+>> time). If you want to write an .ome.tiff it has to be written with
+>> Bio-Formats, anyway.
+>>
+>> > Looks like it's trying to read z plane 60 when there are only 60 planes
+>>
+>> I'm assuming the # of planes to read isn't being updated for each series..
+>> I'll look into it when I get a chance.
+>>
+>> Thanks for the report,
+>> Mark
+>>
+>>
+>> On Wed, Aug 20, 2014 at 9:53 AM, Roger Leigh <rleigh at dundee.ac.uk> wrote:
+>>>
+>>> On 19/08/14 19:52, Michael Meuli wrote:
+>>>
+>>> Dear Michael,
+>>>
+>>>
+>>>> I have some problems converting my .lif files to ome-tiff.
+>>>> I have converted my .lif files originating from a "CLSM Leica SP 8"
+>>>> with bfconvert of Bio-Formats 5.0.3.
+>>>> Trying to make it reproducible I took the file "ko-A.ome.tiff" which
+>>>> can be found here:
+>>>> "https://www.dropbox.com/sh/t2z0f4jttcnfh8s/AADq21HNR7EwH1JFxskhXXhea"
+>>>>    in the ome-tiff-files folder.
+>>>
+>>>
+>>> Thanks.  I've been able to reproduce the validation problems.  I have
+>>> opened a ticket for this and CC'd you on it; please see
+>>> https://trac.openmicroscopy.org.uk/ome/ticket/12532
+>>>
+>>> Note however that the above validation error is harmless; it does not
+>>> affect bioformats' correct reading of the OME-TIFF and I was able to
+>>> read all planes of every series without trouble, and also convert the
+>>> file to a new OME-TIFF which strips out the MetadataOnly elements.  I
+>>> don't think this is in any way related to your other problem, below.
+>>>
+>>>
+>>>> Below you can find the output of bfconvert, xmlvalid and
+>>>> SCIFIOTestDriver itkSCIFIOImageIOTest with the -a flag.
+>>>> The output of tiffcomment you can find as attachment.
+>>>> itkSCIFIOImageIOTest in this example crashes trying to read the third
+>>>> series.
+>>>
+>>>
+>>> I built ITK with itkscifio to test this.  I found this only occurs when
+>>> you enable "-w" to use SCIFIO for output.
+>>>
+>>> While I'm not entirely sure of the separation of responsibilities
+>>> between ITK, SCIFIO and Bio-Formats for this particular task, I don't
+>>> think the problem is in Bio-Formats, but in SCIFIO setting the wrong
+>>> plane index when reading the image data, as shown by your stacktrace.
+>>> Looks like it's trying to read z plane 60 when there are only 60 planes
+>>> (0-59), assuming it's series 2; the others all have too different z
+>>> sizes.  I would suggest reporting this to the SCIFIO developers at
+>>> https://github.com/scifio/scifio
+>>>
+>>>
+>>> Regards,
+>>> Roger Leigh
+>>>
+>>> --
+>>> Dr Roger Leigh -- Open Microscopy Environment
+>>> Wellcome Trust Centre for Gene Regulation and Expression,
+>>> College of Life Sciences, University of Dundee, Dow Street,
+>>> Dundee DD1 5EH Scotland UK   Tel: (01382) 386364
+>>>
+>>> The University of Dundee is a registered Scottish Charity, No: SC015096
+>>> _______________________________________________
+>>> ome-users mailing list
+>>> ome-users at lists.openmicroscopy.org.uk
+>>> http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users
+>>
+>>
+>
+>
+> _______________________________________________
+> ome-users mailing list
+> ome-users at lists.openmicroscopy.org.uk
+> http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users
+>
+-------------- next part --------------
+cmake_minimum_required(VERSION 2.8)
+ 
+project(bactelize)
+ 
+find_package(ITK REQUIRED)
+include(${ITK_USE_FILE})
+
+if(NOT SCIFIO_LOADED)
+  message(FATAL_ERROR "SCIFIO module is required but not available.")
+endif() 
+
+add_executable(bactelize MACOSX_BUNDLE main.cxx)
+ 
+if( "${ITK_VERSION_MAJOR}" LESS 4 )
+  target_link_libraries(bactelize ITKReview ${ITK_LIBRARIES})
+else( "${ITK_VERSION_MAJOR}" LESS 4 )
+  target_link_libraries(bactelize ${ITK_LIBRARIES})
+endif( "${ITK_VERSION_MAJOR}" LESS 4 )
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: main.cxx
+Type: text/x-c++src
+Size: 3636 bytes
+Desc: not available
+URL: <http://scif.io/pipermail/scifio/attachments/20141019/cd1dc3f4/attachment.cxx>
+
+From hiner at wisc.edu  Wed Oct 29 10:23:13 2014
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 29 Oct 2014 10:23:13 -0500
+Subject: [SCIFIO] [ITK] SCIFIO
+In-Reply-To: <CAKSZWGz6EBEQ9JjPjNz5hRNZTxDM8r6WKy_h=EJK11BJHYUHug@mail.gmail.com>
+References: <CAKSZWGz6EBEQ9JjPjNz5hRNZTxDM8r6WKy_h=EJK11BJHYUHug@mail.gmail.com>
+Message-ID: <CA+B=mGrUYuVBPPc=s8gbcB3iy2Vk7iniwPHsp_k7GfV4uvuPGQ@mail.gmail.com>
+
+Hi Michael,
+
+When you get InvalidRequestedRegionError on a series after the first, it
+strongly suggests series skew. In the dead-A.ome.tiff, series 2 is larger
+(more planes) than series 1, and series 3 is smaller than series 2. So it
+seems that at some point in the workflow the requested region is not
+matching the current series... which doesn't cause any errors until the
+region size decreases from one series to the next.
+
+Note that without the intermediate Update() call on the Image, the program
+will iterate successfully through the entire dataset. So it's the
+intermediate Update() that's exposing this problem. I assume you do not
+actually need it, since calling Update() on the writer will trigger the
+whole pipeline and you can then extract the intermediate image.
+
+On the other hand, I also assume you should be able to do incremental
+Update() calls, but I have no idea why it's not working with the
+SCIFIOImageIO. Perhaps someone else in the ITK community sees an error in
+usage of the ITK API?
+
+Otherwise I would suggest inspecting the requested region
+<http://www.itk.org/Doxygen/html/classitk_1_1ImageBase.html#a14769ccb89e9830f8128e09bf022b174>
+of various components at each series. A quick check of the Writer's region
+shows it changing at each series appropriately. However, the region of your
+image with intermediate updates never changes... but I don't really
+understand why (since it's also downstream of the reader).
+
+Sorry I can't be of more help,
+Mark
+
+On Tue, Oct 28, 2014 at 2:49 PM, Michael Meuli <michael.meuli at gmail.com>
+wrote:
+
+> Hi all
+>
+> If I modify the RunTest() function in itkSCIFIOImageIOTest.cxx just a
+> little bit to
+> get hold of the image for processing it, I get the following error
+> which appears, depending on the file, after a
+> certain number of series were processed with the following error:
+>
+> terminate called after throwing an instance of
+> 'itk::InvalidRequestedRegionError'
+>   what():
+> /home/michael/bioimage/itk/itk-master/InsightToolkit/Modules/Core/Common/src/itkDataObject.cxx:393:
+> Requested region is (at least partially) outside the largest possible
+> region.
+> Aborted (core dumped)
+>
+> In case of dead-A.ome.tiff after processing the first two series.
+>
+> Please find attached the runnable code.
+> The file dead-A.ome.tiff can be found here:
+> https://www.dropbox.com/sh/t2z0f4jttcnfh8s/AADq21HNR7EwH1JFxskhXXhea
+> in the folder ome-tiff-files/5.0.5
+>
+> Googling for the poblem I found the following about the Update() fuction:
+>
+> http://www.itk.org/Doxygen/html/classitk_1_1ProcessObject.html#a4041fb21e9105500eee311e265691bd5
+> I don't really understand it but I've tried
+> UpdateLargestPossibleRegion() instead of Update() but the complier
+> didn't eat it.
+>
+> Many thanks and best regards
+>
+> Michael
+>
+> _______________________________________________
+> Community mailing list
+> Community at itk.org
+> http://public.kitware.com/mailman/listinfo/community
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141029/803a6201/attachment.html>
+
+From michael.meuli at gmail.com  Sun Oct 19 15:55:44 2014
+From: michael.meuli at gmail.com (Michael Meuli)
+Date: Sun, 19 Oct 2014 22:55:44 +0200
+Subject: [SCIFIO] [ome-users] converting lif files to ome-tiff
+In-Reply-To: <CA+B=mGqGg99i1JxxJL1uiMr-hpxR6GRyPb08x_Tg9cVOAVaTmg@mail.gmail.com>
+References: <CAKSZWGyeBwBEsyPMqRrfiWbCRQSb8jn+uqbobO8L5UOjjgkX3A@mail.gmail.com>
+	<53F4B64C.8090506@dundee.ac.uk>
+	<CA+B=mGphC__Vv8Orfv4qWma3U9++pKV3+XbvQ6HDeu2JCES-Bg@mail.gmail.com>
+	<CA+B=mGqGg99i1JxxJL1uiMr-hpxR6GRyPb08x_Tg9cVOAVaTmg@mail.gmail.com>
+Message-ID: <CAKSZWGzPr05AR+kfSdAzvp+1MkKcrF=jdds19Nbh8U7cYeOMxw@mail.gmail.com>
+
+Hi Mark
+
+I've converted my files with Bio-Formats 5.0.5 and with the master ITK
+branch I was also able to fully convert my images as multi-series
+image, using the command:
+SCIFIOTestDriver ko-A.ome.tiff out.ome.tif -w -a -d 5
+
+Hower I think there is still a related problem. If I modify the
+RunTest() function in itkSCIFIOImageIOTest.cxx just a little bit to
+get hold of the image for processing it, I get the following error
+which appears, like the previous one, depending on the file, after a
+certain number of series were processed with the following error:
+
+terminate called after throwing an instance of
+'itk::InvalidRequestedRegionError'
+  what():  /home/michael/bioimage/itk/itk-master/InsightToolkit/Modules/Core/Common/src/itkDataObject.cxx:393:
+Requested region is (at least partially) outside the largest possible region.
+Aborted (core dumped)
+
+In case of dead-A.ome.tiff after processing the first two series.
+
+Please fnd attached the runnable code.
+The files can still be found here:
+https://www.dropbox.com/sh/t2z0f4jttcnfh8s/AADq21HNR7EwH1JFxskhXXhea
+
+Googling for the poblem I found the following about the Update() fuction:
+http://www.itk.org/Doxygen/html/classitk_1_1ProcessObject.html#a4041fb21e9105500eee311e265691bd5
+I don't really understand it but I've tried
+UpdateLargestPossibleRegion() instead of Update() but the complier
+didn't eat it.
+
+Many thanks and best regards
+Michael
+
+
+On 10 September 2014 22:11, Mark Hiner <hiner at wisc.edu> wrote:
+> Hi Michael,
+>
+> I opened a pull request to get the latest SCIFIO-ITK imageIO incorporated
+> into the master ITK branch.
+>
+> This fixes the metadata bug suspected by Roger (the dimensions of the first
+> series were always being used, which would crash on encountering a dataset
+> with smaller dimensions). It also upgrades the ImageIO to use Bio-Formats
+> 5.0.4, and has some other minor fixes and improvements.
+>
+> With these updates I was able to fully convert your image as a multi-series
+> image, using the command:
+> SCIFIOTestDriver ko-A.ome.tiff out.ome.tif -w -a -d 5
+>
+> Thanks for the report, it was very helpful. Please let us know if you run
+> into any more problems.
+>
+> Regards,
+> Mark
+>
+> On Wed, Aug 20, 2014 at 12:05 PM, Mark Hiner <hinerm at gmail.com> wrote:
+>>
+>> Hi all,
+>>
+>> >While I'm not entirely sure of the separation of responsibilities between
+>> > ITK, SCIFIO and Bio-Formats for this
+>> >particular task
+>>
+>> The readme for the SCIFIO-ITK ImageIO
+>> (https://github.com/scifio/scifio-imageio) was out of date. It should now
+>> correctly instruct users to e-mail scifio at scif.io (copied) for ITK imageIO
+>> troubleshooting.
+>>
+>> > I found this only occurs when you enable "-w" to use SCIFIO for output.
+>>
+>> Note that without the -w flag, the default ITK TIFF writer will be used,
+>> which I thought was limited to 3 dimensions (or at least it was at one
+>> time). If you want to write an .ome.tiff it has to be written with
+>> Bio-Formats, anyway.
+>>
+>> > Looks like it's trying to read z plane 60 when there are only 60 planes
+>>
+>> I'm assuming the # of planes to read isn't being updated for each series..
+>> I'll look into it when I get a chance.
+>>
+>> Thanks for the report,
+>> Mark
+>>
+>>
+>> On Wed, Aug 20, 2014 at 9:53 AM, Roger Leigh <rleigh at dundee.ac.uk> wrote:
+>>>
+>>> On 19/08/14 19:52, Michael Meuli wrote:
+>>>
+>>> Dear Michael,
+>>>
+>>>
+>>>> I have some problems converting my .lif files to ome-tiff.
+>>>> I have converted my .lif files originating from a "CLSM Leica SP 8"
+>>>> with bfconvert of Bio-Formats 5.0.3.
+>>>> Trying to make it reproducible I took the file "ko-A.ome.tiff" which
+>>>> can be found here:
+>>>> "https://www.dropbox.com/sh/t2z0f4jttcnfh8s/AADq21HNR7EwH1JFxskhXXhea"
+>>>>    in the ome-tiff-files folder.
+>>>
+>>>
+>>> Thanks.  I've been able to reproduce the validation problems.  I have
+>>> opened a ticket for this and CC'd you on it; please see
+>>> https://trac.openmicroscopy.org.uk/ome/ticket/12532
+>>>
+>>> Note however that the above validation error is harmless; it does not
+>>> affect bioformats' correct reading of the OME-TIFF and I was able to
+>>> read all planes of every series without trouble, and also convert the
+>>> file to a new OME-TIFF which strips out the MetadataOnly elements.  I
+>>> don't think this is in any way related to your other problem, below.
+>>>
+>>>
+>>>> Below you can find the output of bfconvert, xmlvalid and
+>>>> SCIFIOTestDriver itkSCIFIOImageIOTest with the -a flag.
+>>>> The output of tiffcomment you can find as attachment.
+>>>> itkSCIFIOImageIOTest in this example crashes trying to read the third
+>>>> series.
+>>>
+>>>
+>>> I built ITK with itkscifio to test this.  I found this only occurs when
+>>> you enable "-w" to use SCIFIO for output.
+>>>
+>>> While I'm not entirely sure of the separation of responsibilities
+>>> between ITK, SCIFIO and Bio-Formats for this particular task, I don't
+>>> think the problem is in Bio-Formats, but in SCIFIO setting the wrong
+>>> plane index when reading the image data, as shown by your stacktrace.
+>>> Looks like it's trying to read z plane 60 when there are only 60 planes
+>>> (0-59), assuming it's series 2; the others all have too different z
+>>> sizes.  I would suggest reporting this to the SCIFIO developers at
+>>> https://github.com/scifio/scifio
+>>>
+>>>
+>>> Regards,
+>>> Roger Leigh
+>>>
+>>> --
+>>> Dr Roger Leigh -- Open Microscopy Environment
+>>> Wellcome Trust Centre for Gene Regulation and Expression,
+>>> College of Life Sciences, University of Dundee, Dow Street,
+>>> Dundee DD1 5EH Scotland UK   Tel: (01382) 386364
+>>>
+>>> The University of Dundee is a registered Scottish Charity, No: SC015096
+>>> _______________________________________________
+>>> ome-users mailing list
+>>> ome-users at lists.openmicroscopy.org.uk
+>>> http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users
+>>
+>>
+>
+>
+> _______________________________________________
+> ome-users mailing list
+> ome-users at lists.openmicroscopy.org.uk
+> http://lists.openmicroscopy.org.uk/mailman/listinfo/ome-users
+>
+-------------- next part --------------
+cmake_minimum_required(VERSION 2.8)
+ 
+project(bactelize)
+ 
+find_package(ITK REQUIRED)
+include(${ITK_USE_FILE})
+
+if(NOT SCIFIO_LOADED)
+  message(FATAL_ERROR "SCIFIO module is required but not available.")
+endif() 
+
+add_executable(bactelize MACOSX_BUNDLE main.cxx)
+ 
+if( "${ITK_VERSION_MAJOR}" LESS 4 )
+  target_link_libraries(bactelize ITKReview ${ITK_LIBRARIES})
+else( "${ITK_VERSION_MAJOR}" LESS 4 )
+  target_link_libraries(bactelize ${ITK_LIBRARIES})
+endif( "${ITK_VERSION_MAJOR}" LESS 4 )
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: main.cxx
+Type: text/x-c++src
+Size: 3636 bytes
+Desc: not available
+URL: <http://scif.io/pipermail/scifio/attachments/20141019/cd1dc3f4/attachment-0002.cxx>
+
+From hiner at wisc.edu  Wed Oct 29 10:23:13 2014
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 29 Oct 2014 10:23:13 -0500
+Subject: [SCIFIO] [ITK] SCIFIO
+In-Reply-To: <CAKSZWGz6EBEQ9JjPjNz5hRNZTxDM8r6WKy_h=EJK11BJHYUHug@mail.gmail.com>
+References: <CAKSZWGz6EBEQ9JjPjNz5hRNZTxDM8r6WKy_h=EJK11BJHYUHug@mail.gmail.com>
+Message-ID: <CA+B=mGrUYuVBPPc=s8gbcB3iy2Vk7iniwPHsp_k7GfV4uvuPGQ@mail.gmail.com>
+
+Hi Michael,
+
+When you get InvalidRequestedRegionError on a series after the first, it
+strongly suggests series skew. In the dead-A.ome.tiff, series 2 is larger
+(more planes) than series 1, and series 3 is smaller than series 2. So it
+seems that at some point in the workflow the requested region is not
+matching the current series... which doesn't cause any errors until the
+region size decreases from one series to the next.
+
+Note that without the intermediate Update() call on the Image, the program
+will iterate successfully through the entire dataset. So it's the
+intermediate Update() that's exposing this problem. I assume you do not
+actually need it, since calling Update() on the writer will trigger the
+whole pipeline and you can then extract the intermediate image.
+
+On the other hand, I also assume you should be able to do incremental
+Update() calls, but I have no idea why it's not working with the
+SCIFIOImageIO. Perhaps someone else in the ITK community sees an error in
+usage of the ITK API?
+
+Otherwise I would suggest inspecting the requested region
+<http://www.itk.org/Doxygen/html/classitk_1_1ImageBase.html#a14769ccb89e9830f8128e09bf022b174>
+of various components at each series. A quick check of the Writer's region
+shows it changing at each series appropriately. However, the region of your
+image with intermediate updates never changes... but I don't really
+understand why (since it's also downstream of the reader).
+
+Sorry I can't be of more help,
+Mark
+
+On Tue, Oct 28, 2014 at 2:49 PM, Michael Meuli <michael.meuli at gmail.com>
+wrote:
+
+> Hi all
+>
+> If I modify the RunTest() function in itkSCIFIOImageIOTest.cxx just a
+> little bit to
+> get hold of the image for processing it, I get the following error
+> which appears, depending on the file, after a
+> certain number of series were processed with the following error:
+>
+> terminate called after throwing an instance of
+> 'itk::InvalidRequestedRegionError'
+>   what():
+> /home/michael/bioimage/itk/itk-master/InsightToolkit/Modules/Core/Common/src/itkDataObject.cxx:393:
+> Requested region is (at least partially) outside the largest possible
+> region.
+> Aborted (core dumped)
+>
+> In case of dead-A.ome.tiff after processing the first two series.
+>
+> Please find attached the runnable code.
+> The file dead-A.ome.tiff can be found here:
+> https://www.dropbox.com/sh/t2z0f4jttcnfh8s/AADq21HNR7EwH1JFxskhXXhea
+> in the folder ome-tiff-files/5.0.5
+>
+> Googling for the poblem I found the following about the Update() fuction:
+>
+> http://www.itk.org/Doxygen/html/classitk_1_1ProcessObject.html#a4041fb21e9105500eee311e265691bd5
+> I don't really understand it but I've tried
+> UpdateLargestPossibleRegion() instead of Update() but the complier
+> didn't eat it.
+>
+> Many thanks and best regards
+>
+> Michael
+>
+> _______________________________________________
+> Community mailing list
+> Community at itk.org
+> http://public.kitware.com/mailman/listinfo/community
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20141029/803a6201/attachment-0002.html>
+

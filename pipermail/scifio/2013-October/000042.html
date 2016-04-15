@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] SCIFIO post from phsiao at cs.unc.edu requires approval
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%20post%20from%20phsiao%40cs.unc.edu%20requires%20approval&In-Reply-To=%3CCA%2BB%3DmGqH7SmtLijL5SsZTzWK07ZbbBa%2BC2%2BzG1pK8fw_jKJNHQ%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000041.html">
+   <LINK REL="Next"  HREF="000043.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] SCIFIO post from phsiao at cs.unc.edu requires approval</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%20post%20from%20phsiao%40cs.unc.edu%20requires%20approval&In-Reply-To=%3CCA%2BB%3DmGqH7SmtLijL5SsZTzWK07ZbbBa%2BC2%2BzG1pK8fw_jKJNHQ%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] SCIFIO post from phsiao at cs.unc.edu requires approval">hinerm at gmail.com
+       </A><BR>
+    <I>Tue Oct 15 14:50:41 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000041.html">[SCIFIO] SCIFIO 0.7.0 Release
+</A></li>
+        <LI>Next message: <A HREF="000043.html">[SCIFIO] SCIFIO post from phsiao at cs.unc.edu requires approval
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#42">[ date ]</a>
+              <a href="thread.html#42">[ thread ]</a>
+              <a href="subject.html#42">[ subject ]</a>
+              <a href="author.html#42">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Joe,
+
+ Thanks for reporting this issue.
+
+reader-&gt;SetImageIO( io );
+&gt;<i>
+</I>
+ Just so you know, this is just disabling SCIFIO I believe, and defaulting
+to the ITK DICOM ImageIO.
+
+ Does the output file have the correct number of total planes? If not, you
+might try &quot;-d 5&quot; just to test. The dimension order is XYCZT but XYZ are the
+dimensions with length more than 1. The SCIFIO plugin is supposed to
+account for that but it could be a bug.
+
+ Otherwise if the dimensions are correct it could be an issue with the
+dataset being interleaved.
+
+ I'll try to look at it soon.
+
+Thanks,
+Mark
+
+
+From: Joe Ping-Lin Hsiao &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">phsiao at cs.unc.edu</A>&gt;
+&gt;<i> To: <A HREF="http://scif.io/mailman/listinfo/scifio">scifio at scif.io</A>
+</I>&gt;<i> Cc:
+</I>&gt;<i> Date: Tue, 15 Oct 2013 14:29:23 -0400
+</I>&gt;<i> Subject: Error reading a 32-bit nrrd image via ITK
+</I>&gt;<i> I am having trouble using SCIFIO in ITK to read a 32-bit .nrrd image in my
+</I>&gt;<i> own program. The attached is a 32-bit 3-dimensional test image.
+</I>&gt;<i>
+</I>&gt;<i> Then I used the following command to test with the SCIFIO test program:
+</I>&gt;<i>
+</I>&gt;<i> SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd 123.ome.tiff -w -d
+</I>&gt;<i> 3 -t float
+</I>&gt;<i>
+</I>&gt;<i> The output '123.ome.tiff' has wrong pixel values and looks wrong in ImageJ.
+</I>&gt;<i>
+</I>&gt;<i> After I dig deeper, I found that in in 'itkSCIFIOImageIOTest.cxx', if I
+</I>&gt;<i> comment out this line
+</I>&gt;<i>
+</I>&gt;<i>    reader-&gt;SetImageIO( io );
+</I>&gt;<i>
+</I>&gt;<i> to use ITK's default ImageIO, the output image becomes normal.
+</I>&gt;<i>
+</I>&gt;<i> Thanks,
+</I>&gt;<i> Joe
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20131015/d7012abf/attachment.html">http://scif.io/pipermail/scifio/attachments/20131015/d7012abf/attachment.html</A>&gt;
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000041.html">[SCIFIO] SCIFIO 0.7.0 Release
+</A></li>
+	<LI>Next message: <A HREF="000043.html">[SCIFIO] SCIFIO post from phsiao at cs.unc.edu requires approval
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#42">[ date ]</a>
+              <a href="thread.html#42">[ thread ]</a>
+              <a href="subject.html#42">[ subject ]</a>
+              <a href="author.html#42">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

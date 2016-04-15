@@ -1,0 +1,208 @@
+From hiner at wisc.edu  Wed Dec 11 11:18:13 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 11 Dec 2013 11:18:13 -0600
+Subject: [SCIFIO] SCIFIO 0.7.4 Released today
+Message-ID: <CA+B=mGo3zhY4YdVyfa6AnRuXViZVca4u5axX1QJBSXK+qtxBVg@mail.gmail.com>
+
+Hi all,
+
+ Today I released SCIFIO 0.7.4 - it can be downloaded directly from
+GitHub<https://github.com/scifio/scifio/releases>,
+and is part of pom-scijava
+1.111<https://github.com/scijava/scijava-common/commit/4cb7d8d92810b173f18fadcc25e1567b9b3d2e1a>.
+Side note: pom-scijava 1.111 also fixes a gav bug with scifio-lifesci, so
+this version is now being tracked correctly (e.g. if you want to use the
+updated SDTFormat<https://github.com/scifio/scifio-lifesci/blob/master/src/main/java/io/scif/lifesci/SDTFormat.java>
+).
+
+In addition to bug fixes and general improvements, I wanted to highlight a
+few new features:
+
+* Tools <https://github.com/scifio/scifio/tree/master/tools>! The
+Bio-Formats command line tools have been ported to SCIFIO. In keeping with
+SCIFIO theme, these tools now support dynamic command extension - via the
+SCIFIOToolCommand<https://github.com/scifio/scifio/blob/master/tools/src/main/java/io/scif/tools/SCIFIOToolCommand.java>plugins.
+Also, a lot of boilerplate is taken care of now in the abstract
+layer, e.g. using args4j <http://args4j.kohsuke.org/> to print command
+usage. I tried to adhere to Git syntax for using these tools, so I think it
+feels pretty slick.
+
+  I only ported show, info and convert for now. If you try implementing a
+new command and have any questions or problems please e-mail me/the list!
+
+  You can also download the latest
+tools<http://jenkins.imagej.net/view/SCIFIO/job/SCIFIO/>from jenkins,
+in
+zip<http://jenkins.imagej.net/view/SCIFIO/job/SCIFIO/lastSuccessfulBuild/artifact/tools/target/scifio-tools-0.7.5-SNAPSHOT-scripts.zip>and
+bz2<http://jenkins.imagej.net/view/SCIFIO/job/SCIFIO/lastSuccessfulBuild/artifact/tools/target/scifio-tools-0.7.5-SNAPSHOT-scripts.tar.bz2>flavors.
+
+* New package: refs<https://github.com/scifio/scifio/commit/d8cad77b212d6faf7bf49471f5a3ffaf46c75c7d>.
+This adds a RefManagerService<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/refs/RefManagerService.java>which
+works in unison with the new
+RefProvider<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/refs/RefProvider.java>plugin
+type to manage references and perform cleanup operations  after they
+are enqueued in a ReferenceQueue.
+
+* Redesigned cache
+functionality<https://github.com/scifio/scifio/commit/781ab8ef00845b6759d27ea2a9a60767505eeb5d>.
+This is the result of our latest hackathon with Christian Dietz. A lot
+happened here, so you can look at the related
+issue<https://github.com/scifio/scifio/issues/69>and commit message
+for the complete story. But to summarize, cache
+performance was terrible and used some ill-advised Java practices. Now
+(thanks to the RefManagerService, among other things) we're doing things
+properly and performance is obscenely improved.
+
+Thanks for reading this update. If you have any questions/comments, please
+let me know.
+
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131211/b5558342/attachment.html>
+
+From hiner at wisc.edu  Thu Dec 26 18:16:46 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Thu, 26 Dec 2013 18:16:46 -0600
+Subject: [SCIFIO] Problem with Tiff Calibration
+In-Reply-To: <52B84B3D.10607@avateam.net>
+References: <52B84B3D.10607@avateam.net>
+Message-ID: <CA+B=mGqtOXP7u+GiuFS8Ge4UcS4H6My9ro9h6W3p6BfPVOEg8g@mail.gmail.com>
+
+Thanks Christian! Looks like I had leftover code from the Bio-Formats
+TIFFReader, so I was populating physical pixel size fields, but not
+transferring that data to the actual axes.
+
+Works for me now.. running the Info command prints correct calibration
+values. Let me know if you have any more problems.
+
+thanks, Mark
+
+
+
+
+On Mon, Dec 23, 2013 at 8:39 AM, Christian Dietz <
+christian.dietz at avateam.net> wrote:
+
+> Hi Mark,
+>
+> hope you are doing good. I have a Chrismas Present for you: A Bug ;-)
+> If I read in the attached file, I don't get the correct calibration for
+> the axis (it's 1.0,1.0,1.0. should be approx. 0.33,0.33,0.33).
+> I think its a problem in the TiffFormat.class in the method:
+> parseCommentImageJ, as there are axis created but to calibration populated.
+>
+> Thanks for fixing and "Frohe Weihnachten und einen guten Rutsch".
+>
+> Christian ;-)
+>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131226/6a960eb1/attachment.html>
+
+From hiner at wisc.edu  Wed Dec 11 11:18:13 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 11 Dec 2013 11:18:13 -0600
+Subject: [SCIFIO] SCIFIO 0.7.4 Released today
+Message-ID: <CA+B=mGo3zhY4YdVyfa6AnRuXViZVca4u5axX1QJBSXK+qtxBVg@mail.gmail.com>
+
+Hi all,
+
+ Today I released SCIFIO 0.7.4 - it can be downloaded directly from
+GitHub<https://github.com/scifio/scifio/releases>,
+and is part of pom-scijava
+1.111<https://github.com/scijava/scijava-common/commit/4cb7d8d92810b173f18fadcc25e1567b9b3d2e1a>.
+Side note: pom-scijava 1.111 also fixes a gav bug with scifio-lifesci, so
+this version is now being tracked correctly (e.g. if you want to use the
+updated SDTFormat<https://github.com/scifio/scifio-lifesci/blob/master/src/main/java/io/scif/lifesci/SDTFormat.java>
+).
+
+In addition to bug fixes and general improvements, I wanted to highlight a
+few new features:
+
+* Tools <https://github.com/scifio/scifio/tree/master/tools>! The
+Bio-Formats command line tools have been ported to SCIFIO. In keeping with
+SCIFIO theme, these tools now support dynamic command extension - via the
+SCIFIOToolCommand<https://github.com/scifio/scifio/blob/master/tools/src/main/java/io/scif/tools/SCIFIOToolCommand.java>plugins.
+Also, a lot of boilerplate is taken care of now in the abstract
+layer, e.g. using args4j <http://args4j.kohsuke.org/> to print command
+usage. I tried to adhere to Git syntax for using these tools, so I think it
+feels pretty slick.
+
+  I only ported show, info and convert for now. If you try implementing a
+new command and have any questions or problems please e-mail me/the list!
+
+  You can also download the latest
+tools<http://jenkins.imagej.net/view/SCIFIO/job/SCIFIO/>from jenkins,
+in
+zip<http://jenkins.imagej.net/view/SCIFIO/job/SCIFIO/lastSuccessfulBuild/artifact/tools/target/scifio-tools-0.7.5-SNAPSHOT-scripts.zip>and
+bz2<http://jenkins.imagej.net/view/SCIFIO/job/SCIFIO/lastSuccessfulBuild/artifact/tools/target/scifio-tools-0.7.5-SNAPSHOT-scripts.tar.bz2>flavors.
+
+* New package: refs<https://github.com/scifio/scifio/commit/d8cad77b212d6faf7bf49471f5a3ffaf46c75c7d>.
+This adds a RefManagerService<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/refs/RefManagerService.java>which
+works in unison with the new
+RefProvider<https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/refs/RefProvider.java>plugin
+type to manage references and perform cleanup operations  after they
+are enqueued in a ReferenceQueue.
+
+* Redesigned cache
+functionality<https://github.com/scifio/scifio/commit/781ab8ef00845b6759d27ea2a9a60767505eeb5d>.
+This is the result of our latest hackathon with Christian Dietz. A lot
+happened here, so you can look at the related
+issue<https://github.com/scifio/scifio/issues/69>and commit message
+for the complete story. But to summarize, cache
+performance was terrible and used some ill-advised Java practices. Now
+(thanks to the RefManagerService, among other things) we're doing things
+properly and performance is obscenely improved.
+
+Thanks for reading this update. If you have any questions/comments, please
+let me know.
+
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131211/b5558342/attachment-0002.html>
+
+From hiner at wisc.edu  Thu Dec 26 18:16:46 2013
+From: hiner at wisc.edu (Mark Hiner)
+Date: Thu, 26 Dec 2013 18:16:46 -0600
+Subject: [SCIFIO] Problem with Tiff Calibration
+In-Reply-To: <52B84B3D.10607@avateam.net>
+References: <52B84B3D.10607@avateam.net>
+Message-ID: <CA+B=mGqtOXP7u+GiuFS8Ge4UcS4H6My9ro9h6W3p6BfPVOEg8g@mail.gmail.com>
+
+Thanks Christian! Looks like I had leftover code from the Bio-Formats
+TIFFReader, so I was populating physical pixel size fields, but not
+transferring that data to the actual axes.
+
+Works for me now.. running the Info command prints correct calibration
+values. Let me know if you have any more problems.
+
+thanks, Mark
+
+
+
+
+On Mon, Dec 23, 2013 at 8:39 AM, Christian Dietz <
+christian.dietz at avateam.net> wrote:
+
+> Hi Mark,
+>
+> hope you are doing good. I have a Chrismas Present for you: A Bug ;-)
+> If I read in the attached file, I don't get the correct calibration for
+> the axis (it's 1.0,1.0,1.0. should be approx. 0.33,0.33,0.33).
+> I think its a problem in the TiffFormat.class in the method:
+> parseCommentImageJ, as there are axis created but to calibration populated.
+>
+> Thanks for fixing and "Frohe Weihnachten und einen guten Rutsch".
+>
+> Christian ;-)
+>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20131226/6a960eb1/attachment-0002.html>
+

@@ -1,0 +1,136 @@
+From hiner at wisc.edu  Mon Sep 21 11:38:48 2015
+From: hiner at wisc.edu (Mark Hiner)
+Date: Mon, 21 Sep 2015 11:38:48 -0500
+Subject: [SCIFIO] SCIFIOImgCells.java
+In-Reply-To: <C1C633FA-53A1-4C96-9289-0040FD5271BF@mpi-cbg.de>
+References: <9CAA8749-A56E-4707-A9EF-1DFA911437AC@mpi-cbg.de>
+	<CA+B=mGoT79ESQamUFV2dpka7aJRa+6piiSMJ3FDPALGVN8OBuA@mail.gmail.com>
+	<4E93C8DB-5FAB-40BF-8470-4D536322010F@mpi-cbg.de>
+	<9E2CE31D-6B9F-491F-8E4D-D6E0657A3CBF@mpi-cbg.de>
+	<C1C633FA-53A1-4C96-9289-0040FD5271BF@mpi-cbg.de>
+Message-ID: <CA+B=mGpsafPVETSpYTQECMfMcT9vuRLFMWNh_mLfBQgokc8btA@mail.gmail.com>
+
+Hi Tobias,
+
+>All the figuring out who is responsible and whether it is already managed
+etc., that looks really expensive to do for each Cell if you have a lot of
+small Cells as in BDV.
+
+There will always be overhead for plugin-based matching. Ideally it
+shouldn't be more than a couple of hash map lookups. As far as complexity
+scaling with number of plugins of a given type, that's a general concern
+which will likely necessitate more indexing support in SciJava eventually.
+Also the ref manager should be a HandlerService.
+
+The alternative I think is for cells to know that they need a phantom
+reference that can cache them, and to always construct it when a cell is
+constructed. Since you have to construct and queue a reference either way,
+in theory I wouldn't expect compatibility determination to be the
+performance bottleneck. I have not profiled the performance of the cache
+service but if doing so did reveal compatibility determination to be a
+problem, then I would also expect it to be resolved with better caching and
+indexing.
+
+Anyway, for technical stuff like this it's best we discuss on the mailing
+list or GitHub.
+
+If you notice problems while you're looking at the code, it's more
+efficient for you to commit a fix directly since you have commit rights. If
+the fix is not clear, then I would open a GitHub issue
+<https://github.com/scifio/scifio/issues>.
+
+Hope that helps.
+
+Thanks,
+Mark
+
+
+
+On Fri, Sep 18, 2015 at 11:29 AM, Tobias Pietzsch <pietzsch at mpi-cbg.de>
+wrote:
+
+> Hi Mark,
+>
+> did you ever benchmark how much time is spent in
+> DefaultRefManagerService.manage()
+> All the figuring out who is responsible and whether it is already managed
+> etc., that looks really expensive to do for each Cell if you have a lot of
+> small Cells as in BDV.
+>
+> best regards,
+> Tobias
+>
+> On 18 Sep 2015, at 17:24, Tobias Pietzsch <pietzsch at mpi-cbg.de> wrote:
+>
+> member variable DefaultRefManagerService.disposed
+>
+> https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/DefaultRefManagerService.java#L75
+> is named and documented in the wrong way (should be renamed to
+> ?notDisposed? or ?running? or similar), or used in the wrong way in
+>
+> https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/DefaultRefManagerService.java#L143
+>
+> https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/DefaultRefManagerService.java#L150
+>
+> On 18 Sep 2015, at 14:07, Tobias Pietzsch <pietzsch at mpi-cbg.de> wrote:
+>
+> Javadoc for class
+>
+> https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/CleaningRef.java#L41
+> and method
+>
+> https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/CleaningRef.java#L49
+> are contradictory.
+>
+> On 17 Sep 2015, at 18:18, Mark Hiner <hiner at wisc.edu> wrote:
+>
+> Hi Tobi,
+>
+> I'll be back Monday.
+>
+> There's are eclipse config files in scifio.git/config but I think maybe
+> they should just be removed in favor of those in imagej/imagej. Either way
+> a code cleanup commit wouldn't hurt.
+>
+> Feel free to commit any fixes directly if you'd like. A lot of those
+> classes will probably change with a refactoring to rely more on imglib2
+> classes. Otherwise, I will try to remember next week.
+>
+> On Thu, Sep 17, 2015 at 11:02 AM, Tobias Pietzsch <pietzsch at mpi-cbg.de>
+> wrote:
+>
+>> Hi Mark,
+>>
+>> I?m currently digging through SCIFIOCellCache, MapDBCache, etc.
+>> I guess I?ll be bugging you with questions over the next days...
+>> ...respectively when you are back from your vacation. Please feel free to
+>> postpone answering until after vacation. I?ll just send emails with
+>> everything I notice so that I don?t forget. When will you be back?
+>>
+>> Could you please add me as an author of the
+>> https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/cell/SCIFIOImgCells.java
+>> class (because this is basically the same as
+>> https://github.com/bigdataviewer/bigdataviewer-core/blob/master/src/main/java/bdv/img/cache/VolatileImgCells.java
+>> from BDV)?
+>>
+>> Something seems to have gone wrong with auto-formatting the comments here
+>>
+>> https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/cell/SCIFIOCell.java#L60-L64
+>> and here
+>>
+>> https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/cell/SCIFIOCell.java#L69-L71
+>>
+>> Is there an eclipse style file for SCIFIO?
+>>
+>> best regards,
+>> Tobias
+>>
+>
+>
+>
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150921/7691dc6f/attachment.html>
+

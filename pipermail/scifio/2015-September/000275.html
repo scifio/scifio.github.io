@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] SCIFIOImgCells.java
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIOImgCells.java&In-Reply-To=%3CCA%2BB%3DmGpsafPVETSpYTQECMfMcT9vuRLFMWNh_mLfBQgokc8btA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] SCIFIOImgCells.java</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIOImgCells.java&In-Reply-To=%3CCA%2BB%3DmGpsafPVETSpYTQECMfMcT9vuRLFMWNh_mLfBQgokc8btA%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] SCIFIOImgCells.java">hiner at wisc.edu
+       </A><BR>
+    <I>Mon Sep 21 11:38:48 CDT 2015</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#275">[ date ]</a>
+              <a href="thread.html#275">[ thread ]</a>
+              <a href="subject.html#275">[ subject ]</a>
+              <a href="author.html#275">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Tobias,
+
+&gt;<i>All the figuring out who is responsible and whether it is already managed
+</I>etc., that looks really expensive to do for each Cell if you have a lot of
+small Cells as in BDV.
+
+There will always be overhead for plugin-based matching. Ideally it
+shouldn't be more than a couple of hash map lookups. As far as complexity
+scaling with number of plugins of a given type, that's a general concern
+which will likely necessitate more indexing support in SciJava eventually.
+Also the ref manager should be a HandlerService.
+
+The alternative I think is for cells to know that they need a phantom
+reference that can cache them, and to always construct it when a cell is
+constructed. Since you have to construct and queue a reference either way,
+in theory I wouldn't expect compatibility determination to be the
+performance bottleneck. I have not profiled the performance of the cache
+service but if doing so did reveal compatibility determination to be a
+problem, then I would also expect it to be resolved with better caching and
+indexing.
+
+Anyway, for technical stuff like this it's best we discuss on the mailing
+list or GitHub.
+
+If you notice problems while you're looking at the code, it's more
+efficient for you to commit a fix directly since you have commit rights. If
+the fix is not clear, then I would open a GitHub issue
+&lt;<A HREF="https://github.com/scifio/scifio/issues">https://github.com/scifio/scifio/issues</A>&gt;.
+
+Hope that helps.
+
+Thanks,
+Mark
+
+
+
+On Fri, Sep 18, 2015 at 11:29 AM, Tobias Pietzsch &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">pietzsch at mpi-cbg.de</A>&gt;
+wrote:
+
+&gt;<i> Hi Mark,
+</I>&gt;<i>
+</I>&gt;<i> did you ever benchmark how much time is spent in
+</I>&gt;<i> DefaultRefManagerService.manage()
+</I>&gt;<i> All the figuring out who is responsible and whether it is already managed
+</I>&gt;<i> etc., that looks really expensive to do for each Cell if you have a lot of
+</I>&gt;<i> small Cells as in BDV.
+</I>&gt;<i>
+</I>&gt;<i> best regards,
+</I>&gt;<i> Tobias
+</I>&gt;<i>
+</I>&gt;<i> On 18 Sep 2015, at 17:24, Tobias Pietzsch &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">pietzsch at mpi-cbg.de</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;<i> member variable DefaultRefManagerService.disposed
+</I>&gt;<i>
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/DefaultRefManagerService.java#L75">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/DefaultRefManagerService.java#L75</A>
+</I>&gt;<i> is named and documented in the wrong way (should be renamed to
+</I>&gt;<i> &#8220;notDisposed&#8221; or &#8220;running&#8221; or similar), or used in the wrong way in
+</I>&gt;<i>
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/DefaultRefManagerService.java#L143">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/DefaultRefManagerService.java#L143</A>
+</I>&gt;<i>
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/DefaultRefManagerService.java#L150">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/DefaultRefManagerService.java#L150</A>
+</I>&gt;<i>
+</I>&gt;<i> On 18 Sep 2015, at 14:07, Tobias Pietzsch &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">pietzsch at mpi-cbg.de</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;<i> Javadoc for class
+</I>&gt;<i>
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/CleaningRef.java#L41">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/CleaningRef.java#L41</A>
+</I>&gt;<i> and method
+</I>&gt;<i>
+</I>&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/CleaningRef.java#L49">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/refs/CleaningRef.java#L49</A>
+</I>&gt;<i> are contradictory.
+</I>&gt;<i>
+</I>&gt;<i> On 17 Sep 2015, at 18:18, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;<i> Hi Tobi,
+</I>&gt;<i>
+</I>&gt;<i> I'll be back Monday.
+</I>&gt;<i>
+</I>&gt;<i> There's are eclipse config files in scifio.git/config but I think maybe
+</I>&gt;<i> they should just be removed in favor of those in imagej/imagej. Either way
+</I>&gt;<i> a code cleanup commit wouldn't hurt.
+</I>&gt;<i>
+</I>&gt;<i> Feel free to commit any fixes directly if you'd like. A lot of those
+</I>&gt;<i> classes will probably change with a refactoring to rely more on imglib2
+</I>&gt;<i> classes. Otherwise, I will try to remember next week.
+</I>&gt;<i>
+</I>&gt;<i> On Thu, Sep 17, 2015 at 11:02 AM, Tobias Pietzsch &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">pietzsch at mpi-cbg.de</A>&gt;
+</I>&gt;<i> wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> Hi Mark,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> I&#8217;m currently digging through SCIFIOCellCache, MapDBCache, etc.
+</I>&gt;&gt;<i> I guess I&#8217;ll be bugging you with questions over the next days...
+</I>&gt;&gt;<i> ...respectively when you are back from your vacation. Please feel free to
+</I>&gt;&gt;<i> postpone answering until after vacation. I&#8217;ll just send emails with
+</I>&gt;&gt;<i> everything I notice so that I don&#8217;t forget. When will you be back?
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Could you please add me as an author of the
+</I>&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/cell/SCIFIOImgCells.java">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/cell/SCIFIOImgCells.java</A>
+</I>&gt;&gt;<i> class (because this is basically the same as
+</I>&gt;&gt;<i> <A HREF="https://github.com/bigdataviewer/bigdataviewer-core/blob/master/src/main/java/bdv/img/cache/VolatileImgCells.java">https://github.com/bigdataviewer/bigdataviewer-core/blob/master/src/main/java/bdv/img/cache/VolatileImgCells.java</A>
+</I>&gt;&gt;<i> from BDV)?
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Something seems to have gone wrong with auto-formatting the comments here
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/cell/SCIFIOCell.java#L60-L64">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/cell/SCIFIOCell.java#L60-L64</A>
+</I>&gt;&gt;<i> and here
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> <A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/cell/SCIFIOCell.java#L69-L71">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/img/cell/SCIFIOCell.java#L69-L71</A>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Is there an eclipse style file for SCIFIO?
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> best regards,
+</I>&gt;&gt;<i> Tobias
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20150921/7691dc6f/attachment.html">http://scif.io/pipermail/scifio/attachments/20150921/7691dc6f/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#275">[ date ]</a>
+              <a href="thread.html#275">[ thread ]</a>
+              <a href="subject.html#275">[ subject ]</a>
+              <a href="author.html#275">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

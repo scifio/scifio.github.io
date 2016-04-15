@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] SCIFIO does not seem to release memory of closed images
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%20does%20not%20seem%20to%20release%20memory%20of%20closed%20images&In-Reply-To=%3CCA%2BB%3DmGqx47SkUzM_FHGkoyAy3vbpf8%2BNMMbURUOSJ65UfeCf3w%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000213.html">
+   <LINK REL="Next"  HREF="000214.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] SCIFIO does not seem to release memory of closed images</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20SCIFIO%20does%20not%20seem%20to%20release%20memory%20of%20closed%20images&In-Reply-To=%3CCA%2BB%3DmGqx47SkUzM_FHGkoyAy3vbpf8%2BNMMbURUOSJ65UfeCf3w%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] SCIFIO does not seem to release memory of closed images">hinerm at gmail.com
+       </A><BR>
+    <I>Mon Jul 14 08:34:45 CDT 2014</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000213.html">[SCIFIO] SCIFIO does not seem to release memory of closed images
+</A></li>
+        <LI>Next message: <A HREF="000214.html">[SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#215">[ date ]</a>
+              <a href="thread.html#215">[ thread ]</a>
+              <a href="subject.html#215">[ subject ]</a>
+              <a href="author.html#215">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Burkhard,
+
+ &gt; run(&quot;Collect Garbage&quot;);
+
+ This just calls System.gc().. twice, actually. There are many articles and
+StackOverflow posts about why System.gc() is unreliable
+&lt;<A HREF="http://stackoverflow.com/questions/2414105/why-is-it-a-bad-practice-to-call-system-gc">http://stackoverflow.com/questions/2414105/why-is-it-a-bad-practice-to-call-system-gc</A>&gt;.
+I personally have seen endlessly repeated System.gc() calls effectively do
+nothing, necessitating the creation of large objects to force memory to be
+released.
+
+ Also, the JVM should automatically attempt to run the garbage collector
+when memory is requested for allocation in excess of the JVM's memory
+limits. So the best way to test if SCIFIO has a memory leak would be:
+
+1) Open datasets that occupy slightly less than the max memory allocated to
+your Fiji
+2) Close these datasets
+3) Try opening more datasets (of a size such that, if the original datasets
+not released, the total memory used would exceed the max allocation)
+
+If you see OutOfMemory errors then there could quite possibly be a leak.
+
+Note also that we have unit tests in place designed to catch these leaks:
+<A HREF="https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java.">https://github.com/scifio/scifio/blob/master/src/test/java/io/scif/img/cell/cache/utests/CacheServiceTest.java.</A>
+An excellent way to demonstrate the memory error would be to come up with
+another test in this class that fails.
+
+Thanks,
+Mark
+
+
+On Sat, Jul 12, 2014 at 1:54 PM, Burkhard H&#246;ckendorf &lt;
+<A HREF="http://scif.io/mailman/listinfo/scifio">burkhard.hoeckendorf at web.de</A>&gt; wrote:
+
+&gt;<i> Dear List,
+</I>&gt;<i>
+</I>&gt;<i> First of all thanks for developing scifio and doing that open source. I
+</I>&gt;<i> have started to use it with ImageJ, since Fiji now offers the option to use
+</I>&gt;<i> it. Having said that, I may also have stumbled upon an issue. I'm unsure
+</I>&gt;<i> when (or whether) scifio releases the corresponding memory after images are
+</I>&gt;<i> closed. To look at this in a somewhat systematic way, I ran a macro (see
+</I>&gt;<i> below) to repeatedly open and close a 3GB single file uncompressed TIFF
+</I>&gt;<i> stack (2048x2048x367x16bits) and record some performance stats along the
+</I>&gt;<i> way. I ran this using a new download of Fiji.
+</I>&gt;<i>
+</I>&gt;<i> Here are the results with scifio disabled:
+</I>&gt;<i>      11450 ms to open files
+</I>&gt;<i>   28578184 mem before opening files
+</I>&gt;<i> 9282667288 mem after opening files
+</I>&gt;<i> 9272732560 mem after opening files &amp; GC
+</I>&gt;<i> 9272780080 mem after closing files
+</I>&gt;<i>   24220936 mem after closing files &amp; GC
+</I>&gt;<i>
+</I>&gt;<i> And here with scifio enabled:
+</I>&gt;<i>       43715 ms to open files
+</I>&gt;<i>    26765224 mem before opening files
+</I>&gt;<i> 10517954400 mem after opening files
+</I>&gt;<i>  9327459480 mem after opening files &amp; GC
+</I>&gt;<i>  9327506440 mem after closing files
+</I>&gt;<i>  9314822896 mem after closing files &amp; GC
+</I>&gt;<i>
+</I>&gt;<i> I have also checked, whether memory is freed a couple of minutes after
+</I>&gt;<i> closing the images, which does not appear to be the case.
+</I>&gt;<i>
+</I>&gt;<i> Note that scifio is also somewhat slower, although I'm a bit hesitant to
+</I>&gt;<i> bring this up, because it is still relatively young and I can see a few
+</I>&gt;<i> &quot;improve ... performance&quot; tickets in the issue tracker.
+</I>&gt;<i>
+</I>&gt;<i> Below is the macro.
+</I>&gt;<i> Kind regards,
+</I>&gt;<i> Burkhard
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> nOpenTimes = 3;
+</I>&gt;<i> file = &quot;/path/to/stack&quot;;
+</I>&gt;<i>
+</I>&gt;<i> run(&quot;Collect Garbage&quot;);
+</I>&gt;<i> memBefore = IJ.currentMemory();
+</I>&gt;<i>
+</I>&gt;<i> msToOpen = getTime();
+</I>&gt;<i> for (i=0; i&lt;nOpenTimes; i+=1) {
+</I>&gt;<i>         open(file);
+</I>&gt;<i> }
+</I>&gt;<i> msToOpen = getTime() - msToOpen;
+</I>&gt;<i>
+</I>&gt;<i> memFilesOpen = IJ.currentMemory();
+</I>&gt;<i> run(&quot;Collect Garbage&quot;);
+</I>&gt;<i> memFilesOpenGC = IJ.currentMemory();
+</I>&gt;<i>
+</I>&gt;<i> for (i=0; i&lt;nOpenTimes; i+=1) {
+</I>&gt;<i>         close();
+</I>&gt;<i> }
+</I>&gt;<i> memFilesClosed = IJ.currentMemory();
+</I>&gt;<i> run(&quot;Collect Garbage&quot;);
+</I>&gt;<i> memFilesClosedGC = IJ.currentMemory();
+</I>&gt;<i>
+</I>&gt;<i> print(&quot;&quot;+ msToOpen + &quot; ms to open files&quot;);
+</I>&gt;<i> print(&quot;&quot;+ memBefore + &quot; mem before opening files&quot;);
+</I>&gt;<i> print(&quot;&quot;+ memFilesOpen + &quot; mem after opening files&quot;);
+</I>&gt;<i> print(&quot;&quot;+ memFilesOpenGC + &quot; mem after opening files &amp; GC&quot;);
+</I>&gt;<i> print(&quot;&quot;+ memFilesClosed + &quot; mem after closing files&quot;);
+</I>&gt;<i> print(&quot;&quot;+ memFilesClosedGC + &quot; mem after closing files &amp; GC&quot;);
+</I>&gt;<i>
+</I>&gt;<i> _______________________________________________
+</I>&gt;<i> SCIFIO mailing list
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20140714/0e7f8b63/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20140714/0e7f8b63/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000213.html">[SCIFIO] SCIFIO does not seem to release memory of closed images
+</A></li>
+	<LI>Next message: <A HREF="000214.html">[SCIFIO] Scrambled tiles in czi files with Scifio-Itk bridge
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#215">[ date ]</a>
+              <a href="thread.html#215">[ thread ]</a>
+              <a href="subject.html#215">[ subject ]</a>
+              <a href="author.html#215">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

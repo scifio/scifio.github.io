@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Service construction
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Service%20construction&In-Reply-To=%3CCA%2BB%3DmGoZH-LfLquJ5tboDLLw5WSbJg2VVLX0HQ%2B3xfB9jG1_fA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000183.html">
+   <LINK REL="Next"  HREF="000189.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Service construction</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Service%20construction&In-Reply-To=%3CCA%2BB%3DmGoZH-LfLquJ5tboDLLw5WSbJg2VVLX0HQ%2B3xfB9jG1_fA%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Service construction">hiner at wisc.edu
+       </A><BR>
+    <I>Tue Jan 14 08:39:38 CST 2014</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000183.html">[SCIFIO] [ImageJ-devel] [ImgLib2] The img-metadata branch
+</A></li>
+        <LI>Next message: <A HREF="000189.html">[SCIFIO] Service construction
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#184">[ date ]</a>
+              <a href="thread.html#184">[ thread ]</a>
+              <a href="subject.html#184">[ subject ]</a>
+              <a href="author.html#184">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Christian,
+
+These are both great questions, so no worries!
+
+* If I want to use a global &quot;Context&quot; in my complete &quot;KNIME Application&quot;,
+&gt;<i> why is there the possibility to create several contexts?
+</I>&gt;<i>
+</I>
+Curtis can expand on this if necessary, but by avoiding one static Context,
+we allow multiple instances of applications to run in the same JVM with
+differing sets of Services, Plugins, and any other state that could be
+desired. I don't have specific use cases off hand, but fundamentally,
+avoiding static classes and allowing state to be encapsulated with each
+instance of a Context is considerably more flexible. I think the only
+advantage a static Context would have is that it might mitigate some
+confusion. ;)
+
+Also, if you know you want a static Context, it's easy enough to create a
+static utility class with a getContext() method that provides a consistent
+Context instance for everything in your application.
+
+* How can I use the class &quot;Scifio&quot; in a global way, s.t. this context also
+&gt;<i> knows all other services? The &quot;Scifio&quot; Context class itself suggests to
+</I>&gt;<i> create one context for ImageJ2, one for SCIFIO, etc.?!
+</I>&gt;<i>
+</I>
+I'm not sure exactly what you mean when you reference the &quot;Scifio&quot; Context.
+But note that the SCIFIO
+class&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/SCIFIO.java#L97">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/SCIFIO.java#L97</A>&gt;has
+a constructor that accepts an existing Context. The SCIFIO class was
+designed, fundamentally, to act as a wrapper for existing Contexts. So you
+can maintain your one application context, and create a new SCIFIO around
+it when needed. The zero-param constructor is primarily a convenience for
+when you don't have/need a Context already in your application.
+
+So to make SCIFIO global, just have a single global Context and then wrap
+it with a SCIFIO whenever you need the SCIFIO API. There are many ways you
+could implement this - using a static utility method as above, or adding a
+HasSCIFIO layer on top of
+AbstractContextual&lt;<A HREF="https://github.com/scijava/scijava-common/blob/master/src/main/java/org/scijava/AbstractContextual.java">https://github.com/scijava/scijava-common/blob/master/src/main/java/org/scijava/AbstractContextual.java</A>&gt;classes
+(which we actually had at one point and then moved away from),
+etc...
+
+Hope this helps. Let me know if anything is unclear.
+
+- Mark
+
+
+On Tue, Jan 14, 2014 at 4:43 AM, Christian Dietz &lt;
+<A HREF="http://scif.io/mailman/listinfo/scifio">christian.dietz at uni-konstanz.de</A>&gt; wrote:
+
+&gt;<i>  Hi Mark,
+</I>&gt;<i>
+</I>&gt;<i> maybe a very stupid questions, but I got two more very general ones:
+</I>&gt;<i>
+</I>&gt;<i> * If I want to use a global &quot;Context&quot; in my complete &quot;KNIME Application&quot;,
+</I>&gt;<i> why is there the possibility to create several contexts?
+</I>&gt;<i> * How can I use the class &quot;Scifio&quot; in a global way, s.t. this context also
+</I>&gt;<i> knows all other services? The &quot;Scifio&quot; Context class itself suggests to
+</I>&gt;<i> create one context for ImageJ2, one for SCIFIO, etc.?!
+</I>&gt;<i>
+</I>&gt;<i> Don't misunderstand me, I really want to use the context the way you guys
+</I>&gt;<i> think its best, but I understand too little since now I guess :)
+</I>&gt;<i>
+</I>&gt;<i> Have a nice day!
+</I>&gt;<i>
+</I>&gt;<i> Christian
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> Am 13.01.2014 17:34, schrieb Mark Hiner:
+</I>&gt;<i>
+</I>&gt;<i>  Hi Christian,
+</I>&gt;<i>
+</I>&gt;<i> On Sat, Jan 11, 2014 at 12:05 PM, Christian Dietz &lt;
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">christian.dietz at uni-konstanz.de</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> If so, I thought about an &quot;exclude service&quot; option in the Context?
+</I>&gt;&gt;<i> Something like: Include all SingletonService, but if you include them, make
+</I>&gt;&gt;<i> sure that they are of type ImageJService or SCIFIOService or something like
+</I>&gt;&gt;<i> that? Or: The user can provide a &quot;ServiceFilter&quot; Implementation where he
+</I>&gt;&gt;<i> can exclude/Include certain services? I don't know if this makes sense at
+</I>&gt;&gt;<i> all, just a naive thinking I guess.
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>  I understand what you're saying, but there are significant problems with
+</I>&gt;<i> excluding services like this. It's really not extensible - it will always
+</I>&gt;<i> be possible for something downstream to add a problematic service. Unless
+</I>&gt;<i> you have complete control of the classpath - but if you have that, you can
+</I>&gt;<i> limit which services and plugins are discovered, and thus loaded, anyway.
+</I>&gt;<i>
+</I>&gt;<i>  So let's go more into the philosophy of what you're trying to do:
+</I>&gt;<i>
+</I>&gt;<i>  - Why severely limit Services available to the Context? From what I
+</I>&gt;<i> understood (and please correct me if I'm wrong here) you have one class
+</I>&gt;<i> loader and one context per plugin? So you want to limit the number of
+</I>&gt;<i> services because each plugin is going to load a new context? Is that right?
+</I>&gt;<i>
+</I>&gt;<i>  If so, I feel like the Context use is a bit too narrowly scoped here.
+</I>&gt;<i> It's developed as more of an application-level context, so I think it will
+</I>&gt;<i> be a continuous struggle to use it as something else. Would it be possible
+</I>&gt;<i> to refactor your context usage to simply have one Context, that loads all
+</I>&gt;<i> of the services/plugins available, and is then passed around/reused by
+</I>&gt;<i> other modules?
+</I>&gt;<i>
+</I>&gt;<i>  Thanks,
+</I>&gt;<i> Mark
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> On Sat, Jan 11, 2014 at 12:05 PM, Christian Dietz &lt;
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">christian.dietz at uni-konstanz.de</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i>  Hi Mark,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> I figured out my problem and I have no clue how to solve it in a nice way
+</I>&gt;&gt;<i> :-)
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> We restrict our the context we create to very limited amount of services.
+</I>&gt;&gt;<i> We only want to load the services we really need.
+</I>&gt;&gt;<i> Since now, I told my Context to load all SingletonService.class. I needed
+</I>&gt;&gt;<i> to load all SingletonServices, such that the method isMultipleChoiceObject
+</I>&gt;&gt;<i> (line 382) returns &quot;true&quot; for e.g. the &quot;CalculatorOp&quot; and KNIME can
+</I>&gt;&gt;<i> generate the dialog for e.g. the ImageCalculator. This only worked if the
+</I>&gt;&gt;<i> CalculatorService.class is available in the context.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> The important part actually is: If I request to load _any_
+</I>&gt;&gt;<i> SingletonService, of course also the SingletonServices from SCIFIO etc are
+</I>&gt;&gt;<i> also loaded, which I actually don't need here. On the other hand, I don't
+</I>&gt;&gt;<i> want to manually add SingletonServices from ImageJ2 I need (this is what I
+</I>&gt;&gt;<i> do now with CalculatorSerice, ThresholdService, etc... see line 128/129 at
+</I>&gt;&gt;<i> <A HREF="https://github.com/knime-ip/knip-imagej2/blob/master/org.knime.knip.imagej2.core/src/org/knime/knip/imagej2/core/IJGateway.java">https://github.com/knime-ip/knip-imagej2/blob/master/org.knime.knip.imagej2.core/src/org/knime/knip/imagej2/core/IJGateway.java</A>
+</I>&gt;&gt;<i> ).
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Does this make sense?
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> If so, I thought about an &quot;exclude service&quot; option in the Context?
+</I>&gt;&gt;<i> Something like: Include all SingletonService, but if you include them, make
+</I>&gt;&gt;<i> sure that they are of type ImageJService or SCIFIOService or something like
+</I>&gt;&gt;<i> that? Or: The user can provide a &quot;ServiceFilter&quot; Implementation where he
+</I>&gt;&gt;<i> can exclude/Include certain services? I don't know if this makes sense at
+</I>&gt;&gt;<i> all, just a naive thinking I guess.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Thanks for your support again,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Christian
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Am 10.01.2014 19:57, schrieb Mark Hiner:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>    OK, so I'm questioning how the IJAdapterProvider&lt;<A HREF="https://github.com/knime-ip/knip-imagej2/blob/master/org.knime.knip.imagej2.core/src/org/knime/knip/imagej2/core/IJGateway.java#L428">https://github.com/knime-ip/knip-imagej2/blob/master/org.knime.knip.imagej2.core/src/org/knime/knip/imagej2/core/IJGateway.java#L428</A>&gt;assembles the list of services..
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> It seems like it's trying to manually assemble a list of services to
+</I>&gt;&gt;<i> construct the context with. Is that right? When constructing the context
+</I>&gt;&gt;<i> and providing a list of services, you basically can give it just the
+</I>&gt;&gt;<i> superclass services, and all children will be discovered. We did that so
+</I>&gt;&gt;<i> you can make a context with say SCIFOService and SciJavaService and then
+</I>&gt;&gt;<i> plugins that add more SCIFIOServices will automatically be included.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Does that make sense?
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>    So I would possibly refactor this to make a context with
+</I>&gt;&gt;<i> ImageJServices, SCIFIOServices, and SciJavaServices.. because those are the
+</I>&gt;&gt;<i> relevant components you're using, right?
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>    Also, yes whenever you try to get objects from an ObjectIndex, ALL
+</I>&gt;&gt;<i> pending initializations occur. This just defers the initialization until
+</I>&gt;&gt;<i> it's required.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>    All SingletonServices add each of their singleton instances to the
+</I>&gt;&gt;<i> ObjectIndex lazily during their initialize() method. So that's why these
+</I>&gt;&gt;<i> translators are being loaded. And they fail because SCIFIOServices aren't
+</I>&gt;&gt;<i> included.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> So, context creation is part of the problem.. but I think the
+</I>&gt;&gt;<i> classpath/class loader is still incorrect, because you have OME-Formats
+</I>&gt;&gt;<i> stuff in it.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> I will try to update the Context so that when that error comes up, it
+</I>&gt;&gt;<i> prints out the services that WERE used to create the context, and maybe the
+</I>&gt;&gt;<i> classpath of the current class loader. Because that error is extremely
+</I>&gt;&gt;<i> cryptic and unhelpful.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Then maybe we can discuss more tomorrow!
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>   Take care
+</I>&gt;&gt;<i>  Mark
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20140114/89f1e264/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20140114/89f1e264/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000183.html">[SCIFIO] [ImageJ-devel] [ImgLib2] The img-metadata branch
+</A></li>
+	<LI>Next message: <A HREF="000189.html">[SCIFIO] Service construction
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#184">[ date ]</a>
+              <a href="thread.html#184">[ thread ]</a>
+              <a href="subject.html#184">[ subject ]</a>
+              <a href="author.html#184">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

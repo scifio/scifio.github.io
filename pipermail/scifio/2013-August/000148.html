@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> Minimal Service Setup for ImgOpener
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20Minimal%20Service%20Setup%20for%20ImgOpener&In-Reply-To=%3CCADN69y%3DLYYOTncvGVyuOpO0cpB0WVNyx1%3DkPC%2BL1J%3DdTqwpoSg%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000147.html">
+   <LINK REL="Next"  HREF="000149.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>Minimal Service Setup for ImgOpener</H1>
+    <B>Curtis Rueden</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20Minimal%20Service%20Setup%20for%20ImgOpener&In-Reply-To=%3CCADN69y%3DLYYOTncvGVyuOpO0cpB0WVNyx1%3DkPC%2BL1J%3DdTqwpoSg%40mail.gmail.com%3E"
+       TITLE="Minimal Service Setup for ImgOpener">ctrueden at wisc.edu
+       </A><BR>
+    <I>Mon Aug 12 13:29:49 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000147.html">Minimal Service Setup for ImgOpener
+</A></li>
+        <LI>Next message: <A HREF="000149.html">Minimal Service Setup for ImgOpener
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#148">[ date ]</a>
+              <a href="thread.html#148">[ thread ]</a>
+              <a href="subject.html#148">[ subject ]</a>
+              <a href="author.html#148">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Michael,
+
+&gt;<i> What is the minimal set of Services that we need just for the opener?
+</I>
+The noargs ImgOpener constructor is supposed to give you exactly that:
+
+<A HREF="https://github.com/scifio/scifio/blob/8037fd38419030dff000eda84fca9b35909be3a4/scifio/src/main/java/io/scif/img/AbstractImgIOComponent.java#L68">https://github.com/scifio/scifio/blob/8037fd38419030dff000eda84fca9b35909be3a4/scifio/src/main/java/io/scif/img/AbstractImgIOComponent.java#L68</A>
+
+Please let us know if it doesn't work for you!
+
+Regards,
+Curtis
+
+
+On Mon, Aug 12, 2013 at 10:39 AM, Michael Zinsmaier &lt;
+<A HREF="http://scif.io/mailman/listinfo/scifio">michael.zinsmaier at gmx.de</A>&gt; wrote:
+
+&gt;<i> Hi all,
+</I>&gt;<i>
+</I>&gt;<i> we try to create a suitable context for the ImgOpener but on our classpath
+</I>&gt;<i> are several jar files that contain services which we do not intend to use
+</I>&gt;<i> and which cause problems if discovered (e.g. HotdrawService is discovered
+</I>&gt;<i> but we do not include all required libs...). What is the minimal set of
+</I>&gt;<i> Services that we need just for the opener?
+</I>&gt;<i>
+</I>&gt;<i> or more code based:
+</I>&gt;<i>
+</I>&gt;<i> given the following methods
+</I>&gt;<i>
+</I>&gt;<i>     public void foo() {
+</I>&gt;<i>         Context c = new Context(getIOContextServices()**);
+</I>&gt;<i>         m_scifio = new SCIFIO(c);
+</I>&gt;<i>         FORMATS = m_scifio.format().**getAllFormats();
+</I>&gt;<i>     }
+</I>&gt;<i>
+</I>&gt;<i>     private List&lt;Class&lt;? extends Service&gt;&gt; getIOContextServices() {
+</I>&gt;<i>         final List services = new ArrayList();
+</I>&gt;<i>        services.add(FormatService.**class);
+</I>&gt;<i>        return services;
+</I>&gt;<i>     }
+</I>&gt;<i>
+</I>&gt;<i> what would be the minimal list of required services in order to get a
+</I>&gt;<i> suitable Context for the ImgOpener?
+</I>&gt;<i>
+</I>&gt;<i> Regards Michael
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130812/c756214a/attachment-0001.html">http://scif.io/pipermail/scifio/attachments/20130812/c756214a/attachment-0001.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000147.html">Minimal Service Setup for ImgOpener
+</A></li>
+	<LI>Next message: <A HREF="000149.html">Minimal Service Setup for ImgOpener
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#148">[ date ]</a>
+              <a href="thread.html#148">[ thread ]</a>
+              <a href="subject.html#148">[ subject ]</a>
+              <a href="author.html#148">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

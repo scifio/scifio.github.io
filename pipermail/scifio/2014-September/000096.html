@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] New file format for SCIFIO
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20New%20file%20format%20for%20SCIFIO&In-Reply-To=%3CCA%2BB%3DmGpz-0mJxp_RZHVwyZiCtHb-uZDb6Eno8j3CjGwKwY4K-Q%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000095.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] New file format for SCIFIO</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20New%20file%20format%20for%20SCIFIO&In-Reply-To=%3CCA%2BB%3DmGpz-0mJxp_RZHVwyZiCtHb-uZDb6Eno8j3CjGwKwY4K-Q%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] New file format for SCIFIO">hiner at wisc.edu
+       </A><BR>
+    <I>Fri Sep 12 09:49:09 CDT 2014</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000095.html">[SCIFIO] [ome-users] converting lif files to ome-tiff
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#96">[ date ]</a>
+              <a href="thread.html#96">[ thread ]</a>
+              <a href="subject.html#96">[ subject ]</a>
+              <a href="author.html#96">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Jerome,
+
+ It's great to hear your interest in integrating your format with SCIFIO
+and ImageJ2. I'm copying this mail to the SCIFIO mailing list, as this
+would be of interest and benefit to the community.
+
+&gt;<i>I hope you could add this the the SCIFIO or explain me where to integrate
+</I>this modification.
+
+ There is a SCIFIO component, SCIFIO-tutorials
+&lt;<A HREF="https://github.com/scifio/scifio-tutorials">https://github.com/scifio/scifio-tutorials</A>&gt;, which was designed to
+introduce the API to developers. In particular, the Custom Format
+&lt;<A HREF="https://github.com/scifio/scifio-tutorials/blob/master/core/src/main/java/io/scif/tutorials/core/T3aCustomFormats.java">https://github.com/scifio/scifio-tutorials/blob/master/core/src/main/java/io/scif/tutorials/core/T3aCustomFormats.java</A>&gt;
+tutorial and studying a simple existing format
+&lt;<A HREF="https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/formats/PCXFormat.java">https://github.com/scifio/scifio/blob/master/src/main/java/io/scif/formats/PCXFormat.java</A>&gt;
+would be the recommended starting point. If anything is unclear in these
+tutorials or if you have further questions about how the SCIFIO format
+should be structured, please feel welcome to ask questions on this list,
+and to report issues on GitHub.
+
+ Once you have a SCIFIO reader for your format, you can distribute it to
+users via an update site
+&lt;<A HREF="http://imagej.net/How_to_set_up_and_populate_an_update_site">http://imagej.net/How_to_set_up_and_populate_an_update_site</A>&gt;.
+
+ With a little work &lt;<A HREF="https://github.com/scifio/scifio-bf-compat/issues/4">https://github.com/scifio/scifio-bf-compat/issues/4</A>&gt;
+on my part, your new SCIFIO reader will get picked up by Bio-Formats, which
+will then allow it to work in Stitching.
+
+ We're happy to provide any guidance we can - looking forward to your
+contributions and feedback!
+
+Regards,
+Mark
+
+On Fri, Sep 12, 2014 at 7:01 AM, J&#233;r&#244;me Parent &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">jerome.parent at lynceetec.com</A>&gt;
+wrote:
+&gt;<i>
+</I>&gt;<i> Hello,
+</I>&gt;<i> I am working for Lynceetec a Swiss company that develop and manufacture
+</I>&gt;<i> Digital Holographic Microscope (DHM). This microscope are used in Life and
+</I>&gt;<i> Material Science.
+</I>&gt;<i> In the past I have written a plugin for ImageJ 1 to read our file format
+</I>&gt;<i> .bin file (attached to this email).
+</I>&gt;<i> There is a new class Koala_Bin_Reader and the file
+</I>&gt;<i> HandleExtraFileTypes.java is updated. This plugin works fine in ImageJ 1
+</I>&gt;<i>
+</I>&gt;<i> Now I wonder if we can integrate this reader to SCIFIO and ImageJ2 to
+</I>&gt;<i> improve our user experience.
+</I>&gt;<i>
+</I>&gt;<i> The Stitching of Fijii is powerfull but the stitching module cannot load
+</I>&gt;<i> our binary format because is not currently supported in Fijii.
+</I>&gt;<i>
+</I>&gt;<i> I hope you could add this the the SCIFIO or explain me where to integrate
+</I>&gt;<i> this modification.
+</I>&gt;<i>
+</I>&gt;<i> Congratulations for the great job and contribution to ImageJ project, I
+</I>&gt;<i> use it for a long time and love it.
+</I>&gt;<i>
+</I>&gt;<i> Best Regards,
+</I>&gt;<i> Jerome
+</I>&gt;<i>
+</I>&gt;<i> *J&#233;r&#244;me Parent*
+</I>&gt;<i> Area Sales Manager
+</I>&gt;<i> Office : 0041 21 693 02 27
+</I>&gt;<i> Mobile : 0041 79 193 91 69
+</I>&gt;<i> www.lynceetec.com
+</I>&gt;<i>
+</I>&gt;<i> *Lync&#233;e Tec SA*
+</I>&gt;<i> PSE-A
+</I>&gt;<i> CH-1015 Lausanne
+</I>&gt;<i> Switzerland
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20140912/3a39b2cf/attachment.html">http://scif.io/pipermail/scifio/attachments/20140912/3a39b2cf/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000095.html">[SCIFIO] [ome-users] converting lif files to ome-tiff
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#96">[ date ]</a>
+              <a href="thread.html#96">[ thread ]</a>
+              <a href="subject.html#96">[ subject ]</a>
+              <a href="author.html#96">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

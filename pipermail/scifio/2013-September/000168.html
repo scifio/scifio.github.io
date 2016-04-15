@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Minimal Service Setup for ImgOpener
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Minimal%20Service%20Setup%20for%20ImgOpener&In-Reply-To=%3CCA%2BB%3DmGrJ5p8GkDjDB93NGCzth0kUZS8KJq1QrQ87%3D3M%3DRg7hJQ%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000167.html">
+   <LINK REL="Next"  HREF="000169.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Minimal Service Setup for ImgOpener</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Minimal%20Service%20Setup%20for%20ImgOpener&In-Reply-To=%3CCA%2BB%3DmGrJ5p8GkDjDB93NGCzth0kUZS8KJq1QrQ87%3D3M%3DRg7hJQ%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Minimal Service Setup for ImgOpener">hinerm at gmail.com
+       </A><BR>
+    <I>Wed Sep 25 12:16:32 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000167.html">[SCIFIO] Minimal Service Setup for ImgOpener
+</A></li>
+        <LI>Next message: <A HREF="000169.html">[SCIFIO] Minimal Service Setup for ImgOpener
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#168">[ date ]</a>
+              <a href="thread.html#168">[ thread ]</a>
+              <a href="subject.html#168">[ subject ]</a>
+              <a href="author.html#168">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Johannes,
+
+How about a warning in the ServiceHelper? It could detect if some service
+&gt;<i> whose class' name does not have the org.scijava. prefix but that
+</I>&gt;<i> implements SciJavaService...
+</I>&gt;<i>
+</I>
+This is a general issue with creating contexts using top-level Service
+markers. I would slightly modify Curtis's words along the lines of:
+
+&quot;non-core services should only extend SciJavaService when they serve as a
+plug-in to scijava-common functionality&quot;
+
+I would expect this to come up more for SCIFIO extensions. For example, I
+made SCIFIO-BF-compat services directly extend SCIFIOService, because even
+though they are in a different component, when present on the classpath
+they're intended to be integrated with the SCIFIO core.
+
+This allows code like: `new Context(SCIFIOService.class)` to then
+automatically load scifio-bf-compat services, when available.
+
+So, conceivably, non-LOCI SCIFIO extensions would want to similarly extend
+SCIFIOService, but would have different package prefixes.
+
+Anyway, I think a case could be made for warning when things extend
+SciJavaService, but I think there's the chance for such a warning to be
+confusing if a case arises where scijava-common functionality is truly
+being extended, because doing so isn't strictly wrong.
+
+And if we do add a SciJavaService warning, I don't think we should extend
+it to similarly-patterned marker interfaces (SCIFIOService and I think I
+made one for IJ2 as well).
+
+- Mark
+
+
+On Wed, Sep 25, 2013 at 11:50 AM, Johannes Schindelin &lt;
+<A HREF="http://scif.io/mailman/listinfo/scifio">Johannes.Schindelin at gmx.de</A>&gt; wrote:
+
+&gt;<i> Hi Curtis,
+</I>&gt;<i>
+</I>&gt;<i> On Wed, 25 Sep 2013, Curtis Rueden wrote:
+</I>&gt;<i>
+</I>&gt;<i> &gt; P.S. The only slightly unintuitive thing (IMHO) is that non-core
+</I>&gt;<i> &gt; services should *not* extend SciJavaService, because that interface is
+</I>&gt;<i> &gt; intended for use by the org.scijava.* services *only*. (E.g.,
+</I>&gt;<i> &gt; SCIFIOService does not extend it.)
+</I>&gt;<i>
+</I>&gt;<i> How about a warning in the ServiceHelper? It could detect if some service
+</I>&gt;<i> whose class' name does not have the org.scijava. prefix but that
+</I>&gt;<i> implements SciJavaService...
+</I>&gt;<i>
+</I>&gt;<i> Ciao,
+</I>&gt;<i> Dscho
+</I>&gt;<i>
+</I>&gt;<i> _______________________________________________
+</I>&gt;<i> SCIFIO mailing list
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130925/0ae35c63/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20130925/0ae35c63/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000167.html">[SCIFIO] Minimal Service Setup for ImgOpener
+</A></li>
+	<LI>Next message: <A HREF="000169.html">[SCIFIO] Minimal Service Setup for ImgOpener
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#168">[ date ]</a>
+              <a href="thread.html#168">[ thread ]</a>
+              <a href="subject.html#168">[ subject ]</a>
+              <a href="author.html#168">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

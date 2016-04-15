@@ -1,0 +1,948 @@
+From phsiao at cs.unc.edu  Wed Apr  2 14:38:02 2014
+From: phsiao at cs.unc.edu (Joe Ping-Lin Hsiao)
+Date: Wed, 2 Apr 2014 15:38:02 -0400
+Subject: [SCIFIO] How to make ITK to download the SCIFIO module?
+Message-ID: <CAPYmBX2U8NmCa6MMVh1vMO3fPG=LhPYCoODLprnqs3NF0XeSLQ@mail.gmail.com>
+
+Hi,
+
+   I 'git pull' the latest ITK code and switch to v4.5.1 by 'git checkout
+tags/v4.5.1'. In CMake (advanced mode) I don't see an option of
+'Module_SCIFIO' or 'Fetch_SCIFIO' like the page says (
+http://www.openmicroscopy.org/site/support/bio-formats5/users/itk/). How do
+I make ITK to download SCIFIO?
+
+Thanks,
+Joe
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140402/4b66710e/attachment.html>
+
+From hinerm at gmail.com  Fri Apr  4 06:49:42 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Fri, 4 Apr 2014 06:49:42 -0500
+Subject: [SCIFIO] How to make ITK to download the SCIFIO module?
+In-Reply-To: <CAPYmBX2U8NmCa6MMVh1vMO3fPG=LhPYCoODLprnqs3NF0XeSLQ@mail.gmail.com>
+References: <CAPYmBX2U8NmCa6MMVh1vMO3fPG=LhPYCoODLprnqs3NF0XeSLQ@mail.gmail.com>
+Message-ID: <CA+B=mGqeRLCW4JN1FAFynbd32seXMAMGgdiieGda6o2Kef67qQ@mail.gmail.com>
+
+Hi Joe,
+
+I don't see an option of 'Module_SCIFIO' or 'Fetch_SCIFIO'
+>
+
+Unfortunately those instructions are correct (although it is called
+"Module_SCIFIO" now, and not "Fetch_SCIFIO" on 4.5.1).
+
+What operating system are you using?
+
+I am assuming you just did something like (from the top-level of the ITK
+checkout):
+* mkdir build
+* cd build
+* ccmake ..
+
+to start the CMake configuration.. does that sound about right? That works
+for me locally right now.
+
+Thanks,
+Mark
+
+
+On Wed, Apr 2, 2014 at 2:38 PM, Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>wrote:
+
+> Hi,
+>
+>    I 'git pull' the latest ITK code and switch to v4.5.1 by 'git checkout
+> tags/v4.5.1'. In CMake (advanced mode) I don't see an option of
+> 'Module_SCIFIO' or 'Fetch_SCIFIO' like the page says (
+> http://www.openmicroscopy.org/site/support/bio-formats5/users/itk/). How
+> do I make ITK to download SCIFIO?
+>
+> Thanks,
+> Joe
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140404/f270e143/attachment.html>
+
+From phsiao at cs.unc.edu  Mon Apr  7 10:54:00 2014
+From: phsiao at cs.unc.edu (Joe Ping-Lin Hsiao)
+Date: Mon, 7 Apr 2014 11:54:00 -0400
+Subject: [SCIFIO] How to make ITK to download the SCIFIO module?
+In-Reply-To: <CA+B=mGqeRLCW4JN1FAFynbd32seXMAMGgdiieGda6o2Kef67qQ@mail.gmail.com>
+References: <CAPYmBX2U8NmCa6MMVh1vMO3fPG=LhPYCoODLprnqs3NF0XeSLQ@mail.gmail.com>
+	<CA+B=mGqeRLCW4JN1FAFynbd32seXMAMGgdiieGda6o2Kef67qQ@mail.gmail.com>
+Message-ID: <CAPYmBX2R6OAKJoq5MtYkmsd=nWEVUvzb_Cgu+BZCcRxCbzTGEw@mail.gmail.com>
+
+SCIFIO shows up if I git clone a brand new copy of ITK and checkout the tag
+'v4.5.1' from that, but it won't show up if I git pull my old copy (on
+master) and checkout the tag from there. Guess I'll just clone a new copy
+every time. I am on Windows BTW. Upgrading from an old copy on Mac works
+fine though.
+
+Thanks,
+Joe
+
+
+On Fri, Apr 4, 2014 at 7:49 AM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Hi Joe,
+>
+>
+> I don't see an option of 'Module_SCIFIO' or 'Fetch_SCIFIO'
+>>
+>
+> Unfortunately those instructions are correct (although it is called
+> "Module_SCIFIO" now, and not "Fetch_SCIFIO" on 4.5.1).
+>
+> What operating system are you using?
+>
+> I am assuming you just did something like (from the top-level of the ITK
+> checkout):
+> * mkdir build
+> * cd build
+> * ccmake ..
+>
+> to start the CMake configuration.. does that sound about right? That works
+> for me locally right now.
+>
+> Thanks,
+> Mark
+>
+>
+> On Wed, Apr 2, 2014 at 2:38 PM, Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>wrote:
+>
+>> Hi,
+>>
+>>    I 'git pull' the latest ITK code and switch to v4.5.1 by 'git checkout
+>> tags/v4.5.1'. In CMake (advanced mode) I don't see an option of
+>> 'Module_SCIFIO' or 'Fetch_SCIFIO' like the page says (
+>> http://www.openmicroscopy.org/site/support/bio-formats5/users/itk/). How
+>> do I make ITK to download SCIFIO?
+>>
+>> Thanks,
+>> Joe
+>>
+>> _______________________________________________
+>> SCIFIO mailing list
+>> SCIFIO at scif.io
+>> http://scif.io/mailman/listinfo/scifio
+>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140407/74b55da7/attachment.html>
+
+From hinerm at gmail.com  Mon Apr  7 11:41:25 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 7 Apr 2014 11:41:25 -0500
+Subject: [SCIFIO] How to make ITK to download the SCIFIO module?
+In-Reply-To: <CAPYmBX2R6OAKJoq5MtYkmsd=nWEVUvzb_Cgu+BZCcRxCbzTGEw@mail.gmail.com>
+References: <CAPYmBX2U8NmCa6MMVh1vMO3fPG=LhPYCoODLprnqs3NF0XeSLQ@mail.gmail.com>
+	<CA+B=mGqeRLCW4JN1FAFynbd32seXMAMGgdiieGda6o2Kef67qQ@mail.gmail.com>
+	<CAPYmBX2R6OAKJoq5MtYkmsd=nWEVUvzb_Cgu+BZCcRxCbzTGEw@mail.gmail.com>
+Message-ID: <CA+B=mGpJ2QGHCMEwmBmE+gNCBi9XJWbLkU+LCm3ZuK-WMrT_tQ@mail.gmail.com>
+
+Hi Joe,
+
+SCIFIO shows up if I git clone a brand new copy of ITK and checkout the tag
+> 'v4.5.1' from that, but it won't show up if I git pull my old copy (on
+> master) and checkout the tag from there.
+
+
+I'm glad you found a workaround, but that sounds like odd behavior.
+Forwarding this to the Insight-Users list.. does anyone know why this might
+happen?
+
+Thanks for the info!
+Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140407/7776d5be/attachment.html>
+
+From hinerm at gmail.com  Mon Apr 21 15:25:10 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 21 Apr 2014 15:25:10 -0500
+Subject: [SCIFIO] 0.11.0 Released
+Message-ID: <CA+B=mGrLPRqBLBamL5ZNhsR+YYWa6gm0=ptFBvuC_yWFbAHCkA@mail.gmail.com>
+
+Hi all,
+
+ Just a quick note that I released a new
+SCIFIO<https://github.com/scifio/scifio/releases/tag/scifio-0.11.0>today.
+
+This was a pretty small release, but had two big changes that we wanted to
+get out:
+- automatic BigTiff<https://github.com/scifio/scifio/commit/f7683eb5fc490b150318a8963105e8e54be4c15e>output
+detection. When saving datasets over 2GB we will now automatically
+write BigTiff, removing the need to set this flag manually.
+- ImgOpener can now open more than one
+image<https://github.com/scifio/scifio/commit/b1a32a555ddfba37852ac1aa0224206a795c191d>in
+a dataset. There is API for opening specified indices, ranges or the
+complete dataset. This should help simplify logic in consuming code (e.g.
+no more loops to open all the ImgPluses).
+
+Thanks!
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140421/3941a51b/attachment.html>
+
+From ctrueden at wisc.edu  Mon Apr 21 16:07:41 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 21 Apr 2014 16:07:41 -0500
+Subject: [SCIFIO] How to fix bug: BigTiff not handled well by
+	Bio-Formats or SCIFIO
+In-Reply-To: <CAMFXD1cbQc6jwPNt0ekggiUpcs0ds-fW=KvjjyooX6Xt_1yjnw@mail.gmail.com>
+References: <CAMFXD1cbQc6jwPNt0ekggiUpcs0ds-fW=KvjjyooX6Xt_1yjnw@mail.gmail.com>
+Message-ID: <CADN69yk9aoCm119O0w4Z7ev5R1xDN_3MrMwcorEwBS_czd1NOw@mail.gmail.com>
+
+Hi Adam,
+
+[CCing the SCIFIO and OME users mailing lists, as this discussion will be
+of interest to others.]
+
+> This bug:
+> https://groups.google.com/forum/#!topic/fiji-users/7qLsi-V-jvs
+> (Bio-Formats does not export a tiff using the BigTIFF library
+> automatically when a file will be bigger than 4GB) is still a bug in
+> the latest version of FIJI and the latest build of Bio-Formats
+> installed separately in ImageJ, though you hoped to fix it in 2012.
+
+Right. My apologies that that problem has continued to exist for so long.
+IMO, Bio-Formats should auto-detect whether the output file might be large
+enough to be need BigTIFF, and act accordingly. But the current 5.0.1
+release does not.
+
+> You mention in late 2013 on stackoverflow that SCIFIO should solve
+> this problem:
+>
+http://stackoverflow.com/questions/18986368/java-how-to-write-a-very-large-20-000x20-000-px-or-larger-tif-image/19034370#19034370
+> but that does not yet seem to be the case as FIJI, for which SCIFIO
+> claims to do the I/O, still has this bug when trying to write out a
+> tiff >4GB.
+
+Actually, that SO question is about a different issue: huge planes. The
+BigTIFF format is actually needed even for more modest size planes, when
+you simply have many of them, which result in a TIFF file of more than 4GB
+in size. Regular TIFF uses 32-bit offsets, so as soon as the TIFF file gets
+over 4GB, there is no way to indicate that an offset should go deeper into
+the file than that. BigTIFF solves this problem by using 64-bit offsets.
+
+> Changing Line 132 in TIffWriter.JAVA to say: isBigTiff = true; would
+> simply force writing BigTIFFs all the time, which would solve the
+> problem for me (although I realize cause other problems for others!)
+
+Well, there is also an API method in TiffWriter: setBigTiff(true). But of
+course you have to write a little program in order to use it; there is no
+built-in method in the ImageJ user interface to enable that option. And it
+is off by default.
+
+> However, I cannot find a way to change this java file and propagate
+> the change to within ImageJ/FIJI.  When I compile the new
+> TiffWriter.java in ImageJ I get hundreds of errors (see attached log
+> from ImageJ).
+
+I am not sure why you are seeing those errors. I would need to know more
+about how you were trying to build the system. The best ways to build
+Bio-Formats are with either Ant ("ant jars" from top level works) or Maven
+(e.g., "mvn" from top level).
+
+> What am I missing and/or is there any simple way to solve this problem
+> and/or fix the bug?
+
+Earlier today, Mark Hiner released a new version of SCIFIO that
+automatically enables BigTIFF as needed:
+    http://scif.io/pipermail/scifio/2014-April/000067.html
+    http://maven.imagej.net/content/groups/public/io/scif/scifio/0.11.0/
+
+We are close to having Fiji use SCIFIO for its image I/O by default; once
+that happens, opening and saving large images should "just work" even when
+they are larger than 4GB in size.
+
+Regards,
+Curtis
+
+
+On Wed, Apr 16, 2014 at 4:03 PM, Adam Packer <a.packer at ucl.ac.uk> wrote:
+
+> Dear Curtis
+>
+> This bug:
+> https://groups.google.com/forum/#!topic/fiji-users/7qLsi-V-jvs
+>  (Bio-Formats does not export a tiff using the BigTIFF library
+> automatically when a file will be bigger than 4GB) is still a bug in the
+> latest version of FIJI and the latest build of Bio-Formats installed
+> separately in ImageJ, though you hoped to fix it in 2012.
+>
+> You mention in late 2013 on stackoverflow that SCIFIO should solve this
+> problem:
+>
+> http://stackoverflow.com/questions/18986368/java-how-to-write-a-very-large-20-000x20-000-px-or-larger-tif-image/19034370#19034370
+> but that does not yet seem to be the case as FIJI, for which SCIFIO claims
+> to do the I/O, still has this bug when trying to write out a tiff >4GB.
+>
+> Changing Line 132 in TIffWriter.JAVA to say:
+> isBigTiff = true;
+> would simply force writing BigTIFFs all the time, which would solve the
+> problem for me (although I realize cause other problems for others!)
+>
+> However, I cannot find a way to change this java file and propagate the
+> change to within ImageJ/FIJI.  When I compile the new TiffWriter.java in
+> ImageJ I get hundreds of errors (see attached log from ImageJ).
+>
+> What am I missing and/or is there any simple way to solve this problem
+> and/or fix the bug?
+>
+> All the best,
+> Adam Packer
+> University College London
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140421/d8e7c68d/attachment.html>
+
+From ctrueden at wisc.edu  Mon Apr 21 16:20:27 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 21 Apr 2014 16:20:27 -0500
+Subject: [SCIFIO] How to fix bug: BigTiff not handled well by
+ Bio-Formats or SCIFIO
+In-Reply-To: <CAMFXD1ed+cPW2bgDTmSJxrThX4qGED-mB7pd3BXGVr-u_MWAHg@mail.gmail.com>
+References: <CAMFXD1cbQc6jwPNt0ekggiUpcs0ds-fW=KvjjyooX6Xt_1yjnw@mail.gmail.com>
+	<CADN69yk9aoCm119O0w4Z7ev5R1xDN_3MrMwcorEwBS_czd1NOw@mail.gmail.com>
+	<CAMFXD1ed+cPW2bgDTmSJxrThX4qGED-mB7pd3BXGVr-u_MWAHg@mail.gmail.com>
+Message-ID: <CADN69ykVr5KDPMQwuMxvfie3T8R3WJANBKwL5nYh5F2GMiT99Q@mail.gmail.com>
+
+Hi Adam,
+
+> I'll try out the new SCIFIO and let you know what happens.
+
+Great! Just to be clear: SCIFIO is not used by default in Fiji... yet.
+Coming soon. In the meantime, you can either:
+
+Try with ImageJ2 (experimental!):
+- Help > Switch to Modern Mode
+- File > Save As...
+
+Write a program which uses SCIFIO's ImgSaver API:
+-
+https://github.com/scifio/scifio/blob/scifio-0.11.0/scifio/src/main/java/io/scif/img/ImgSaver.java
+
+Unfortunately there isn't a great tutorial yet for me to point you at --
+this stuff is still a bit bleeding edge. But we're happy to answer any
+questions you have if you reply back to the list!
+
+Regards,
+Curtis
+
+
+On Mon, Apr 21, 2014 at 4:15 PM, Adam Packer <a.packer at ucl.ac.uk> wrote:
+
+> Hi Curtis,
+>
+> Thanks so much for replying to my message in such detail!  I'll try out
+> the new SCIFIO and let you know what happens.
+>
+> Best
+> Adam
+>
+>
+> On Mon, Apr 21, 2014 at 10:07 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+>
+>> Hi Adam,
+>>
+>> [CCing the SCIFIO and OME users mailing lists, as this discussion will be
+>> of interest to others.]
+>>
+>> > This bug:
+>> > https://groups.google.com/forum/#!topic/fiji-users/7qLsi-V-jvs
+>> > (Bio-Formats does not export a tiff using the BigTIFF library
+>> > automatically when a file will be bigger than 4GB) is still a bug in
+>> > the latest version of FIJI and the latest build of Bio-Formats
+>> > installed separately in ImageJ, though you hoped to fix it in 2012.
+>>
+>> Right. My apologies that that problem has continued to exist for so long.
+>> IMO, Bio-Formats should auto-detect whether the output file might be large
+>> enough to be need BigTIFF, and act accordingly. But the current 5.0.1
+>> release does not.
+>>
+>> > You mention in late 2013 on stackoverflow that SCIFIO should solve
+>> > this problem:
+>> >
+>> http://stackoverflow.com/questions/18986368/java-how-to-write-a-very-large-20-000x20-000-px-or-larger-tif-image/19034370#19034370
+>> > but that does not yet seem to be the case as FIJI, for which SCIFIO
+>> > claims to do the I/O, still has this bug when trying to write out a
+>> > tiff >4GB.
+>>
+>>  Actually, that SO question is about a different issue: huge planes. The
+>> BigTIFF format is actually needed even for more modest size planes, when
+>> you simply have many of them, which result in a TIFF file of more than 4GB
+>> in size. Regular TIFF uses 32-bit offsets, so as soon as the TIFF file gets
+>> over 4GB, there is no way to indicate that an offset should go deeper into
+>> the file than that. BigTIFF solves this problem by using 64-bit offsets.
+>>
+>> > Changing Line 132 in TIffWriter.JAVA to say: isBigTiff = true; would
+>> > simply force writing BigTIFFs all the time, which would solve the
+>> > problem for me (although I realize cause other problems for others!)
+>>
+>> Well, there is also an API method in TiffWriter: setBigTiff(true). But of
+>> course you have to write a little program in order to use it; there is no
+>> built-in method in the ImageJ user interface to enable that option. And it
+>> is off by default.
+>>
+>> > However, I cannot find a way to change this java file and propagate
+>> > the change to within ImageJ/FIJI.  When I compile the new
+>> > TiffWriter.java in ImageJ I get hundreds of errors (see attached log
+>> > from ImageJ).
+>>
+>> I am not sure why you are seeing those errors. I would need to know more
+>> about how you were trying to build the system. The best ways to build
+>> Bio-Formats are with either Ant ("ant jars" from top level works) or Maven
+>> (e.g., "mvn" from top level).
+>>
+>> > What am I missing and/or is there any simple way to solve this problem
+>> > and/or fix the bug?
+>>
+>> Earlier today, Mark Hiner released a new version of SCIFIO that
+>> automatically enables BigTIFF as needed:
+>>     http://scif.io/pipermail/scifio/2014-April/000067.html
+>>     http://maven.imagej.net/content/groups/public/io/scif/scifio/0.11.0/
+>>
+>> We are close to having Fiji use SCIFIO for its image I/O by default; once
+>> that happens, opening and saving large images should "just work" even when
+>> they are larger than 4GB in size.
+>>
+>> Regards,
+>> Curtis
+>>
+>>
+>> On Wed, Apr 16, 2014 at 4:03 PM, Adam Packer <a.packer at ucl.ac.uk> wrote:
+>>
+>>> Dear Curtis
+>>>
+>>> This bug:
+>>> https://groups.google.com/forum/#!topic/fiji-users/7qLsi-V-jvs
+>>>  (Bio-Formats does not export a tiff using the BigTIFF library
+>>> automatically when a file will be bigger than 4GB) is still a bug in the
+>>> latest version of FIJI and the latest build of Bio-Formats installed
+>>> separately in ImageJ, though you hoped to fix it in 2012.
+>>>
+>>> You mention in late 2013 on stackoverflow that SCIFIO should solve this
+>>> problem:
+>>>
+>>> http://stackoverflow.com/questions/18986368/java-how-to-write-a-very-large-20-000x20-000-px-or-larger-tif-image/19034370#19034370
+>>> but that does not yet seem to be the case as FIJI, for which SCIFIO
+>>> claims to do the I/O, still has this bug when trying to write out a tiff
+>>> >4GB.
+>>>
+>>> Changing Line 132 in TIffWriter.JAVA to say:
+>>> isBigTiff = true;
+>>> would simply force writing BigTIFFs all the time, which would solve the
+>>> problem for me (although I realize cause other problems for others!)
+>>>
+>>> However, I cannot find a way to change this java file and propagate the
+>>> change to within ImageJ/FIJI.  When I compile the new TiffWriter.java in
+>>> ImageJ I get hundreds of errors (see attached log from ImageJ).
+>>>
+>>> What am I missing and/or is there any simple way to solve this problem
+>>> and/or fix the bug?
+>>>
+>>> All the best,
+>>> Adam Packer
+>>> University College London
+>>>
+>>
+>>
+>> _______________________________________________
+>> SCIFIO mailing list
+>> SCIFIO at scif.io
+>> http://scif.io/mailman/listinfo/scifio
+>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140421/2968f2d8/attachment-0001.html>
+
+From phsiao at cs.unc.edu  Wed Apr  2 14:38:02 2014
+From: phsiao at cs.unc.edu (Joe Ping-Lin Hsiao)
+Date: Wed, 2 Apr 2014 15:38:02 -0400
+Subject: [SCIFIO] How to make ITK to download the SCIFIO module?
+Message-ID: <CAPYmBX2U8NmCa6MMVh1vMO3fPG=LhPYCoODLprnqs3NF0XeSLQ@mail.gmail.com>
+
+Hi,
+
+   I 'git pull' the latest ITK code and switch to v4.5.1 by 'git checkout
+tags/v4.5.1'. In CMake (advanced mode) I don't see an option of
+'Module_SCIFIO' or 'Fetch_SCIFIO' like the page says (
+http://www.openmicroscopy.org/site/support/bio-formats5/users/itk/). How do
+I make ITK to download SCIFIO?
+
+Thanks,
+Joe
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140402/4b66710e/attachment-0002.html>
+
+From hinerm at gmail.com  Fri Apr  4 06:49:42 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Fri, 4 Apr 2014 06:49:42 -0500
+Subject: [SCIFIO] How to make ITK to download the SCIFIO module?
+In-Reply-To: <CAPYmBX2U8NmCa6MMVh1vMO3fPG=LhPYCoODLprnqs3NF0XeSLQ@mail.gmail.com>
+References: <CAPYmBX2U8NmCa6MMVh1vMO3fPG=LhPYCoODLprnqs3NF0XeSLQ@mail.gmail.com>
+Message-ID: <CA+B=mGqeRLCW4JN1FAFynbd32seXMAMGgdiieGda6o2Kef67qQ@mail.gmail.com>
+
+Hi Joe,
+
+I don't see an option of 'Module_SCIFIO' or 'Fetch_SCIFIO'
+>
+
+Unfortunately those instructions are correct (although it is called
+"Module_SCIFIO" now, and not "Fetch_SCIFIO" on 4.5.1).
+
+What operating system are you using?
+
+I am assuming you just did something like (from the top-level of the ITK
+checkout):
+* mkdir build
+* cd build
+* ccmake ..
+
+to start the CMake configuration.. does that sound about right? That works
+for me locally right now.
+
+Thanks,
+Mark
+
+
+On Wed, Apr 2, 2014 at 2:38 PM, Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>wrote:
+
+> Hi,
+>
+>    I 'git pull' the latest ITK code and switch to v4.5.1 by 'git checkout
+> tags/v4.5.1'. In CMake (advanced mode) I don't see an option of
+> 'Module_SCIFIO' or 'Fetch_SCIFIO' like the page says (
+> http://www.openmicroscopy.org/site/support/bio-formats5/users/itk/). How
+> do I make ITK to download SCIFIO?
+>
+> Thanks,
+> Joe
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140404/f270e143/attachment-0002.html>
+
+From phsiao at cs.unc.edu  Mon Apr  7 10:54:00 2014
+From: phsiao at cs.unc.edu (Joe Ping-Lin Hsiao)
+Date: Mon, 7 Apr 2014 11:54:00 -0400
+Subject: [SCIFIO] How to make ITK to download the SCIFIO module?
+In-Reply-To: <CA+B=mGqeRLCW4JN1FAFynbd32seXMAMGgdiieGda6o2Kef67qQ@mail.gmail.com>
+References: <CAPYmBX2U8NmCa6MMVh1vMO3fPG=LhPYCoODLprnqs3NF0XeSLQ@mail.gmail.com>
+	<CA+B=mGqeRLCW4JN1FAFynbd32seXMAMGgdiieGda6o2Kef67qQ@mail.gmail.com>
+Message-ID: <CAPYmBX2R6OAKJoq5MtYkmsd=nWEVUvzb_Cgu+BZCcRxCbzTGEw@mail.gmail.com>
+
+SCIFIO shows up if I git clone a brand new copy of ITK and checkout the tag
+'v4.5.1' from that, but it won't show up if I git pull my old copy (on
+master) and checkout the tag from there. Guess I'll just clone a new copy
+every time. I am on Windows BTW. Upgrading from an old copy on Mac works
+fine though.
+
+Thanks,
+Joe
+
+
+On Fri, Apr 4, 2014 at 7:49 AM, Mark Hiner <hinerm at gmail.com> wrote:
+
+> Hi Joe,
+>
+>
+> I don't see an option of 'Module_SCIFIO' or 'Fetch_SCIFIO'
+>>
+>
+> Unfortunately those instructions are correct (although it is called
+> "Module_SCIFIO" now, and not "Fetch_SCIFIO" on 4.5.1).
+>
+> What operating system are you using?
+>
+> I am assuming you just did something like (from the top-level of the ITK
+> checkout):
+> * mkdir build
+> * cd build
+> * ccmake ..
+>
+> to start the CMake configuration.. does that sound about right? That works
+> for me locally right now.
+>
+> Thanks,
+> Mark
+>
+>
+> On Wed, Apr 2, 2014 at 2:38 PM, Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>wrote:
+>
+>> Hi,
+>>
+>>    I 'git pull' the latest ITK code and switch to v4.5.1 by 'git checkout
+>> tags/v4.5.1'. In CMake (advanced mode) I don't see an option of
+>> 'Module_SCIFIO' or 'Fetch_SCIFIO' like the page says (
+>> http://www.openmicroscopy.org/site/support/bio-formats5/users/itk/). How
+>> do I make ITK to download SCIFIO?
+>>
+>> Thanks,
+>> Joe
+>>
+>> _______________________________________________
+>> SCIFIO mailing list
+>> SCIFIO at scif.io
+>> http://scif.io/mailman/listinfo/scifio
+>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140407/74b55da7/attachment-0002.html>
+
+From hinerm at gmail.com  Mon Apr  7 11:41:25 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 7 Apr 2014 11:41:25 -0500
+Subject: [SCIFIO] How to make ITK to download the SCIFIO module?
+In-Reply-To: <CAPYmBX2R6OAKJoq5MtYkmsd=nWEVUvzb_Cgu+BZCcRxCbzTGEw@mail.gmail.com>
+References: <CAPYmBX2U8NmCa6MMVh1vMO3fPG=LhPYCoODLprnqs3NF0XeSLQ@mail.gmail.com>
+	<CA+B=mGqeRLCW4JN1FAFynbd32seXMAMGgdiieGda6o2Kef67qQ@mail.gmail.com>
+	<CAPYmBX2R6OAKJoq5MtYkmsd=nWEVUvzb_Cgu+BZCcRxCbzTGEw@mail.gmail.com>
+Message-ID: <CA+B=mGpJ2QGHCMEwmBmE+gNCBi9XJWbLkU+LCm3ZuK-WMrT_tQ@mail.gmail.com>
+
+Hi Joe,
+
+SCIFIO shows up if I git clone a brand new copy of ITK and checkout the tag
+> 'v4.5.1' from that, but it won't show up if I git pull my old copy (on
+> master) and checkout the tag from there.
+
+
+I'm glad you found a workaround, but that sounds like odd behavior.
+Forwarding this to the Insight-Users list.. does anyone know why this might
+happen?
+
+Thanks for the info!
+Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140407/7776d5be/attachment-0002.html>
+
+From hinerm at gmail.com  Mon Apr 21 15:25:10 2014
+From: hinerm at gmail.com (Mark Hiner)
+Date: Mon, 21 Apr 2014 15:25:10 -0500
+Subject: [SCIFIO] 0.11.0 Released
+Message-ID: <CA+B=mGrLPRqBLBamL5ZNhsR+YYWa6gm0=ptFBvuC_yWFbAHCkA@mail.gmail.com>
+
+Hi all,
+
+ Just a quick note that I released a new
+SCIFIO<https://github.com/scifio/scifio/releases/tag/scifio-0.11.0>today.
+
+This was a pretty small release, but had two big changes that we wanted to
+get out:
+- automatic BigTiff<https://github.com/scifio/scifio/commit/f7683eb5fc490b150318a8963105e8e54be4c15e>output
+detection. When saving datasets over 2GB we will now automatically
+write BigTiff, removing the need to set this flag manually.
+- ImgOpener can now open more than one
+image<https://github.com/scifio/scifio/commit/b1a32a555ddfba37852ac1aa0224206a795c191d>in
+a dataset. There is API for opening specified indices, ranges or the
+complete dataset. This should help simplify logic in consuming code (e.g.
+no more loops to open all the ImgPluses).
+
+Thanks!
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140421/3941a51b/attachment-0002.html>
+
+From ctrueden at wisc.edu  Mon Apr 21 16:07:41 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 21 Apr 2014 16:07:41 -0500
+Subject: [SCIFIO] How to fix bug: BigTiff not handled well by
+	Bio-Formats or SCIFIO
+In-Reply-To: <CAMFXD1cbQc6jwPNt0ekggiUpcs0ds-fW=KvjjyooX6Xt_1yjnw@mail.gmail.com>
+References: <CAMFXD1cbQc6jwPNt0ekggiUpcs0ds-fW=KvjjyooX6Xt_1yjnw@mail.gmail.com>
+Message-ID: <CADN69yk9aoCm119O0w4Z7ev5R1xDN_3MrMwcorEwBS_czd1NOw@mail.gmail.com>
+
+Hi Adam,
+
+[CCing the SCIFIO and OME users mailing lists, as this discussion will be
+of interest to others.]
+
+> This bug:
+> https://groups.google.com/forum/#!topic/fiji-users/7qLsi-V-jvs
+> (Bio-Formats does not export a tiff using the BigTIFF library
+> automatically when a file will be bigger than 4GB) is still a bug in
+> the latest version of FIJI and the latest build of Bio-Formats
+> installed separately in ImageJ, though you hoped to fix it in 2012.
+
+Right. My apologies that that problem has continued to exist for so long.
+IMO, Bio-Formats should auto-detect whether the output file might be large
+enough to be need BigTIFF, and act accordingly. But the current 5.0.1
+release does not.
+
+> You mention in late 2013 on stackoverflow that SCIFIO should solve
+> this problem:
+>
+http://stackoverflow.com/questions/18986368/java-how-to-write-a-very-large-20-000x20-000-px-or-larger-tif-image/19034370#19034370
+> but that does not yet seem to be the case as FIJI, for which SCIFIO
+> claims to do the I/O, still has this bug when trying to write out a
+> tiff >4GB.
+
+Actually, that SO question is about a different issue: huge planes. The
+BigTIFF format is actually needed even for more modest size planes, when
+you simply have many of them, which result in a TIFF file of more than 4GB
+in size. Regular TIFF uses 32-bit offsets, so as soon as the TIFF file gets
+over 4GB, there is no way to indicate that an offset should go deeper into
+the file than that. BigTIFF solves this problem by using 64-bit offsets.
+
+> Changing Line 132 in TIffWriter.JAVA to say: isBigTiff = true; would
+> simply force writing BigTIFFs all the time, which would solve the
+> problem for me (although I realize cause other problems for others!)
+
+Well, there is also an API method in TiffWriter: setBigTiff(true). But of
+course you have to write a little program in order to use it; there is no
+built-in method in the ImageJ user interface to enable that option. And it
+is off by default.
+
+> However, I cannot find a way to change this java file and propagate
+> the change to within ImageJ/FIJI.  When I compile the new
+> TiffWriter.java in ImageJ I get hundreds of errors (see attached log
+> from ImageJ).
+
+I am not sure why you are seeing those errors. I would need to know more
+about how you were trying to build the system. The best ways to build
+Bio-Formats are with either Ant ("ant jars" from top level works) or Maven
+(e.g., "mvn" from top level).
+
+> What am I missing and/or is there any simple way to solve this problem
+> and/or fix the bug?
+
+Earlier today, Mark Hiner released a new version of SCIFIO that
+automatically enables BigTIFF as needed:
+    http://scif.io/pipermail/scifio/2014-April/000067.html
+    http://maven.imagej.net/content/groups/public/io/scif/scifio/0.11.0/
+
+We are close to having Fiji use SCIFIO for its image I/O by default; once
+that happens, opening and saving large images should "just work" even when
+they are larger than 4GB in size.
+
+Regards,
+Curtis
+
+
+On Wed, Apr 16, 2014 at 4:03 PM, Adam Packer <a.packer at ucl.ac.uk> wrote:
+
+> Dear Curtis
+>
+> This bug:
+> https://groups.google.com/forum/#!topic/fiji-users/7qLsi-V-jvs
+>  (Bio-Formats does not export a tiff using the BigTIFF library
+> automatically when a file will be bigger than 4GB) is still a bug in the
+> latest version of FIJI and the latest build of Bio-Formats installed
+> separately in ImageJ, though you hoped to fix it in 2012.
+>
+> You mention in late 2013 on stackoverflow that SCIFIO should solve this
+> problem:
+>
+> http://stackoverflow.com/questions/18986368/java-how-to-write-a-very-large-20-000x20-000-px-or-larger-tif-image/19034370#19034370
+> but that does not yet seem to be the case as FIJI, for which SCIFIO claims
+> to do the I/O, still has this bug when trying to write out a tiff >4GB.
+>
+> Changing Line 132 in TIffWriter.JAVA to say:
+> isBigTiff = true;
+> would simply force writing BigTIFFs all the time, which would solve the
+> problem for me (although I realize cause other problems for others!)
+>
+> However, I cannot find a way to change this java file and propagate the
+> change to within ImageJ/FIJI.  When I compile the new TiffWriter.java in
+> ImageJ I get hundreds of errors (see attached log from ImageJ).
+>
+> What am I missing and/or is there any simple way to solve this problem
+> and/or fix the bug?
+>
+> All the best,
+> Adam Packer
+> University College London
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140421/d8e7c68d/attachment-0002.html>
+
+From ctrueden at wisc.edu  Mon Apr 21 16:20:27 2014
+From: ctrueden at wisc.edu (Curtis Rueden)
+Date: Mon, 21 Apr 2014 16:20:27 -0500
+Subject: [SCIFIO] How to fix bug: BigTiff not handled well by
+ Bio-Formats or SCIFIO
+In-Reply-To: <CAMFXD1ed+cPW2bgDTmSJxrThX4qGED-mB7pd3BXGVr-u_MWAHg@mail.gmail.com>
+References: <CAMFXD1cbQc6jwPNt0ekggiUpcs0ds-fW=KvjjyooX6Xt_1yjnw@mail.gmail.com>
+	<CADN69yk9aoCm119O0w4Z7ev5R1xDN_3MrMwcorEwBS_czd1NOw@mail.gmail.com>
+	<CAMFXD1ed+cPW2bgDTmSJxrThX4qGED-mB7pd3BXGVr-u_MWAHg@mail.gmail.com>
+Message-ID: <CADN69ykVr5KDPMQwuMxvfie3T8R3WJANBKwL5nYh5F2GMiT99Q@mail.gmail.com>
+
+Hi Adam,
+
+> I'll try out the new SCIFIO and let you know what happens.
+
+Great! Just to be clear: SCIFIO is not used by default in Fiji... yet.
+Coming soon. In the meantime, you can either:
+
+Try with ImageJ2 (experimental!):
+- Help > Switch to Modern Mode
+- File > Save As...
+
+Write a program which uses SCIFIO's ImgSaver API:
+-
+https://github.com/scifio/scifio/blob/scifio-0.11.0/scifio/src/main/java/io/scif/img/ImgSaver.java
+
+Unfortunately there isn't a great tutorial yet for me to point you at --
+this stuff is still a bit bleeding edge. But we're happy to answer any
+questions you have if you reply back to the list!
+
+Regards,
+Curtis
+
+
+On Mon, Apr 21, 2014 at 4:15 PM, Adam Packer <a.packer at ucl.ac.uk> wrote:
+
+> Hi Curtis,
+>
+> Thanks so much for replying to my message in such detail!  I'll try out
+> the new SCIFIO and let you know what happens.
+>
+> Best
+> Adam
+>
+>
+> On Mon, Apr 21, 2014 at 10:07 PM, Curtis Rueden <ctrueden at wisc.edu> wrote:
+>
+>> Hi Adam,
+>>
+>> [CCing the SCIFIO and OME users mailing lists, as this discussion will be
+>> of interest to others.]
+>>
+>> > This bug:
+>> > https://groups.google.com/forum/#!topic/fiji-users/7qLsi-V-jvs
+>> > (Bio-Formats does not export a tiff using the BigTIFF library
+>> > automatically when a file will be bigger than 4GB) is still a bug in
+>> > the latest version of FIJI and the latest build of Bio-Formats
+>> > installed separately in ImageJ, though you hoped to fix it in 2012.
+>>
+>> Right. My apologies that that problem has continued to exist for so long.
+>> IMO, Bio-Formats should auto-detect whether the output file might be large
+>> enough to be need BigTIFF, and act accordingly. But the current 5.0.1
+>> release does not.
+>>
+>> > You mention in late 2013 on stackoverflow that SCIFIO should solve
+>> > this problem:
+>> >
+>> http://stackoverflow.com/questions/18986368/java-how-to-write-a-very-large-20-000x20-000-px-or-larger-tif-image/19034370#19034370
+>> > but that does not yet seem to be the case as FIJI, for which SCIFIO
+>> > claims to do the I/O, still has this bug when trying to write out a
+>> > tiff >4GB.
+>>
+>>  Actually, that SO question is about a different issue: huge planes. The
+>> BigTIFF format is actually needed even for more modest size planes, when
+>> you simply have many of them, which result in a TIFF file of more than 4GB
+>> in size. Regular TIFF uses 32-bit offsets, so as soon as the TIFF file gets
+>> over 4GB, there is no way to indicate that an offset should go deeper into
+>> the file than that. BigTIFF solves this problem by using 64-bit offsets.
+>>
+>> > Changing Line 132 in TIffWriter.JAVA to say: isBigTiff = true; would
+>> > simply force writing BigTIFFs all the time, which would solve the
+>> > problem for me (although I realize cause other problems for others!)
+>>
+>> Well, there is also an API method in TiffWriter: setBigTiff(true). But of
+>> course you have to write a little program in order to use it; there is no
+>> built-in method in the ImageJ user interface to enable that option. And it
+>> is off by default.
+>>
+>> > However, I cannot find a way to change this java file and propagate
+>> > the change to within ImageJ/FIJI.  When I compile the new
+>> > TiffWriter.java in ImageJ I get hundreds of errors (see attached log
+>> > from ImageJ).
+>>
+>> I am not sure why you are seeing those errors. I would need to know more
+>> about how you were trying to build the system. The best ways to build
+>> Bio-Formats are with either Ant ("ant jars" from top level works) or Maven
+>> (e.g., "mvn" from top level).
+>>
+>> > What am I missing and/or is there any simple way to solve this problem
+>> > and/or fix the bug?
+>>
+>> Earlier today, Mark Hiner released a new version of SCIFIO that
+>> automatically enables BigTIFF as needed:
+>>     http://scif.io/pipermail/scifio/2014-April/000067.html
+>>     http://maven.imagej.net/content/groups/public/io/scif/scifio/0.11.0/
+>>
+>> We are close to having Fiji use SCIFIO for its image I/O by default; once
+>> that happens, opening and saving large images should "just work" even when
+>> they are larger than 4GB in size.
+>>
+>> Regards,
+>> Curtis
+>>
+>>
+>> On Wed, Apr 16, 2014 at 4:03 PM, Adam Packer <a.packer at ucl.ac.uk> wrote:
+>>
+>>> Dear Curtis
+>>>
+>>> This bug:
+>>> https://groups.google.com/forum/#!topic/fiji-users/7qLsi-V-jvs
+>>>  (Bio-Formats does not export a tiff using the BigTIFF library
+>>> automatically when a file will be bigger than 4GB) is still a bug in the
+>>> latest version of FIJI and the latest build of Bio-Formats installed
+>>> separately in ImageJ, though you hoped to fix it in 2012.
+>>>
+>>> You mention in late 2013 on stackoverflow that SCIFIO should solve this
+>>> problem:
+>>>
+>>> http://stackoverflow.com/questions/18986368/java-how-to-write-a-very-large-20-000x20-000-px-or-larger-tif-image/19034370#19034370
+>>> but that does not yet seem to be the case as FIJI, for which SCIFIO
+>>> claims to do the I/O, still has this bug when trying to write out a tiff
+>>> >4GB.
+>>>
+>>> Changing Line 132 in TIffWriter.JAVA to say:
+>>> isBigTiff = true;
+>>> would simply force writing BigTIFFs all the time, which would solve the
+>>> problem for me (although I realize cause other problems for others!)
+>>>
+>>> However, I cannot find a way to change this java file and propagate the
+>>> change to within ImageJ/FIJI.  When I compile the new TiffWriter.java in
+>>> ImageJ I get hundreds of errors (see attached log from ImageJ).
+>>>
+>>> What am I missing and/or is there any simple way to solve this problem
+>>> and/or fix the bug?
+>>>
+>>> All the best,
+>>> Adam Packer
+>>> University College London
+>>>
+>>
+>>
+>> _______________________________________________
+>> SCIFIO mailing list
+>> SCIFIO at scif.io
+>> http://scif.io/mailman/listinfo/scifio
+>>
+>>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20140421/2968f2d8/attachment-0002.html>
+

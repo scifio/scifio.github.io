@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] bug report: missing slice labels with Fiji using SCIFIO
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20bug%20report%3A%20missing%20slice%20labels%20with%20Fiji%20using%20SCIFIO&In-Reply-To=%3CE450B219918B8C47A2C631E943340A708B391F01%40UKK086.ADS.UK-KOELN.DE%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000089.html">
+   <LINK REL="Next"  HREF="000091.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] bug report: missing slice labels with Fiji using SCIFIO</H1>
+    <B>Martin H&#246;hne</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20bug%20report%3A%20missing%20slice%20labels%20with%20Fiji%20using%20SCIFIO&In-Reply-To=%3CE450B219918B8C47A2C631E943340A708B391F01%40UKK086.ADS.UK-KOELN.DE%3E"
+       TITLE="[SCIFIO] bug report: missing slice labels with Fiji using SCIFIO">martin.hoehne at uk-koeln.de
+       </A><BR>
+    <I>Thu Jul 17 11:39:18 CDT 2014</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000089.html">[SCIFIO] Bio-Formats Imaris writer
+</A></li>
+        <LI>Next message: <A HREF="000091.html">[SCIFIO] bug report: missing slice labels with Fiji using SCIFIO
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#90">[ date ]</a>
+              <a href="thread.html#90">[ thread ]</a>
+              <a href="subject.html#90">[ subject ]</a>
+              <a href="author.html#90">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Dear All,
+when using SCIFO for saving Tiff-stacks with Fiji (ImageJ 2.0.0-rc-9/1.49d) the slice labels are lost.
+The following macro reproduces the error. 
+
+path=getDirectory(&quot;temp&quot;);
+run(&quot;Blobs (25K)&quot;);
+run(&quot;Duplicate...&quot;, &quot;title=blobs-1.gif&quot;);
+run(&quot;Duplicate...&quot;, &quot;title=blobs-2.gif&quot;);
+run(&quot;Images to Stack&quot;, &quot;name=Stack title=[] use&quot;);
+saveAs(&quot;Tiff&quot;, path+File.separator+&quot;Stack.tif&quot;);
+rename(&quot;Before_save&quot;);
+open(path+File.separator+&quot;Stack.tif&quot;);
+File.delete(path+File.separator+&quot;Stack.tif&quot;);
+
+
+Thanks for all you effort,
+
+Martin 
+
+
+
+</PRE>
+
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000089.html">[SCIFIO] Bio-Formats Imaris writer
+</A></li>
+	<LI>Next message: <A HREF="000091.html">[SCIFIO] bug report: missing slice labels with Fiji using SCIFIO
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#90">[ date ]</a>
+              <a href="thread.html#90">[ thread ]</a>
+              <a href="subject.html#90">[ subject ]</a>
+              <a href="author.html#90">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

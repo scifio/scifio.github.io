@@ -1,0 +1,161 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Hi&nbsp;Michael,&lt;br&gt;&lt;br&gt; Right&nbsp;now&nbsp;I&nbsp;get&nbsp;an&nbsp;ArrayIndexOutOfBounds&nbsp;at&nbsp;line&nbsp;60&nbsp;of&nbsp;the&nbsp;ByteArrayLoader,&nbsp;as&nbsp;it&nbsp;tries&nbsp;to&nbsp;populate&nbsp;the&nbsp;ImgPlus&nbsp;using&nbsp;planes&nbsp;read&nbsp;by&nbsp;SCIFIO.&lt;br&gt;&lt;br&gt;&lt;/div&gt; On&nbsp;my&nbsp;end,&nbsp;this&nbsp;is&nbsp;because&nbsp;the&nbsp;ImgPlus&nbsp;gets&nbsp;constrained&nbsp;properly&nbsp;to&nbsp;the&nbsp;desired&nbsp;subregion,&nbsp;but&nbsp;ImgOpener&nbsp;tries&nbsp;to&nbsp;jam&nbsp;in&nbsp;all&nbsp;21&nbsp;Z&nbsp;slices..&nbsp;so&nbsp;the&nbsp;source&nbsp;is&nbsp;too&nbsp;big&nbsp;for&nbsp;the&nbsp;destination,&nbsp;and&nbsp;it&nbsp;gets&nbsp;AIOOB&nbsp;when&nbsp;copying,&nbsp;eventually.&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt; &nbsp;Looks&nbsp;like&nbsp;the&nbsp;SubRegion&nbsp;application&nbsp;only&nbsp;considered&nbsp;if&nbsp;the&nbsp;SubRegion&nbsp;actually&nbsp;contains&nbsp;a&nbsp;given&nbsp;Axis&nbsp;for&nbsp;X&nbsp;and&nbsp;Y.&nbsp;Then&nbsp;for&nbsp;ZCT&nbsp;it&nbsp;just&nbsp;always&nbsp;applies&nbsp;whatever&nbsp;constraints&nbsp;it&nbsp;has.&nbsp;(e.g.&nbsp;it&nbsp;was&nbsp;trying&nbsp;to&nbsp;constrain&nbsp;C&nbsp;to&nbsp;0-10&nbsp;instead&nbsp;of&nbsp;Z,&nbsp;because&nbsp;the&nbsp;dimension&nbsp;order&nbsp;was&nbsp;CZT)&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt; &nbsp;I&nbsp;standardized&nbsp;this&nbsp;check&nbsp;so&nbsp;it&#39;s&nbsp;the&nbsp;same&nbsp;for&nbsp;each&nbsp;axis,&nbsp;and&nbsp;now&nbsp;your&nbsp;code&nbsp;works&nbsp;for&nbsp;me&nbsp;:)&lt;br&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt; &nbsp;Fixed&nbsp;on&nbsp;latest&nbsp;master&nbsp;(&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio/issues/58&quot;&gt;issue&nbsp;58&lt;/a&gt;).&lt;br&gt;<br>
+<br>
+&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;-&nbsp;Mark&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Mon,&nbsp;Aug&nbsp;26,&nbsp;2013&nbsp;at&nbsp;9:04&nbsp;AM,&nbsp;Michael&nbsp;Zinsmaier&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:michael.zinsmaier@gmx.de&quot;&nbsp;target=&quot;_blank&quot;&gt;michael.zinsmaier@gmx.de&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;Hi&nbsp;Mark,&lt;br&gt;<br>
+&lt;br&gt;<br>
+if&nbsp;you&nbsp;get&nbsp;the&nbsp;same&nbsp;error&nbsp;that&nbsp;is&nbsp;thrown&nbsp;at&nbsp;my&nbsp;place&nbsp;its&nbsp;an&nbsp;ArrayIndexOutof&nbsp;Bounds&nbsp;...&lt;br&gt;<br>
+I&nbsp;tried&nbsp;to&nbsp;track&nbsp;it&nbsp;down&nbsp;already&nbsp;and&nbsp;it&nbsp;might&nbsp;be&nbsp;an&nbsp;Error&nbsp;in&nbsp;ImgOpener&nbsp;readPlanes&nbsp; line&nbsp;599&nbsp;following.&lt;br&gt;<br>
+&lt;br&gt;<br>
+The&nbsp;while&nbsp;loop&nbsp;skips&nbsp;X,&nbsp;and&nbsp;Y&nbsp;but&nbsp;enters&nbsp;CHANNEL&nbsp;although&nbsp;the&nbsp;Subregion&nbsp;is&nbsp;set&nbsp;for&nbsp;Z&nbsp;which&nbsp;seems&nbsp;to&nbsp;be&nbsp;realted&nbsp;to&nbsp;this&nbsp;snippet&lt;br&gt;<br>
+&quot;dimsPlaced&nbsp;&lt;&nbsp;region.size()&quot;&lt;br&gt;<br>
+&lt;br&gt;<br>
+I&#39;m&nbsp;not&nbsp;sure&nbsp;what&nbsp; is&nbsp;going&nbsp;on&nbsp;there&nbsp;but&nbsp;it&nbsp;seems&nbsp;somehow&nbsp;incorrect&nbsp;(-:&nbsp;maybe&nbsp;this&nbsp;helps&nbsp;you&lt;br&gt;<br>
+&lt;br&gt;<br>
+best&nbsp;Michael&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+Am&nbsp;Montag,&nbsp;26.&nbsp;August&nbsp;2013&nbsp;15:38:44&nbsp;schrieb&nbsp;Mark&nbsp;Hiner:&lt;br&gt;<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;&lt;div&nbsp;class=&quot;im&quot;&gt;<br>
+Hi&nbsp;Michael,&lt;br&gt;<br>
+&lt;br&gt;<br>
+ I&nbsp;was&nbsp;able&nbsp;to&nbsp;confirm&nbsp;this&nbsp;code&nbsp;fails&nbsp;locally,&nbsp;although&nbsp;I&nbsp;don&#39;t&nbsp;think&lt;br&gt;<br>
+it&#39;s&nbsp;an&nbsp;issue&nbsp;with&nbsp;the&nbsp;calibration&nbsp;(or&nbsp;your&nbsp;code).&lt;br&gt;<br>
+&lt;br&gt;<br>
+Without&nbsp;SCIFIO-BF-compat,&nbsp;this&nbsp;fails&nbsp;because&nbsp;it&nbsp;defaults&nbsp;to&nbsp;the&lt;br&gt;<br>
+MinimalTIFFReader,&nbsp;which&nbsp;compresses&nbsp;the&nbsp;axes&nbsp;to&nbsp;a&nbsp;single&nbsp;plane&nbsp;(thus&lt;br&gt;<br>
+there&nbsp;is&nbsp;no&nbsp;Z,&nbsp;thus&nbsp;it&nbsp;fails).&lt;br&gt;<br>
+&lt;br&gt;<br>
+With&nbsp;SCIFIO-BF-compat,&nbsp;it&nbsp;opens&nbsp;correctly&nbsp;as&nbsp;an&nbsp;LSM..&nbsp;but&nbsp;it&nbsp;seems&lt;br&gt;<br>
+that&nbsp;the&nbsp;ImgPlus&nbsp;that&#39;s&nbsp;created&nbsp;is&nbsp;too&nbsp;small.&nbsp;The&nbsp;#&nbsp;of&nbsp;dimensions&nbsp;are&lt;br&gt;<br>
+being&nbsp;read&nbsp;correctly&nbsp;(e.g.,&nbsp;same&nbsp;as&nbsp;in&nbsp;the&nbsp;current&nbsp;FIJI)&nbsp;so&nbsp;I&#39;m&nbsp;not&lt;br&gt;<br>
+sure&nbsp;why&nbsp;the&nbsp;array&nbsp;is&nbsp;the&nbsp;wrong&nbsp;size..&nbsp;looking&nbsp;into&nbsp;it&nbsp;now.&lt;br&gt;<br>
+&lt;br&gt;<br>
+-&nbsp;Mark&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+On&nbsp;Mon,&nbsp;Aug&nbsp;26,&nbsp;2013&nbsp;at&nbsp;1:07&nbsp;AM,&nbsp;Michael&nbsp;Zinsmaier&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&nbsp;class=&quot;h5&quot;&gt;<br>
+&lt;&lt;a&nbsp;href=&quot;mailto:michael.zinsmaier@gmx.de&quot;&nbsp;target=&quot;_blank&quot;&gt;michael.zinsmaier@gmx.de&lt;/a&gt;&nbsp;&lt;mailto:&lt;a&nbsp;href=&quot;mailto:michael.zinsmaier@gmx.de&quot;&nbsp;target=&quot;_blank&quot;&gt;michael.zinsmaier@gmx.&lt;u&gt;&lt;/u&gt;de&lt;/a&gt;&gt;&gt;&nbsp;wrote:&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;Hi&nbsp;Mark,&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;I&nbsp;get&nbsp;the&nbsp;error&nbsp;for&nbsp;a&nbsp;dataset&nbsp;with&nbsp;axes&nbsp;&gt;&nbsp;2.&nbsp;I&nbsp;perpared&nbsp;some&lt;br&gt;<br>
+ &nbsp; &nbsp;sample&nbsp;code&nbsp;(maybe&nbsp;something&nbsp;is&nbsp;wrong&nbsp;here)&nbsp;and&nbsp;I&#39;ll&nbsp;send&nbsp;you&nbsp;the&lt;br&gt;<br>
+ &nbsp; &nbsp;file&nbsp;in&nbsp;a&nbsp;seperate&nbsp;mail.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;Regards&nbsp;Michael&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;------------------------------&lt;u&gt;&lt;/u&gt;------------------------------&lt;u&gt;&lt;/u&gt;----&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;FormatException,&lt;br&gt;<br>
+ &nbsp; &nbsp;IOException,&nbsp;ImgIOException,&nbsp;InstantiableException&nbsp;{&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;String&nbsp;imgRef&nbsp;=&lt;br&gt;<br>
+ &nbsp; &nbsp;&quot;C:/Users/zinsmaie/Desktop/&lt;u&gt;&lt;/u&gt;bilder/5d/2chZT.lsm&quot;;&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Context&nbsp;c&nbsp;=&nbsp;new&nbsp;Context(SciJavaService.class,&lt;br&gt;<br>
+ &nbsp; &nbsp;SCIFIOService.class);&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SCIFIO&nbsp;sci&nbsp;=&nbsp;new&nbsp;SCIFIO(c);&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Reader&nbsp;reader&nbsp;=&nbsp;sci.initializer()&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.initializeReader(imgRef,&nbsp;true);&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ImgOptions&nbsp;options&nbsp;=&nbsp;new&nbsp;ImgOptions();&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;//WORKS&lt;br&gt;<br>
+ &nbsp; &nbsp;//&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; DimRange[]&nbsp;ranges&nbsp;=&nbsp;new&nbsp;DimRange[]&nbsp;{new&lt;br&gt;<br>
+ &nbsp; &nbsp;DimRange(&quot;0&quot;)};&lt;br&gt;<br>
+ &nbsp; &nbsp;//&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; AxisType[]&nbsp;axes&nbsp;=&nbsp;new&nbsp;AxisType[]&nbsp;{Axes.CHANNEL};&lt;br&gt;<br>
+ &nbsp; &nbsp;//EXCEPTION&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;DimRange[]&nbsp;ranges&nbsp;=&nbsp;new&nbsp;DimRange[]&nbsp;{new&lt;br&gt;<br>
+ &nbsp; &nbsp;DimRange(&quot;0-10&quot;)};&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AxisType[]&nbsp;axes&nbsp;=&nbsp;new&nbsp;AxisType[]&nbsp;{Axes.Z};&lt;br&gt;<br>
+ &nbsp; &nbsp;//WORKS&lt;br&gt;<br>
+ &nbsp; &nbsp;//&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; DimRange[]&nbsp;ranges&nbsp;=&nbsp;new&nbsp;DimRange[]&nbsp;{new&lt;br&gt;<br>
+ &nbsp; &nbsp;DimRange(&quot;0&quot;),&nbsp;new&nbsp;DimRange(&quot;0-10&quot;)};&lt;br&gt;<br>
+ &nbsp; &nbsp;//&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; AxisType[]&nbsp;axes&nbsp;=&nbsp;new&nbsp;AxisType[]&lt;br&gt;<br>
+ &nbsp; &nbsp;{Axes.CHANNEL,&nbsp;Axes.Z};&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;options.setRegion(new&nbsp;SubRegion(axes,&nbsp;ranges));&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ImgPlus&lt;RealType&gt;&nbsp;ret&nbsp;=&nbsp;new&nbsp;ImgOpener().openImg(reader,&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;new&nbsp;UnsignedByteType(),&nbsp;new&nbsp;ArrayImgFactory(),&lt;br&gt;<br>
+ &nbsp; &nbsp;options);&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;System.out.println(ret.&lt;u&gt;&lt;/u&gt;getName());&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;}&lt;br&gt;<br>
+&lt;/div&gt;&lt;/div&gt;&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;&lt;div&gt;&lt;div&nbsp;class=&quot;h5&quot;&gt;<br>
+ &nbsp; &nbsp;Hi&nbsp;Michael,&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; I&nbsp;was&nbsp;only&nbsp;able&nbsp;to&nbsp;reproduce&nbsp;this&nbsp;when&nbsp;trying&nbsp;to&nbsp;create&nbsp;a&lt;br&gt;<br>
+ &nbsp; &nbsp;SubRegion&nbsp;for&nbsp;Axes&nbsp;that&nbsp;weren&#39;t&nbsp;present.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; In&nbsp;the&nbsp;case&nbsp;of&nbsp;ImgOpener,&nbsp;Axes&nbsp;of&nbsp;length&nbsp;1&nbsp;are&nbsp;discarded...&nbsp;so&lt;br&gt;<br>
+ &nbsp; &nbsp;they&nbsp;effectively&nbsp;&quot;aren&#39;t&nbsp;present&quot;&nbsp;and&nbsp;can&#39;t&nbsp;have&nbsp;a&nbsp;SubRegion&lt;br&gt;<br>
+ &nbsp; &nbsp;applied&nbsp;to&nbsp;them&nbsp;(since&nbsp;they&nbsp;are&nbsp;implicitly&nbsp;included&nbsp;anyway&nbsp;in&nbsp;the&lt;br&gt;<br>
+ &nbsp; &nbsp;image).&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; Unfortunately,&nbsp;I&#39;m&nbsp;not&nbsp;sure&nbsp;how&nbsp;to&nbsp;make&nbsp;the&nbsp;error&nbsp;reporting&lt;br&gt;<br>
+ &nbsp; &nbsp;better,&nbsp;in&nbsp;general,&nbsp;on&nbsp;this&nbsp;issue..&nbsp;since,&nbsp;when&nbsp;constructing&nbsp;a&lt;br&gt;<br>
+ &nbsp; &nbsp;SubRegion,&nbsp;there&#39;s&nbsp;no&nbsp;way&nbsp;to&nbsp;know&nbsp;what&nbsp;dataset(s)&nbsp;it&nbsp;will&nbsp;be&lt;br&gt;<br>
+ &nbsp; &nbsp;applied&nbsp;to...&nbsp;it&#39;s&nbsp;up&nbsp;to&nbsp;the&nbsp;consuming&nbsp;software&nbsp;to&nbsp;use&nbsp;the&lt;br&gt;<br>
+ &nbsp; &nbsp;SubRegion&nbsp;information&nbsp;when&nbsp;reading&nbsp;the&nbsp;dataset.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; I&nbsp;could&nbsp;add&nbsp;some&nbsp;defensive&nbsp;checks&nbsp;to&nbsp;verify&nbsp;that&nbsp;axes&nbsp;are&lt;br&gt;<br>
+ &nbsp; &nbsp;present..&nbsp;but&nbsp;this&nbsp;whole&nbsp;system&nbsp;is&nbsp;going&nbsp;to&nbsp;be&nbsp;reworked&nbsp;in&nbsp;0.7.0&lt;br&gt;<br>
+ &nbsp; &nbsp;for&nbsp;N-dimensionality.&nbsp;So&nbsp;I&#39;m&nbsp;going&nbsp;to&nbsp;add&nbsp;a&nbsp;comment&nbsp;to&nbsp;our&nbsp;N-dim&lt;br&gt;&lt;/div&gt;&lt;/div&gt;<br>
+ &nbsp; &nbsp;ticket&nbsp;&lt;&lt;a&nbsp;href=&quot;https://github.com/scifio/scifio/issues/19&quot;&nbsp;target=&quot;_blank&quot;&gt;https://github.com/scifio/&lt;u&gt;&lt;/u&gt;scifio/issues/19&lt;/a&gt;&gt;&nbsp;to&nbsp;test&nbsp;this.&lt;div&nbsp;class=&quot;im&quot;&gt;&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; For&nbsp;now,&nbsp;in&nbsp;your&nbsp;code,&nbsp;can&nbsp;you&nbsp;check&nbsp;if&nbsp;an&nbsp;axis&nbsp;length&nbsp;is&nbsp;&lt;&nbsp;2&lt;br&gt;<br>
+ &nbsp; &nbsp;before&nbsp;creating&nbsp;the&nbsp;SubRegion,&nbsp;and&nbsp;if&nbsp;so&nbsp;-&nbsp;don&#39;t&nbsp;add&nbsp;it&nbsp;to&nbsp;the&lt;br&gt;<br>
+ &nbsp; &nbsp;SubRegion&nbsp;specification?&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; Oh&nbsp;-&nbsp;if&nbsp;you&nbsp;are&nbsp;getting&nbsp;this&nbsp;issue&nbsp;for&nbsp;Axes&nbsp;you&nbsp;know&nbsp;have&nbsp;a&lt;br&gt;<br>
+ &nbsp; &nbsp;length&nbsp;&gt;&nbsp;1,&nbsp;send&nbsp;me&nbsp;the&nbsp;dataset,&nbsp;because&nbsp;something&nbsp;else&nbsp;is&nbsp;going&lt;br&gt;<br>
+ &nbsp; &nbsp;on&nbsp;there.&nbsp;:)&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;Thanks,&lt;br&gt;<br>
+ &nbsp; &nbsp;Mark&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp;On&nbsp;Fri,&nbsp;Aug&nbsp;23,&nbsp;2013&nbsp;at&nbsp;2:55&nbsp;AM,&nbsp;Michael&nbsp;Zinsmaier&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;im&quot;&gt;<br>
+ &nbsp; &nbsp;&lt;&lt;a&nbsp;href=&quot;mailto:michael.zinsmaier@gmx.de&quot;&nbsp;target=&quot;_blank&quot;&gt;michael.zinsmaier@gmx.de&lt;/a&gt;&nbsp;&lt;mailto:&lt;a&nbsp;href=&quot;mailto:michael.zinsmaier@gmx.de&quot;&nbsp;target=&quot;_blank&quot;&gt;michael.zinsmaier@gmx.&lt;u&gt;&lt;/u&gt;de&lt;/a&gt;&gt;&gt;&nbsp;wrote:&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;Hi&nbsp;together,&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;defining&nbsp;intervals&nbsp;via&nbsp;the&nbsp;ImgOptions&nbsp;mechanism&nbsp;seems&nbsp;not&nbsp;to&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;work&nbsp;if&nbsp;you&nbsp;define&nbsp;an&nbsp;Interval&nbsp;only&nbsp;for&nbsp;one&nbsp;Axes&nbsp;(except&nbsp;for&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;Channel).&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;E.g.&nbsp;consider&nbsp;that&nbsp;you&nbsp;want&nbsp;to&nbsp;select&nbsp;only&nbsp;time=0&nbsp;from&nbsp;a&nbsp;5dim&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;Image&nbsp;(x,y,Channel,z,Time)&nbsp;and&nbsp;define&nbsp;the&nbsp;SubRegion&nbsp;as&nbsp;follows&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;new&nbsp;SubRegion(new&nbsp;AxesType[]{Time},&nbsp;new&nbsp;Range[]{0}).&nbsp;An&nbsp;array&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;index&nbsp;out&nbsp;of&nbsp;bounds&nbsp;exception&nbsp;is&nbsp;thrown.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;It&nbsp;does&nbsp;however&nbsp;work&nbsp;if&nbsp;you&nbsp;do&nbsp;the&nbsp;same&nbsp;thing&nbsp;with&nbsp;Channel&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;and&nbsp;it&nbsp;works&nbsp;also&nbsp;if&nbsp;you&nbsp;specify&nbsp;Ranges&nbsp;for&nbsp;Channel,&nbsp;Z&nbsp;and&nbsp;Time.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;The&nbsp;API&nbsp;of&nbsp;SubRegion&nbsp;(Map&nbsp;Constructor)&nbsp;gives&nbsp;me&nbsp;the&nbsp;feeling&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;that&nbsp;is&nbsp;should&nbsp;not&nbsp;be&nbsp;necessary&nbsp;to&nbsp;specify&nbsp;Axes&nbsp;that&nbsp;I&nbsp;want&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;to&nbsp;include&nbsp;completly.&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;I&nbsp;hope&nbsp;thats&nbsp;correct&nbsp;if&nbsp;not&nbsp;I&nbsp;would&nbsp;like&nbsp;to&nbsp;suggest&nbsp;to&nbsp;change&nbsp;it.&lt;br&gt;<br>
+&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;Best&nbsp;regards&lt;br&gt;<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;Michael&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;/div&gt;&lt;/blockquote&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;/blockquote&gt;<br>
+&lt;br&gt;<br>
+&lt;br&gt;<br>
+&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+
+</tt>

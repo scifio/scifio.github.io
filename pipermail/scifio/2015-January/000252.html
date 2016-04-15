@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Block-wise writer
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Block-wise%20writer&In-Reply-To=%3CCA%2BB%3DmGoZvHugf_H3tAhvCCY0cTB%2BPV%3Dz7gSJFvCG%2Bu_decPeYA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000251.html">
+   <LINK REL="Next"  HREF="000253.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Block-wise writer</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Block-wise%20writer&In-Reply-To=%3CCA%2BB%3DmGoZvHugf_H3tAhvCCY0cTB%2BPV%3Dz7gSJFvCG%2Bu_decPeYA%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Block-wise writer">hiner at wisc.edu
+       </A><BR>
+    <I>Fri Jan 30 10:53:00 CST 2015</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000251.html">[SCIFIO] Block-wise writer
+</A></li>
+        <LI>Next message: <A HREF="000253.html">[SCIFIO] Block-wise writer
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#252">[ date ]</a>
+              <a href="thread.html#252">[ thread ]</a>
+              <a href="subject.html#252">[ subject ]</a>
+              <a href="author.html#252">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Burkhard,
+
+Argh, I think you are getting bit by a confusing naming choice in SCIFIO. A
+&quot;planar axis&quot; in SCIFIO means its value contributes to the size of a plane,
+not the number of planes. See the ImageMetadata javadoc[1] for a better
+explanation.
+
+So, if you have an XYZT dataset for example, and you set your planar axis
+count to 4, the writer thinks it has one plane of size X * Y * Z * T (which
+is why the warning says it only supports 1 plane in your case).
+
+If you set the planar axis count to 2 in this case, you would have Z * T
+number of planes, each of size X * Y.
+
+If anything is still unclear about planar axes, just let me know. I'm happy
+to look over code examples for your translator/writer, as well, and will
+try to create better documentation on this subject[2].
+
+Best,
+Mark
+
+[1]
+<A HREF="http://javadoc.imagej.net/SCIFIO/io/scif/ImageMetadata.html#setPlanarAxisCount(int">http://javadoc.imagej.net/SCIFIO/io/scif/ImageMetadata.html#setPlanarAxisCount(int</A>)
+[2] <A HREF="https://github.com/scifio/scifio-tutorials/issues/2">https://github.com/scifio/scifio-tutorials/issues/2</A>
+
+On Thu, Jan 29, 2015 at 3:57 PM, Burkhard Hoeckendorf &lt;
+<A HREF="http://scif.io/mailman/listinfo/scifio">burkhard.hoeckendorf at web.de</A>&gt; wrote:
+
+&gt;<i> Dear Mark,
+</I>&gt;<i>
+</I>&gt;<i> Its me again, this time I have a quick question about writing &gt;2D blocks.
+</I>&gt;<i> For the format I mentioned in my previous mail, I have a metadata
+</I>&gt;<i> translator that sets the planar axis count to 3-5. I know that my writer
+</I>&gt;<i> implementation can handle that, but ImageJ won't let it. Instead, I get a
+</I>&gt;<i> message box saying &quot;Source dataset contains: n planes, but writer format
+</I>&gt;<i> only supports: 1&quot;. Is there an easy way around this?
+</I>&gt;<i>
+</I>&gt;<i> Thanks,
+</I>&gt;<i> Burkhard
+</I>&gt;<i>
+</I>&gt;<i> _______________________________________________
+</I>&gt;<i> SCIFIO mailing list
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20150130/90ec93c3/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20150130/90ec93c3/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000251.html">[SCIFIO] Block-wise writer
+</A></li>
+	<LI>Next message: <A HREF="000253.html">[SCIFIO] Block-wise writer
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#252">[ date ]</a>
+              <a href="thread.html#252">[ thread ]</a>
+              <a href="subject.html#252">[ subject ]</a>
+              <a href="author.html#252">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

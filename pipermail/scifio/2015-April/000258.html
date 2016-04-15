@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> DICOM format detection
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20DICOM%20format%20detection&In-Reply-To=%3C552C0405.3080605%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000259.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>DICOM format detection</H1>
+    <B>Burkhard Hoeckendorf</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20DICOM%20format%20detection&In-Reply-To=%3C552C0405.3080605%40web.de%3E"
+       TITLE="DICOM format detection">burkhard.hoeckendorf at web.de
+       </A><BR>
+    <I>Mon Apr 13 12:59:33 CDT 2015</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000259.html">[SCIFIO] DICOM format detection
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#258">[ date ]</a>
+              <a href="thread.html#258">[ thread ]</a>
+              <a href="subject.html#258">[ subject ]</a>
+              <a href="author.html#258">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Dear List,
+
+I apologize in case I am posting this mail twice. The first attempt at 
+the end of last week came with an attachment and I assume it was 
+probably scrubbed (and rightly so).
+
+We recently ran into an issue with DICOM format detection. We use a 
+custom file format that is completely unrelated to DICOM and that is 
+implemented for SCIFIO such that the file name extension alone is 
+necessary and sufficient to recognize it. This works well, except for a 
+single file which we couldn't open in Fiji. Reading it by other means 
+(C++, MATLAB) worked fine.
+
+As it turns out, even before looking at its file name extension, SCIFIO 
+opened the file and tried to detect whether its header is in DICOM 
+format. I am unfamiliar with the DICOM standard and not a professional 
+Programmer, but from the SCIFIO implementation 
+(io.scif.formats.DICOMFormat) it appears to me that the magic 'DICM' 
+string in the header is treated as optional. If it is not found, SCIFIO 
+tries to read a single header field, and if successful considers the 
+file a DICOM file. In our case, we got unlucky and by accident SCIFIO 
+retrieved a valid-enough result when reading the corresponding position 
+in the non-DICOM file. Hence, it was wrongly detected as a DICOM file.
+
+For the time being, we are now running our own, locally modified SCIFIO 
+that does not try harder when the 'DICM' string is missing, and this 
+solved our problem. For reference, we modified line 1079 in 
+io.scif.formats.DICOMFormat. I am also happy to send this as a pull 
+request, but I am not a DICOM user, so can not comment whether or not 
+this is actually a workable solution.
+
+More generally though, this experience has led me to wonder whether the 
+order in which file formats are detected could be tweaked such that the 
+ones requiring the most work are only attempted when the easier ones 
+fail. DICOM format detection would thus only occur when the file name 
+extension does not match that of any format where the extension alone is 
+necessary and sufficient. This may help prevent similar conflicts in the 
+future and may additionally contribute a little bit to a much needed 
+performance increase.
+
+Cheers,
+Burkhard
+
+
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000259.html">[SCIFIO] DICOM format detection
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#258">[ date ]</a>
+              <a href="thread.html#258">[ thread ]</a>
+              <a href="subject.html#258">[ subject ]</a>
+              <a href="author.html#258">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

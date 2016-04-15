@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] New releases: SCIFIO 0.6.0 + SCIFIO-BF-compat 1.1.0
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20New%20releases%3A%20SCIFIO%200.6.0%20%2B%20SCIFIO-BF-compat%201.1.0&In-Reply-To=%3CCA%2BB%3DmGrTLPbfwc_1K4vxXc771oUBYWY9SC1A1KoVCvL1VfT8iw%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000023.html">
+   <LINK REL="Next"  HREF="000026.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] New releases: SCIFIO 0.6.0 + SCIFIO-BF-compat 1.1.0</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20New%20releases%3A%20SCIFIO%200.6.0%20%2B%20SCIFIO-BF-compat%201.1.0&In-Reply-To=%3CCA%2BB%3DmGrTLPbfwc_1K4vxXc771oUBYWY9SC1A1KoVCvL1VfT8iw%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] New releases: SCIFIO 0.6.0 + SCIFIO-BF-compat 1.1.0">hiner at wisc.edu
+       </A><BR>
+    <I>Tue Aug 20 13:47:41 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000023.html">[SCIFIO] Some small bugs / feature requests
+</A></li>
+        <LI>Next message: <A HREF="000026.html">[SCIFIO] ImgOpener - ImgOptions - SubRegions
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#24">[ date ]</a>
+              <a href="thread.html#24">[ thread ]</a>
+              <a href="subject.html#24">[ subject ]</a>
+              <a href="author.html#24">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi all,
+
+ Two releases today! These releases include the latest
+SciJava-common&lt;<A HREF="https://github.com/scijava/scijava-common">https://github.com/scijava/scijava-common</A>&gt;and
+ImgLib &lt;<A HREF="https://github.com/imagej/imglib">https://github.com/imagej/imglib</A>&gt;, which added the capacity to load
+multiple descendants of a single service, and fixed several bugs with
+CalibratedAxis&lt;<A HREF="https://github.com/imagej/imglib/blob/master/meta/src/main/java/net/imglib2/meta/CalibratedAxis.java">https://github.com/imagej/imglib/blob/master/meta/src/main/java/net/imglib2/meta/CalibratedAxis.java</A>&gt;,
+respectively.
+
+ Highlights of these releases include:
+
+*SCIFIO 0.6.0*
+- Created a SCIFIOService&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/SCIFIOService.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/SCIFIOService.java</A>&gt;class.
+All SCIFIO Services extend this base interface. This allows a
+SciJava Context&lt;<A HREF="https://github.com/scijava/scijava-common/blob/master/src/main/java/org/scijava/Context.java">https://github.com/scijava/scijava-common/blob/master/src/main/java/org/scijava/Context.java</A>&gt;to
+be created listing just SCIFIOService.class and SciJavaService.class,
+and all necessary subclasses will be included automatically. This is the
+recommended way to create a Context if you want to limit its scope to
+classes required by SCIFIO.
+
+- Bug fixes for the use of CalibratedAxis
+
+- Several format-specific bug fixes
+
+- Bug fixes for ImgOpener and ImgSaver behavior
+
+- Added calibration value tokens to
+FakeFormat&lt;<A HREF="https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/formats/FakeFormat.java">https://github.com/scifio/scifio/blob/master/scifio/src/main/java/io/scif/formats/FakeFormat.java</A>&gt;
+
+*SCIFIO-BF-compat 1.1.0*
+- All services now extend SCIFIOService. Thus, if a context is created
+using SCIFIOService.class, it will not need to specify any additional
+services when scifio-bf-compat is added to the classpath.
+
+- More CalibratedAxis fixes!
+
+- Rolled back N-D logic in the BioFormatsFormat. Unfortunately, SCIFIO is
+still fixed 5-D and the N-D logic was incompatible with several utility
+methods. This will be re-introduced when SCIFIO goes N-D.
+
+- Added OME-XML&lt;<A HREF="https://github.com/scifio/scifio-bf-compat/tree/master/src/main/java/io/scif/ome/xml">https://github.com/scifio/scifio-bf-compat/tree/master/src/main/java/io/scif/ome/xml</A>&gt;classes!
+All the converted OME-XML-based formats are now available in
+SCIFIO-BF-compat, including translators between several existing formats.
+Also, these classes can now take advantage of the CalibratedAxis framework
+in SCIFIO to better preserve calibration values.
+
+*Future plans*
+Hoping to get N-D refactoring into the SCIFIO 0.7.0 release. Unfortunately,
+the CalibratedAxis changes left a number of bugs that necessitated a
+release sooner rather than later.
+
+We'll also be releasing a new component between SCIFIO-bf-compat and
+SCIFIO, which includes translated Bio-Formats (proprietary) formats. Our
+first priority will be improving TIFF performance in SCIFIO, then
+translating the
+PrairieReader&lt;<A HREF="https://github.com/openmicroscopy/bioformats/blob/develop/components/bio-formats/src/loci/formats/in/PrairieReader.java">https://github.com/openmicroscopy/bioformats/blob/develop/components/bio-formats/src/loci/formats/in/PrairieReader.java</A>&gt;to
+take advantage of the updated TIFFFormat.
+
+If you have any questions or run into bugs, let me know!
+
+- Mark
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130820/bedf9f75/attachment.html">http://scif.io/pipermail/scifio/attachments/20130820/bedf9f75/attachment.html</A>&gt;
+</PRE>
+
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000023.html">[SCIFIO] Some small bugs / feature requests
+</A></li>
+	<LI>Next message: <A HREF="000026.html">[SCIFIO] ImgOpener - ImgOptions - SubRegions
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#24">[ date ]</a>
+              <a href="thread.html#24">[ thread ]</a>
+              <a href="subject.html#24">[ subject ]</a>
+              <a href="author.html#24">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Imaris writer in FIJI
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Imaris%20writer%20in%20FIJI&In-Reply-To=%3CCA%2BB%3DmGoYrACoC9Y-thHV11Xu5JmNvybMC_3dXguThzCxTTqiHg%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000127.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Imaris writer in FIJI</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Imaris%20writer%20in%20FIJI&In-Reply-To=%3CCA%2BB%3DmGoYrACoC9Y-thHV11Xu5JmNvybMC_3dXguThzCxTTqiHg%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Imaris writer in FIJI">hiner at wisc.edu
+       </A><BR>
+    <I>Fri Mar  6 10:24:51 CST 2015</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000127.html">[SCIFIO] Imaris writer in FIJI
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#128">[ date ]</a>
+              <a href="thread.html#128">[ thread ]</a>
+              <a href="subject.html#128">[ subject ]</a>
+              <a href="author.html#128">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi all,
+
+&gt;<i>Unfortunately, in my tests just now, there are bugs. I filed some issues
+</I>for them:
+&gt;<i>
+</I>&gt;<i> * <A HREF="https://github.com/scifio/scifio/issues/261">https://github.com/scifio/scifio/issues/261</A>
+</I>&gt;<i> * <A HREF="https://github.com/scifio/scifio/issues/262">https://github.com/scifio/scifio/issues/262</A>
+</I>
+For anyone who's interested, these issues are now fixed on master branches
+and can be tested by enabling the SCIFIO-dev update site[1,2]
+
+Thanks!
+- Mark
+
+[1] <A HREF="http://imagej.net/How_to_follow_a_3rd_party_update_site">http://imagej.net/How_to_follow_a_3rd_party_update_site</A>
+[2] <A HREF="http://imagej.net/List_of_update_sites">http://imagej.net/List_of_update_sites</A>
+
+
+
+On Mon, Mar 2, 2015 at 10:38 AM, Curtis Rueden &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">ctrueden at wisc.edu</A>&gt; wrote:
+
+&gt;<i> Hi Henry,
+</I>&gt;<i>
+</I>&gt;<i> &gt; Has the Imaris writer been adde to FIJI yet?
+</I>&gt;<i>
+</I>&gt;<i> Yes, it was added on February 3.
+</I>&gt;<i>
+</I>&gt;<i> &gt; Where should I look to find it--in the save as menu?
+</I>&gt;<i>
+</I>&gt;<i> No one added an ImageJ command for it, so it will not be in the menus. (We
+</I>&gt;<i> learned that having a separate menu item for every file format does not
+</I>&gt;<i> scale well.)
+</I>&gt;<i>
+</I>&gt;<i> Rather, the writer will be invoked automatically by the File &gt; Export &gt;
+</I>&gt;<i> Image... command when a file with extension .ims is specified.
+</I>&gt;<i>
+</I>&gt;<i> Unfortunately, in my tests just now, there are bugs. I filed some issues
+</I>&gt;<i> for them:
+</I>&gt;<i>
+</I>&gt;<i> * <A HREF="https://github.com/scifio/scifio/issues/261">https://github.com/scifio/scifio/issues/261</A>
+</I>&gt;<i> * <A HREF="https://github.com/scifio/scifio/issues/262">https://github.com/scifio/scifio/issues/262</A>
+</I>&gt;<i>
+</I>&gt;<i> We will investigate these problems later this week.
+</I>&gt;<i>
+</I>&gt;<i> Regards,
+</I>&gt;<i> Curtis
+</I>&gt;<i>
+</I>&gt;<i> On Mon, Mar 2, 2015 at 10:13 AM, Henry Pinkard &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">henry.pinkard at gmail.com</A>&gt;
+</I>&gt;<i> wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> Hi Curtis and Mark,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Has the Imaris writer been adde to FIJI yet? Where should I look to find
+</I>&gt;&gt;<i> it--in the save as menu?
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Best,
+</I>&gt;&gt;<i> Henry
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> _______________________________________________
+</I>&gt;&gt;<i> SCIFIO mailing list
+</I>&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>
+</I>&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> _______________________________________________
+</I>&gt;<i> SCIFIO mailing list
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>
+</I>&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20150306/cc04fb80/attachment.html">http://scif.io/pipermail/scifio/attachments/20150306/cc04fb80/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000127.html">[SCIFIO] Imaris writer in FIJI
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#128">[ date ]</a>
+              <a href="thread.html#128">[ thread ]</a>
+              <a href="subject.html#128">[ subject ]</a>
+              <a href="author.html#128">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

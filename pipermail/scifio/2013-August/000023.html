@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Some small bugs / feature requests
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Some%20small%20bugs%20/%20feature%20requests&In-Reply-To=%3CCA%2BB%3DmGqc26u6DnbdDxHs6yjyaE0BngSdnVabuFo%2B-HLj2tPvwA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000022.html">
+   <LINK REL="Next"  HREF="000024.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Some small bugs / feature requests</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Some%20small%20bugs%20/%20feature%20requests&In-Reply-To=%3CCA%2BB%3DmGqc26u6DnbdDxHs6yjyaE0BngSdnVabuFo%2B-HLj2tPvwA%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Some small bugs / feature requests">hinerm at gmail.com
+       </A><BR>
+    <I>Thu Aug 15 07:59:11 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000022.html">[SCIFIO] SCIFIO mailing list
+</A></li>
+        <LI>Next message: <A HREF="000024.html">[SCIFIO] New releases: SCIFIO 0.6.0 + SCIFIO-BF-compat 1.1.0
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#23">[ date ]</a>
+              <a href="thread.html#23">[ thread ]</a>
+              <a href="subject.html#23">[ subject ]</a>
+              <a href="author.html#23">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Michael,
+
+ You're using the scifio-bf-compat snapshot right?
+
+    - we had to add two services to our Scifio Context
+&gt;<i> OMEXMLMetadataService.class, OMEXMLService.class
+</I>&gt;<i>
+</I>
+ Curtis and I talked about a Service solution.. it should be fairly
+straightforward, just have to do it!
+
+
+One other small bug: the OMEMetadata empty constructor is broken
+&gt;<i>
+</I>&gt;<i>
+</I>
+ Yeah, Curtis made the @Parameter injection smarter for Scijava-common, but
+it means no more null contexts allowed. I will fix that, thanks for
+pointing it out!
+
+- but this does not work for jpg images (index out of bounds)
+&gt;<i>
+</I>
+where do you get this exception? I'll write some calibration unit tests
+today to try and cover these scenarios.
+
+Also, where is your calibration data coming from exactly? I don't believe
+there's any metadata in JPEG that's explicitly being translated to
+calibration values. So currently the expected behavior would be to see
+default calibration (1.0um) for each axis.
+
+Still, setting the calibration after initializing Metadata should work..
+can you share the code snippet that's doing the setting?
+
+    - and I have at least one .lsm image that fails with a null pointer if
+&gt;<i> I load it with .openImg.
+</I>&gt;<i>       This error is not related to our attemps to get callibration working
+</I>&gt;<i>       (img in the appendix)
+</I>&gt;<i>
+</I>
+Thanks for providing the failing image. I'll test that today.
+
+I looked today at the interval selection code. Could you add a long[]
+&gt;<i> constructor for DimRange? I think a simple one that just lists all included
+</I>&gt;<i> indices should be enough (equivalent to the string constructor with
+</I>&gt;<i> &quot;a,b,c,d&quot;   long[] {a,b,c,d})
+</I>&gt;<i>
+</I>
+Yep, that sounds reasonable :) I may release a 0.5.2 today because of some
+ImgSaver bug fixes I made yesterday.. so if so, this will be included as
+well.
+
+Thanks for the feedback,
+Mark
+
+
+On Thu, Aug 15, 2013 at 7:48 AM, Michael Zinsmaier &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">michael.zinsmaier at gmx.de</A>
+&gt;<i> wrote:
+</I>
+&gt;<i> Hi Mark,
+</I>&gt;<i>
+</I>&gt;<i> yay the new libs (currently scifio-bf-compat 1.0.1 / scifio-0.5.1 /
+</I>&gt;<i> scijava-common-2.0.2) are working (-:
+</I>&gt;<i>
+</I>&gt;<i> Callibration still makes some trouble (I know that is super early
+</I>&gt;<i> implementation stage but anyways)
+</I>&gt;<i>     - we had to add two services to our Scifio Context
+</I>&gt;<i> OMEXMLMetadataService.class, OMEXMLService.class
+</I>&gt;<i>     - the ImgPlus returned by ImgOpener.openImg does not contain
+</I>&gt;<i> callibration values
+</I>&gt;<i>
+</I>&gt;<i>     because of the 2nd point we added a small hack: we currently add the
+</I>&gt;<i> calibration values after loading of the image (calibration values
+</I>&gt;<i>     come from metadata -&gt; ome metadata)
+</I>&gt;<i>
+</I>&gt;<i>     - but this does not work for jpg images (index out of bounds)
+</I>&gt;<i>
+</I>&gt;<i>     - and I have at least one .lsm image that fails with a null pointer if
+</I>&gt;<i> I load it with .openImg.
+</I>&gt;<i>       This error is not related to our attemps to get callibration working
+</I>&gt;<i>       (img in the appendix)
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> One other small bug: the OMEMetadata empty constructor is broken
+</I>&gt;<i>
+</I>&gt;<i>   OMEMEtadata()     -&gt;     this(null)
+</I>&gt;<i>         OMEMetadata(final Context context)       -&gt; this(context, null);
+</I>&gt;<i>             OMEMetadata(final Context context, final OMEXMLMetadata root)
+</I>&gt;<i>      -&gt;    setContext(context)
+</I>&gt;<i>                     context.inject(this);
+</I>&gt;<i>
+</I>&gt;<i>     =&gt; NullPointer
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> And finally a feature request:
+</I>&gt;<i> I looked today at the interval selection code. Could you add a long[]
+</I>&gt;<i> constructor for DimRange? I think a simple one that just lists all included
+</I>&gt;<i> indices should be enough (equivalent to the string constructor with
+</I>&gt;<i> &quot;a,b,c,d&quot;   long[] {a,b,c,d})
+</I>&gt;<i>
+</I>&gt;<i> Best regards
+</I>&gt;<i> Michael
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130815/c27bb257/attachment.html">http://scif.io/pipermail/scifio/attachments/20130815/c27bb257/attachment.html</A>&gt;
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000022.html">[SCIFIO] SCIFIO mailing list
+</A></li>
+	<LI>Next message: <A HREF="000024.html">[SCIFIO] New releases: SCIFIO 0.6.0 + SCIFIO-BF-compat 1.1.0
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#23">[ date ]</a>
+              <a href="thread.html#23">[ thread ]</a>
+              <a href="subject.html#23">[ subject ]</a>
+              <a href="author.html#23">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

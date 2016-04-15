@@ -1,0 +1,120 @@
+From phsiao at cs.unc.edu  Wed Jun 17 10:45:51 2015
+From: phsiao at cs.unc.edu (Joe Ping-Lin Hsiao)
+Date: Wed, 17 Jun 2015 11:45:51 -0400
+Subject: [SCIFIO]  SCIFIO or Bio-Formats for C++?
+Message-ID: <CAPYmBX0tcp2Lz3qtBMv-W33Qd1YGNSn+wsRZjBMKGXdcgnx=ww@mail.gmail.com>
+
+Hi,
+
+I wanted to add Nikon Elements nd formats support to a program written in
+C++, and I think integrating SCIFIO or Bio-Formats into the program do the
+job.
+
+After Google searching for a while, I am still very confused and not sure
+which one to use.
+Bio-Fomrats C++
+<http://www.openmicroscopy.org/site/support/bio-formats5.1/developers/cpp/overview.html>
+seems
+to be a newer method and the most native to C++ , but on the page it says
+it only supports TIFF and OME-TIFF and all other readers and writers from
+the Java implementation are currently unavailable.
+Bio-Formats C++ bindings
+<http://www.openmicroscopy.org/site/support/bio-formats5.1/developers/jace/overview.html>
+has
+been there for a long time. Maybe this is still the way to go?
+SCIFIO-imageio <https://github.com/scifio/scifio-imageio> is the only
+SCIFIO project related to C++ that I could find, but it was written for ITK.
+
+Are these the options that I have now for my need?
+
+Thanks,
+Joe
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150617/f3915183/attachment.html>
+
+From hiner at wisc.edu  Wed Jun 17 11:37:37 2015
+From: hiner at wisc.edu (Mark Hiner)
+Date: Wed, 17 Jun 2015 11:37:37 -0500
+Subject: [SCIFIO] SCIFIO or Bio-Formats for C++?
+In-Reply-To: <CAPYmBX0tcp2Lz3qtBMv-W33Qd1YGNSn+wsRZjBMKGXdcgnx=ww@mail.gmail.com>
+References: <CAPYmBX0tcp2Lz3qtBMv-W33Qd1YGNSn+wsRZjBMKGXdcgnx=ww@mail.gmail.com>
+Message-ID: <CA+B=mGoXRmMRf_R7NqQeGoJQ0n6Yto61qyFfT+0yr7dBY7uupA@mail.gmail.com>
+
+Hi Joe,
+
+This article[1] has good links to discussions on this topic (and Java/C++
+interoperability in general).
+
+> Bio-Formats C++
+
+Your observations are right on - this is the only option that avoids
+C++/Java cross-talk, but would require implementation of the Bio-Formats
+reader(s) you're interested in.
+
+> Bio-Formats C++ Bindings
+
+Since these are C++ wrappers that call into Java code, this is likely the
+easiest/fastest way to get immediate C++ support for all of Bio-Formats.
+
+> SCIFIO-imageio
+
+This is an unfortunate victim of early SCIFIO brand/library conflation:
+it's not actually SCIFIO-based right now, but uses Bio-Formats (C++/Java
+communication is accomplished via pipes, instead of the C++ bindings).
+Since it's ITK-based I don't think it will meet your needs.
+
+There will likely eventually be a C++ SCIFIO (or ImageJ) core that will
+give you all the Bio-Formats format support, but for now I would recommend
+trying out the C++ Bindings. If the ND2 reader is added to Bio-Formats C++
+then that may be a good fit for your application.
+
+Hope that helps.
+
+Best,
+Mark
+
+[1]
+https://www.openmicroscopy.org/site/support/bio-formats5.1/developers/non-java-code.html
+
+On Wed, Jun 17, 2015 at 10:45 AM, Joe Ping-Lin Hsiao <phsiao at cs.unc.edu>
+wrote:
+
+> Hi,
+>
+> I wanted to add Nikon Elements nd formats support to a program written in
+> C++, and I think integrating SCIFIO or Bio-Formats into the program do the
+> job.
+>
+> After Google searching for a while, I am still very confused and not sure
+> which one to use.
+> Bio-Fomrats C++
+> <http://www.openmicroscopy.org/site/support/bio-formats5.1/developers/cpp/overview.html> seems
+> to be a newer method and the most native to C++ , but on the page it says
+> it only supports TIFF and OME-TIFF and all other readers and writers from
+> the Java implementation are currently unavailable.
+> Bio-Formats C++ bindings
+> <http://www.openmicroscopy.org/site/support/bio-formats5.1/developers/jace/overview.html> has
+> been there for a long time. Maybe this is still the way to go?
+> SCIFIO-imageio <https://github.com/scifio/scifio-imageio> is the only
+> SCIFIO project related to C++ that I could find, but it was written for ITK.
+>
+> Are these the options that I have now for my need?
+>
+> Thanks,
+> Joe
+>
+>
+>
+>
+>
+> _______________________________________________
+> SCIFIO mailing list
+> SCIFIO at scif.io
+> http://scif.io/mailman/listinfo/scifio
+>
+>
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <http://scif.io/pipermail/scifio/attachments/20150617/fb435602/attachment.html>
+

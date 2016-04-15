@@ -1,0 +1,64 @@
+<tt>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;Hi&nbsp;Joe,&lt;br&gt;&lt;br&gt; Just&nbsp;wanted&nbsp;to&nbsp;let&nbsp;you&nbsp;know&nbsp;I&nbsp;identified&nbsp;that&nbsp;this&nbsp;is&nbsp;an&nbsp;error&nbsp;with&nbsp;endianness&nbsp;not&nbsp;being&nbsp;handled&nbsp;correctly&nbsp;in&nbsp;the&nbsp;SCIFIO&nbsp;ImageIO.&lt;br&gt;&lt;div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;<br>
+<br>
+ I&nbsp;fixed&nbsp;it&nbsp;locally,&nbsp;but&nbsp;found&nbsp;some&nbsp;bugs&nbsp;with&nbsp;how&nbsp;indexed&nbsp;and&nbsp;RGB&nbsp;images&nbsp;are&nbsp;being&nbsp;handled&nbsp;along&nbsp;the&nbsp;way.&nbsp;Once&nbsp;I&nbsp;have&nbsp;those&nbsp;fixed&nbsp;I&#39;ll&nbsp;update&nbsp;the&nbsp;SCIFIO&nbsp;ImageIO&nbsp;module&nbsp;and&nbsp;let&nbsp;you&nbsp;know.&lt;br&gt;&lt;br&gt;Thank&nbsp;you&nbsp;for&nbsp;reporting&nbsp;this,&nbsp;and&nbsp;for&nbsp;using&nbsp;the&nbsp;SCIFIO-ITK&nbsp;imageIO!&lt;br&gt;<br>
+<br>
+&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;-&nbsp;Mark&lt;br&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Tue,&nbsp;Oct&nbsp;15,&nbsp;2013&nbsp;at&nbsp;3:21&nbsp;PM,&nbsp;Joe&nbsp;Ping-Lin&nbsp;Hsiao&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:phsiao@cs.unc.edu&quot;&nbsp;target=&quot;_blank&quot;&gt;phsiao@cs.unc.edu&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;&lt;div&nbsp;dir=&quot;ltr&quot;&gt;Hi&nbsp;Mark,&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;The&nbsp;output&nbsp;dimension&nbsp;is&nbsp;3,&nbsp;which&nbsp;is&nbsp;equal&nbsp;to&nbsp;the&nbsp;input&#39;s&nbsp;dimension.&nbsp;I&nbsp;also&nbsp;tried&nbsp;&quot;-d&nbsp;5&quot;.&nbsp;Seems&nbsp;to&nbsp;me&nbsp;it&nbsp;doesn&#39;t&nbsp;change&nbsp;anything&nbsp;of&nbsp;the&nbsp;output.&nbsp;The&nbsp;output&nbsp;dimension&nbsp;is&nbsp;still&nbsp;3&nbsp;and&nbsp;the&nbsp;pixel&nbsp;values&nbsp;are&nbsp;wrong.&lt;/div&gt;<br>
+<br>
+<br>
+&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Don&#39;t&nbsp;know&nbsp;if&nbsp;this&nbsp;helps.&nbsp;I&nbsp;put&nbsp;the&nbsp;following&nbsp;code&nbsp;after&nbsp;reader-&gt;Update()&nbsp;to&nbsp;check&nbsp;the&nbsp;image&#39;s&nbsp;min&nbsp;and&nbsp;max&nbsp;pixel&nbsp;values:&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;typedef&nbsp;itk::MinimumMaximumImageCalculator&nbsp;&lt;ImageType&gt;&nbsp;ImageCalculatorFilterType;&lt;/div&gt;<br>
+<br>
+<br>
+&lt;div&gt;ImageCalculatorFilterType::Pointer&nbsp;imageCalculatorFilter&nbsp;=&nbsp;ImageCalculatorFilterType::New&nbsp;();&lt;/div&gt;&lt;div&gt;imageCalculatorFilter-&gt;SetImage(reader-&gt;GetOutput());&lt;br&gt;&lt;/div&gt;&lt;div&gt;imageCalculatorFilter-&gt;Compute();&lt;/div&gt;<br>
+<br>
+<br>
+&lt;div&gt;cout&nbsp;&lt;&lt;&nbsp;&quot;max&nbsp;intensity&nbsp;&quot;&nbsp;&lt;&lt;&nbsp;imageCalculatorFilter-&gt;GetMaximum()&nbsp;&lt;&lt;&nbsp;endl;&lt;/div&gt;&lt;div&gt;cout&nbsp;&lt;&lt;&nbsp;&quot;min&nbsp;intensity&nbsp;&quot;&nbsp;&lt;&lt;&nbsp;imageCalculatorFilter-&gt;GetMinimum();&lt;/div&gt;&lt;/div&gt;<br>
+<br>
+&lt;div&gt;<br>
+&lt;br&gt;&lt;/div&gt;&lt;div&gt;The&nbsp;value&nbsp;range&nbsp;is&nbsp;the&nbsp;full&nbsp;range&nbsp;of&nbsp;&#39;float&#39;&nbsp;from&nbsp;-3.49e38&nbsp;to&nbsp;3.49e38,&nbsp;which&nbsp;seems&nbsp;wrong.&nbsp;But&nbsp;if&nbsp;I&nbsp;comment&nbsp;out&nbsp;reader-&gt;SetImageIO(io),&nbsp;the&nbsp;values&nbsp;look&nbsp;reasonable.&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Thanks,&lt;/div&gt;<br>
+<br>
+<br>
+&lt;div&gt;Joe&lt;/div&gt;&lt;/div&gt;&lt;div&nbsp;class=&quot;HOEnZb&quot;&gt;&lt;div&nbsp;class=&quot;h5&quot;&gt;&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;On&nbsp;Tue,&nbsp;Oct&nbsp;15,&nbsp;2013&nbsp;at&nbsp;3:50&nbsp;PM,&nbsp;Mark&nbsp;Hiner&nbsp;&lt;span&nbsp;dir=&quot;ltr&quot;&gt;&lt;&lt;a&nbsp;href=&quot;mailto:hinerm@gmail.com&quot;&nbsp;target=&quot;_blank&quot;&gt;hinerm@gmail.com&lt;/a&gt;&gt;&lt;/span&gt;&nbsp;wrote:&lt;br&gt;<br>
+<br>
+<br>
+&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0&nbsp;0&nbsp;0&nbsp;.8ex;border-left:1px&nbsp;#ccc&nbsp;solid;padding-left:1ex&quot;&gt;&lt;div&nbsp;dir=&quot;ltr&quot;&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Hi&nbsp;Joe,&lt;br&gt;&lt;br&gt;&lt;/div&gt; Thanks&nbsp;for&nbsp;reporting&nbsp;this&nbsp;issue.&lt;br&gt;&lt;br&gt;&lt;blockquote&nbsp;style=&quot;margin:0px&nbsp;0px&nbsp;0px&nbsp;0.8ex;border-left:1px&nbsp;solid&nbsp;rgb(204,204,204);padding-left:1ex&quot;&nbsp;class=&quot;gmail_quote&quot;&gt;<br>
+<br>
+<br>
+<br>
+<br>
+reader-&gt;SetImageIO(&nbsp;io&nbsp;);&lt;br&gt;<br>
+&lt;/blockquote&gt;&lt;div&gt; &lt;/div&gt;&lt;/div&gt; Just&nbsp;so&nbsp;you&nbsp;know,&nbsp;this&nbsp;is&nbsp;just&nbsp;disabling&nbsp;SCIFIO&nbsp;I&nbsp;believe,&nbsp;and&nbsp;defaulting&nbsp;to&nbsp;the&nbsp;ITK&nbsp;DICOM&nbsp;ImageIO.&lt;br&gt;&lt;br&gt;&lt;/div&gt; Does&nbsp;the&nbsp;output&nbsp;file&nbsp;have&nbsp;the&nbsp;correct&nbsp;number&nbsp;of&nbsp;total&nbsp;planes?&nbsp;If&nbsp;not,&nbsp;you&nbsp;might&nbsp;try&nbsp;&quot;-d&nbsp;5&quot;&nbsp;just&nbsp;to&nbsp;test.&nbsp;The&nbsp;dimension&nbsp;order&nbsp;is&nbsp;XYCZT&nbsp;but&nbsp;XYZ&nbsp;are&nbsp;the&nbsp;dimensions&nbsp;with&nbsp;length&nbsp;more&nbsp;than&nbsp;1.&nbsp;The&nbsp;SCIFIO&nbsp;plugin&nbsp;is&nbsp;supposed&nbsp;to&nbsp;account&nbsp;for&nbsp;that&nbsp;but&nbsp;it&nbsp;could&nbsp;be&nbsp;a&nbsp;bug.&lt;br&gt;<br>
+<br>
+<br>
+<br>
+<br>
+&lt;br&gt;&lt;/div&gt; Otherwise&nbsp;if&nbsp;the&nbsp;dimensions&nbsp;are&nbsp;correct&nbsp;it&nbsp;could&nbsp;be&nbsp;an&nbsp;issue&nbsp;with&nbsp;the&nbsp;dataset&nbsp;being&nbsp;interleaved.&lt;br&gt;&lt;br&gt;&lt;/div&gt; I&#39;ll&nbsp;try&nbsp;to&nbsp;look&nbsp;at&nbsp;it&nbsp;soon.&lt;br&gt;&lt;br&gt;Thanks,&lt;br&gt;Mark&lt;div&gt;&lt;br&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;<br>
+&lt;div&gt;&lt;div&gt;&lt;div&gt;<br>
+<br>
+&lt;div&nbsp;class=&quot;gmail_extra&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;div&nbsp;class=&quot;gmail_quote&quot;&gt;&lt;blockquote&nbsp;class=&quot;gmail_quote&quot;&nbsp;style=&quot;margin:0px&nbsp;0px&nbsp;0px&nbsp;0.8ex;border-left:1px&nbsp;solid&nbsp;rgb(204,204,204);padding-left:1ex&quot;&gt;<br>
+From: Joe&nbsp;Ping-Lin&nbsp;Hsiao&nbsp;&lt;&lt;a&nbsp;href=&quot;mailto:phsiao@cs.unc.edu&quot;&nbsp;target=&quot;_blank&quot;&gt;phsiao@cs.unc.edu&lt;/a&gt;&gt;&lt;br&gt;To: &lt;a&nbsp;href=&quot;mailto:scifio@scif.io&quot;&nbsp;target=&quot;_blank&quot;&gt;scifio@scif.io&lt;/a&gt;&lt;br&gt;Cc: &lt;br&gt;Date: Tue,&nbsp;15&nbsp;Oct&nbsp;2013&nbsp;14:29:23&nbsp;-0400&lt;br&gt;<br>
+<br>
+<br>
+<br>
+<br>
+Subject: Error&nbsp;reading&nbsp;a&nbsp;32-bit&nbsp;nrrd&nbsp;image&nbsp;via&nbsp;ITK&lt;br&gt;<br>
+&lt;div&nbsp;dir=&quot;ltr&quot;&gt;I&nbsp;am&nbsp;having&nbsp;trouble&nbsp;using&nbsp;SCIFIO&nbsp;in&nbsp;ITK&nbsp;to&nbsp;read&nbsp;a&nbsp;32-bit&nbsp;.nrrd&nbsp;image&nbsp;in&nbsp;<br>
+my&nbsp;own&nbsp;program.&nbsp;The&nbsp;attached&nbsp;is&nbsp;a&nbsp;32-bit 3-dimensional&nbsp;test&nbsp;image.&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Then&nbsp;I&nbsp;used&nbsp;the&nbsp;following&nbsp;command&nbsp;to&nbsp;test&nbsp;with&nbsp;the&nbsp;SCIFIO&nbsp;test&nbsp;program:&lt;/div&gt;<br>
+&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;SCIFIOTestDriver.exe&nbsp;itkSCIFIOImageIOTest&nbsp;sample_5.nrrd&nbsp;123.ome.tiff&nbsp;-w&nbsp;-d&nbsp;3&nbsp;-t&nbsp;float&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;The&nbsp;output&nbsp;&#39;123.ome.tiff&#39;&nbsp;has&nbsp;wrong&nbsp;pixel&nbsp;values&nbsp;and&nbsp;looks&nbsp;wrong&nbsp;in&nbsp;ImageJ.&lt;/div&gt;<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;After&nbsp;I&nbsp;dig&nbsp;deeper,&nbsp;I&nbsp;found&nbsp;that&nbsp;in&nbsp;in&nbsp;&#39;itkSCIFIOImageIOTest.cxx&#39;,&nbsp;if&nbsp;I&nbsp;comment&nbsp;out&nbsp;this&nbsp;line&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt; &nbsp; reader-&gt;SetImageIO(&nbsp;io&nbsp;);&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;to<br>
+&nbsp;use&nbsp;ITK&#39;s&nbsp;default&nbsp;ImageIO,&nbsp;the&nbsp;output&nbsp;image&nbsp;becomes&nbsp;normal.&lt;br&gt;&lt;/div&gt;<br>
+&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Thanks,&lt;/div&gt;&lt;div&gt;Joe&lt;/div&gt;&lt;/div&gt;<br>
+&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;<br>
+&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;<br>
+&lt;/div&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;/div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;<br>
+
+</tt>

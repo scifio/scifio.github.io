@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> Nrrd ITK-SCIFIO Bug
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20Nrrd%20ITK-SCIFIO%20Bug&In-Reply-To=%3CCADN69ym4M_1%2BqRvXy%3DMRb5d_kj1NJPyUZhUyQGbKAviMM0PgdA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000006.html">
+   <LINK REL="Next"  HREF="000008.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>Nrrd ITK-SCIFIO Bug</H1>
+    <B>Curtis Rueden</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20Nrrd%20ITK-SCIFIO%20Bug&In-Reply-To=%3CCADN69ym4M_1%2BqRvXy%3DMRb5d_kj1NJPyUZhUyQGbKAviMM0PgdA%40mail.gmail.com%3E"
+       TITLE="Nrrd ITK-SCIFIO Bug">ctrueden at wisc.edu
+       </A><BR>
+    <I>Tue Jul  2 15:22:56 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000006.html">Nrrd ITK-SCIFIO Bug
+</A></li>
+        <LI>Next message: <A HREF="000008.html">Nrrd ITK-SCIFIO Bug
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#7">[ date ]</a>
+              <a href="thread.html#7">[ thread ]</a>
+              <a href="subject.html#7">[ subject ]</a>
+              <a href="author.html#7">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Matt,
+
+Thanks for your suggestions. To be clear, in microscopy these days, it is
+quite common to have an experiment stored as a single file (in e.g. Leica
+LIF format), which contains many loosely related N-dimensional images from
+the same experiment, but dimensionally different. So you might have, e.g.:
+
+512 x 512 (single image plane)
+768 x 512 x 12 T x 5 Z
+1024 x 1024 x 3 C x 100 T
+... etc., with very few rules or limitations on the number of images, or
+their structure.
+
+It would be great if in ITK there were a way to represent this in a general
+way. SCIFIO &amp; Bio-Formats handle it by allowing you to specify the image
+index you want to retrieve. (From the information so far, it sounds like
+the VideoIO may not be powerful enough, and/or may not match the intended
+use case here?) What would be the best way forward to pursue such an
+enhancement?
+
+Thanks,
+Curtis
+
+
+On Tue, Jul 2, 2013 at 3:13 PM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hiner at wisc.edu</A>&gt; wrote:
+
+&gt;<i>
+</I>&gt;<i> On Tue, Jul 2, 2013 at 2:55 PM, Matt McCormick &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">matt.mccormick at kitware.com</A>
+</I>&gt;<i> &gt; wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> TemporalDataObject?
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> So is this incompatible with the ImageReaders, because it's a sibling of
+</I>&gt;<i> ImageBase &lt;<A HREF="http://www.itk.org/Doxygen/html/classitk_1_1ImageBase.html">http://www.itk.org/Doxygen/html/classitk_1_1ImageBase.html</A>&gt;?
+</I>&gt;<i> Is there a separate VideoReader/VideoWriter class? (didn't see one in the video
+</I>&gt;<i> module &lt;<A HREF="http://www.itk.org/Doxygen/html/group__ITKVideoCore.html">http://www.itk.org/Doxygen/html/group__ITKVideoCore.html</A>&gt;...)
+</I>&gt;<i>
+</I>&gt;<i> I don't love the idea of creating another ImageIO... but can't I just
+</I>&gt;<i> make, essentially, a TemporalDataObject that extends ImageBase, and
+</I>&gt;<i> specifically holds a list of image series?
+</I>&gt;<i>
+</I>&gt;<i> It doesn't even have to be a circular list.. it can just hold offsets into
+</I>&gt;<i> the data..
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20130702/4f5b257d/attachment.html">http://scif.io/pipermail/scifio/attachments/20130702/4f5b257d/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000006.html">Nrrd ITK-SCIFIO Bug
+</A></li>
+	<LI>Next message: <A HREF="000008.html">Nrrd ITK-SCIFIO Bug
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#7">[ date ]</a>
+              <a href="thread.html#7">[ thread ]</a>
+              <a href="subject.html#7">[ subject ]</a>
+              <a href="author.html#7">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

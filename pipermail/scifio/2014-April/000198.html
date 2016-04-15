@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] How to fix bug: BigTiff not handled well by Bio-Formats or SCIFIO
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20How%20to%20fix%20bug%3A%20BigTiff%20not%20handled%20well%20by%0A%20Bio-Formats%20or%20SCIFIO&In-Reply-To=%3CCADN69ykVr5KDPMQwuMxvfie3T8R3WJANBKwL5nYh5F2GMiT99Q%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000197.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] How to fix bug: BigTiff not handled well by Bio-Formats or SCIFIO</H1>
+    <B>Curtis Rueden</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20How%20to%20fix%20bug%3A%20BigTiff%20not%20handled%20well%20by%0A%20Bio-Formats%20or%20SCIFIO&In-Reply-To=%3CCADN69ykVr5KDPMQwuMxvfie3T8R3WJANBKwL5nYh5F2GMiT99Q%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] How to fix bug: BigTiff not handled well by Bio-Formats or SCIFIO">ctrueden at wisc.edu
+       </A><BR>
+    <I>Mon Apr 21 16:20:27 CDT 2014</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000197.html">[SCIFIO] How to fix bug: BigTiff not handled well by	Bio-Formats or SCIFIO
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#198">[ date ]</a>
+              <a href="thread.html#198">[ thread ]</a>
+              <a href="subject.html#198">[ subject ]</a>
+              <a href="author.html#198">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Adam,
+
+&gt;<i> I'll try out the new SCIFIO and let you know what happens.
+</I>
+Great! Just to be clear: SCIFIO is not used by default in Fiji... yet.
+Coming soon. In the meantime, you can either:
+
+Try with ImageJ2 (experimental!):
+- Help &gt; Switch to Modern Mode
+- File &gt; Save As...
+
+Write a program which uses SCIFIO's ImgSaver API:
+-
+<A HREF="https://github.com/scifio/scifio/blob/scifio-0.11.0/scifio/src/main/java/io/scif/img/ImgSaver.java">https://github.com/scifio/scifio/blob/scifio-0.11.0/scifio/src/main/java/io/scif/img/ImgSaver.java</A>
+
+Unfortunately there isn't a great tutorial yet for me to point you at --
+this stuff is still a bit bleeding edge. But we're happy to answer any
+questions you have if you reply back to the list!
+
+Regards,
+Curtis
+
+
+On Mon, Apr 21, 2014 at 4:15 PM, Adam Packer &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">a.packer at ucl.ac.uk</A>&gt; wrote:
+
+&gt;<i> Hi Curtis,
+</I>&gt;<i>
+</I>&gt;<i> Thanks so much for replying to my message in such detail!  I'll try out
+</I>&gt;<i> the new SCIFIO and let you know what happens.
+</I>&gt;<i>
+</I>&gt;<i> Best
+</I>&gt;<i> Adam
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> On Mon, Apr 21, 2014 at 10:07 PM, Curtis Rueden &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">ctrueden at wisc.edu</A>&gt; wrote:
+</I>&gt;<i>
+</I>&gt;&gt;<i> Hi Adam,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> [CCing the SCIFIO and OME users mailing lists, as this discussion will be
+</I>&gt;&gt;<i> of interest to others.]
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> &gt; This bug:
+</I>&gt;&gt;<i> &gt; <A HREF="https://groups.google.com/forum/#!topic/fiji-users/7qLsi-V-jvs">https://groups.google.com/forum/#!topic/fiji-users/7qLsi-V-jvs</A>
+</I>&gt;&gt;<i> &gt; (Bio-Formats does not export a tiff using the BigTIFF library
+</I>&gt;&gt;<i> &gt; automatically when a file will be bigger than 4GB) is still a bug in
+</I>&gt;&gt;<i> &gt; the latest version of FIJI and the latest build of Bio-Formats
+</I>&gt;&gt;<i> &gt; installed separately in ImageJ, though you hoped to fix it in 2012.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Right. My apologies that that problem has continued to exist for so long.
+</I>&gt;&gt;<i> IMO, Bio-Formats should auto-detect whether the output file might be large
+</I>&gt;&gt;<i> enough to be need BigTIFF, and act accordingly. But the current 5.0.1
+</I>&gt;&gt;<i> release does not.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> &gt; You mention in late 2013 on stackoverflow that SCIFIO should solve
+</I>&gt;&gt;<i> &gt; this problem:
+</I>&gt;&gt;<i> &gt;
+</I>&gt;&gt;<i> <A HREF="http://stackoverflow.com/questions/18986368/java-how-to-write-a-very-large-20-000x20-000-px-or-larger-tif-image/19034370#19034370">http://stackoverflow.com/questions/18986368/java-how-to-write-a-very-large-20-000x20-000-px-or-larger-tif-image/19034370#19034370</A>
+</I>&gt;&gt;<i> &gt; but that does not yet seem to be the case as FIJI, for which SCIFIO
+</I>&gt;&gt;<i> &gt; claims to do the I/O, still has this bug when trying to write out a
+</I>&gt;&gt;<i> &gt; tiff &gt;4GB.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>  Actually, that SO question is about a different issue: huge planes. The
+</I>&gt;&gt;<i> BigTIFF format is actually needed even for more modest size planes, when
+</I>&gt;&gt;<i> you simply have many of them, which result in a TIFF file of more than 4GB
+</I>&gt;&gt;<i> in size. Regular TIFF uses 32-bit offsets, so as soon as the TIFF file gets
+</I>&gt;&gt;<i> over 4GB, there is no way to indicate that an offset should go deeper into
+</I>&gt;&gt;<i> the file than that. BigTIFF solves this problem by using 64-bit offsets.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> &gt; Changing Line 132 in TIffWriter.JAVA to say: isBigTiff = true; would
+</I>&gt;&gt;<i> &gt; simply force writing BigTIFFs all the time, which would solve the
+</I>&gt;&gt;<i> &gt; problem for me (although I realize cause other problems for others!)
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Well, there is also an API method in TiffWriter: setBigTiff(true). But of
+</I>&gt;&gt;<i> course you have to write a little program in order to use it; there is no
+</I>&gt;&gt;<i> built-in method in the ImageJ user interface to enable that option. And it
+</I>&gt;&gt;<i> is off by default.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> &gt; However, I cannot find a way to change this java file and propagate
+</I>&gt;&gt;<i> &gt; the change to within ImageJ/FIJI.  When I compile the new
+</I>&gt;&gt;<i> &gt; TiffWriter.java in ImageJ I get hundreds of errors (see attached log
+</I>&gt;&gt;<i> &gt; from ImageJ).
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> I am not sure why you are seeing those errors. I would need to know more
+</I>&gt;&gt;<i> about how you were trying to build the system. The best ways to build
+</I>&gt;&gt;<i> Bio-Formats are with either Ant (&quot;ant jars&quot; from top level works) or Maven
+</I>&gt;&gt;<i> (e.g., &quot;mvn&quot; from top level).
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> &gt; What am I missing and/or is there any simple way to solve this problem
+</I>&gt;&gt;<i> &gt; and/or fix the bug?
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Earlier today, Mark Hiner released a new version of SCIFIO that
+</I>&gt;&gt;<i> automatically enables BigTIFF as needed:
+</I>&gt;&gt;<i>     <A HREF="http://scif.io/pipermail/scifio/2014-April/000067.html">http://scif.io/pipermail/scifio/2014-April/000067.html</A>
+</I>&gt;&gt;<i>     <A HREF="http://maven.imagej.net/content/groups/public/io/scif/scifio/0.11.0/">http://maven.imagej.net/content/groups/public/io/scif/scifio/0.11.0/</A>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> We are close to having Fiji use SCIFIO for its image I/O by default; once
+</I>&gt;&gt;<i> that happens, opening and saving large images should &quot;just work&quot; even when
+</I>&gt;&gt;<i> they are larger than 4GB in size.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Regards,
+</I>&gt;&gt;<i> Curtis
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> On Wed, Apr 16, 2014 at 4:03 PM, Adam Packer &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">a.packer at ucl.ac.uk</A>&gt; wrote:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Dear Curtis
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> This bug:
+</I>&gt;&gt;&gt;<i> <A HREF="https://groups.google.com/forum/#!topic/fiji-users/7qLsi-V-jvs">https://groups.google.com/forum/#!topic/fiji-users/7qLsi-V-jvs</A>
+</I>&gt;&gt;&gt;<i>  (Bio-Formats does not export a tiff using the BigTIFF library
+</I>&gt;&gt;&gt;<i> automatically when a file will be bigger than 4GB) is still a bug in the
+</I>&gt;&gt;&gt;<i> latest version of FIJI and the latest build of Bio-Formats installed
+</I>&gt;&gt;&gt;<i> separately in ImageJ, though you hoped to fix it in 2012.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> You mention in late 2013 on stackoverflow that SCIFIO should solve this
+</I>&gt;&gt;&gt;<i> problem:
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> <A HREF="http://stackoverflow.com/questions/18986368/java-how-to-write-a-very-large-20-000x20-000-px-or-larger-tif-image/19034370#19034370">http://stackoverflow.com/questions/18986368/java-how-to-write-a-very-large-20-000x20-000-px-or-larger-tif-image/19034370#19034370</A>
+</I>&gt;&gt;&gt;<i> but that does not yet seem to be the case as FIJI, for which SCIFIO
+</I>&gt;&gt;&gt;<i> claims to do the I/O, still has this bug when trying to write out a tiff
+</I>&gt;&gt;&gt;<i> &gt;4GB.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> Changing Line 132 in TIffWriter.JAVA to say:
+</I>&gt;&gt;&gt;<i> isBigTiff = true;
+</I>&gt;&gt;&gt;<i> would simply force writing BigTIFFs all the time, which would solve the
+</I>&gt;&gt;&gt;<i> problem for me (although I realize cause other problems for others!)
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> However, I cannot find a way to change this java file and propagate the
+</I>&gt;&gt;&gt;<i> change to within ImageJ/FIJI.  When I compile the new TiffWriter.java in
+</I>&gt;&gt;&gt;<i> ImageJ I get hundreds of errors (see attached log from ImageJ).
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> What am I missing and/or is there any simple way to solve this problem
+</I>&gt;&gt;&gt;<i> and/or fix the bug?
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> All the best,
+</I>&gt;&gt;&gt;<i> Adam Packer
+</I>&gt;&gt;&gt;<i> University College London
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> _______________________________________________
+</I>&gt;&gt;<i> SCIFIO mailing list
+</I>&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">SCIFIO at scif.io</A>
+</I>&gt;&gt;<i> <A HREF="http://scif.io/mailman/listinfo/scifio">http://scif.io/mailman/listinfo/scifio</A>
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20140421/2968f2d8/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20140421/2968f2d8/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000197.html">[SCIFIO] How to fix bug: BigTiff not handled well by	Bio-Formats or SCIFIO
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#198">[ date ]</a>
+              <a href="thread.html#198">[ thread ]</a>
+              <a href="subject.html#198">[ subject ]</a>
+              <a href="author.html#198">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

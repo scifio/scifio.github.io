@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] Error reading a 32-bit nrrd image via ITK
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Error%20reading%20a%2032-bit%20nrrd%20image%20via%20ITK&In-Reply-To=%3CCAPYmBX069YuFxFUOuski8Rmk2MK_2b%2B1oL%3Dt%3DLXagUXFpVdJhQ%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000176.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] Error reading a 32-bit nrrd image via ITK</H1>
+    <B>Joe Ping-Lin Hsiao</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20Error%20reading%20a%2032-bit%20nrrd%20image%20via%20ITK&In-Reply-To=%3CCAPYmBX069YuFxFUOuski8Rmk2MK_2b%2B1oL%3Dt%3DLXagUXFpVdJhQ%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] Error reading a 32-bit nrrd image via ITK">phsiao at cs.unc.edu
+       </A><BR>
+    <I>Fri Oct 25 15:43:19 CDT 2013</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000176.html">[SCIFIO] Error reading a 32-bit nrrd image via ITK
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#177">[ date ]</a>
+              <a href="thread.html#177">[ thread ]</a>
+              <a href="subject.html#177">[ subject ]</a>
+              <a href="author.html#177">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Mike,
+
+I added the following three lines of code to itkSCIFIOImageIOTest.cxx,
+right before the line &quot;typedef itk::ImageFileWriter&lt; ImageType &gt;
+WriterType;&quot;:
+
+reader-&gt;Update();
+itk::ImageIOBase* io2 = reader-&gt;GetImageIO();
+std::cout &lt;&lt; &quot;spacing: &quot; &lt;&lt; io2-&gt;GetSpacing(0) &lt;&lt; &quot; &quot; &lt;&lt; io2-&gt;GetSpacing(1)
+&lt;&lt; &quot; &quot; &lt;&lt; io2-&gt;GetSpacing(2) &lt;&lt; std::endl;
+
+And I run the following command with the same test image &quot;sample_5.nrrd&quot;:
+
+SCIFIOTestDriver.exe itkSCIFIOImageIOTest sample_5.nrrd aa.ome.tiff -w -d 3
+-t float
+
+the spacing output is different with and without &quot;reader-&gt;SetImageIO( io
+);&quot;.
+
+According to the ITK::ImageBase (
+<A HREF="http://www.itk.org/Doxygen/html/classitk_1_1ImageBase.html#a2d92ff5736deb71ffd0f1e43201b4c96">http://www.itk.org/Doxygen/html/classitk_1_1ImageBase.html#a2d92ff5736deb71ffd0f1e43201b4c96</A>),
+spacing is the size of a pixel in physical space.
+
+Thanks for taking time looking into this.
+
+Joe
+
+
+
+
+
+
+On Fri, Oct 25, 2013 at 10:36 AM, Mark Hiner &lt;<A HREF="http://scif.io/mailman/listinfo/scifio">hinerm at gmail.com</A>&gt; wrote:
+
+&gt;<i>
+</I>&gt;<i> I also found the SCIFIO reader reports different 'Voxel sizes'
+</I>&gt;&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> Can you tell me what steps you used to check the voxel sizes with the
+</I>&gt;<i> ITK-SCIFIO plugin?
+</I>&gt;<i>
+</I>&gt;<i> No need to make another thread, I will look into it when I get time.
+</I>&gt;<i>
+</I>&gt;<i> Thanks!
+</I>&gt;<i> - Mark
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20131025/ad0cf7a8/attachment-0002.html">http://scif.io/pipermail/scifio/attachments/20131025/ad0cf7a8/attachment-0002.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000176.html">[SCIFIO] Error reading a 32-bit nrrd image via ITK
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#177">[ date ]</a>
+              <a href="thread.html#177">[ thread ]</a>
+              <a href="subject.html#177">[ subject ]</a>
+              <a href="author.html#177">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

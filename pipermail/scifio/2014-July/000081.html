@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] jpeg2000format.java error
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20jpeg2000format.java%20error&In-Reply-To=%3CCAE%2B6duODDxpzB1ZNWJczfAcsiqi_Hpcp7RsgdYD0QcxteAdt0g%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000082.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] jpeg2000format.java error</H1>
+    <B>Diego Joss</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20jpeg2000format.java%20error&In-Reply-To=%3CCAE%2B6duODDxpzB1ZNWJczfAcsiqi_Hpcp7RsgdYD0QcxteAdt0g%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] jpeg2000format.java error">djego.joss at gmail.com
+       </A><BR>
+    <I>Mon Jul  7 07:04:18 CDT 2014</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000082.html">[SCIFIO] jpeg2000format.java error
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#81">[ date ]</a>
+              <a href="thread.html#81">[ thread ]</a>
+              <a href="subject.html#81">[ subject ]</a>
+              <a href="author.html#81">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi everyone,
+
+I was looking at the github page, and stumbled by chance upon a silly
+bug in src/main/java/io/scif/formats/JPEG2000Format.java:221 in the
+public method ColorTable, in the conditionals testing the pixeldepth,
+instead of testing for bytedepth == 2 for 16bit jp2 images, the test
+is == 1!
+
+Cheers,
+Diego
+
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000082.html">[SCIFIO] jpeg2000format.java error
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#81">[ date ]</a>
+              <a href="thread.html#81">[ thread ]</a>
+              <a href="subject.html#81">[ subject ]</a>
+              <a href="author.html#81">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>

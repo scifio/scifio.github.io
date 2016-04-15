@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [SCIFIO] DICOM format detection
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20DICOM%20format%20detection&In-Reply-To=%3CCA%2BB%3DmGou2ihEnXZnwf6ZVP3OKLbkLM3kcGoxxVOvSwa1%2BDGuww%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000258.html">
+   <LINK REL="Next"  HREF="000260.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[SCIFIO] DICOM format detection</H1>
+    <B>Mark Hiner</B> 
+    <A HREF="mailto:scifio%40scif.io?Subject=Re%3A%20%5BSCIFIO%5D%20DICOM%20format%20detection&In-Reply-To=%3CCA%2BB%3DmGou2ihEnXZnwf6ZVP3OKLbkLM3kcGoxxVOvSwa1%2BDGuww%40mail.gmail.com%3E"
+       TITLE="[SCIFIO] DICOM format detection">hiner at wisc.edu
+       </A><BR>
+    <I>Mon Apr 13 13:37:46 CDT 2015</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000258.html">DICOM format detection
+</A></li>
+        <LI>Next message: <A HREF="000260.html">[SCIFIO] DICOM format detection
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#259">[ date ]</a>
+              <a href="thread.html#259">[ thread ]</a>
+              <a href="subject.html#259">[ subject ]</a>
+              <a href="author.html#259">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Burkhard,
+
+&gt;<i>I apologize in case I am posting this mail twice. The first attempt at the
+</I>end of last week came with an attachment and I assume it was probably
+scrubbed (and rightly so).
+
+No worries - there actually was a technical issue with the mailing list
+that's now fixed. Sorry about that!
+
+&gt;<i>As it turns out, even before looking at its file name extension, SCIFIO
+</I>opened the file and tried to detect whether its header is in DICOM format
+
+DICOM is an unfortunate example that has some history in Bio-Formats
+(extensionless DICOM images, DICOM images with no magic string) that
+carried over to the SCIFIO implementation with potential for false
+positives. However, I think the best solution right now is to set your
+format to a higher priority. Formats are checked in plugin priority order.
+
+For example, see a sample format that uses a higher priority[1]. DICOM uses
+the normal priority (0), so you can use any of the higher constants[2] or
+set it manually[3] to a value &gt; 0 for your format to be detected first.
+
+&gt;<i>More generally though, this experience has led me to wonder whether the
+</I>order in which file formats are detected could be tweaked such that the
+ones requiring the most work are only attempted when the easier ones fail.
+
+Agreed completely. Plugin priority was a starting point, but we have
+started discussing how exactly to do things better[4] with some ideas very
+similar to what you outline.
+
+Thanks for the feedback, let us know if you have any more suggestions or
+questions.
+
+Best,
+Mark
+
+[1]
+<A HREF="https://github.com/scifio/scifio-bf-compat/blob/scifio-bf-compat-1.11.0/src/main/java/io/scif/bf/BioFormatsFormat.java#L79-80">https://github.com/scifio/scifio-bf-compat/blob/scifio-bf-compat-1.11.0/src/main/java/io/scif/bf/BioFormatsFormat.java#L79-80</A>
+[2]
+<A HREF="https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/Priority.java#L48-55">https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/Priority.java#L48-55</A>
+[3]
+<A HREF="https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/plugin/Plugin.java#L108-129">https://github.com/scijava/scijava-common/blob/scijava-common-2.40.0/src/main/java/org/scijava/plugin/Plugin.java#L108-129</A>
+[4] <A HREF="https://github.com/scifio/scifio/issues/39">https://github.com/scifio/scifio/issues/39</A>
+
+On Mon, Apr 13, 2015 at 12:59 PM, Burkhard Hoeckendorf &lt;
+<A HREF="http://scif.io/mailman/listinfo/scifio">burkhard.hoeckendorf at web.de</A>&gt; wrote:
+
+&gt;<i> Dear List,
+</I>&gt;<i>
+</I>&gt;<i> I apologize in case I am posting this mail twice. The first attempt at the
+</I>&gt;<i> end of last week came with an attachment and I assume it was probably
+</I>&gt;<i> scrubbed (and rightly so).
+</I>&gt;<i>
+</I>&gt;<i> We recently ran into an issue with DICOM format detection. We use a custom
+</I>&gt;<i> file format that is completely unrelated to DICOM and that is implemented
+</I>&gt;<i> for SCIFIO such that the file name extension alone is necessary and
+</I>&gt;<i> sufficient to recognize it. This works well, except for a single file which
+</I>&gt;<i> we couldn't open in Fiji. Reading it by other means (C++, MATLAB) worked
+</I>&gt;<i> fine.
+</I>&gt;<i>
+</I>&gt;<i> As it turns out, even before looking at its file name extension, SCIFIO
+</I>&gt;<i> opened the file and tried to detect whether its header is in DICOM format.
+</I>&gt;<i> I am unfamiliar with the DICOM standard and not a professional Programmer,
+</I>&gt;<i> but from the SCIFIO implementation (io.scif.formats.DICOMFormat) it appears
+</I>&gt;<i> to me that the magic 'DICM' string in the header is treated as optional. If
+</I>&gt;<i> it is not found, SCIFIO tries to read a single header field, and if
+</I>&gt;<i> successful considers the file a DICOM file. In our case, we got unlucky and
+</I>&gt;<i> by accident SCIFIO retrieved a valid-enough result when reading the
+</I>&gt;<i> corresponding position in the non-DICOM file. Hence, it was wrongly
+</I>&gt;<i> detected as a DICOM file.
+</I>&gt;<i>
+</I>&gt;<i> For the time being, we are now running our own, locally modified SCIFIO
+</I>&gt;<i> that does not try harder when the 'DICM' string is missing, and this solved
+</I>&gt;<i> our problem. For reference, we modified line 1079 in
+</I>&gt;<i> io.scif.formats.DICOMFormat. I am also happy to send this as a pull
+</I>&gt;<i> request, but I am not a DICOM user, so can not comment whether or not this
+</I>&gt;<i> is actually a workable solution.
+</I>&gt;<i>
+</I>&gt;<i> More generally though, this experience has led me to wonder whether the
+</I>&gt;<i> order in which file formats are detected could be tweaked such that the
+</I>&gt;<i> ones requiring the most work are only attempted when the easier ones fail.
+</I>&gt;<i> DICOM format detection would thus only occur when the file name extension
+</I>&gt;<i> does not match that of any format where the extension alone is necessary
+</I>&gt;<i> and sufficient. This may help prevent similar conflicts in the future and
+</I>&gt;<i> may additionally contribute a little bit to a much needed performance
+</I>&gt;<i> increase.
+</I>&gt;<i>
+</I>&gt;<i> Cheers,
+</I>&gt;<i> Burkhard
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="http://scif.io/pipermail/scifio/attachments/20150413/a89ccb8e/attachment.html">http://scif.io/pipermail/scifio/attachments/20150413/a89ccb8e/attachment.html</A>&gt;
+</PRE>
+
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000258.html">DICOM format detection
+</A></li>
+	<LI>Next message: <A HREF="000260.html">[SCIFIO] DICOM format detection
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#259">[ date ]</a>
+              <a href="thread.html#259">[ thread ]</a>
+              <a href="subject.html#259">[ subject ]</a>
+              <a href="author.html#259">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="http://scif.io/mailman/listinfo/scifio">More information about the SCIFIO
+mailing list</a><br>
+</body></html>
