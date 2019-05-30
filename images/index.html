@@ -1,366 +1,408 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="../ico/favicon.ico">
 
-    <title>SCIFIO</title>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="SCIFIO: a flexible framework for SCientific Image Format Input and Output.">
+  <meta name="author" content="The SCIFIO Team">
+  <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
 
-    <!-- Bootstrap core CSS -->
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap theme -->
-    <link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+  <title>SCIFIO Images</title>
 
-    <!-- Custom styles for this template -->
-    <link href="../theme.css" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
+  <!-- Font Awesome -->
+  <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/solid.js"
+    integrity="sha384-IA6YnujJIO+z1m4NKyAGvZ9Wmxrd4Px8WFqhFcgRmwLaJaiwijYgApVpo1MV8p77" crossorigin="anonymous">
+  </script>
+  <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/brands.js"
+    integrity="sha384-rUOIFHM3HXni/WG5pzDhA1e2Js5nn4bWudTYujHbbI9ztBIxK54CL4ZNZWwcBQeD" crossorigin="anonymous">
+  </script>
+  <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/fontawesome.js"
+    integrity="sha384-EMmnH+Njn8umuoSMZ3Ae3bC9hDknHKOWL2e9WJD/cN6XLeAN7tr5ZQ0Hx5HDHtkS" crossorigin="anonymous">
+  </script>
 
-  <body role="document">
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
 
-    <!-- Fixed navbar -->
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="../">SCIFIO</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="../">Home</a></li>
-            <li class="active"><a href="#">Images</a></li>
-            <li><a href="https://github.com/scifio/scifio/wiki">Wiki</a></li>
-            <li><a href="https://github.com/scifio">Source</a></li>
-            <li><a href="https://forum.image.sc/tags/scifio">Forum</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
+<body role="document" style="padding-top: 70px;">
+
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top" role="navigation">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">
+        <img width="30" height="30" class="d-inline-block align-top" src="../img/square-logo.png" alt="SCIFIO logo" />
+        SCIFIO
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">Home</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="../images/index.html">Images <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/scifio/scifio/wiki">Wiki</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/scifio">Source</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://forum.image.sc/tags/scifio">Forum</a>
+          </li>
+        </ul>
       </div>
     </div>
+  </nav>
 
-    <div class="container theme-showcase" style="width: 100%" role="main">
+  <div class="container-fluid" role="main">
 
-      <table class="table">
-        <tr>
-          <th>Thumbnail</th>
-          <th>Download</th>
-          <th>File format</th>
-          <th>File size</th>
-          <th>Pixel type</th>
-          <th>Dimensions</th>
-          <th>Contributed by</th>
-        </tr>
+    <table class="table">
+      <tr>
+        <th>Thumbnail</th>
+        <th>Download</th>
+        <th>File format</th>
+        <th>File size</th>
+        <th>Pixel type</th>
+        <th>Dimensions</th>
+        <th>Contributed by</th>
+      </tr>
 
-        <tr>
-          <td rowspan=2><img src="mouse-kidney.jpg" width="100"></td>
-          <td colspan=10>Mouse kidney section from Invitrogen's <a href="http://products.invitrogen.com/ivgn/product/F24630?CID=Search-Product">FluoCell prepared slide #3</a>. The section is stained with Alexafluor 488 WGA, Alexafluor 568 phalloidin and DAPI, and is imaged as two series: an XYZ stack (25 planes), and an XZY version (46 planes) of the same zone.</td>
-        </tr>
-        <tr>
-          <td><a href="https://samples.scif.io/mouse-kidney.zip">mouse-kidney.zip</a></td>
-          <td>Leica LIF</td>
-          <td>84,788,147 bytes</td>
-          <td>uint16</td>
-          <td>512 x 512<br>71 focal planes<br>4 channels</td>
-          <td><a href="http://www.pasteur.fr/ip/easysite/go/03b-00003g-0lt/imagopole">PFID - Imagopôle</a>, <a href="http://www.pasteur.fr/ip/easysite/go/03b-00002j-000/en">Institut Pasteur</a></td>
-        </tr>
+      <tr>
+        <td rowspan=2><img src="mouse-kidney.jpg" width="100"></td>
+        <td colspan=10>Mouse kidney section from Invitrogen's <a
+            href="http://products.invitrogen.com/ivgn/product/F24630?CID=Search-Product">FluoCell prepared slide #3</a>.
+          The section is stained with Alexafluor 488 WGA, Alexafluor 568 phalloidin and DAPI, and is imaged as two
+          series: an XYZ stack (25 planes), and an XZY version (46 planes) of the same zone.</td>
+      </tr>
+      <tr>
+        <td><a href="https://samples.scif.io/mouse-kidney.zip">mouse-kidney.zip</a></td>
+        <td>Leica LIF</td>
+        <td>84,788,147 bytes</td>
+        <td>uint16</td>
+        <td>512 x 512<br>71 focal planes<br>4 channels</td>
+        <td><a href="http://www.pasteur.fr/ip/easysite/go/03b-00003g-0lt/imagopole">PFID - Imagopôle</a>, <a
+            href="http://www.pasteur.fr/ip/easysite/go/03b-00002j-000/en">Institut Pasteur</a></td>
+      </tr>
 
-        <tr>
-          <td rowspan=2><img src="CECellLineageFP6.jpg" width="100"></td>
-          <td colspan=10>4D dataset of C. elegans embryo development up to 8-cell stage</td>
-        </tr>
-        <tr>
-          <td><a href="https://samples.scif.io/EmbryoCE.zip">EmbryoCE.zip</a></td>
-          <td>TIFF</td>
-          <td>294,270,460 bytes</td>
-          <td>?</td>
-          <td>425 x 434<br>12 focal planes</td>
-          <td><a href="http://www2.niddk.nih.gov/NIDDKLabs/IntramuralFaculty/OConnellKevin.htm">Kevin O&#039;Connell</a>, <a href="http://www2.niddk.nih.gov/">NIDDK</a>, <a href="http://www.nih.gov/">National Institutes of Health</a></td>
-        </tr>
+      <tr>
+        <td rowspan=2><img src="CECellLineageFP6.jpg" width="100"></td>
+        <td colspan=10>4D dataset of C. elegans embryo development up to 8-cell stage</td>
+      </tr>
+      <tr>
+        <td><a href="https://samples.scif.io/EmbryoCE.zip">EmbryoCE.zip</a></td>
+        <td>TIFF</td>
+        <td>294,270,460 bytes</td>
+        <td>?</td>
+        <td>425 x 434<br>12 focal planes</td>
+        <td><a href="http://www2.niddk.nih.gov/NIDDKLabs/IntramuralFaculty/OConnellKevin.htm">Kevin O&#039;Connell</a>,
+          <a href="http://www2.niddk.nih.gov/">NIDDK</a>, <a href="http://www.nih.gov/">National Institutes of
+            Health</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="dub.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/dub.zip">dub.zip</a></td>
-          <td>Bio-Rad PIC</td>
-          <td>756,808,942 bytes</td>
-          <td>uint8</td>
-          <td>768 x 512<br>85 time points<br>33 focal planes</td>
-          <td><a href="http://genetics.uchc.edu/MohlerLab/">William Mohler</a>, <a href="http://www.uchc.edu/">Health Center</a>, <a href="http://www.uconn.edu/">University of Connecticut-Farmington</a></td>
-        </tr>
+      <tr>
+        <td><img src="dub.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/dub.zip">dub.zip</a></td>
+        <td>Bio-Rad PIC</td>
+        <td>756,808,942 bytes</td>
+        <td>uint8</td>
+        <td>768 x 512<br>85 time points<br>33 focal planes</td>
+        <td><a href="http://genetics.uchc.edu/MohlerLab/">William Mohler</a>, <a href="http://www.uchc.edu/">Health
+            Center</a>, <a href="http://www.uconn.edu/">University of Connecticut-Farmington</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="embryo2.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/embryo2.zip">embryo2.zip</a></td>
-          <td>Openlab LIFF</td>
-          <td>59,092,227 bytes</td>
-          <td>?</td>
-          <td>672 x 512<br>33 time points<br>3 channels</td>
-          <td><a href="http://www2.niddk.nih.gov/">NIDDK</a>, <a href="http://www.nih.gov/">National Institutes of Health</a></td>
-        </tr>
+      <tr>
+        <td><img src="embryo2.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/embryo2.zip">embryo2.zip</a></td>
+        <td>Openlab LIFF</td>
+        <td>59,092,227 bytes</td>
+        <td>?</td>
+        <td>672 x 512<br>33 time points<br>3 channels</td>
+        <td><a href="http://www2.niddk.nih.gov/">NIDDK</a>, <a href="http://www.nih.gov/">National Institutes of
+            Health</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="2chZT.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/2chZT.zip">2chZT.zip</a></td>
-          <td>Zeiss LSM</td>
-          <td>54,055,250 bytes</td>
-          <td>uint8</td>
-          <td>400 x 300<br>19 time points<br>21 focal planes<br>2 channels</td>
-          <td><a href="http://www.zeiss.com">Zeiss</a></td>
-        </tr>
+      <tr>
+        <td><img src="2chZT.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/2chZT.zip">2chZT.zip</a></td>
+        <td>Zeiss LSM</td>
+        <td>54,055,250 bytes</td>
+        <td>uint8</td>
+        <td>400 x 300<br>19 time points<br>21 focal planes<br>2 channels</td>
+        <td><a href="http://www.zeiss.com">Zeiss</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="10-31_E1.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/10-31_E1.zip">10-31_E1.zip</a></td>
-          <td>Olympus Fluoview TIFF</td>
-          <td>50,556,723 bytes</td>
-          <td>uint16</td>
-          <td>512 x 512<br>16 time points<br>21 focal planes</td>
-          <td><a href="http://gomez.anatomy.wisc.edu/">Timothy Gomez</a>, <a href="http://anatomy.wisc.edu/">Anatomy</a>, <a href="http://www.wisc.edu/">UW-Madison</a></td>
-        </tr>
+      <tr>
+        <td><img src="10-31_E1.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/10-31_E1.zip">10-31_E1.zip</a></td>
+        <td>Olympus Fluoview TIFF</td>
+        <td>50,556,723 bytes</td>
+        <td>uint16</td>
+        <td>512 x 512<br>16 time points<br>21 focal planes</td>
+        <td><a href="http://gomez.anatomy.wisc.edu/">Timothy Gomez</a>, <a href="http://anatomy.wisc.edu/">Anatomy</a>,
+          <a href="http://www.wisc.edu/">UW-Madison</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="TAABA.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/TAABA.zip">TAABA.zip</a></td>
-          <td>Bio-Rad PIC</td>
-          <td>42,939,725 bytes</td>
-          <td>uint8</td>
-          <td>512 x 512<br>45 time points<br>5 focal planes</td>
-          <td>-</td>
-        </tr>
+      <tr>
+        <td><img src="TAABA.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/TAABA.zip">TAABA.zip</a></td>
+        <td>Bio-Rad PIC</td>
+        <td>42,939,725 bytes</td>
+        <td>uint8</td>
+        <td>512 x 512<br>45 time points<br>5 focal planes</td>
+        <td>-</td>
+      </tr>
 
-        <tr>
-          <td><img src="dnasample1.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/dnasample1.zip">dnasample1.zip</a></td>
-          <td>Gatan DM3</td>
-          <td>25,689,710 bytes</td>
-          <td>uint16</td>
-          <td>4096 x 4096</td>
-          <td><a href="http://www.engr.wisc.edu/mse/">Materials Science &amp; Engineering</a>, <a href="http://www.engr.wisc.edu/">UW-Madison College of Engineering</a></td>
-        </tr>
+      <tr>
+        <td><img src="dnasample1.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/dnasample1.zip">dnasample1.zip</a></td>
+        <td>Gatan DM3</td>
+        <td>25,689,710 bytes</td>
+        <td>uint16</td>
+        <td>4096 x 4096</td>
+        <td><a href="http://www.engr.wisc.edu/mse/">Materials Science &amp; Engineering</a>, <a
+            href="http://www.engr.wisc.edu/">UW-Madison College of Engineering</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="KEVIN2-3.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/KEVIN2-3.zip">KEVIN2-3.zip</a></td>
-          <td>PerkinElmer</td>
-          <td>23,911,099 bytes</td>
-          <td>?</td>
-          <td>672 x 512<br>2 time points<br>29 focal planes<br>3 channels</td>
-          <td><a href="http://www2.niddk.nih.gov/NIDDKLabs/IntramuralFaculty/OConnellKevin.htm">Kevin O&#039;Connell</a>, <a href="http://www2.niddk.nih.gov/">NIDDK</a>, <a href="http://www.nih.gov/">National Institutes of Health</a></td>
-        </tr>
+      <tr>
+        <td><img src="KEVIN2-3.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/KEVIN2-3.zip">KEVIN2-3.zip</a></td>
+        <td>PerkinElmer</td>
+        <td>23,911,099 bytes</td>
+        <td>?</td>
+        <td>672 x 512<br>2 time points<br>29 focal planes<br>3 channels</td>
+        <td><a href="http://www2.niddk.nih.gov/NIDDKLabs/IntramuralFaculty/OConnellKevin.htm">Kevin O&#039;Connell</a>,
+          <a href="http://www2.niddk.nih.gov/">NIDDK</a>, <a href="http://www.nih.gov/">National Institutes of
+            Health</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="NESb.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/NESb.zip">NESb.zip</a></td>
-          <td>TIFF</td>
-          <td>22,463,680 bytes</td> 
-          <td>uint8</td>
-          <td>1024 x 1024<br>10 time points<br>9 focal planes</td>
-          <td>-</td>
-        </tr>
+      <tr>
+        <td><img src="NESb.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/NESb.zip">NESb.zip</a></td>
+        <td>TIFF</td>
+        <td>22,463,680 bytes</td>
+        <td>uint8</td>
+        <td>1024 x 1024<br>10 time points<br>9 focal planes</td>
+        <td>-</td>
+      </tr>
 
-        <tr>
-          <td><img src="MF-2CH-Z-T.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/MF-2CH-Z-T.zip">MF-2CH-Z-T.zip</a></td>
-          <td>ABD TIFF</td>
-          <td>16,163,765 bytes</td> 
-          <td>uint16</td>
-          <td>256 x 256<br>5 time points<br>4 focal planes<br>2 channels<br>5 fields</td>
-          <td><a href="http://www.andor.com/">Andor Technology</a></td>
-        </tr>
+      <tr>
+        <td><img src="MF-2CH-Z-T.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/MF-2CH-Z-T.zip">MF-2CH-Z-T.zip</a></td>
+        <td>ABD TIFF</td>
+        <td>16,163,765 bytes</td>
+        <td>uint16</td>
+        <td>256 x 256<br>5 time points<br>4 focal planes<br>2 channels<br>5 fields</td>
+        <td><a href="http://www.andor.com/">Andor Technology</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="mitosis-test.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/mitosis-test.zip">mitosis-test.zip</a></td>
-          <td>Image-Pro workspace</td>
-          <td>12,642,856 bytes</td>
-          <td>uint8</td>
-          <td>256 x 256<br>7 time points<br>24 focal planes<br>2 channels</td>
-          <td>-</td>
-        </tr>
+      <tr>
+        <td><img src="mitosis-test.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/mitosis-test.zip">mitosis-test.zip</a></td>
+        <td>Image-Pro workspace</td>
+        <td>12,642,856 bytes</td>
+        <td>uint8</td>
+        <td>256 x 256<br>7 time points<br>24 focal planes<br>2 channels</td>
+        <td>-</td>
+      </tr>
 
-        <tr>
-          <td><img src="sdub.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/sdub.zip">sdub.zip</a></td>
-          <td>Bio-Rad PIC</td>
-          <td>5,742,740 bytes</td>
-          <td>uint8</td>
-          <td>192 x 128<br>12 time points<br>9 focal planes</td>
-          <td><a href="http://genetics.uchc.edu/MohlerLab/">William Mohler</a>, <a href="http://www.uchc.edu/">University of Connecticut - Farmington</a></td>
-        </tr>
+      <tr>
+        <td><img src="sdub.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/sdub.zip">sdub.zip</a></td>
+        <td>Bio-Rad PIC</td>
+        <td>5,742,740 bytes</td>
+        <td>uint8</td>
+        <td>192 x 128<br>12 time points<br>9 focal planes</td>
+        <td><a href="http://genetics.uchc.edu/MohlerLab/">William Mohler</a>, <a href="http://www.uchc.edu/">University
+            of Connecticut - Farmington</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="wtembryo.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/wtembryo.zip">wtembryo.zip</a></td>
-          <td>QuickTime</td>
-          <td>5,523,978 bytes</td> 
-          <td>uint8</td>
-          <td>320 x 240<br>108 time points<br>3 channels</td>
-          <td>-</td>
-        </tr>
+      <tr>
+        <td><img src="wtembryo.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/wtembryo.zip">wtembryo.zip</a></td>
+        <td>QuickTime</td>
+        <td>5,523,978 bytes</td>
+        <td>uint8</td>
+        <td>320 x 240<br>108 time points<br>3 channels</td>
+        <td>-</td>
+      </tr>
 
-        <tr>
-          <td><img src="HEART.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/HEART.zip">HEART.zip</a></td>
-          <td>Image-Pro</td>
-          <td>3,296,110 bytes</td> 
-          <td>uint8</td>
-          <td>512 x 512<br>30 focal planes</td>
-          <td>-</td>
-        </tr>
+      <tr>
+        <td><img src="HEART.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/HEART.zip">HEART.zip</a></td>
+        <td>Image-Pro</td>
+        <td>3,296,110 bytes</td>
+        <td>uint8</td>
+        <td>512 x 512<br>30 focal planes</td>
+        <td>-</td>
+      </tr>
 
-        <tr>
-          <td><img src="kidney_TFl.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/kidney_TFl.zip">kidney_TFl.zip</a></td>
-          <td>Windows Bitmap</td>
-          <td>2,083,265 bytes</td>
-          <td>uint8</td>
-          <td>384 x 384<br>9 focal planes<br>3 channels</td>
-          <td><a href="http://web.eng.fiu.edu/dfan/">Dennis Fan</a>, <a href="http://www.eng.fiu.edu/mme/">Department of Mechanical and Materials Engineering</a>, <a href="http://www.fiu.edu/">Florida International University</a></td>
-        </tr>
+      <tr>
+        <td><img src="kidney_TFl.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/kidney_TFl.zip">kidney_TFl.zip</a></td>
+        <td>Windows Bitmap</td>
+        <td>2,083,265 bytes</td>
+        <td>uint8</td>
+        <td>384 x 384<br>9 focal planes<br>3 channels</td>
+        <td><a href="http://web.eng.fiu.edu/dfan/">Dennis Fan</a>, <a href="http://www.eng.fiu.edu/mme/">Department of
+            Mechanical and Materials Engineering</a>, <a href="http://www.fiu.edu/">Florida International University</a>
+        </td>
+      </tr>
 
-        <tr>
-          <td><img src="Blend_Final.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/Blend_Final.zip">Blend Final</a></td>
-          <td>IPLab</td>
-          <td>691,397 bytes</td>
-          <td>uint8</td>
-          <td>650 x 515<br>3 channels</td>
-          <td><a href="http://www.scanalytics.com">Scanalytics</a></td>
-        </tr>
+      <tr>
+        <td><img src="Blend_Final.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/Blend_Final.zip">Blend Final</a></td>
+        <td>IPLab</td>
+        <td>691,397 bytes</td>
+        <td>uint8</td>
+        <td>650 x 515<br>3 channels</td>
+        <td><a href="http://www.scanalytics.com">Scanalytics</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="leica_stack.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/leica_stack.zip">Leica stack</a></td>
-          <td>Leica</td>
-          <td>83,581 bytes</td>
-          <td>uint8</td>
-          <td>256 x 256<br>3 focal planes</td>
-          <td><a href="http://www.primate.wisc.edu/index.html">Wisconsin National Primate Research Center</a>, <a href="http://www.wisc.edu">UW-Madison</a></td>
-        </tr>
+      <tr>
+        <td><img src="leica_stack.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/leica_stack.zip">Leica stack</a></td>
+        <td>Leica</td>
+        <td>83,581 bytes</td>
+        <td>uint8</td>
+        <td>256 x 256<br>3 focal planes</td>
+        <td><a href="http://www.primate.wisc.edu/index.html">Wisconsin National Primate Research Center</a>, <a
+            href="http://www.wisc.edu">UW-Madison</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="qdna1.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/qdna1.zip">qdna1.zip</a></td>
-          <td>Image Cytometry Standard</td>
-          <td>42,831 bytes</td>
-          <td>uint8</td>
-          <td>256 x 256</td>
-          <td><a href="http://valelab.ucsf.edu/people/p-stuurman.htm">Nico Stuurman</a>, <a href="http://valelab.ucsf.edu/">Vale Laboratory</a>, <a href="http://www.ucsf.edu/">University of California-San Diego</a></td>
-        </tr>
-      </table>
+      <tr>
+        <td><img src="qdna1.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/qdna1.zip">qdna1.zip</a></td>
+        <td>Image Cytometry Standard</td>
+        <td>42,831 bytes</td>
+        <td>uint8</td>
+        <td>256 x 256</td>
+        <td><a href="http://valelab.ucsf.edu/people/p-stuurman.htm">Nico Stuurman</a>, <a
+            href="http://valelab.ucsf.edu/">Vale Laboratory</a>, <a href="http://www.ucsf.edu/">University of
+            California-San Diego</a></td>
+      </tr>
+    </table>
+    <h3>Test images (used for validation) </h3>
+    <table class="table">
 
-    </div> <!-- /container -->
+      <tr>
+        <th>Thumbnail</th>
+        <th>Download</th>
+        <th>File Size</th>
+        <th>File format</th>
+        <th>Contributed by</th>
+      </tr>
 
-    <h3 style="margin-left : 20px" >Test images (used for validation) </h3>
-    <div class="container theme-showcase" style="width: 100%" role="main">
-      <table class="table">
+      <tr>
+        <td rowspan=2><img src="test-avi.jpg" width="100"></td>
+        <td colspan=10>
+          An AVI version of the
+          <a href="https://imagej.net/images/t1-rendering.zip">T1 Head Renderings</a>
+          sample dataset from the
+          <a href="https://imagej.net/images/">ImageJ sample images</a>.
+          The dataset is a stack of 36 surface renderings of the "T1 Head"
+          volume. It was created using the "Render Cine-mode" option in
+          <a href="http://bij.isi.uu.nl/vr.htm">VolumeJ</a>, using the
+          default settings. The "T1 Head" is a T1 weighted MRI head dataset
+          <a href="https://imagej.net/images/t1-rendering.zip">courtesy of Jeff Orchard</a>.
+          Voxels outside the head have been set to zero to improve file
+          compression. This was done by subtracting 32 from each of the 129
+          slices.
+        </td>
+      </tr>
+      <tr>
+        <td><a href="https://samples.scif.io/test-avi.zip">test-avi.zip</a></td>
+        <td>AVI</td>
+        <td>752,503 bytes</td>
+        <td>Jeff Orchard and Wayne Rasband</td>
+      </tr>
 
-        <tr>
-          <th>Thumbnail</th>
-          <th>Download</th>
-          <th>File Size</th>
-          <th>File format</th>
-          <th>Contributed by</th>
-        </tr>
+      <tr>
+        <td><img src="test-image.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/test-eps.zip">test-eps.zip</a></td>
+        <td>EPS</td>
+        <td>101,557 bytes</td>
+        <td><a href="https://imagej.net/User:Gab1one">Gabriel Einsdorf</a></td>
+      </tr>
 
-        <tr>
-          <td rowspan=2><img src="test-avi.jpg" width="100"></td>
-          <td colspan=10>
-            An AVI version of the
-            <a href="https://imagej.net/images/t1-rendering.zip">T1 Head Renderings</a>
-            sample dataset from the
-            <a href="https://imagej.net/images/">ImageJ sample images</a>.
-            The dataset is a stack of 36 surface renderings of the "T1 Head"
-            volume. It was created using the "Render Cine-mode" option in
-            <a href="http://bij.isi.uu.nl/vr.htm">VolumeJ</a>, using the
-            default settings. The "T1 Head" is a T1 weighted MRI head dataset
-            <a href="https://imagej.net/images/t1-rendering.zip">courtesy of Jeff Orchard</a>.
-            Voxels outside the head have been set to zero to improve file
-            compression. This was done by subtracting 32 from each of the 129
-            slices.
-          </td>
-        </tr>
-        <tr>
-          <td><a href="https://samples.scif.io/test-avi.zip">test-avi.zip</a></td>
-          <td>AVI</td>
-          <td>752,503 bytes</td>
-          <td>Jeff Orchard and Wayne Rasband</td>
-        </tr>
+      <tr>
+        <td><img src="test-image.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/test-gif.zip">test-gif.zip</a></td>
+        <td>GIF</td>
+        <td>311,118 bytes</td>
+        <td><a href="https://imagej.net/User:Gab1one">Gabriel Einsdorf</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="test-image.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/test-eps.zip">test-eps.zip</a></td>
-          <td>EPS</td>
-          <td>101,557 bytes</td>
-          <td><a href="https://imagej.net/User:Gab1one">Gabriel Einsdorf</a></td>
-        </tr>
+      <tr>
+        <td><img src="test-ics.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/test-ics.zip">test-ics.zip</a></td>
+        <td>Image Cytometry Standard (ICS)</td>
+        <td>334,825 bytes</td>
+        <td><a href="https://imagej.net/User:Eglinger">Jan Eglinger</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="test-image.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/test-gif.zip">test-gif.zip</a></td>
-          <td>GIF</td>
-          <td>311,118 bytes</td>
-          <td><a href="https://imagej.net/User:Gab1one">Gabriel Einsdorf</a></td>
-        </tr>
+      <tr>
+        <td><img src="test-image.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/test-jpeg2000.zip">test-jpeg2000.zip</a></td>
+        <td>JPEG 2000</td>
+        <td>200,179 bytes</td>
+        <td><a href="https://imagej.net/User:Gab1one">Gabriel Einsdorf</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="test-ics.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/test-ics.zip">test-ics.zip</a></td>
-          <td>Image Cytometry Standard (ICS)</td>
-          <td>334,825 bytes</td>
-          <td><a href="https://imagej.net/User:Eglinger">Jan Eglinger</a></td>
-        </tr>
+      <tr>
+        <td><img src="test-image.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/test-jpg.zip">test-jpg.zip</a></td>
+        <td>JPEG</td>
+        <td>102,382 bytes</td>
+        <td><a href="https://imagej.net/User:Gab1one">Gabriel Einsdorf</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="test-image.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/test-jpeg2000.zip">test-jpeg2000.zip</a></td>
-          <td>JPEG 2000</td>
-          <td>200,179 bytes</td>
-          <td><a href="https://imagej.net/User:Gab1one">Gabriel Einsdorf</a></td>
-        </tr>
+      <tr>
+        <td><img src="test-image.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/test-pict.zip">test-pict.zip</a></td>
+        <td>QuickTime PICT</td>
+        <td>100,055 bytes</td>
+        <td><a href="https://imagej.net/User:Gab1one">Gabriel Einsdorf</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="test-image.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/test-jpg.zip">test-jpg.zip</a></td>
-          <td>JPEG</td>
-          <td>102,382 bytes</td>
-          <td><a href="https://imagej.net/User:Gab1one">Gabriel Einsdorf</a></td>
-        </tr>
+      <tr>
+        <td><img src="test-image.jpg" width="100"></td>
+        <td><a href="https://samples.scif.io/test-png.zip">test-png.zip</a></td>
+        <td>Portable Network Graphics (PNG)</td>
+        <td>1,023,286 bytes</td>
+        <td><a href="https://imagej.net/User:Gab1one">Gabriel Einsdorf</a></td>
+      </tr>
 
-        <tr>
-          <td><img src="test-image.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/test-pict.zip">test-pict.zip</a></td>
-          <td>QuickTime PICT</td>
-          <td>100,055 bytes</td>
-          <td><a href="https://imagej.net/User:Gab1one">Gabriel Einsdorf</a></td>
-        </tr>
+    </table>
+    <hr />
+    <footer class="text-center">
+      <p>
+        Made with <span class="fas fa-heart" style="color:red"></span> by the SCIFIO team
+      </p>
+      <p>
+        <a href="https://github.com/scifio"><span class="fab fa-lg fa-github" style="color:black"></span></a>
+      </p>
+    </footer>
+  </div>
+  <!-- Bootstrap core JavaScript
+      ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="../js/jquery-3.4.1.slim.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+</body>
 
-        <tr>
-          <td><img src="test-image.jpg" width="100"></td>
-          <td><a href="https://samples.scif.io/test-png.zip">test-png.zip</a></td>
-          <td>Portable Network Graphics (PNG)</td>
-          <td>1,023,286 bytes</td>
-          <td><a href="https://imagej.net/User:Gab1one">Gabriel Einsdorf</a></td>
-        </tr>
-
-      </table>
-    </div>
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-  </body>
 </html>

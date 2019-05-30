@@ -1,148 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="ico/favicon.ico">
 
-    <title>SCIFIO</title>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="SCIFIO: a flexible framework for SCientific Image Format Input and Output.">
+  <meta name="author" content="The SCIFIO Team">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
 
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap theme -->
-    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+  <title>SCIFIO</title>
 
-    <!-- Custom styles for this template -->
-    <link href="theme.css" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
+  <!-- Font Awesome -->
+  <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/solid.js"
+    integrity="sha384-IA6YnujJIO+z1m4NKyAGvZ9Wmxrd4Px8WFqhFcgRmwLaJaiwijYgApVpo1MV8p77" crossorigin="anonymous">
+  </script>
+  <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/brands.js"
+    integrity="sha384-rUOIFHM3HXni/WG5pzDhA1e2Js5nn4bWudTYujHbbI9ztBIxK54CL4ZNZWwcBQeD" crossorigin="anonymous">
+  </script>
+  <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/fontawesome.js"
+    integrity="sha384-EMmnH+Njn8umuoSMZ3Ae3bC9hDknHKOWL2e9WJD/cN6XLeAN7tr5ZQ0Hx5HDHtkS" crossorigin="anonymous">
+  </script>
 
-  <body role="document">
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
 
-    <!-- Fixed navbar -->
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">SCIFIO</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="images">Images</a></li>
-            <li><a href="https://github.com/scifio/scifio/wiki">Wiki</a></li>
-            <li><a href="https://github.com/scifio">Source</a></li>
-            <li><a href="https://forum.image.sc/tags/scifio">Forum</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
+<body role="document" style="padding-top: 70px;">
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top" role="navigation">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img width="30" height="30" class="d-inline-block align-top" src="img/square-logo.png" alt="SCIFIO logo" />
+        SCIFIO
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="images/index.html">Images</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/scifio/scifio/wiki">Wiki</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/scifio">Source</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://forum.image.sc/tags/scifio">Forum</a>
+          </li>
+        </ul>
       </div>
     </div>
+  </nav>
 
-    <div class="container theme-showcase" role="main">
+  <div class="container" role="main">
 
-      <!-- Main jumbotron for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <img src="logo.png" class="logo" alt="logo">
-        <p>
-        A flexible framework for SCientific Image Format Input and Output
-        (SCIFIO). SCIFIO defines a common pattern for image format
-        construction. Built using the <a href="http://www.scijava.org/">SciJava
-        Common</a> plugin mechanism, SCIFIO is easily extended&mdash;from
-        custom formats to new metadata schema.
-        </p>
-        <p>
-        <a href="#source" class="btn btn-info btn-lg" role="button">Source &raquo;</a>
-        <a href="#bf" class="btn btn-primary btn-lg" role="button">Bio-Formats &raquo;</a>
-        <a href="#imagej" class="btn btn-success btn-lg" role="button">ImageJ &raquo;</a>
-        </p>
-      </div>
-
-      <div class="well">
-        <p>
-        SCIFIO is developed by the ImageJ development team at the
-        <a href="http://loci.wisc.edu/">Laboratory for
-        Optical and Computational Instrumentation</a> (LOCI) at the University
-        of Wisconsin-Madison.
-        </p>
-      </div>
-
-      <div id="source" class="page-header">
-        <h1>Source</h1>
-      </div>
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <img src="img/logo.png" class="img-fluid d-block" alt="logo" style="margin-left: auto; margin-right: auto;">
+      <br />
       <p>
-      The SCIFIO core is licensed under a <a
-      href="http://en.wikipedia.org/wiki/BSD_licenses#2-clause_license_.28.22Simplified_BSD_License.22_or_.22FreeBSD_License.22.29">
-      Simplified BSD License</a>.
+        SCIFIO is a flexible framework for SCientific Image Format Input and Output. SCIFIO defines a common pattern for
+        image format construction. Built using the <a href="http://www.scijava.org/">SciJava Common</a> plugin
+        mechanism, SCIFIO is easily extended&mdash;from custom formats to new metadata schema.
       </p>
       <p>
-      The SCIFIO core library code is written in Java 6 compatible Java.
+        SCIFIO is developed by the ImageJ development team at the <a href="http://loci.wisc.edu/">Laboratory for Optical
+          and Computational Instrumentation</a> (LOCI) at the University of Wisconsin-Madison.
       </p>
-      <a href="https://github.com/scifio/scifio" class="btn btn-default btn-lg" role="button">See the code &raquo;</a>
-      <a href="https://github.com/scifio/scifio/wiki" class="btn btn-default btn-lg" role="button">Read the docs &raquo;</a>
-
-      <div id="bf" class="page-header">
-        <h1>Bio-Formats</h1>
+      <p>
+        The SCIFIO core is licensed under a <a
+          href="http://en.wikipedia.org/wiki/BSD_licenses#2-clause_license_.28.22Simplified_BSD_License.22_or_.22FreeBSD_License.22.29">
+          Simplified BSD License</a>. It is written in Java 6 compatabile Java.
+      </p>
+      <p>
+        <a href="https://github.com/scifio/scifio" class="btn btn-lg btn-dark" role="button">
+          <span class="fab fa-github"></span>
+          See the code
+        </a>
+        <a href="https://github.com/scifio/scifio/wiki" class="btn btn-lg btn-primary" role="button">
+          <span class="fas fa-book"></span>
+          Read the docs
+        </a>
+      </p>
+    </div>
+    <div class="card card-body">
+      <h1>Bio-Formats</h1>
+      <div class="row">
+        <div class="col-12 col-md-6 order-md-12">
+          <img src="img/bio-formats.png" class="img-fluid d-block" alt="Bio-Formats logo" />
+        </div>
+        <div class="col-12 col-md-6">
+          <p>
+            The Open Microscopy Environment's Bio-Formats library provides the
+            ability to convert many proprietary image formats to a common OME-TIFF
+            format, using the OME-XML schema. This allows scientists to freely share
+            image data without being restricted by proprietary format barriers.
+          </p>
+          <p>
+            SCIFIO was envisioned as a refactoring of Bio-Formats&mdash;creating the
+            framework that would support Bio-Formats and the OME-XML model, but also
+            allow support for N-Dimensional models and metadata schema from other
+            imaging domains. The core SCIFIO formats, which are necessarily BSD
+            licensed, are based on the original Bio-Formats readers.
+          </p>
+          <p>
+            To foster interoperability between SCIFIO and Bio-Formats, such that both
+            benefit from new formats in the other, we created <a
+              href="https://github.com/scifio/scifio-bf-compat">SCIFIO-BF-compat</a>: a
+            compatibility layer for the two projects.
+          </p>
+          <a href="http://www.openmicroscopy.org/info/bio-formats" class="btn btn-lg btn-primary" role="button">
+            <span class="fas fa-book"></span>
+            Read more
+          </a>
+        </div>
       </div>
-      <img src="bio-formats.png" style="float: right; width: 400px" class="img-thumbnail" alt="Bio-Formats logo">
-      <p>
-      The Open Microscopy Environment's Bio-Formats library provides the
-      ability to convert many proprietary image formats to a common OME-TIFF
-      format, using the OME-XML schema. This allows scientists to freely share
-      image data without being restricted by proprietary format barriers.
-      <p>
-      SCIFIO was envisioned as a refactoring of Bio-Formats&mdash;creating the
-      framework that would support Bio-Formats and the OME-XML model, but also
-      allow support for N-Dimensional models and metadata schema from other
-      imaging domains. The core SCIFIO formats, which are necessarily BSD
-      licensed, are based on the original Bio-Formats readers.
-      </p>
-      <p>
-      To foster interoperability between SCIFIO and Bio-Formats, such that both
-      benefit from new formats in the other, we created <a
-      href="https://github.com/scifio/scifio-bf-compat">SCIFIO-BF-compat</a>: a
-      compatibility layer for the two projects.
-      </p>
-      <a href="http://www.openmicroscopy.org/info/bio-formats" class="btn btn-default btn-lg" role="button">Read more &raquo;</a>
-
-      <div id="imagej" class="page-header" style="clear: right">
-        <h1>ImageJ</h1>
+    </div>
+    <br />
+    <div class="card card-body">
+      <h1>ImageJ</h1>
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <img src="img/fiji.jpg" class="img-fluid" alt="Image J preview" />
+        </div>
+        <div class="col-12 col-md-6">
+          <p>
+            The ImageJ2 project is a redesign, from the ground up, of the original <a
+              href="http://imagej.net/ImageJ1">ImageJ</a> project. Like SCIFIO, it is
+            built on the SciJava Common plugin framework to facilitate extension at
+            any level. Additionally, it is built to augment the existing ImageJ 1.x,
+            allowing almost all of the original ImageJ functionality to remain intact.
+          </p>
+          <p>
+            Using SCIFIO as its image I/O core, ImageJ2 allows users to get support
+            for all the open formats from SCIFIO and proprietary formats from
+            Bio-Formats. Further, SCIFIO provides a single point of extension,
+            allowing any 3rd-party formats to be easily enabled (and co-exist) via
+            ImageJ2's <a href="http://imagej.net/Update_Sites">update site
+              mechanism.</a>
+          </p>
+          <a href="http://imagej.net/SCIFIO" class="btn btn-lg btn-primary" role="button">
+            <span class="fas fa-book"></span>
+            Read more
+          </a>
+        </div>
       </div>
-      <img src="Fiji.jpg" style="float: right; width: 400px" class="img-thumbnail" alt="imagej2">
+    </div>
+    <hr />
+    <footer class="text-center">
       <p>
-      The ImageJ2 project is a redesign, from the ground up, of the original <a
-      href="http://imagej.net/ImageJ1">ImageJ</a> project. Like SCIFIO, it is
-      built on the SciJava Common plugin framework to facilitate extension at
-      any level. Additionally, it is built to augment the existing ImageJ 1.x,
-      allowing almost all of the original ImageJ functionality to remain intact.
-      <p>
-      Using SCIFIO as its image I/O core, ImageJ2 allows users to get support
-      for all the open formats from SCIFIO and proprietary formats from
-      Bio-Formats. Further, SCIFIO provides a single point of extension,
-      allowing any 3rd-party formats to be easily enabled (and co-exist) via
-      ImageJ2's <a href="http://imagej.net/Update_Sites">update site
-      mechanism.</a>
+        Made with <span class="fas fa-heart" style="color:red"></span> by the SCIFIO team
       </p>
-      <a href="http://imagej.net/SCIFIO" class="btn btn-default btn-lg" role="button">Read more &raquo;</a>
+      <p>
+        <a href="https://github.com/scifio"><span class="fab fa-lg fa-github" style="color:black"></span></a>
+      </p>
+    </footer>
+  </div> <!-- /container -->
 
-    </div> <!-- /container -->
-
-    <!-- Bootstrap core JavaScript
+  <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-  </body>
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="js/jquery-3.4.1.slim.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+</body>
+
 </html>
